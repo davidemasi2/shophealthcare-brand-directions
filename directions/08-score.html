@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B1A;
+    --bg-2: #111127;
+    --card: #16163A;
+    --card-2: #1E1E47;
+    --line: #2A2A55;
+    --line-2: #3A3A6B;
+    --text: #E9E9F5;
+    --mute: #9A9ACB;
+    --mute-2: #6E6EA5;
+    --indigo: #6366F1;
+    --indigo-2: #818CF8;
+    --violet: #A78BFA;
+    --cyan: #22D3EE;
+    --green: #34D399;
+    --amber: #FBBF24;
+    --red: #F87171;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: 'Sora', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(1000px 600px at 80% -10%, rgba(99,102,241,0.25), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, rgba(34,211,238,0.1), transparent 60%),
+      var(--bg);
+  }
+  .mono { font-family: 'Geist Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  .page { max-width: 1360px; margin: 0 auto; padding: 0 40px; }
+
+  /* NAV */
+  nav.head {
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+    background: rgba(11,11,26,0.8);
+  }
+  nav.head .row {
+    max-width: 1360px; margin: 0 auto; padding: 18px 40px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .wordmark {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .wm-mark {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: conic-gradient(from 200deg, var(--indigo), var(--cyan), var(--violet), var(--indigo));
+    position: relative;
+  }
+  .wm-mark::after {
+    content: ""; position: absolute; inset: 6px; border-radius: 4px;
+    background: var(--bg);
+  }
+  .nav-links {
+    display: flex; gap: 24px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-links a { color: var(--mute); text-decoration: none; }
+  .nav-links a.active { color: var(--text); }
+  .nav-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    background: transparent;
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    border-color: transparent;
+    box-shadow: 0 8px 28px rgba(99,102,241,0.4);
+  }
+  .btn.ghost { color: var(--mute); border: 0; }
+  .btn.big { padding: 16px 26px; font-size: 15px; border-radius: 999px; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px 100px;
+    position: relative;
+  }
+  .hero .inner { max-width: 1360px; margin: 0 auto; }
+  .hero-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 56px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--indigo-2);
+  }
+  .pill .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 3px rgba(52,211,153,0.2); }
+
+  .hero h1 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 84px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    margin: 24px 0 28px;
+    max-width: 980px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--indigo-2) 0%, var(--violet) 50%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero .lead {
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--mute);
+    max-width: 620px;
+    margin: 0 0 36px;
+  }
+  .hero .cta-row { display: flex; gap: 14px; align-items: center; }
+  .hero .cta-row .note {
+    margin-left: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--mute-2);
+    letter-spacing: 0.02em;
+  }
+
+  /* Score hero widget */
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+  .score-card {
+    background: linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
+    border: 1px solid var(--line-2);
+    border-radius: 28px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .score-card::before {
+    content: ""; position: absolute; top: -40px; right: -40px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.35), transparent 70%);
+    pointer-events: none;
+  }
+  .sc-head { display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px; position: relative; }
+  .sc-head .k { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--mute); text-transform: uppercase; }
+  .sc-head .name { font-size: 14px; font-weight: 600; margin-top: 6px; }
+  .sc-head .updated {
+    font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--mute-2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sc-head .updated::before { content: ""; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+
+  .score-ring {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 8px auto 18px;
+  }
+  .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-ring .track { stroke: var(--line); fill: none; stroke-width: 14; }
+  .score-ring .fill { fill: none; stroke-width: 14; stroke-linecap: round; }
+  .score-ring .center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .score-ring .big {
+    font-family: 'Sora', sans-serif;
+    font-weight: 300;
+    font-size: 96px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .score-ring .of { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--mute); margin-top: 6px; letter-spacing: 0.08em; }
+  .score-ring .rank {
+    margin-top: 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: rgba(52,211,153,0.15);
+    border: 1px solid rgba(52,211,153,0.35);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .score-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin: 24px 0 0;
+  }
+  .score-bar .seg {
+    height: 6px; border-radius: 3px;
+    background: var(--line);
+  }
+  .score-bar .seg.on-1 { background: var(--red); }
+  .score-bar .seg.on-2 { background: var(--amber); }
+  .score-bar .seg.on-3 { background: var(--indigo); }
+  .score-bar .seg.on-4 { background: var(--indigo-2); }
+  .score-bar .seg.on-5 { background: var(--green); }
+  .score-bar-labels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-top: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--mute-2);
+    text-transform: uppercase;
+  }
+
+  .sc-meta {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .sc-meta .m .k { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--mute-2); text-transform: uppercase; margin-bottom: 6px; }
+  .sc-meta .m .v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sc-meta .m .v.up { color: var(--green); }
+  .sc-meta .m .v.down { color: var(--red); }
+
+  /* SECTIONS */
+  section.block { padding: 96px 40px; position: relative; }
+  .block .inner { max-width: 1360px; margin: 0 auto; }
+
+  .eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--indigo-2);
+    margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--indigo-2); }
+  h2.section {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -0.028em;
+    margin: 0 0 24px;
+    max-width: 900px;
+  }
+  h2.section .grad {
+    background: linear-gradient(135deg, var(--indigo-2), var(--violet), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .section-lead { font-size: 19px; line-height: 1.55; color: var(--mute); max-width: 680px; margin: 0 0 56px; }
+
+  /* Factor breakdown */
+  .factors { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .factor {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px 28px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .factor::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(90deg, var(--indigo), var(--violet));
+  }
+  .factor.amber::before { background: linear-gradient(90deg, var(--amber), #F59E0B); }
+  .factor.green::before { background: linear-gradient(90deg, var(--green), #10B981); }
+  .factor.cyan::before { background: linear-gradient(90deg, var(--cyan), #06B6D4); }
+  .factor .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .factor .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .factor .weight { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--mute-2); letter-spacing: 0.06em; }
+  .factor h3 { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 26px; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 14px; }
+  .factor p { font-size: 15px; line-height: 1.55; color: var(--mute); margin: 0 0 22px; }
+  .factor-score { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .factor-score .n { font-family: 'Sora', sans-serif; font-weight: 300; font-size: 56px; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .factor-score .n.a { color: var(--amber); }
+  .factor-score .n.g { color: var(--green); }
+  .factor-score .n.c { color: var(--cyan); }
+  .factor-score .n.i { color: var(--indigo-2); }
+  .factor-score .of { font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--mute-2); }
+  .factor-score .delta { margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 600; }
+  .factor-score .delta.up { color: var(--green); }
+  .factor-score .delta.down { color: var(--red); }
+  .track-bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-bottom: 18px; }
+  .track-bar .fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--indigo), var(--violet)); }
+  .track-bar .fill.a { background: linear-gradient(90deg, var(--amber), #F59E0B); }
+  .track-bar .fill.g { background: linear-gradient(90deg, var(--green), #10B981); }
+  .track-bar .fill.c { background: linear-gradient(90deg, var(--cyan), #06B6D4); }
+  .factor .action {
+    display: flex; align-items: center; gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--indigo-2);
+    letter-spacing: 0.04em;
+  }
+  .factor .action::after { content: "→"; margin-left: auto; }
+
+  /* Actions to raise score */
+  .actions-section { background: linear-gradient(180deg, transparent, rgba(99,102,241,0.05)); }
+  .actions-list { display: grid; gap: 16px; }
+  .action-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 26px;
+    display: grid;
+    grid-template-columns: 60px 1fr 220px 140px;
+    gap: 24px;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .action-card:hover { border-color: var(--indigo); background: var(--card-2); }
+  .action-card .lift {
+    font-family: 'Sora', sans-serif;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+  }
+  .action-card .lift .u { font-size: 13px; color: var(--mute); font-weight: 500; margin-left: 2px; }
+  .action-card h4 { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 18px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .action-card p { margin: 0; font-size: 14px; color: var(--mute); line-height: 1.5; }
+  .action-card .impact {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .action-card .impact b { color: var(--text); display: block; font-size: 15px; font-family: 'Sora', sans-serif; font-weight: 600; margin-top: 2px; }
+  .action-card .go {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 10px 16px;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.4);
+    border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    color: var(--indigo-2);
+    text-decoration: none;
+  }
+
+  /* Plans */
+  .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .plan {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .plan.top {
+    border-color: var(--indigo);
+    background: linear-gradient(180deg, var(--card-2), var(--card));
+    box-shadow: 0 16px 48px rgba(99,102,241,0.2);
+  }
+  .plan .ribbon {
+    position: absolute; top: -10px; left: 24px;
+    padding: 5px 12px;
+    background: linear-gradient(90deg, var(--indigo), var(--violet));
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .plan .carrier { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--mute); text-transform: uppercase; margin-bottom: 8px; }
+  .plan h3 { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.015em; margin: 0 0 20px; }
+  .plan-score { display: flex; align-items: baseline; gap: 10px; padding: 16px 18px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); border-radius: 12px; margin-bottom: 20px; }
+  .plan-score .lbl { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.08em; text-transform: uppercase; }
+  .plan-score .n { font-family: 'Sora', sans-serif; font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--indigo-2); margin-left: auto; }
+  .plan-score .n.g { color: var(--green); }
+  .plan-score .of { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--mute-2); }
+  .plan .row {
+    display: flex; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .plan .row .k { color: var(--mute); }
+  .plan .row .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .plan .row .v.g { color: var(--green); }
+  .plan .fit { margin-top: 20px; padding: 14px 16px; background: rgba(52,211,153,0.08); border-radius: 10px; font-size: 13px; line-height: 1.5; color: var(--mute); }
+  .plan .fit b { color: var(--green); display: block; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.08em; margin-bottom: 4px; text-transform: uppercase; }
+  .plan .cta { margin-top: 22px; }
+
+  /* Score factors explanation */
+  .howscore {
+    background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(34,211,238,0.04));
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .howscore-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+  .hs-viz {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .hs-viz h4 { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 16px; margin: 0 0 24px; letter-spacing: -0.01em; }
+  .formula-row {
+    display: grid; grid-template-columns: 1fr 60px 100px;
+    gap: 16px; align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+  }
+  .formula-row:last-child { border-bottom: 0; }
+  .formula-row .name { color: var(--text); }
+  .formula-row .mini { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .formula-row .mini .fill { height: 100%; background: linear-gradient(90deg, var(--indigo), var(--violet)); }
+  .formula-row .pct { text-align: right; color: var(--mute); font-variant-numeric: tabular-nums; }
+  .hs-viz .total {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid var(--line-2);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+  }
+  .hs-viz .total b { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 300; letter-spacing: -0.02em; color: var(--indigo-2); }
+
+  .howscore ol {
+    list-style: none; counter-reset: step;
+    padding: 0; margin: 32px 0 0;
+  }
+  .howscore li {
+    counter-increment: step;
+    padding: 20px 0 20px 72px;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .howscore li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: 20px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--indigo-2);
+    letter-spacing: 0.06em;
+  }
+  .howscore li b { display: block; font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .howscore li p { margin: 0; color: var(--mute); font-size: 15px; line-height: 1.55; }
+
+  /* Nora */
+  .nora-section { padding: 96px 40px; }
+  .nora-card {
+    background: linear-gradient(135deg, var(--card), var(--card-2));
+    border: 1px solid var(--line-2);
+    border-radius: 28px;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .nora-card::before {
+    content: ""; position: absolute; right: -100px; top: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,139,250,0.2), transparent 60%);
+    pointer-events: none;
+  }
+  .nora-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: conic-gradient(from 180deg, var(--indigo), var(--violet), var(--cyan), var(--indigo));
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .nora-avatar::after {
+    content: ""; position: absolute; inset: 12px; border-radius: 50%;
+    background: var(--card);
+  }
+  .nora-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 0 0 20px;
+  }
+  .nora-card h3 .grad { background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nora-card p { font-size: 16px; line-height: 1.6; color: var(--mute); margin: 0 0 16px; }
+
+  .chat {
+    background: rgba(11,11,26,0.6);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .chat .bubble {
+    padding: 14px 18px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 92%;
+  }
+  .chat .bubble.nora { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); border-top-left-radius: 4px; }
+  .chat .bubble.you { background: var(--card-2); border: 1px solid var(--line); border-top-right-radius: 4px; margin-left: auto; }
+  .chat .bubble .tag { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--indigo-2); text-transform: uppercase; margin-bottom: 6px; display: block; }
+  .chat .bubble.you .tag { color: var(--mute); }
+  .chat .bubble b { color: var(--green); font-weight: 600; }
+  .chat .bubble .score-preview {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(52,211,153,0.1);
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+  }
+  .chat .bubble .score-preview .n { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 300; color: var(--green); line-height: 1; letter-spacing: -0.02em; }
+  .chat .bubble .score-preview .d { color: var(--mute); line-height: 1.4; }
+
+  /* Trust stats */
+  .stats-block { padding: 80px 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .stat {
+    padding-right: 32px;
+    border-right: 1px solid var(--line);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .n {
+    font-family: 'Sora', sans-serif;
+    font-weight: 300;
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .n .grad { background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat .lbl { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--mute); text-transform: uppercase; margin-top: 16px; }
+  .stat .d { margin-top: 10px; font-size: 14px; color: var(--mute); line-height: 1.5; max-width: 260px; }
+
+  /* Final CTA */
+  .final {
+    padding: 120px 40px;
+    text-align: center;
+    position: relative;
+    background: radial-gradient(800px 400px at 50% 100%, rgba(99,102,241,0.3), transparent 70%);
+  }
+  .final h2 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin: 0 0 28px;
+    max-width: 1100px;
+    margin-left: auto; margin-right: auto;
+  }
+  .final h2 .grad { background: linear-gradient(135deg, var(--indigo-2), var(--violet), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .final p { font-size: 20px; color: var(--mute); margin: 0 auto 40px; max-width: 600px; line-height: 1.5; }
+  .final .cta-row { display: flex; justify-content: center; gap: 14px; }
+  .final .fine { margin-top: 32px; font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--mute-2); letter-spacing: 0.04em; }
+
+  /* Footer */
+  footer { padding: 56px 40px 32px; border-top: 1px solid var(--line); }
+  .foot-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+  footer h6 { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); margin: 0 0 16px; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 14px; color: var(--text); margin-bottom: 10px; }
+  .foot-bottom { max-width: 1360px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid var(--line); font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--mute-2); letter-spacing: 0.06em; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="head">
+  <div class="row">
+    <div class="wordmark">
+      <span class="wm-mark"></span>
+      shophealthcare
+      <span class="mono" style="color: var(--mute-2); font-size: 12px; margin-left: 4px; letter-spacing: 0.06em;">/ SCORE</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Score</a>
+      <a href="#">Plans</a>
+      <a href="#">Factors</a>
+      <a href="#">Nora</a>
+      <a href="#">About</a>
+    </div>
+    <div class="nav-right">
+      <a class="btn ghost" href="#">Sign in</a>
+      <a class="btn primary" href="#">Get my score — free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="inner">
+    <div class="hero-head">
+      <div class="pill"><span class="dot"></span>OPEN ENROLLMENT · LIVE NOW · 2026</div>
+      <div class="pill" style="border-color: rgba(34,211,238,0.3); background: rgba(34,211,238,0.08); color: var(--cyan);">⚡ 2 min · no account required</div>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>
+          Your health coverage, <span class="grad">scored.</span>
+        </h1>
+        <p class="lead">
+          Your Coverage Score tells you, in one number, how well your plan actually fits your life — and exactly how to raise it. Like a credit score, but for the thing that keeps you alive.
+        </p>
+        <div class="cta-row">
+          <a class="btn primary big" href="#">Get my Coverage Score →</a>
+          <a class="btn big" href="#">See how it's calculated</a>
+          <span class="note">FREE · NO CREDIT CARD · SOC 2 TYPE II</span>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="sc-head">
+          <div>
+            <div class="k">Your Coverage Score</div>
+            <div class="name">Maya R. · Oakland CA · 2026 plan</div>
+          </div>
+          <div class="updated">Updated 4m ago</div>
+        </div>
+        <div class="score-ring">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366F1"/>
+                <stop offset="50%" stop-color="#A78BFA"/>
+                <stop offset="100%" stop-color="#22D3EE"/>
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="86" class="track"/>
+            <circle cx="100" cy="100" r="86" class="fill" stroke="url(#scoreGrad)"
+                    stroke-dasharray="540" stroke-dashoffset="140"/>
+          </svg>
+          <div class="center">
+            <div class="big tab">742</div>
+            <div class="of">OUT OF 900</div>
+            <div class="rank">▲ +47 this month · Very Good</div>
+          </div>
+        </div>
+        <div class="score-bar">
+          <div class="seg on-1"></div>
+          <div class="seg on-2"></div>
+          <div class="seg on-3"></div>
+          <div class="seg on-4"></div>
+          <div class="seg"></div>
+        </div>
+        <div class="score-bar-labels">
+          <div>Poor</div>
+          <div>Fair</div>
+          <div>Good</div>
+          <div style="color: var(--indigo-2);">Very&nbsp;Good</div>
+          <div>Excellent</div>
+        </div>
+        <div class="sc-meta">
+          <div class="m">
+            <div class="k">Projected ∆ / yr</div>
+            <div class="v up tab">+$2,140</div>
+          </div>
+          <div class="m">
+            <div class="k">Doctors in-net</div>
+            <div class="v tab">4 / 4</div>
+          </div>
+          <div class="m">
+            <div class="k">Risk surface</div>
+            <div class="v">Low</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACTORS -->
+<section class="block">
+  <div class="inner">
+    <div class="eyebrow">THE FIVE FACTORS</div>
+    <h2 class="section">Five inputs. One <span class="grad">number.</span> Total clarity.</h2>
+    <p class="section-lead">Every plan we show you is scored across five dimensions that actually predict real-world outcomes. Every drop and jump in your score is explained — no black box, no hand-waving.</p>
+
+    <div class="factors">
+      <div class="factor green">
+        <div class="head">
+          <span class="label">FACTOR 01</span>
+          <span class="weight">WEIGHT · 28%</span>
+        </div>
+        <h3>Network fit</h3>
+        <p>Do your actual doctors take this plan? We check all 4 of your providers — PCP, dermatologist, therapist, your kid's pediatrician — against the carrier's live directory, updated weekly.</p>
+        <div class="factor-score">
+          <span class="n g tab">94</span>
+          <span class="of">/ 100</span>
+          <span class="delta up">▲ +12 vs last plan</span>
+        </div>
+        <div class="track-bar"><div class="fill g" style="width: 94%;"></div></div>
+        <div class="action">4 / 4 PROVIDERS IN-NETWORK</div>
+      </div>
+
+      <div class="factor cyan">
+        <div class="head">
+          <span class="label">FACTOR 02</span>
+          <span class="weight">WEIGHT · 24%</span>
+        </div>
+        <h3>Total cost at your usage</h3>
+        <p>Not just premium. Your real annual cost — premium + projected deductibles + copays at your real utilization from last year (3 PCP visits, 2 specialist, 4 Rx refills).</p>
+        <div class="factor-score">
+          <span class="n c tab">81</span>
+          <span class="of">/ 100</span>
+          <span class="delta up">▲ +18 vs last plan</span>
+        </div>
+        <div class="track-bar"><div class="fill c" style="width: 81%;"></div></div>
+        <div class="action">$4,820 PROJECTED VS $6,960 CURRENT</div>
+      </div>
+
+      <div class="factor">
+        <div class="head">
+          <span class="label">FACTOR 03</span>
+          <span class="weight">WEIGHT · 20%</span>
+        </div>
+        <h3>Drug coverage</h3>
+        <p>Every prescription you've filled in the last 12 months, checked against the plan's formulary. Tier-by-tier. Generic-equivalent substitution flagged. Prior-auth requirements surfaced upfront.</p>
+        <div class="factor-score">
+          <span class="n i tab">76</span>
+          <span class="of">/ 100</span>
+          <span class="delta up">▲ +4 vs last plan</span>
+        </div>
+        <div class="track-bar"><div class="fill" style="width: 76%;"></div></div>
+        <div class="action">3 / 3 RX COVERED · LIPITOR ON TIER 1</div>
+      </div>
+
+      <div class="factor amber">
+        <div class="head">
+          <span class="label">FACTOR 04</span>
+          <span class="weight">WEIGHT · 16%</span>
+        </div>
+        <h3>Risk surface</h3>
+        <p>Worst-case exposure modeled on 10,000 Monte Carlo scenarios drawn from claims data for people with your profile. Answers: "if I'm unlucky, how bad can it actually get?"</p>
+        <div class="factor-score">
+          <span class="n a tab">64</span>
+          <span class="of">/ 100</span>
+          <span class="delta down">▼ −8 vs last plan</span>
+        </div>
+        <div class="track-bar"><div class="fill a" style="width: 64%;"></div></div>
+        <div class="action">OOP MAX $8,700 · ABOVE YOUR COMFORT LINE</div>
+      </div>
+
+      <div class="factor" style="grid-column: 1 / -1;">
+        <div class="head">
+          <span class="label">FACTOR 05</span>
+          <span class="weight">WEIGHT · 12%</span>
+        </div>
+        <h3>Carrier quality signal</h3>
+        <p>Appeals overturned in consumer's favor, claim denial rates, NAIC complaint ratios, average time-to-reimbursement — the stuff that actually predicts how a plan behaves when you file a claim. Scored on a rolling 18-month window per state.</p>
+        <div class="factor-score">
+          <span class="n i tab">82</span>
+          <span class="of">/ 100</span>
+          <span class="delta up">▲ +6 vs last plan</span>
+        </div>
+        <div class="track-bar"><div class="fill" style="width: 82%;"></div></div>
+        <div class="action">KAISER CA · DENIAL RATE 4.2% (STATE AVG 11.8%)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIONS TO RAISE SCORE -->
+<section class="block actions-section">
+  <div class="inner">
+    <div class="eyebrow">RAISE YOUR SCORE</div>
+    <h2 class="section">Three moves. <span class="grad">+158 points.</span></h2>
+    <p class="section-lead">We ranked every plan change available to you in California by how many points it would add to your score — and how much it would actually cost or save you. In order of impact.</p>
+    <div class="actions-list">
+      <div class="action-card">
+        <span class="lift">+64<span class="u">pts</span></span>
+        <div>
+          <h4>Switch to Kaiser Silver HMO 2000</h4>
+          <p>Same network for all 4 of your doctors. Drops your deductible from $6,800 → $2,000. Keeps your therapist in-network, which Aetna dropped last March.</p>
+        </div>
+        <div class="impact">ESTIMATED ANNUAL IMPACT<b>Save $2,140 / yr</b></div>
+        <a href="#" class="go">See plan →</a>
+      </div>
+      <div class="action-card">
+        <span class="lift">+58<span class="u">pts</span></span>
+        <div>
+          <h4>Add dental rider for $24/mo</h4>
+          <p>Your current plan excludes dental. You had 2 cleanings and a filling last year — out of pocket $630. Adding the rider covers all three at 100% and 80% respectively.</p>
+        </div>
+        <div class="impact">ESTIMATED ANNUAL IMPACT<b>Save $342 / yr</b></div>
+        <a href="#" class="go">Add rider →</a>
+      </div>
+      <div class="action-card">
+        <span class="lift">+36<span class="u">pts</span></span>
+        <div>
+          <h4>Verify HSA eligibility for Bronze HDHP</h4>
+          <p>You likely qualify for an HSA-eligible plan that's $78/mo cheaper AND gets you a $4,150 tax-advantaged savings bucket you're currently not using. Worth 15 minutes of Nora's time.</p>
+        </div>
+        <div class="impact">ESTIMATED ANNUAL IMPACT<b>Save $1,870 / yr</b></div>
+        <a href="#" class="go">Let Nora check →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDED PLANS -->
+<section class="block">
+  <div class="inner">
+    <div class="eyebrow">YOUR TOP 3 PLANS</div>
+    <h2 class="section">Ranked by <span class="grad">your</span> score. Not ours.</h2>
+    <p class="section-lead">Out of 47 plans available to you in Alameda County, these are the three we'd score highest against your actual health profile, network, and utilization. Not the ones that pay us most.</p>
+    <div class="plans-grid">
+      <div class="plan top">
+        <div class="ribbon">Best match</div>
+        <div class="carrier">KAISER PERMANENTE CA</div>
+        <h3>Silver HMO 2000</h3>
+        <div class="plan-score">
+          <div>
+            <div class="lbl">Coverage Score</div>
+          </div>
+          <span class="n g tab">806</span>
+          <span class="of">/ 900</span>
+        </div>
+        <div class="row"><span class="k">Monthly premium</span><span class="v tab">$412</span></div>
+        <div class="row"><span class="k">Deductible</span><span class="v tab">$2,000</span></div>
+        <div class="row"><span class="k">OOP max</span><span class="v tab">$7,200</span></div>
+        <div class="row"><span class="k">Your doctors</span><span class="v g">4 of 4 in-net</span></div>
+        <div class="row"><span class="k">Projected annual</span><span class="v tab">$4,820</span></div>
+        <div class="fit">
+          <b>Why this scored highest</b>
+          All 4 of your providers are in-network. Drops your deductible by $4,800. Lipitor on Tier 1 formulary.
+        </div>
+        <div class="cta"><a class="btn primary big" style="width: 100%; justify-content: center;" href="#">Enroll in this plan</a></div>
+      </div>
+      <div class="plan">
+        <div class="carrier">BLUE SHIELD CA</div>
+        <h3>Silver PPO 2500</h3>
+        <div class="plan-score">
+          <div>
+            <div class="lbl">Coverage Score</div>
+          </div>
+          <span class="n tab">761</span>
+          <span class="of">/ 900</span>
+        </div>
+        <div class="row"><span class="k">Monthly premium</span><span class="v tab">$486</span></div>
+        <div class="row"><span class="k">Deductible</span><span class="v tab">$2,500</span></div>
+        <div class="row"><span class="k">OOP max</span><span class="v tab">$8,200</span></div>
+        <div class="row"><span class="k">Your doctors</span><span class="v">3 of 4 in-net</span></div>
+        <div class="row"><span class="k">Projected annual</span><span class="v tab">$5,640</span></div>
+        <div class="fit">
+          <b>Why this ranked 2nd</b>
+          PPO flexibility if you want out-of-network access. Therapist drops to out-of-network — would add $1,400/yr.
+        </div>
+        <div class="cta"><a class="btn big" style="width: 100%; justify-content: center;" href="#">Compare →</a></div>
+      </div>
+      <div class="plan">
+        <div class="carrier">ANTHEM BLUE CROSS</div>
+        <h3>Bronze HSA 6000</h3>
+        <div class="plan-score">
+          <div>
+            <div class="lbl">Coverage Score</div>
+          </div>
+          <span class="n tab">728</span>
+          <span class="of">/ 900</span>
+        </div>
+        <div class="row"><span class="k">Monthly premium</span><span class="v tab">$334</span></div>
+        <div class="row"><span class="k">Deductible</span><span class="v tab">$6,000</span></div>
+        <div class="row"><span class="k">OOP max</span><span class="v tab">$7,050</span></div>
+        <div class="row"><span class="k">Your doctors</span><span class="v g">4 of 4 in-net</span></div>
+        <div class="row"><span class="k">Projected annual</span><span class="v tab">$5,110</span></div>
+        <div class="fit">
+          <b>Why this ranked 3rd</b>
+          Cheapest premium + HSA tax advantage. But higher risk surface if you have a bad year medically.
+        </div>
+        <div class="cta"><a class="btn big" style="width: 100%; justify-content: center;" href="#">Compare →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW THE SCORE IS CALCULATED -->
+<section class="block howscore">
+  <div class="inner">
+    <div class="howscore-grid">
+      <div>
+        <div class="eyebrow">THE MATH, OPENED UP</div>
+        <h2 class="section">No black box. <span class="grad">Ever.</span></h2>
+        <p class="section-lead">Your score is a weighted sum of five factors, each computed from inputs we show you. Every point moves with a reason. Every reason is auditable.</p>
+        <ol>
+          <li><b>We pull public data.</b><p>Carrier formularies, NAIC complaint data, state denial-rate filings, provider directories. We never buy your health records from a broker.</p></li>
+          <li><b>You tell us what matters.</b><p>Your doctors by name, your prescriptions, your projected 2026 income, your household size. Stored encrypted. Deletable with one click.</p></li>
+          <li><b>We compute the score in public.</b><p>Every factor's weight, formula, and data source is published at /methodology. Nothing is proprietary. Audited annually by Milliman.</p></li>
+          <li><b>You can always export the math.</b><p>Download a PDF with the full calculation — every number, every source, every weight. Share it with a doctor, CPA, or human.</p></li>
+        </ol>
+      </div>
+      <div class="hs-viz">
+        <h4>Maya's score — the math</h4>
+        <div class="formula-row"><span class="name">Network fit</span><span class="mini"><span class="fill" style="width: 28%;"></span></span><span class="pct">94 × 28%</span></div>
+        <div class="formula-row"><span class="name">Total cost at usage</span><span class="mini"><span class="fill" style="width: 24%;"></span></span><span class="pct">81 × 24%</span></div>
+        <div class="formula-row"><span class="name">Drug coverage</span><span class="mini"><span class="fill" style="width: 20%;"></span></span><span class="pct">76 × 20%</span></div>
+        <div class="formula-row"><span class="name">Risk surface</span><span class="mini"><span class="fill" style="width: 16%;"></span></span><span class="pct">64 × 16%</span></div>
+        <div class="formula-row"><span class="name">Carrier quality</span><span class="mini"><span class="fill" style="width: 12%;"></span></span><span class="pct">82 × 12%</span></div>
+        <div class="total">
+          <span>WEIGHTED SUM × 9</span>
+          <b class="tab">742 / 900</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NORA -->
+<section class="nora-section">
+  <div class="inner">
+    <div class="nora-card">
+      <div>
+        <div class="nora-avatar"></div>
+        <div class="eyebrow">YOUR AI CO-PILOT</div>
+        <h3>Nora explains <span class="grad">every single point.</span></h3>
+        <p>Why did your score drop 12 points? Why is Plan A beating Plan B for you specifically? What happens to your score if your spouse adds a prescription? Ask in plain English.</p>
+        <p>Nora answers with numbers, sources, and a "raise-my-score" suggestion. Every claim she makes links to the underlying data. Every recommendation shows the score delta before you decide.</p>
+        <div style="margin-top: 28px;">
+          <a class="btn primary" href="#">Ask Nora about my score →</a>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="bubble you">
+          <span class="tag">YOU</span>
+          Why did my score drop this month?
+        </div>
+        <div class="bubble nora">
+          <span class="tag">NORA</span>
+          Your therapist, Dr. Chen, left Aetna's network on Nov 1. That dropped your Network Fit factor from 100 → 75, which is 28% of your score — so it cost you about <b>28 points</b>.
+          <div class="score-preview">
+            <span class="n">−28</span>
+            <div class="d">Network Fit factor<br>100 → 75 (Dr. Chen out-of-net)</div>
+          </div>
+        </div>
+        <div class="bubble you">
+          <span class="tag">YOU</span>
+          what if I switch to kaiser?
+        </div>
+        <div class="bubble nora">
+          <span class="tag">NORA</span>
+          Dr. Chen is in Kaiser's network. Switching to Kaiser Silver HMO 2000 would raise your score by <b>+64 points</b> and save you about <b>$2,140 / yr</b>. Want me to walk through it?
+          <div class="score-preview">
+            <span class="n">+64</span>
+            <div class="d">742 → 806 · "Very Good" → "Excellent"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-block">
+  <div class="inner">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="n"><span class="grad">2.1M</span></div>
+        <div class="lbl">COVERAGE SCORES RUN</div>
+        <div class="d">Since we launched scoring in March 2024.</div>
+      </div>
+      <div class="stat">
+        <div class="n tab">+94</div>
+        <div class="lbl">AVG SCORE LIFT</div>
+        <div class="d">For members who act on top 3 recommendations in their first year.</div>
+      </div>
+      <div class="stat">
+        <div class="n tab">$1,840</div>
+        <div class="lbl">AVG ANNUAL SAVINGS</div>
+        <div class="d">Across 420K members who switched plans in 2025 open enrollment.</div>
+      </div>
+      <div class="stat">
+        <div class="n tab">A+</div>
+        <div class="lbl">METHODOLOGY AUDIT</div>
+        <div class="d">Milliman actuarial review, 2024 and 2025. Full report published.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="inner">
+    <h2>Know your number.<br><span class="grad">Then raise it.</span></h2>
+    <p>2 minutes. No credit card. No account required to see your score. The only health coverage decision you'll ever make with a number attached.</p>
+    <div class="cta-row">
+      <a class="btn primary big" href="#">Get my Coverage Score →</a>
+      <a class="btn big" href="#">Read the methodology</a>
+    </div>
+    <p class="fine">FREE · SOC 2 TYPE II · NPN #19482230 · LICENSED IN ALL 50 STATES · AUDITED BY MILLIMAN</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="wordmark" style="margin-bottom: 20px;">
+        <span class="wm-mark"></span>
+        shophealthcare
+      </div>
+      <p style="font-size: 14px; color: var(--mute); line-height: 1.55; max-width: 320px; margin: 0;">A health insurance brokerage that scores every plan against your actual life — and shows you how to raise the number.</p>
+    </div>
+    <div>
+      <h6>SCORE</h6>
+      <ul><li>Get my score</li><li>Factors</li><li>Methodology</li><li>Audit report</li></ul>
+    </div>
+    <div>
+      <h6>PRODUCTS</h6>
+      <ul><li>Individual</li><li>Family</li><li>Bridge (55–64)</li><li>Small business</li></ul>
+    </div>
+    <div>
+      <h6>COMPANY</h6>
+      <ul><li>About</li><li>Press</li><li>Privacy</li><li>Terms</li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    © 2026 SHOPHEALTHCARE, INC · NPN #19482230 · LICENSED IN ALL 50 STATES · NOT A GOVERNMENT SITE · COVERAGE SCORE™ IS A REGISTERED METHODOLOGY · AUDITED ANNUALLY BY MILLIMAN CONSULTING · METHODOLOGY PUBLISHED AT /methodology · OUR BROKERS ARE PAID FLAT FEES BY CARRIERS ONLY UPON ENROLLMENT AND ARE NEVER COMPENSATED BASED ON WHICH PLAN A MEMBER CHOOSES
+  </div>
+</footer>
+
+</body>
+</html>

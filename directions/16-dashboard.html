@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --canvas: #FAFAFB;
+    --paper: #FFFFFF;
+    --blue: #0064F0;
+    --blue-soft: #E8F0FE;
+    --ink: #0B0D12;
+    --mute: #6B6F76;
+    --rule: #E5E7EB;
+    --rule-soft: #F1F2F4;
+    --green: #10B981;
+    --amber: #F59E0B;
+    --red: #EF4444;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--canvas); color: var(--ink); }
+  body {
+    width: 1440px; margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex; align-items: center; gap: 24px;
+    padding: 12px 28px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .wordmark { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .wm-mark {
+    width: 20px; height: 20px; border-radius: 5px;
+    background: var(--blue);
+    position: relative;
+  }
+  .wm-mark::after { content: ""; position: absolute; inset: 5px 5px 5px 9px; background: var(--paper); border-radius: 1px; }
+  .nav-links { display: flex; gap: 22px; margin-left: 16px; }
+  .nav-links a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  .nav-links a.mute { color: var(--mute); font-weight: 400; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .kbd {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--mute);
+    background: var(--canvas);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .searchbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 12px;
+    min-width: 220px;
+    background: var(--canvas);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--mute);
+    font-size: 13px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 13px;
+    font-family: 'Inter', sans-serif; font-weight: 500; font-size: 13px;
+    border-radius: 6px; border: 1px solid var(--rule);
+    background: var(--paper); color: var(--ink);
+    text-decoration: none; cursor: pointer;
+    letter-spacing: -0.005em;
+  }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.lg { padding: 10px 18px; font-size: 14px; }
+
+  /* HERO */
+  .hero { padding: 56px 56px 32px; }
+  .hero-head { max-width: 820px; margin-bottom: 32px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--blue); letter-spacing: 0.04em;
+    background: var(--blue-soft);
+    border: 1px solid #D6E4FC;
+    padding: 5px 10px; border-radius: 999px;
+    margin-bottom: 22px;
+  }
+  .eyebrow .d { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; }
+  h1.hero-title {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 62px; line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin: 0 0 18px;
+  }
+  .hero-lead { font-size: 18px; color: var(--mute); line-height: 1.5; max-width: 680px; margin: 0 0 24px; }
+  .hero-cta { display: flex; align-items: center; gap: 10px; }
+  .hero-cta .meta { margin-left: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.03em; }
+
+  /* DASHBOARD DEMO — the showpiece */
+  .dash {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(11,13,18,0.03), 0 24px 48px -20px rgba(11,13,18,0.12);
+    overflow: hidden;
+    display: grid; grid-template-columns: 220px 1fr;
+  }
+  .dash-chrome {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: #F7F7F8;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dot-tl { width: 10px; height: 10px; border-radius: 50%; background: #E4E6EA; }
+  .dash-chrome .url {
+    margin-left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute);
+    background: var(--paper); border: 1px solid var(--rule);
+    padding: 4px 10px; border-radius: 5px; min-width: 360px;
+  }
+  .dash-chrome .url b { color: var(--ink); font-weight: 500; }
+  .dash-chrome .right {
+    margin-left: auto; display: flex; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.05em;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--rule);
+    padding: 18px 12px;
+    background: var(--canvas);
+  }
+  .sb-group { margin-bottom: 22px; }
+  .sb-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 10px 8px; }
+  .sb-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 6px;
+    font-size: 13px; color: var(--ink); font-weight: 500;
+    margin-bottom: 2px;
+    cursor: pointer;
+  }
+  .sb-item .ic { width: 14px; height: 14px; border: 1.5px solid var(--mute); border-radius: 3px; flex-shrink: 0; }
+  .sb-item.active { background: var(--blue-soft); color: var(--blue); }
+  .sb-item.active .ic { border-color: var(--blue); background: var(--blue); }
+  .sb-item .k { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); background: var(--paper); border: 1px solid var(--rule); padding: 1px 5px; border-radius: 3px; }
+  .sb-item .count { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); background: #FEF3C7; padding: 1px 6px; border-radius: 999px; font-weight: 600; }
+
+  .sb-foot {
+    margin-top: 32px;
+    padding: 10px;
+    display: flex; align-items: center; gap: 10px;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+  }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #CBD5E1, #94A3B8); flex-shrink: 0; }
+  .sb-foot .n { font-size: 12px; font-weight: 600; }
+  .sb-foot .e { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); }
+
+  /* MAIN PANEL */
+  .main { padding: 22px 26px 26px; }
+  .main-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+  .main-head h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .main-head .ts { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.02em; }
+  .main-head .ts b { color: var(--ink); font-weight: 500; }
+  .main-head .actions { display: flex; gap: 6px; }
+  .main-head .actions .btn { padding: 5px 10px; font-size: 12px; }
+
+  /* Coverage stat row */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+  .stat-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat-card .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-card .v { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; }
+  .stat-card .sub { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.02em; }
+  .stat-card .sub .up { color: var(--green); font-weight: 600; }
+  .stat-card .sub .dn { color: var(--red); font-weight: 600; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    border-radius: 999px;
+  }
+  .pill .d { width: 5px; height: 5px; border-radius: 50%; }
+  .pill.active { color: var(--green); background: #ECFDF5; border: 1px solid #A7F3D0; }
+  .pill.active .d { background: var(--green); box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
+  .pill.mon { color: var(--blue); background: var(--blue-soft); border: 1px solid #C7D9FB; }
+  .pill.mon .d { background: var(--blue); }
+  .pill.alert { color: var(--amber); background: #FEF3C7; border: 1px solid #FDE68A; }
+  .pill.alert .d { background: var(--amber); }
+
+  /* TWO-COL BODY */
+  .main-body { display: grid; grid-template-columns: 1.45fr 1fr; gap: 14px; }
+
+  /* Card stack (left) */
+  .stack-wrap { background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px 18px; }
+  .stack-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .stack-head h3 { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .stack-head .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); margin-top: 3px; }
+
+  .stack { position: relative; height: 270px; margin-bottom: 16px; }
+  .card {
+    position: absolute;
+    left: 0; right: 0;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 10px rgba(11,13,18,0.04);
+  }
+  .card.c1 { top: 0; left: 48px; right: 48px; z-index: 1; opacity: 0.6; transform: scale(0.96); }
+  .card.c2 { top: 18px; left: 24px; right: 24px; z-index: 2; opacity: 0.85; transform: scale(0.98); }
+  .card.c3 { top: 38px; left: 0; right: 0; z-index: 3; border-color: var(--ink); box-shadow: 0 8px 24px rgba(11,13,18,0.1); }
+
+  .card .top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .card .carrier { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase; }
+  .card .name { font-weight: 600; font-size: 16px; letter-spacing: -0.015em; margin-top: 3px; }
+  .card .price { text-align: right; }
+  .card .price .amt { font-weight: 700; font-size: 28px; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .card .price .per { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); }
+  .card .meta-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding-top: 12px; border-top: 1px solid var(--rule-soft);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .card .meta-row .k { color: var(--mute); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .card .meta-row .v { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .card .meta-row .v.g { color: var(--green); font-weight: 600; }
+
+  .stack-foot { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); }
+  .stack-foot .ks { display: flex; gap: 4px; }
+
+  /* Activity feed (right) */
+  .feed { background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px 10px; }
+  .feed-head { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .feed-head h3 { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .feed-head a { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--blue); text-decoration: none; }
+  .ev { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; padding: 10px 0; border-top: 1px solid var(--rule-soft); align-items: start; }
+  .ev:first-child { border-top: 0; }
+  .ev .dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; margin-left: 4px; }
+  .ev .dot.g { background: var(--green); }
+  .ev .dot.a { background: var(--amber); }
+  .ev .dot.b { background: var(--blue); }
+  .ev .dot.r { background: var(--red); }
+  .ev .msg { font-size: 13px; line-height: 1.45; }
+  .ev .msg b { font-weight: 600; }
+  .ev .msg .ctx { color: var(--mute); display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; margin-top: 2px; letter-spacing: 0.02em; }
+  .ev .t { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); text-align: right; padding-top: 2px; }
+
+  /* SUBSIDY BAND */
+  .subsidy {
+    margin-top: 12px;
+    background: linear-gradient(180deg, #F9FBFF, var(--paper));
+    border: 1px solid #D6E4FC;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 180px;
+    gap: 20px;
+    align-items: center;
+  }
+  .subsidy .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .subsidy .v { font-weight: 700; font-size: 22px; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .subsidy .v small { font-weight: 500; font-size: 13px; color: var(--mute); margin-left: 4px; }
+  .bar-wrap { width: 100%; height: 8px; background: #E3ECFC; border-radius: 99px; overflow: hidden; }
+  .bar-wrap .fill { height: 100%; width: 72%; background: var(--blue); border-radius: 99px; }
+  .subsidy .note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); }
+
+  /* STRIP (logos / social proof) */
+  .strip {
+    margin: 56px 56px 16px;
+    padding: 20px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .strip .lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.1em; text-transform: uppercase; }
+  .strip .logos { display: flex; gap: 42px; }
+  .strip .logo { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; color: var(--mute); letter-spacing: -0.02em; }
+
+  /* FEATURE GRID */
+  .features { padding: 64px 56px 24px; }
+  .features-head { margin-bottom: 40px; max-width: 720px; }
+  .features-head .kick { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--blue); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+  .features-head h2 { font-size: 40px; font-weight: 700; letter-spacing: -0.032em; line-height: 1.05; margin: 0 0 14px; }
+  .features-head p { font-size: 17px; color: var(--mute); margin: 0; line-height: 1.5; max-width: 620px; }
+
+  .fgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .feat {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 22px 22px 20px;
+    display: flex; flex-direction: column;
+    min-height: 230px;
+  }
+  .feat .ic-box {
+    width: 32px; height: 32px;
+    background: var(--blue-soft);
+    border: 1px solid #D6E4FC;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .feat h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 6px; }
+  .feat p { font-size: 13px; color: var(--mute); line-height: 1.5; margin: 0 0 auto; }
+  .feat .foot { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mute); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* CHANGELOG */
+  .changelog { padding: 64px 56px 40px; }
+  .clog-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
+  .clog-head .kick { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--blue); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .clog-head h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.028em; margin: 0; line-height: 1.1; }
+  .clog-head .view { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--blue); text-decoration: none; }
+
+  .clog {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .clog-row {
+    display: grid;
+    grid-template-columns: 120px 100px 1fr 140px;
+    gap: 20px;
+    padding: 14px 22px;
+    align-items: center;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 13px;
+  }
+  .clog-row:first-child { border-top: 0; }
+  .clog-row .date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.04em; }
+  .clog-row .msg b { font-weight: 600; }
+  .clog-row .msg .c { color: var(--mute); }
+  .clog-row .val { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 500; }
+  .clog-row .val.g { color: var(--green); }
+  .clog-row .val.r { color: var(--red); }
+
+  /* FINAL CTA */
+  .final {
+    margin: 24px 56px 0;
+    padding: 64px 56px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: center;
+  }
+  .final h2 { font-size: 42px; font-weight: 700; letter-spacing: -0.032em; line-height: 1.05; margin: 0 0 16px; }
+  .final p { font-size: 16px; color: var(--mute); margin: 0 0 22px; line-height: 1.5; }
+  .final .ctas { display: flex; gap: 10px; align-items: center; }
+  .final .ctas .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); margin-left: 6px; letter-spacing: 0.03em; }
+  .final-side { background: var(--canvas); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; }
+  .final-side .r { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--rule); font-size: 13px; }
+  .final-side .r:first-child { border-top: 0; padding-top: 0; }
+  .final-side .r .k { color: var(--mute); }
+  .final-side .r .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .final-side .r .v.g { color: var(--green); }
+
+  /* FOOTER */
+  footer {
+    margin-top: 72px;
+    padding: 36px 56px 28px;
+    border-top: 1px solid var(--rule);
+  }
+  .foot-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .foot-row .word { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+  .foot-row .compl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--mute); letter-spacing: 0.04em; text-align: right; line-height: 1.7;
+  }
+  .foot-row .compl b { color: var(--ink); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="wordmark"><span class="wm-mark"></span>Shophealthcare</div>
+  <div class="nav-links">
+    <a href="#">Product</a>
+    <a href="#" class="mute">Coverage</a>
+    <a href="#" class="mute">Pricing</a>
+    <a href="#" class="mute">Changelog</a>
+    <a href="#" class="mute">Docs</a>
+  </div>
+  <div class="topbar-right">
+    <div class="searchbar"><span>Search plans, carriers, states…</span><span class="kbd">⌘ K</span></div>
+    <a class="btn" href="#">Sign in</a>
+    <a class="btn primary" href="#">Open dashboard <span class="kbd" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.2);">⏎</span></a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-head">
+    <div class="eyebrow"><span class="d"></span>LIVE · OPEN ENROLLMENT 2026 · ENDS JAN 15</div>
+    <h1 class="hero-title">Health coverage, monitored year-round.</h1>
+    <p class="hero-lead">The first SaaS dashboard for your health plan. Track premiums, subsidy eligibility, and network changes — with alerts that fire the moment something moves against you. Not a one-time enrollment tool. A watchtower.</p>
+    <div class="hero-cta">
+      <a class="btn primary lg" href="#">Start monitoring — free</a>
+      <a class="btn lg" href="#">See live demo <span class="kbd">D</span></a>
+      <span class="meta">SOC 2 TYPE II · HIPAA · NPN #19482230</span>
+    </div>
+  </div>
+
+  <!-- DASHBOARD DEMO -->
+  <div class="dash">
+    <div class="dash-chrome">
+      <span class="dot-tl"></span><span class="dot-tl"></span><span class="dot-tl"></span>
+      <span class="url">shophealthcare.app/<b>coverage</b>/maya-r</span>
+      <div class="right"><span>v4.12.0</span><span>·</span><span>MONITORED · LAST SYNC 2m AGO</span></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-group">
+        <div class="sb-label">Workspace</div>
+        <div class="sb-item active"><span class="ic"></span>Coverage<span class="k">C</span></div>
+        <div class="sb-item"><span class="ic"></span>Plans<span class="k">P</span></div>
+        <div class="sb-item"><span class="ic"></span>Subsidy<span class="k">S</span></div>
+        <div class="sb-item"><span class="ic"></span>Alerts<span class="count">3</span></div>
+        <div class="sb-item"><span class="ic"></span>Settings<span class="k">,</span></div>
+      </div>
+      <div class="sb-group">
+        <div class="sb-label">Household</div>
+        <div class="sb-item"><span class="ic"></span>Maya R.</div>
+        <div class="sb-item"><span class="ic"></span>Sam R.</div>
+        <div class="sb-item"><span class="ic"></span>+ Add member</div>
+      </div>
+      <div class="sb-foot">
+        <span class="avatar"></span>
+        <div>
+          <div class="n">Maya Reyes</div>
+          <div class="e">oakland, ca · 94610</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="main-head">
+        <div>
+          <h2>Coverage overview</h2>
+          <div class="ts">Last checked <b>2 days ago</b> · next sync <b>Nov 20, 04:00 PT</b> · <span class="pill active" style="margin-left:8px;"><span class="d"></span>ACTIVE</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn" href="#">Filter</a>
+          <a class="btn" href="#">Export</a>
+          <a class="btn primary" href="#">Run audit <span class="kbd" style="background:rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.2);">R</span></a>
+        </div>
+      </div>
+
+      <!-- stat row -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="lbl">Current premium / mo</div>
+          <div class="v tab">$486</div>
+          <div class="sub"><span class="dn">▲ 8.2%</span><span>vs Oct · threshold fired</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Subsidy eligible</div>
+          <div class="v tab">$312<span style="font-size:13px; color:var(--mute); font-weight:500;"> /mo</span></div>
+          <div class="sub"><span class="up">▲ $38</span><span>recalc Nov 12</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Network doctors</div>
+          <div class="v tab">4 <span style="font-size:13px; color:var(--mute); font-weight:500;">/ 4</span></div>
+          <div class="sub"><span class="up">●</span><span>all in-network · checked 2d ago</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Annual deductible</div>
+          <div class="v tab">$2,500</div>
+          <div class="sub"><span>$840 met · 33.6%</span></div>
+        </div>
+      </div>
+
+      <!-- body -->
+      <div class="main-body">
+        <!-- CARD STACK -->
+        <div class="stack-wrap">
+          <div class="stack-head">
+            <div>
+              <h3>Plan alternatives</h3>
+              <div class="sub">3 of 47 matched · swipe <span class="kbd" style="display:inline-flex;">← →</span> to compare</div>
+            </div>
+            <span class="pill mon"><span class="d"></span>MONITORING</span>
+          </div>
+
+          <div class="stack">
+            <div class="card c1">
+              <div class="top">
+                <div><div class="carrier">ANTHEM</div><div class="name">Bronze HSA 6000</div></div>
+                <div class="price"><div class="amt tab">$334</div><div class="per">/mo</div></div>
+              </div>
+            </div>
+            <div class="card c2">
+              <div class="top">
+                <div><div class="carrier">BLUE SHIELD CA</div><div class="name">Silver PPO 2500</div></div>
+                <div class="price"><div class="amt tab">$486</div><div class="per">/mo · current</div></div>
+              </div>
+            </div>
+            <div class="card c3">
+              <div class="top">
+                <div>
+                  <div class="carrier">KAISER PERMANENTE · <span style="color:var(--green);">best match</span></div>
+                  <div class="name">Silver HMO 2000</div>
+                </div>
+                <div class="price"><div class="amt tab">$412</div><div class="per">/mo · save $74</div></div>
+              </div>
+              <div class="meta-row">
+                <div><div class="k">Deductible</div><div class="v tab">$2,000</div></div>
+                <div><div class="k">OOP max</div><div class="v tab">$7,200</div></div>
+                <div><div class="k">Your docs</div><div class="v g">4 of 4</div></div>
+                <div><div class="k">Annual est.</div><div class="v tab">$4,820</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack-foot">
+            <span>SHOWING 3 OF 47 · FILTERED BY YOUR 4 PROVIDERS</span>
+            <span class="ks"><span class="kbd">J</span><span class="kbd">K</span> to cycle</span>
+          </div>
+        </div>
+
+        <!-- FEED -->
+        <div class="feed">
+          <div class="feed-head">
+            <h3>Live activity</h3>
+            <a href="#">View all →</a>
+          </div>
+          <div class="ev">
+            <span class="dot a"></span>
+            <div class="msg"><b>Plan X raised premium 8.2%</b> — your threshold alert fired<span class="ctx">BLUE SHIELD SILVER PPO 2500 · $449 → $486</span></div>
+            <div class="t">2d ago</div>
+          </div>
+          <div class="ev">
+            <span class="dot b"></span>
+            <div class="msg"><b>Subsidy recalculated</b><span class="ctx">APTC adjusted +$38/mo based on 2026 income projection</span></div>
+            <div class="t">Nov 12</div>
+          </div>
+          <div class="ev">
+            <span class="dot g"></span>
+            <div class="msg"><b>All 4 providers confirmed in-network</b><span class="ctx">Weekly directory audit · no changes</span></div>
+            <div class="t">Nov 10</div>
+          </div>
+          <div class="ev">
+            <span class="dot r"></span>
+            <div class="msg"><b>Formulary change</b> — Lipitor moved Tier 1 → Tier 2<span class="ctx">Blue Shield 2026 formulary update · +$18/refill</span></div>
+            <div class="t">Nov 08</div>
+          </div>
+          <div class="ev">
+            <span class="dot b"></span>
+            <div class="msg"><b>New plan available in your county</b><span class="ctx">KAISER SILVER HMO 2000 · est. $74/mo savings</span></div>
+            <div class="t">Nov 01</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBSIDY BAND -->
+      <div class="subsidy">
+        <div>
+          <div class="k">Subsidy monitor · 2026</div>
+          <div class="v tab">$3,744<small>/yr eligible</small></div>
+        </div>
+        <div>
+          <div class="k" style="color:var(--mute);">INCOME BUFFER · 72% of 400% FPL</div>
+          <div class="bar-wrap" style="margin-top:8px;"><div class="fill"></div></div>
+          <div class="note" style="margin-top:6px;">$14,200 room before cliff · we'll alert at 90%</div>
+        </div>
+        <div>
+          <span class="pill active"><span class="d"></span>AUTO-AUDIT ON</span>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); margin-top:6px; letter-spacing:0.02em;">RECALC WEEKLY · PDF EXPORT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <span class="lbl">Trusted by 180+ licensed directors in 50 states</span>
+  <div class="logos">
+    <span class="logo">Kaiser</span>
+    <span class="logo">Blue Shield</span>
+    <span class="logo">Anthem</span>
+    <span class="logo">Cigna</span>
+    <span class="logo">UnitedHealth</span>
+    <span class="logo">Aetna</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-head">
+    <div class="kick">THE OPERATOR TOOLKIT</div>
+    <h2>Insurance stopped being a form. It became a dashboard.</h2>
+    <p>Everything that used to require a 60-minute call or a trip to healthcare.gov — premiums, subsidy math, network audits, formulary drift — lives behind one keyboard shortcut.</p>
+  </div>
+  <div class="fgrid">
+    <div class="feat">
+      <div class="ic-box">Λ</div>
+      <h3>Premium tracking</h3>
+      <p>Set a threshold. If any carrier in your county raises the price of a plan you own or watch, Nora pages you within the hour. No more annual surprise.</p>
+      <div class="foot"><span>MONITORED DAILY</span><span class="kbd">⌘ P</span></div>
+    </div>
+    <div class="feat">
+      <div class="ic-box">$</div>
+      <h3>Subsidy monitor</h3>
+      <p>APTC recalculates every time your income projection moves. See the exact dollar delta before the IRS does. Auto-files the 8962 at year-end.</p>
+      <div class="foot"><span>RECALC WEEKLY</span><span class="kbd">⌘ S</span></div>
+    </div>
+    <div class="feat">
+      <div class="ic-box">⌁</div>
+      <h3>Network audits</h3>
+      <p>We re-check all four of your providers against carrier directories on a weekly sweep. If your therapist drops, you'll know that morning — not in March.</p>
+      <div class="foot"><span>WEEKLY SWEEP</span><span class="kbd">⌘ N</span></div>
+    </div>
+    <div class="feat">
+      <div class="ic-box">⚑</div>
+      <h3>Threshold alerts</h3>
+      <p>Define what you care about — a 5% premium bump, a formulary change, an out-of-network shift. Get a push, a Slack message, or an email. Your rules.</p>
+      <div class="foot"><span>3 ACTIVE · 12 AVAILABLE</span><span class="kbd">⌘ A</span></div>
+    </div>
+    <div class="feat">
+      <div class="ic-box">⇄</div>
+      <h3>Card-stack compare</h3>
+      <p>Three tap-to-cycle cards instead of a 47-row table. Robinhood for plans. Every number is pulled from your actual utilization last year.</p>
+      <div class="foot"><span>47 PLANS IN YOUR ZIP</span><span class="kbd">J  K</span></div>
+    </div>
+    <div class="feat">
+      <div class="ic-box">⎙</div>
+      <h3>Audit-grade exports</h3>
+      <p>Every screen exports a dated PDF with sources cited. Hand to your CPA, your HR team, or your attorney. Immutable. SHA-256 hashed.</p>
+      <div class="foot"><span>PDF · CSV · JSON</span><span class="kbd">⌘ E</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHANGELOG -->
+<section class="changelog">
+  <div class="clog-head">
+    <div>
+      <div class="kick">CHANGELOG · YOUR COVERAGE</div>
+      <h2>Every change, receipt-grade.</h2>
+    </div>
+    <a class="view" href="#">View full log →</a>
+  </div>
+  <div class="clog">
+    <div class="clog-row">
+      <div class="date">NOV 14 · 09:04</div>
+      <div><span class="pill alert"><span class="d"></span>ALERT</span></div>
+      <div class="msg"><b>Premium raised</b> <span class="c">· Blue Shield Silver PPO 2500 · your current plan · threshold set at +5%</span></div>
+      <div class="val r">+$37 /mo</div>
+    </div>
+    <div class="clog-row">
+      <div class="date">NOV 12 · 16:41</div>
+      <div><span class="pill mon"><span class="d"></span>SUBSIDY</span></div>
+      <div class="msg"><b>APTC recalculated</b> <span class="c">· 2026 income projection adjusted · filed with marketplace</span></div>
+      <div class="val g">+$38 /mo</div>
+    </div>
+    <div class="clog-row">
+      <div class="date">NOV 10 · 04:00</div>
+      <div><span class="pill active"><span class="d"></span>AUDIT</span></div>
+      <div class="msg"><b>Weekly network audit complete</b> <span class="c">· 4 of 4 providers confirmed in-network · no changes</span></div>
+      <div class="val">OK</div>
+    </div>
+    <div class="clog-row">
+      <div class="date">NOV 08 · 11:22</div>
+      <div><span class="pill alert"><span class="d"></span>FORMULARY</span></div>
+      <div class="msg"><b>Lipitor moved Tier 1 → Tier 2</b> <span class="c">· 2026 formulary update · est. impact per refill</span></div>
+      <div class="val r">+$18 /fill</div>
+    </div>
+    <div class="clog-row">
+      <div class="date">NOV 01 · 07:30</div>
+      <div><span class="pill mon"><span class="d"></span>NEW</span></div>
+      <div class="msg"><b>New plan available in Alameda Co.</b> <span class="c">· Kaiser Silver HMO 2000 · all 4 providers in-network</span></div>
+      <div class="val g">−$74 /mo</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div>
+    <h2>Monitor your coverage. Stop shopping it.</h2>
+    <p>Two minutes to connect your plan. A lifetime of knowing the second anything moves. Free during open enrollment, $0 after if you're not on a paid plan.</p>
+    <div class="ctas">
+      <a class="btn primary lg" href="#">Start free</a>
+      <a class="btn lg" href="#">Book a walkthrough</a>
+      <span class="meta">NO CREDIT CARD · ⌘ K TO SEARCH</span>
+    </div>
+  </div>
+  <div class="final-side">
+    <div class="r"><span class="k">Plans monitored</span><span class="v tab">1.2M+</span></div>
+    <div class="r"><span class="k">Avg annual savings</span><span class="v g tab">$2,140</span></div>
+    <div class="r"><span class="k">Alert latency</span><span class="v tab">&lt; 60 min</span></div>
+    <div class="r"><span class="k">Licensed states</span><span class="v tab">50 + DC</span></div>
+    <div class="r"><span class="k">Cost to audit</span><span class="v g tab">$0.00</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-row">
+    <div>
+      <div class="word"><span class="wm-mark"></span>Shophealthcare</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mute); margin-top:10px; letter-spacing:0.04em;">COVERAGE · AS · A · SERVICE</div>
+    </div>
+    <div class="compl">
+      © 2026 SHOPHEALTHCARE, INC · <b>NPN #19482230</b> · LICENSED IN ALL 50 STATES + DC<br>
+      NOT A GOVERNMENT SITE · SOC 2 TYPE II · HIPAA-AUDIT ENCRYPTION 256-BIT<br>
+      STATUS · PRIVACY · TERMS · CHANGELOG · DOCS · API
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

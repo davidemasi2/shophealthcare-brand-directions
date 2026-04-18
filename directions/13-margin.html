@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Margin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cobalt: #0A1F7D;
+    --paper: #FAFAF7;
+    --red: #E5261F;
+    --ink: #0C0F14;
+    --mute: #C7C5BD;
+    --mute-2: #8A8780;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    width: 1440px; margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+  h1,h2,h3,h4 { font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.03em; margin: 0; }
+
+  /* Ticker */
+  .ticker {
+    background: var(--ink); color: var(--paper);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 9px 32px; display: flex; gap: 32px; letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--ink);
+    overflow: hidden; white-space: nowrap;
+  }
+  .ticker .dot { color: var(--red); }
+  .ticker b { color: #FFF; font-weight: 700; }
+  .ticker .up { color: #3EE37A; }
+
+  /* Nav */
+  nav.head {
+    background: var(--cobalt); color: var(--paper);
+    padding: 18px 40px; display: flex; align-items: center; gap: 36px;
+  }
+  .word { font-weight: 900; font-size: 22px; letter-spacing: -0.03em; display: flex; align-items: center; gap: 12px; }
+  .word .sq { width: 16px; height: 16px; background: var(--paper); }
+  .nav-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(250,250,247,0.7); display: flex; gap: 18px; }
+  .nav-links { margin-left: auto; display: flex; gap: 24px; font-size: 13px; font-weight: 500; }
+  .nav-links a { color: var(--paper); text-decoration: none; opacity: 0.9; }
+  .nav-cta { display: flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--paper); color: var(--paper); }
+  .btn.solid { background: var(--paper); color: var(--cobalt); }
+  .btn.red { background: var(--red); border-color: var(--red); color: var(--paper); }
+
+  /* HERO — the formula IS the hero */
+  .hero { padding: 64px 40px 40px; border-bottom: 1px solid var(--ink); }
+  .hero .kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cobalt); font-weight: 700; margin-bottom: 28px; }
+  .hero h1 { font-size: 64px; line-height: 0.95; letter-spacing: -0.035em; max-width: 1100px; margin-bottom: 40px; }
+  .hero h1 em { font-style: normal; color: var(--red); text-decoration: line-through; text-decoration-thickness: 5px; font-weight: 900; }
+  .hero h1 .mark { background: var(--cobalt); color: var(--paper); padding: 0 10px; }
+
+  /* Formula block */
+  .formula {
+    background: var(--ink); color: var(--paper);
+    padding: 36px 40px; margin: 32px 0 28px;
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    flex-wrap: wrap;
+  }
+  .f-term { display: flex; flex-direction: column; gap: 4px; }
+  .f-term .lbl { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,250,247,0.55); }
+  .f-term .val { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .f-op { font-size: 32px; font-weight: 400; color: rgba(250,250,247,0.45); padding: 0 6px; align-self: center; margin-top: 14px; }
+  .f-equals { font-size: 32px; color: var(--red); font-weight: 700; padding: 0 10px; align-self: center; margin-top: 14px; }
+  .f-total { margin-left: auto; text-align: right; }
+  .f-total .lbl { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+  .f-total .val { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; color: var(--paper); }
+  .f-total .val .u { font-size: 16px; color: rgba(250,250,247,0.5); margin-left: 4px; }
+
+  .hero-sub { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: start; }
+  .hero-sub p.lede { font-size: 17px; line-height: 1.6; color: var(--ink); max-width: 560px; margin: 0 0 24px; }
+  .hero-sub p.lede b { font-weight: 700; }
+  .cta-row { display: flex; gap: 12px; }
+  .cta-row .btn { border-color: var(--ink); color: var(--ink); }
+  .cta-row .btn.solid { background: var(--cobalt); color: var(--paper); border-color: var(--cobalt); }
+
+  /* Overpayment anchor */
+  .over {
+    border: 2px solid var(--ink); padding: 24px 28px; background: var(--paper);
+    position: relative;
+  }
+  .over .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); font-weight: 700; margin-bottom: 10px; }
+  .over .now { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--mute-2); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 2px; }
+  .over .num { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 96px; line-height: 0.9; letter-spacing: -0.05em; color: var(--red); margin: 10px 0; }
+  .over .num .u { font-size: 20px; color: var(--ink); letter-spacing: 0; margin-left: 6px; }
+  .over .desc { font-size: 13px; color: var(--ink); line-height: 1.5; }
+  .over .desc b { color: var(--cobalt); font-weight: 700; }
+
+  /* Broker commission disclosure — ON PAGE */
+  .disclose {
+    background: var(--cobalt); color: var(--paper);
+    padding: 28px 40px;
+    display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 48px;
+    align-items: center; font-family: 'JetBrains Mono', monospace;
+  }
+  .disclose .title { font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+  .disclose .title::before { content: "◆ "; color: var(--red); }
+  .disclose p { font-size: 13px; line-height: 1.55; margin: 0; color: rgba(250,250,247,0.85); }
+  .disclose p b { color: #FFF; font-weight: 700; }
+  .disclose .stat { text-align: right; }
+  .disclose .stat .n { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; color: #FFF; }
+  .disclose .stat .l { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,250,247,0.6); margin-top: 4px; }
+
+  /* PLAN CARD STACK — math fully exposed */
+  .plans { padding: 64px 40px; }
+  .plans-head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 32px; }
+  .plans-head h2 { font-size: 44px; letter-spacing: -0.035em; max-width: 700px; }
+  .plans-head .note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute-2); letter-spacing: 0.08em; text-transform: uppercase; text-align: right; }
+  .plans-head .note b { color: var(--ink); }
+  .plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .plan {
+    border: 1px solid var(--ink); background: var(--paper);
+    display: flex; flex-direction: column;
+  }
+  .plan.best { background: var(--ink); color: var(--paper); }
+  .plan .ph { padding: 18px 22px; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+  .plan.best .ph { border-bottom-color: rgba(250,250,247,0.2); }
+  .plan .ph .badge { background: var(--red); color: var(--paper); padding: 3px 8px; font-weight: 800; }
+  .plan .pn { padding: 22px; }
+  .plan .pn .name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .plan .pn .carrier { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute-2); letter-spacing: 0.08em; text-transform: uppercase; }
+  .plan.best .pn .carrier { color: rgba(250,250,247,0.6); }
+  .plan .math { padding: 0 22px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .plan .math .line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--mute); }
+  .plan.best .math .line { border-bottom-color: rgba(250,250,247,0.2); }
+  .plan .math .line .k { color: var(--mute-2); }
+  .plan.best .math .line .k { color: rgba(250,250,247,0.55); }
+  .plan .math .line .v { font-weight: 600; color: var(--ink); }
+  .plan.best .math .line .v { color: var(--paper); }
+  .plan .math .line.sub .v { color: var(--red); }
+  .plan .total { padding: 20px 22px; background: var(--cobalt); color: var(--paper); display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ink); }
+  .plan.best .total { background: var(--red); }
+  .plan .total .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; }
+  .plan .total .n { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 32px; letter-spacing: -0.03em; }
+  .plan .total .n .u { font-size: 12px; opacity: 0.7; margin-left: 3px; }
+
+  /* Bloomberg terminal grid */
+  .terminal {
+    background: var(--ink); color: var(--paper);
+    padding: 48px 40px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .terminal .th { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .terminal .th .left { color: var(--red); font-weight: 700; }
+  .terminal .th .left::before { content: "● "; }
+  .terminal .th .right { color: rgba(250,250,247,0.55); }
+  .t-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    font-size: 12px;
+  }
+  .t-grid .hd {
+    border-bottom: 1px solid rgba(250,250,247,0.25);
+    padding: 10px 14px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(250,250,247,0.5); font-size: 10px; font-weight: 600;
+  }
+  .t-grid .c {
+    padding: 10px 14px; border-bottom: 1px solid rgba(250,250,247,0.08);
+  }
+  .t-grid .c.up { color: #3EE37A; }
+  .t-grid .c.dn { color: var(--red); }
+  .t-grid .row-name { font-weight: 600; }
+
+  /* Situations */
+  .sit-sec { padding: 64px 40px; border-top: 1px solid var(--ink); }
+  .sit-sec h2 { font-size: 44px; letter-spacing: -0.035em; margin-bottom: 28px; max-width: 800px; }
+  .sit-sec h2 em { font-style: normal; color: var(--cobalt); }
+  .sit-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+  .sit { padding: 24px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); min-height: 160px; display: flex; flex-direction: column; }
+  .sit .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cobalt); font-weight: 700; margin-bottom: 10px; }
+  .sit h3 { font-size: 22px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 800; }
+  .sit .go { margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); }
+  .sit.overflow { background: var(--cobalt); color: var(--paper); }
+  .sit.overflow .tag { color: var(--red); }
+  .sit.overflow .go { color: var(--paper); }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: var(--paper); padding: 56px 40px 28px; }
+  .foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 28px; border-bottom: 1px solid rgba(250,250,247,0.18); }
+  footer h6 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,250,247,0.55); margin: 0 0 14px; font-weight: 700; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-bottom: 8px; color: rgba(250,250,247,0.85); }
+  .foot-word { font-size: 22px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+  .foot-word .sq { width: 14px; height: 14px; background: var(--red); }
+  .foot-tag { font-size: 13px; line-height: 1.55; color: rgba(250,250,247,0.7); max-width: 320px; }
+  .foot-bottom { padding-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(250,250,247,0.5); letter-spacing: 0.06em; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span><span class="dot">●</span> LIVE · ACA OE 2026</span>
+  <span>AVG PREMIUM <b>$612/MO</b> <span class="up">▲ 14.2%</span></span>
+  <span>AVG SUBSIDY <b>$346/MO</b> <span class="up">▲ 6.8%</span></span>
+  <span>BROKER COMMISSION <b class="tab">$0.00</b> (YOU PAY NOTHING)</span>
+  <span>CARRIER PAYS US <b class="tab">$312 / ENROLLMENT · DISCLOSED</b></span>
+  <span>PLANS SCANNED TODAY <b class="tab">14,882</b></span>
+  <span>DEADLINE <b>JAN 15 · 00:00 CT</b></span>
+</div>
+
+<!-- NAV -->
+<nav class="head">
+  <div class="word"><span class="sq"></span>Shophealthcare</div>
+  <div class="nav-meta"><span>NPN #19482230</span><span>LICENSED · 50 STATES</span></div>
+  <div class="nav-links"><a href="#">Plans</a><a href="#">The Math</a><a href="#">Nora</a><a href="#">About</a></div>
+  <div class="nav-cta">
+    <span class="tab">(800) 555-0198</span>
+    <a class="btn" href="#">See The Math</a>
+    <a class="btn red" href="#">Start →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="kicker">◆ FIG. 13 — RADICAL MARGIN TRANSPARENCY · REV. 2026.04</div>
+  <h1>Health insurance, <em>priced like a mystery.</em><br><span class="mark">We show the entire math.</span></h1>
+
+  <!-- THE FORMULA — hero UI -->
+  <div class="formula">
+    <div class="f-term"><span class="lbl">Premium × 12</span><span class="val tab">$4,944</span></div>
+    <span class="f-op">+</span>
+    <div class="f-term"><span class="lbl">Expected OOP</span><span class="val tab">$1,280</span></div>
+    <span class="f-op">+</span>
+    <div class="f-term"><span class="lbl">Deductible Risk</span><span class="val tab">$2,000</span></div>
+    <span class="f-op">−</span>
+    <div class="f-term"><span class="lbl">Subsidy</span><span class="val tab" style="color:#3EE37A;">$2,952</span></div>
+    <span class="f-equals">=</span>
+    <div class="f-total"><span class="lbl">Your Real Cost</span><span class="val tab">$5,272<span class="u">/yr</span></span></div>
+  </div>
+
+  <div class="hero-sub">
+    <div>
+      <p class="lede">Every ACA plan gets priced by a formula your broker hopes you never see. <b>Premium times twelve, plus the out-of-pocket you'll actually incur, plus the deductible you might hit, minus the subsidy you qualify for.</b> That's your real cost. We show it. On every card. Before you click.</p>
+      <div class="cta-row">
+        <a class="btn solid" href="#">Run my formula →</a>
+        <a class="btn" href="#">See the methodology</a>
+      </div>
+    </div>
+    <div class="over">
+      <div class="tag">◆ What you're overpaying · right now</div>
+      <div class="now tab">Current premium · $412 / mo</div>
+      <div class="num tab">$1,249<span class="u">/yr</span></div>
+      <div class="desc">On your current plan (<b>Ambetter Essential 5, TX, 32F</b>) you are paying <b>$1,249</b> more per year than the best-math plan in your state. We surface the gap before the sale, not after.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BROKER DISCLOSURE — homepage, not footer -->
+<section class="disclose">
+  <div class="title">Broker Commission Disclosure</div>
+  <p>We are paid a flat <b>$312</b> commission by the carrier when you enroll — the same amount, on every plan we show you. We are not paid more for steering you to premium tiers. <b>We will refuse a carrier's bonus program</b> if it distorts the math. This disclosure lives on the homepage. It will never move.</p>
+  <div class="stat"><div class="n tab">$312.00</div><div class="l">flat · carrier-paid · not tier-weighted</div></div>
+</section>
+
+<!-- PLANS — 3 cards, math exposed -->
+<section class="plans">
+  <div class="plans-head">
+    <h2>Three plans. Every number visible. No footnotes.</h2>
+    <div class="note">Showing: TX · 32F · HH 1 · 2026 income $58,400<br><b>Ranked by Real Cost · low to high</b></div>
+  </div>
+  <div class="plan-grid">
+
+    <div class="plan best">
+      <div class="ph"><span>◆ BEST MATH</span><span class="badge">SAVE $1,249</span></div>
+      <div class="pn">
+        <div class="name">BCBS Silver 73</div>
+        <div class="carrier">Blue Cross Blue Shield · Silver · CSR 73</div>
+      </div>
+      <div class="math">
+        <div class="line"><span class="k">Premium × 12</span><span class="v tab">$2,964</span></div>
+        <div class="line"><span class="k">Expected OOP (your utilization)</span><span class="v tab">$640</span></div>
+        <div class="line"><span class="k">Deductible risk (weighted)</span><span class="v tab">$1,420</span></div>
+        <div class="line sub"><span class="k">Subsidy (APTC)</span><span class="v tab">−$2,952</span></div>
+        <div class="line"><span class="k">Broker commission</span><span class="v tab">$312 (carrier-paid)</span></div>
+      </div>
+      <div class="total"><span class="k">Your Real Cost · 2026</span><span class="n tab">$2,072<span class="u">/yr</span></span></div>
+    </div>
+
+    <div class="plan">
+      <div class="ph"><span>OPTION 02</span><span class="mono" style="color:var(--mute-2);">BRONZE</span></div>
+      <div class="pn">
+        <div class="name">Oscar Bronze 3</div>
+        <div class="carrier">Oscar Health · Bronze · No CSR</div>
+      </div>
+      <div class="math">
+        <div class="line"><span class="k">Premium × 12</span><span class="v tab">$2,196</span></div>
+        <div class="line"><span class="k">Expected OOP (your utilization)</span><span class="v tab">$2,180</span></div>
+        <div class="line"><span class="k">Deductible risk (weighted)</span><span class="v tab">$2,840</span></div>
+        <div class="line sub"><span class="k">Subsidy (APTC)</span><span class="v tab">−$2,952</span></div>
+        <div class="line"><span class="k">Broker commission</span><span class="v tab">$312 (carrier-paid)</span></div>
+      </div>
+      <div class="total"><span class="k">Your Real Cost · 2026</span><span class="n tab">$4,264<span class="u">/yr</span></span></div>
+    </div>
+
+    <div class="plan">
+      <div class="ph"><span>OPTION 03 · YOUR CURRENT</span><span class="mono" style="color:var(--red);">OVERPAY</span></div>
+      <div class="pn">
+        <div class="name">Ambetter Essential 5</div>
+        <div class="carrier">Ambetter · Silver · No CSR · current</div>
+      </div>
+      <div class="math">
+        <div class="line"><span class="k">Premium × 12</span><span class="v tab">$4,944</span></div>
+        <div class="line"><span class="k">Expected OOP (your utilization)</span><span class="v tab">$1,280</span></div>
+        <div class="line"><span class="k">Deductible risk (weighted)</span><span class="v tab">$2,000</span></div>
+        <div class="line sub"><span class="k">Subsidy (APTC)</span><span class="v tab">−$2,952</span></div>
+        <div class="line"><span class="k">Broker commission</span><span class="v tab">$312 (carrier-paid)</span></div>
+      </div>
+      <div class="total" style="background:var(--red);"><span class="k">Your Real Cost · 2026</span><span class="n tab">$5,272<span class="u">/yr</span></span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BLOOMBERG TERMINAL GRID -->
+<section class="terminal">
+  <div class="th"><span class="left">SHC://MARGIN.TERMINAL · TX · 07 PLANS · 2026</span><span class="right">UPDATED 09:42:11 CT · SOURCE: HEALTHCARE.GOV + CARRIER API</span></div>
+  <div class="t-grid">
+    <div class="hd">Plan</div>
+    <div class="hd">Prem/mo</div>
+    <div class="hd">Deduct</div>
+    <div class="hd">OOP Max</div>
+    <div class="hd">Real Cost</div>
+    <div class="hd">Δ vs Current</div>
+
+    <div class="c row-name">BCBS Silver 73</div><div class="c tab">$247</div><div class="c tab">$2,000</div><div class="c tab">$4,900</div><div class="c tab">$2,072</div><div class="c up tab">−$3,200</div>
+    <div class="c row-name">Oscar Bronze 3</div><div class="c tab">$183</div><div class="c tab">$7,200</div><div class="c tab">$9,100</div><div class="c tab">$4,264</div><div class="c up tab">−$1,008</div>
+    <div class="c row-name">Ambetter Essential 5 <span style="color:var(--red);">◄ YOU</span></div><div class="c tab">$412</div><div class="c tab">$7,500</div><div class="c tab">$9,450</div><div class="c tab">$5,272</div><div class="c tab">—</div>
+    <div class="c row-name">Aetna CVS Gold 2</div><div class="c tab">$389</div><div class="c tab">$1,500</div><div class="c tab">$4,200</div><div class="c tab">$5,380</div><div class="c dn tab">+$108</div>
+    <div class="c row-name">Cigna Connect Silver</div><div class="c tab">$301</div><div class="c tab">$3,800</div><div class="c tab">$7,500</div><div class="c tab">$3,104</div><div class="c up tab">−$2,168</div>
+    <div class="c row-name">Molina Marketplace Bronze</div><div class="c tab">$201</div><div class="c tab">$8,400</div><div class="c tab">$9,450</div><div class="c tab">$4,892</div><div class="c up tab">−$380</div>
+    <div class="c row-name">UHC Choice Plus Silver</div><div class="c tab">$358</div><div class="c tab">$4,200</div><div class="c tab">$8,100</div><div class="c tab">$4,720</div><div class="c up tab">−$552</div>
+  </div>
+</section>
+
+<!-- SITUATIONS -->
+<section class="sit-sec">
+  <h2>The formula runs differently <em>for every household.</em> Pick yours.</h2>
+  <div class="sit-grid">
+    <div class="sit"><div class="tag">01 · SEP ELIGIBLE</div><h3>I just lost my health insurance.</h3><span class="go">Run the math →</span></div>
+    <div class="sit"><div class="tag">02 · 1099 · SCHEDULE C</div><h3>I'm self-employed. Variable income.</h3><span class="go">Run the math →</span></div>
+    <div class="sit"><div class="tag">03 · RENEWAL · +14%</div><h3>My renewal letter just landed.</h3><span class="go">Run the math →</span></div>
+    <div class="sit"><div class="tag">04 · BRIDGE · AGE 55–64</div><h3>I'm pre-Medicare. Need a bridge.</h3><span class="go">Run the math →</span></div>
+    <div class="sit"><div class="tag">05 · GUT-CHECK</div><h3>I just want a second opinion on my plan.</h3><span class="go">Run the math →</span></div>
+    <div class="sit overflow"><div class="tag">◆ UNMATCHED</div><h3>None of these fit — route me.</h3><span class="go">Four questions →</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-word"><span class="sq"></span>Shophealthcare</div>
+      <p class="foot-tag">A licensed independent brokerage. The math is the product. Broker commissions disclosed on the homepage, not in the footer.</p>
+    </div>
+    <div>
+      <h6>CONTACT</h6>
+      <ul><li class="tab">(800) 555-0198</li><li>MON–SAT 7A–10P ET</li><li>hello@shophealthcare.com</li></ul>
+    </div>
+    <div>
+      <h6>LEGAL</h6>
+      <ul><li>NPN #19482230</li><li>LICENSED · 50 STATES + DC</li><li>NOT A GOVERNMENT SITE</li></ul>
+    </div>
+    <div>
+      <h6>COMPLIANCE</h6>
+      <ul><li>HIPAA · SOC 2 TYPE II</li><li>256-BIT ENCRYPTION</li><li>METHODOLOGY · PUBLIC</li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 SHOPHEALTHCARE, INC · REV. 2026.04 · THE MATH IS THE PRODUCT</span>
+    <span>TERMS · PRIVACY · ACCESSIBILITY</span>
+  </div>
+</footer>
+
+</body>
+</html>

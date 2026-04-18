@@ -1,0 +1,484 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Shophealthcare — Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEE8DA;       /* blueprint vellum / grid paper */
+  --paper-2:#E6DFCD;
+  --ink:#111215;
+  --ink-2:#2B2D33;
+  --mute:#6F6B5E;
+  --rule:#B7AE95;
+  --rule-2:#D2C9AF;
+  --blue:#1F3A7A;        /* blueprint blue */
+  --blue-2:#2E5AAB;
+  --red:#B5341F;         /* drafting red */
+  --amber:#C78A2B;       /* callout amber */
+  --green:#2E5D3E;
+  --cream:#F8F3E4;
+}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+body{font-family:'IBM Plex Sans',sans-serif;font-size:15.5px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(rgba(31,58,122,.065) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(31,58,122,.065) 1px,transparent 1px);
+  background-size:24px 24px;
+  background-position:-1px -1px;
+}
+.serif{font-family:'IBM Plex Serif',serif;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.tab{font-variant-numeric:tabular-nums;}
+.page{max-width:1320px;margin:0 auto;padding:0 40px;}
+
+/* Announce — drafting title block */
+.announce{background:var(--ink);color:var(--paper);padding:9px 0;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-align:center;}
+.announce b{color:var(--amber);}
+.announce span{margin:0 14px;opacity:.5;}
+
+/* Title block (letterhead) */
+nav.head{background:var(--paper);border-bottom:1.5px solid var(--ink);}
+nav.head .row{max-width:1320px;margin:0 auto;padding:18px 40px;display:grid;grid-template-columns:auto 1fr auto auto;gap:32px;align-items:center;}
+.wordmark{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:26px;letter-spacing:-.015em;display:flex;align-items:center;gap:14px;}
+.wordmark .sq{width:28px;height:28px;border:1.5px solid var(--ink);position:relative;}
+.wordmark .sq::before,.wordmark .sq::after{content:"";position:absolute;background:var(--ink);}
+.wordmark .sq::before{top:50%;left:0;right:0;height:1.5px;transform:translateY(-50%);}
+.wordmark .sq::after{top:0;bottom:0;left:50%;width:1.5px;transform:translateX(-50%);}
+.titleblock{display:flex;gap:28px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);}
+.titleblock div b{display:block;color:var(--ink);font-weight:600;margin-top:3px;font-size:11px;}
+.nav-links{display:flex;gap:24px;font-size:14px;font-weight:500;}
+.nav-links a{color:var(--ink);text-decoration:none;}
+.nav-links a:hover{color:var(--red);}
+.btn{padding:11px 20px;font-size:13px;font-weight:600;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;transition:all .12s;}
+.btn:hover{background:var(--ink);color:var(--paper);}
+.btn.primary{background:var(--ink);color:var(--paper);}
+.btn.primary:hover{background:var(--blue);border-color:var(--blue);}
+.btn.big{padding:16px 28px;font-size:13px;}
+
+/* HERO — schematic */
+.hero{padding:56px 0 40px;border-bottom:1.5px solid var(--ink);}
+.hero-inner{max-width:1320px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1.25fr;gap:60px;align-items:start;}
+.hero .rubric{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:22px;}
+.hero .rubric::before{content:"◢";margin-right:10px;color:var(--red);}
+.hero h1{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:80px;line-height:.98;letter-spacing:-.022em;margin:0 0 28px;}
+.hero h1 em{font-style:italic;color:var(--blue);}
+.hero h1 .u{border-bottom:3px solid var(--red);padding-bottom:2px;}
+.hero p.lede{font-size:18px;line-height:1.55;color:var(--ink-2);max-width:520px;margin:0 0 28px;}
+.hero p.lede b{font-weight:600;border-bottom:1.5px dashed var(--blue);padding-bottom:1px;}
+.hero .actions{display:flex;gap:10px;}
+.hero .specs{margin-top:36px;padding-top:22px;border-top:1px dashed var(--rule);display:grid;grid-template-columns:repeat(3,auto);gap:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase;}
+.hero .specs b{display:block;color:var(--ink);font-family:'IBM Plex Serif',serif;font-weight:600;font-size:18px;letter-spacing:-.01em;text-transform:none;margin-top:4px;}
+
+/* SCHEMATIC CANVAS */
+.schematic{background:var(--cream);border:1.5px solid var(--ink);padding:28px 28px 22px;position:relative;min-height:520px;}
+.sch-title{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:20px;border-bottom:1px solid var(--ink);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);}
+.sch-title b{color:var(--red);}
+.sch-title .ver{color:var(--mute);}
+.sch{position:relative;height:460px;}
+.sch svg{position:absolute;inset:0;width:100%;height:100%;}
+.node{position:absolute;background:var(--paper);border:1.5px solid var(--ink);padding:10px 14px;min-width:110px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-align:center;line-height:1.25;}
+.node b{display:block;font-family:'IBM Plex Serif',serif;font-weight:600;font-size:14px;letter-spacing:-.01em;text-transform:none;margin-bottom:2px;color:var(--ink);}
+.node.blue{background:var(--blue);color:var(--paper);border-color:var(--blue);}
+.node.blue b{color:var(--paper);}
+.node.red{background:var(--red);color:var(--cream);border-color:var(--red);}
+.node.red b{color:var(--cream);}
+.node.dashed{border-style:dashed;background:transparent;}
+.node.you{background:var(--amber);border-color:var(--amber);color:var(--ink);}
+.node.you b{color:var(--ink);}
+.callout{position:absolute;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;line-height:1.3;max-width:120px;}
+.callout::before{content:"◤ ";}
+.dim{position:absolute;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--mute);text-transform:uppercase;}
+
+/* LEGEND */
+.legend{margin-top:14px;padding-top:14px;border-top:1px dashed var(--rule);display:flex;gap:26px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase;flex-wrap:wrap;}
+.legend .sw{display:inline-block;width:12px;height:12px;border:1.5px solid var(--ink);margin-right:6px;vertical-align:-2px;}
+.legend .sw.blue{background:var(--blue);border-color:var(--blue);}
+.legend .sw.red{background:var(--red);border-color:var(--red);}
+.legend .sw.amber{background:var(--amber);border-color:var(--amber);}
+.legend .sw.dashed{background:transparent;border-style:dashed;}
+
+/* SPEC SHEET SECTION — the system explained piece by piece */
+.specsheet{padding:84px 0 48px;}
+.sec-head{max-width:1320px;margin:0 auto;padding:0 40px 28px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;border-bottom:1.5px solid var(--ink);}
+.sec-head .rub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:10px;}
+.sec-head h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:48px;line-height:1.02;letter-spacing:-.018em;margin:0;max-width:760px;}
+.sec-head h2 em{font-style:italic;color:var(--blue);}
+.sec-head .sheetno{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase;text-align:right;min-width:180px;}
+.sec-head .sheetno b{display:block;font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;color:var(--ink);letter-spacing:-.01em;margin-top:4px;text-transform:none;}
+
+.layers{max-width:1320px;margin:0 auto;padding:28px 40px 0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;}
+.layer{border:1.5px solid var(--ink);border-right:0;padding:24px 22px;background:var(--cream);position:relative;min-height:300px;}
+.layer:last-child{border-right:1.5px solid var(--ink);}
+.layer .no{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;}
+.layer .no b{color:var(--red);}
+.layer h3{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:22px;line-height:1.12;letter-spacing:-.01em;margin:0 0 14px;}
+.layer p{font-size:14px;line-height:1.5;color:var(--ink-2);margin:0 0 14px;}
+.layer p b{font-weight:600;border-bottom:1.5px dashed var(--blue);padding-bottom:1px;}
+.layer .tag{position:absolute;bottom:16px;left:22px;right:22px;padding-top:10px;border-top:1px dashed var(--rule);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--blue);text-transform:uppercase;}
+.layer .tag.warn{color:var(--red);}
+.layer .chip{display:inline-block;background:var(--blue);color:var(--paper);padding:3px 8px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.layer .chip.red{background:var(--red);}
+.layer .chip.amber{background:var(--amber);color:var(--ink);}
+
+/* INSPECTORS — the "nothing hidden" strip */
+.inspect{padding:80px 0;background:var(--ink);color:var(--paper);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.inspect-inner{max-width:1320px;margin:0 auto;padding:0 40px;}
+.inspect .rub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;margin-bottom:18px;}
+.inspect h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:60px;line-height:1.02;letter-spacing:-.022em;margin:0 0 50px;max-width:900px;}
+.inspect h2 em{font-style:italic;color:var(--amber);}
+.inspect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.insp{border:1.5px solid rgba(238,232,218,.32);padding:22px;background:rgba(31,58,122,.14);position:relative;}
+.insp .n{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:10px;}
+.insp h4{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:19px;line-height:1.2;margin:0 0 10px;color:var(--paper);}
+.insp p{font-size:13.5px;line-height:1.5;color:rgba(238,232,218,.72);margin:0 0 10px;}
+.insp .val{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--paper);padding-top:12px;border-top:1px dashed rgba(238,232,218,.24);text-transform:uppercase;}
+.insp .val b{color:var(--amber);}
+
+/* WORKED EXAMPLE */
+.worked{padding:96px 0;}
+.worked-inner{max-width:1320px;margin:0 auto;padding:0 40px;}
+.worked .rub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:14px;}
+.worked h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:56px;line-height:1.02;letter-spacing:-.022em;margin:0 0 36px;max-width:820px;}
+.worked h2 em{font-style:italic;color:var(--blue);}
+.worked-card{background:var(--cream);border:1.5px solid var(--ink);}
+.worked-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1.5px solid var(--ink);}
+.worked-header .c{padding:14px 20px;border-right:1px solid var(--rule);}
+.worked-header .c:last-child{border-right:0;}
+.worked-header .l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase;margin-bottom:4px;}
+.worked-header .v{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+.worked-flow{padding:32px 20px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:14px;align-items:stretch;}
+.wnode{border:1.5px solid var(--ink);padding:14px 16px;background:var(--paper);text-align:center;position:relative;}
+.wnode .s{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin-bottom:6px;}
+.wnode .v{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:17px;letter-spacing:-.01em;margin-bottom:4px;}
+.wnode .sub{font-size:11px;color:var(--ink-2);line-height:1.35;}
+.wnode.blue{background:var(--blue);color:var(--paper);border-color:var(--blue);}
+.wnode.blue .s{color:var(--paper);opacity:.72;}.wnode.blue .sub{color:rgba(238,232,218,.85);}
+.wnode.red{background:var(--red);color:var(--cream);border-color:var(--red);}
+.wnode.red .s{color:var(--cream);opacity:.72;}.wnode.red .sub{color:rgba(248,243,228,.9);}
+.wnode.amber{background:var(--amber);color:var(--ink);border-color:var(--amber);}
+.warrow{display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);justify-content:center;}
+.worked-foot{border-top:1px dashed var(--rule);padding:16px 24px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;}
+.worked-foot b{color:var(--ink);}
+
+/* NORA INSPECTOR — annotated UI screenshot */
+.nora{padding:96px 0;background:var(--paper-2);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);}
+.nora-inner{max-width:1320px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center;}
+.nora .rub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:14px;}
+.nora h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:52px;line-height:1.02;letter-spacing:-.02em;margin:0 0 20px;}
+.nora h2 em{font-style:italic;color:var(--blue);}
+.nora p{font-size:17px;line-height:1.6;color:var(--ink-2);margin:0 0 18px;}
+.nora p b{font-weight:600;border-bottom:1.5px dashed var(--blue);}
+.nora-screen{background:var(--cream);border:1.5px solid var(--ink);padding:22px;position:relative;}
+.nora-screen .bar{display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--rule);margin-bottom:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;}
+.nora-screen .bar .on{color:var(--green);}
+.tr{padding:10px 0;border-bottom:1px dashed var(--rule-2);display:grid;grid-template-columns:90px 1fr;gap:14px;font-size:14px;line-height:1.45;}
+.tr:last-child{border-bottom:0;}
+.tr .who{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;font-weight:700;padding-top:2px;}
+.tr.u .who{color:var(--ink);}
+.tr b{font-weight:600;border-bottom:1.5px dashed var(--blue);}
+.pin{position:absolute;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:var(--red);text-transform:uppercase;max-width:140px;line-height:1.35;}
+.pin::before{content:"";position:absolute;background:var(--red);}
+.pin.p1{top:82px;right:-130px;width:110px;}
+.pin.p1::before{top:6px;left:-44px;width:40px;height:1.5px;}
+.pin.p2{top:172px;right:-130px;width:110px;}
+.pin.p2::before{top:6px;left:-44px;width:40px;height:1.5px;}
+.pin.p3{bottom:44px;right:-130px;width:110px;}
+.pin.p3::before{top:6px;left:-44px;width:40px;height:1.5px;}
+
+/* VOID — annotated brief */
+.void{padding:96px 0;}
+.void-inner{max-width:900px;margin:0 auto;padding:0 40px;}
+.void .rub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red);text-transform:uppercase;margin-bottom:16px;}
+.void h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:52px;line-height:1.02;letter-spacing:-.022em;margin:0 0 26px;}
+.void h2 em{font-style:italic;color:var(--blue);}
+.void p{font-family:'IBM Plex Serif',serif;font-size:18px;line-height:1.65;color:var(--ink-2);margin:0 0 18px;}
+.void p b{font-weight:600;color:var(--ink);border-bottom:2px solid var(--red);padding-bottom:1px;}
+
+/* CTA — spec sheet closer */
+.cta{padding:80px 0;background:var(--ink);color:var(--paper);}
+.cta-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center;}
+.cta h2{font-family:'IBM Plex Serif',serif;font-weight:400;font-size:68px;line-height:1;letter-spacing:-.025em;margin:0 0 20px;}
+.cta h2 em{font-style:italic;color:var(--amber);}
+.cta p{font-size:17px;color:rgba(238,232,218,.78);margin:0 0 26px;max-width:520px;}
+.cta .actions{display:flex;gap:10px;}
+.cta .btn{color:var(--paper);border-color:var(--paper);}
+.cta .btn:hover{background:var(--paper);color:var(--ink);}
+.cta .btn.primary{background:var(--amber);border-color:var(--amber);color:var(--ink);}
+.cta .tb{border:1.5px solid rgba(238,232,218,.32);padding:18px;}
+.cta .tb .r{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed rgba(238,232,218,.22);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:rgba(238,232,218,.72);text-transform:uppercase;}
+.cta .tb .r:last-child{border-bottom:0;}
+.cta .tb .r b{color:var(--paper);font-family:'IBM Plex Serif',serif;font-weight:600;font-size:15px;letter-spacing:-.01em;text-transform:none;}
+
+footer{background:var(--paper);color:var(--ink-2);padding:44px 40px 28px;border-top:1.5px solid var(--ink);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;}
+.foot-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;}
+footer h6{font-size:10px;letter-spacing:.18em;color:var(--red);margin:0 0 12px;}
+footer ul{list-style:none;padding:0;margin:0;}footer li{font-size:12px;margin-bottom:6px;letter-spacing:.08em;}
+footer .word{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:26px;color:var(--ink);margin-bottom:6px;letter-spacing:-.01em;text-transform:none;}
+footer .tag{font-size:12px;line-height:1.55;max-width:340px;letter-spacing:.04em;}
+.foot-bottom{max-width:1320px;margin:28px auto 0;padding-top:16px;border-top:1px dashed var(--rule);font-size:10px;letter-spacing:.14em;color:var(--mute);display:flex;justify-content:space-between;}
+</style></head><body>
+
+<div class="announce">SHEET 01 OF 07<span>·</span>SHOPHEALTHCARE SYSTEM<span>·</span><b>OPEN ENROLLMENT — ENDS JAN 15</b><span>·</span>REV. 2026.01</div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark"><span class="sq"></span>Shophealthcare</div>
+  <div class="titleblock">
+    <div>PROJECT<b>Health Brokerage</b></div>
+    <div>SCOPE<b>50 States · ACA + ICHRA</b></div>
+    <div>STATUS<b>In production</b></div>
+  </div>
+  <div class="nav-links"><a>System</a><a>Agents</a><a>Docs</a><a>Sign in</a></div>
+  <a class="btn primary" href="#">Start intake</a>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero"><div class="hero-inner">
+  <div>
+    <div class="rubric">Sheet A · the system, drawn</div>
+    <h1>Health insurance,<br><em>blueprinted.</em><br><span class="u">Nothing hidden.</span></h1>
+    <p class="lede">Every subsidy rule, network check, formulary lookup, and carrier handoff — <b>drawn</b>, labeled, and inspectable. We don't sell you a plan. We show you the system and walk you through it.</p>
+    <div class="actions">
+      <a class="btn primary big" href="#">Begin 4-min intake →</a>
+      <a class="btn big" href="#">Read the schematic</a>
+    </div>
+    <div class="specs">
+      <div>LICENSED AGENTS<b class="tab">180</b></div>
+      <div>PLANS INDEXED<b class="tab">1.2M</b></div>
+      <div>AVG. RESPONSE<b class="tab">04:12</b></div>
+    </div>
+  </div>
+
+  <!-- Schematic -->
+  <div class="schematic">
+    <div class="sch-title"><span>FIG. 01 · <b>INTAKE → ENROLLMENT · DATA FLOW</b></span><span class="ver">REV 2026.01 · OPEN</span></div>
+    <div class="sch">
+      <svg viewBox="0 0 640 460" preserveAspectRatio="none">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#111215"/>
+          </marker>
+          <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#B5341F"/>
+          </marker>
+        </defs>
+        <!-- grid ticks (subtle) -->
+        <g stroke="#B7AE95" stroke-width="0.5" opacity="0.35">
+          <line x1="0" y1="115" x2="640" y2="115" stroke-dasharray="2 4"/>
+          <line x1="0" y1="230" x2="640" y2="230" stroke-dasharray="2 4"/>
+          <line x1="0" y1="345" x2="640" y2="345" stroke-dasharray="2 4"/>
+        </g>
+        <!-- connectors -->
+        <path d="M 100 70 L 100 140" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 155 170 L 260 170" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 320 200 L 320 260" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 265 290 L 155 290" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 100 320 L 100 370" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 155 395 L 415 395" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <path d="M 470 370 L 470 200" stroke="#1F3A7A" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <path d="M 525 170 L 560 170" stroke="#111215" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <!-- carrier branches out -->
+        <path d="M 590 200 L 590 280 L 540 280" stroke="#B5341F" stroke-width="1.5" fill="none" stroke-dasharray="2 3" marker-end="url(#arrR)"/>
+      </svg>
+
+      <div class="node you" style="top:24px;left:36px;"><b>You</b>situation + paperwork</div>
+      <div class="node" style="top:142px;left:36px;"><b>Nora · AI Intake</b>reads forms, extracts facts</div>
+      <div class="node blue" style="top:154px;left:260px;"><b>Subsidy Engine</b>APTC + CSR math</div>
+      <div class="node" style="top:264px;left:260px;"><b>Plan Index</b>1.2M plans</div>
+      <div class="node" style="top:272px;left:36px;"><b>Network Check</b>doctors · Rx</div>
+      <div class="node red" style="top:374px;left:36px;"><b>Licensed Agent</b>signs rec</div>
+      <div class="node" style="top:374px;left:416px;"><b>Enrollment</b>sent to carrier</div>
+      <div class="node dashed" style="top:154px;left:560px;"><b>Marketplace</b>.gov handshake</div>
+      <div class="node dashed" style="top:264px;left:460px;"><b>Carrier</b>ID card + invoice</div>
+
+      <!-- callouts -->
+      <div class="callout" style="top:168px;left:190px;">reads 1095-A, W-2, renewal</div>
+      <div class="callout" style="top:320px;left:190px;">formulary cross-check</div>
+      <div class="callout" style="top:410px;left:240px;">human sign-off, required</div>
+
+      <!-- dimensions -->
+      <div class="dim" style="top:6px;right:8px;">SCALE · 1 : 1</div>
+      <div class="dim" style="bottom:-18px;left:0;">DWG NO · SH-01-A</div>
+      <div class="dim" style="bottom:-18px;right:0;">DRAWN · NORA + AGENTS · 2026</div>
+    </div>
+    <div class="legend">
+      <span><span class="sw amber"></span>You</span>
+      <span><span class="sw"></span>System node</span>
+      <span><span class="sw blue"></span>Compute node</span>
+      <span><span class="sw red"></span>Human required</span>
+      <span><span class="sw dashed"></span>External handoff</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- SPEC SHEET: the 5 layers -->
+<section class="specsheet">
+  <div class="sec-head">
+    <div>
+      <div class="rub">Sheet B · layers of the system</div>
+      <h2>Five layers between <em>you</em> and coverage. We draw all five.</h2>
+    </div>
+    <div class="sheetno">DWG NO<b>SH-02</b></div>
+  </div>
+
+  <div class="layers">
+    <div class="layer">
+      <div class="no"><span>01</span><b>INTAKE</b></div>
+      <span class="chip">LAYER 01</span>
+      <h3>Your situation, in plain words.</h3>
+      <p>Upload a renewal notice or describe what changed. Nora reads <b>1095-A, W-2, COBRA letters, and insurance cards</b> and converts them to structured facts.</p>
+      <div class="tag">OUT → SUBSIDY · NETWORK</div>
+    </div>
+    <div class="layer">
+      <div class="no"><span>02</span><b>SUBSIDY</b></div>
+      <span class="chip">LAYER 02</span>
+      <h3>APTC + CSR, computed.</h3>
+      <p>Household AGI, FPL percentage, and state-specific CSR tiers are calculated against the <b>current year's premium benchmarks</b>. No estimates — actuals.</p>
+      <div class="tag">IN ← INTAKE · OUT → PLAN INDEX</div>
+    </div>
+    <div class="layer">
+      <div class="no"><span>03</span><b>NETWORK</b></div>
+      <span class="chip amber">LAYER 03</span>
+      <h3>Doctors and Rx, cross-checked.</h3>
+      <p>Every plan in your county is filtered against <b>your doctors, your prescriptions, and your preferred pharmacy</b>. The ones that fail the check are shown, not hidden.</p>
+      <div class="tag">IN ← PLAN INDEX</div>
+    </div>
+    <div class="layer">
+      <div class="no"><span>04</span><b>HUMAN</b></div>
+      <span class="chip red">LAYER 04 · REQUIRED</span>
+      <h3>A licensed agent signs.</h3>
+      <p>Nora never enrolls you alone. A <b>state-licensed agent</b> reviews your recommendation, signs their name, and becomes your contact for every renewal afterward.</p>
+      <div class="tag warn">HUMAN GATE · NON-BYPASSABLE</div>
+    </div>
+    <div class="layer">
+      <div class="no"><span>05</span><b>HANDOFF</b></div>
+      <span class="chip">LAYER 05</span>
+      <h3>Enrollment sent. ID card returned.</h3>
+      <p>We transmit your signed application to <b>HealthCare.gov or your state exchange</b>, track its status, and confirm effective date in writing.</p>
+      <div class="tag">OUT → CARRIER · MARKETPLACE</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSPECTORS -->
+<section class="inspect"><div class="inspect-inner">
+  <div class="rub">Sheet C · what most brokerages hide</div>
+  <h2>Every <em>clause</em>, every <em>fee</em>, every <em>commission</em> — posted on the wall.</h2>
+  <div class="inspect-grid">
+    <div class="insp">
+      <div class="n">INSP 01 · COMMISSION</div>
+      <h4>What the agent earns.</h4>
+      <p>Flat salary, disclosed to the dollar. No per-plan kickback. No carrier bonus pool.</p>
+      <div class="val">PAID BY US · <b>NOT THE CARRIER</b></div>
+    </div>
+    <div class="insp">
+      <div class="n">INSP 02 · RENEWAL</div>
+      <h4>Auto-renew rules.</h4>
+      <p>Off by default. Every policy gets a fresh human review before the carrier's deadline.</p>
+      <div class="val">AUTO-RENEW · <b>DISABLED</b></div>
+    </div>
+    <div class="insp">
+      <div class="n">INSP 03 · DATA</div>
+      <h4>Where your info goes.</h4>
+      <p>To the carrier you choose, to your agent's desk, and to no one else — ever. Zero third-party resale.</p>
+      <div class="val">SYNDICATED · <b>0 PARTIES</b></div>
+    </div>
+    <div class="insp">
+      <div class="n">INSP 04 · ESCAPE</div>
+      <h4>How you leave.</h4>
+      <p>Export your profile, cancel your match, and walk away in under a minute. No retention flow.</p>
+      <div class="val">TIME TO LEAVE · <b>&lt; 60 SEC</b></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- WORKED EXAMPLE -->
+<section class="worked"><div class="worked-inner">
+  <div class="rub">Sheet D · a worked example</div>
+  <h2>One real case, <em>drawn in full.</em></h2>
+  <div class="worked-card">
+    <div class="worked-header">
+      <div class="c"><div class="l">CASE · #C-19482</div><div class="v">1099 illustrator, NC</div></div>
+      <div class="c"><div class="l">HOUSEHOLD AGI</div><div class="v tab">$74,000</div></div>
+      <div class="c"><div class="l">COUNTY</div><div class="v">Mecklenburg</div></div>
+      <div class="c"><div class="l">COBRA ENDS</div><div class="v tab">Dec 31, 2025</div></div>
+    </div>
+    <div class="worked-flow">
+      <div class="wnode"><div class="s">Step 01 · Intake</div><div class="v">4:12</div><div class="sub">Renewal letter + income form read</div></div>
+      <div class="warrow">▸</div>
+      <div class="wnode blue"><div class="s">Step 02 · Subsidy</div><div class="v tab">$418/mo</div><div class="sub">APTC computed vs. benchmark silver</div></div>
+      <div class="warrow">▸</div>
+      <div class="wnode amber"><div class="s">Step 03 · Network</div><div class="v">3 of 47 plans</div><div class="sub">Therapist + 2 Rx in-network</div></div>
+      <div class="warrow">▸</div>
+      <div class="wnode red"><div class="s">Step 04 · Human</div><div class="v">Maya Okafor</div><div class="sub">Signs rec · NC #44812</div></div>
+    </div>
+    <div class="worked-foot"><span>FINAL · <b>Plan A · BCBS NC Blue Local Silver 5</b></span><span>MONTHLY PREMIUM · <b class="tab">$142</b></span><span>DRAWN 10/12/2025</span></div>
+  </div>
+</div></section>
+
+<!-- NORA INSPECTOR -->
+<section class="nora"><div class="nora-inner">
+  <div>
+    <div class="rub">Sheet E · intake, annotated</div>
+    <h2>Nora works in the <em>open.</em></h2>
+    <p>Every input Nora takes in, every rule she applies, and every number she produces is <b>visible in the transcript</b>. Nothing is inferred off-screen. Nothing is saved to a vendor.</p>
+    <p>If you disagree with her reading, you can correct the transcript before it reaches the agent. Your agent sees the same document you see.</p>
+    <a class="btn" href="#">Read a sample transcript →</a>
+  </div>
+  <div class="nora-screen">
+    <div class="bar"><span>TRANSCRIPT · #C-19482</span><span class="on">● INSPECTOR MODE</span></div>
+    <div class="tr u"><span class="who">You</span><span>COBRA ends Dec 31. I'm 1099 now, AGI around $74k in NC.</span></div>
+    <div class="tr"><span class="who">Nora</span><span>Reading renewal notice: APTC-eligible at <b>$418/mo</b> (NC benchmark silver $612, expected contribution $194 at 263% FPL).</span></div>
+    <div class="tr u"><span class="who">You</span><span>Keep my therapist and my Lexapro in-network.</span></div>
+    <div class="tr"><span class="who">Nora</span><span>Network check: <b>3 of 47 plans</b> pass. Formulary check: <b>Lexapro tier 2</b> across all three. Flagging Plan C for an October reset clause.</span></div>
+    <div class="tr"><span class="who">Nora</span><span>Routing to <b>Maya Okafor, NC #44812</b> — best caseload match for your situation.</span></div>
+    <div class="pin p1">Inputs parsed from 1095-A</div>
+    <div class="pin p2">APTC formula, fully shown</div>
+    <div class="pin p3">Human gate · non-bypassable</div>
+  </div>
+</div></section>
+
+<!-- VOID -->
+<section class="void"><div class="void-inner">
+  <div class="rub">Sheet F · why we exist</div>
+  <h2>The navigator void, and why <em>transparency</em> is the only product.</h2>
+  <p>In late 2025, federal funding for health insurance navigators was <b>reduced sixfold</b>. Millions of Americans — specifically the self-employed and those nearing retirement — lost the trusted advocate that helped them decipher the changing subsidy landscape.</p>
+  <p>Shophealthcare was built as a response. We treated the brokerage not as a black box to sell through, but as a <b>system to draw</b> — every layer labeled, every handoff visible, every human named. If it happens to your coverage, it appears on a sheet. Nothing hidden.</p>
+</div></section>
+
+<!-- CTA -->
+<section class="cta"><div class="cta-inner">
+  <div>
+    <h2>Start the <em>intake.</em><br>Read every line.</h2>
+    <p>Four minutes with Nora. A licensed agent on the other side. Full transcript. Full blueprint. Free to walk at any step.</p>
+    <div class="actions">
+      <a class="btn primary big" href="#">Begin intake →</a>
+      <a class="btn big" href="#">See the full schematic</a>
+    </div>
+  </div>
+  <div class="tb">
+    <div class="r"><span>DRAWING REV</span><b>2026.01</b></div>
+    <div class="r"><span>LAYERS</span><b>05 · all drawn</b></div>
+    <div class="r"><span>HUMAN GATES</span><b>01 · required</b></div>
+    <div class="r"><span>COST TO YOU</span><b>$0.00 · ever</b></div>
+    <div class="r"><span>TIME TO FIRST REC</span><b>≤ 24 hrs</b></div>
+  </div>
+</div></section>
+
+<footer>
+<div class="foot-grid">
+  <div>
+    <div class="word">Shophealthcare</div>
+    <div style="font-size:10px;letter-spacing:.18em;color:var(--red);margin-bottom:14px;">LICENSED BROKERAGE · EST. 2024</div>
+    <p class="tag">A system drawn in the open. 180 state-licensed agents, Nora the AI intake, zero data resold, every handoff visible on a sheet.</p>
+  </div>
+  <div><h6>SYSTEM</h6><ul><li>The schematic</li><li>Agent directory</li><li>Inspectors</li><li>Transcripts</li></ul></div>
+  <div><h6>LEGAL</h6><ul><li>Privacy</li><li>HIPAA</li><li>License lookup</li><li>NPN #19482230</li></ul></div>
+  <div><h6>DIRECTORY</h6><ul><li>HELLO@SHOPHEALTHCARE</li><li class="tab">(800) 555-0198</li><li>M–F · 8a – 9p ET</li></ul></div>
+</div>
+<div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED 50 STATES</span><span>SHEET 07 OF 07 · NOT A GOV SITE</span></div>
+</footer>
+
+</body></html>

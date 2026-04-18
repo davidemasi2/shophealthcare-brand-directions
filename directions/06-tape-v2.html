@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Shophealthcare — Tape (v2 wireframe-loyal)</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--manila:#E8D9B0;--paper:#F4EDD8;--ink:#0E0E0E;--red:#C8171C;--rule:#B8A77C;--mute:#6B6250;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;background:var(--manila);color:var(--ink);}
+body{font-family:'Archivo',sans-serif;font-size:16px;line-height:1.55;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;background-image:radial-gradient(circle at 1px 1px,rgba(14,14,14,.06) 1px,transparent 1.5px);background-size:3px 3px;mix-blend-mode:multiply;opacity:.5;}
+.mono{font-family:'JetBrains Mono',monospace;}.type{font-family:'Special Elite',monospace;}.tab{font-variant-numeric:tabular-nums;}
+.page{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+.announce{background:var(--red);color:var(--paper);text-align:center;padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-bottom:2px solid var(--ink);}
+.announce a{color:#FFECA8;text-decoration:underline;}
+
+nav.head{border-bottom:2px solid var(--ink);background:var(--paper);}
+nav.head .row{max-width:1280px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;gap:24px;}
+.wordmark{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:.01em;}
+.wordmark .mark{width:26px;height:26px;background:var(--red);border:2px solid var(--ink);transform:rotate(-4deg);}
+.nav-sub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);display:flex;gap:14px;padding-left:18px;border-left:1px solid var(--ink);}
+.nav-links{margin-left:auto;display:flex;gap:22px;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.03em;}
+.nav-links a{color:var(--ink);text-decoration:none;}
+.nav-right{display:flex;gap:8px;}
+.btn{display:inline-flex;align-items:center;padding:10px 16px;font-family:'Archivo';font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:2px solid var(--ink);text-decoration:none;color:var(--ink);background:var(--paper);cursor:pointer;}
+.btn.primary{background:var(--red);color:var(--paper);border-color:var(--ink);}
+.btn.ghost{background:transparent;}
+.btn.big{padding:16px 22px;font-size:13px;}
+
+.crumb{max-width:1280px;margin:0 auto;padding:14px 40px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;border-bottom:1px dashed var(--ink);}
+.crumb b{color:var(--ink);}
+.crumb .sep{margin:0 8px;}
+
+.hero{padding:64px 0 40px;}
+.hero .grid{display:grid;grid-template-columns:1.35fr 1fr;gap:56px;align-items:start;}
+.hero h1{font-family:'Archivo';font-weight:900;font-size:88px;line-height:.94;letter-spacing:-.03em;margin:0 0 26px;text-transform:uppercase;}
+.hero h1 em{font-family:'Special Elite',monospace;font-weight:400;font-style:normal;color:var(--red);text-transform:none;letter-spacing:-.01em;}
+.hero h1 .fix{background:var(--ink);color:var(--paper);padding:0 12px;display:inline-block;}
+.hero .lead{font-family:'Special Elite',monospace;font-size:18px;line-height:1.6;max-width:540px;margin:0 0 26px;}
+.hero .lead b{font-family:'Archivo';font-weight:800;background:#FFECA8;padding:0 2px;}
+.hero .ctas{display:flex;gap:10px;}
+.illus{aspect-ratio:1/1;background:var(--paper);border:2px solid var(--ink);display:flex;align-items:flex-end;justify-content:center;padding:16px;position:relative;box-shadow:8px 8px 0 var(--ink);}
+.illus::before{content:"";position:absolute;inset:14px;border:1px dashed var(--ink);}
+.illus .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:var(--manila);padding:6px 10px;border:1px solid var(--ink);position:relative;z-index:2;}
+
+.nora-chip{max-width:1280px;margin:0 auto;padding:0 40px 24px;}
+.nora-chip .inner{display:inline-flex;align-items:center;gap:12px;padding:9px 14px;border:2px solid var(--ink);background:var(--paper);font-size:13px;font-weight:600;box-shadow:3px 3px 0 var(--ink);}
+.nora-chip .dot{width:9px;height:9px;background:var(--red);border-radius:50%;box-shadow:0 0 0 3px rgba(200,23,28,.25);}
+.nora-chip .meta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase;}
+
+.situations{padding:20px 0 14px;}
+.sit-grid{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink);background:var(--paper);}
+.sit{padding:28px 26px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);display:flex;flex-direction:column;min-height:220px;}
+.sit:nth-child(3n){border-right:0;}.sit:nth-child(n+4){border-bottom:0;}
+.sit .kicker{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;margin-bottom:14px;font-weight:600;}
+.sit h3{font-family:'Archivo';font-weight:900;font-size:24px;line-height:1.05;letter-spacing:-.015em;margin:0 0 auto;text-transform:uppercase;}
+.sit .start{margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink);text-decoration:none;}
+.sit .start::after{content:" →";color:var(--red);}
+.sit.alt{background:var(--ink);color:var(--paper);}
+.sit.alt h3{color:var(--paper);font-family:'Special Elite',monospace;font-weight:400;text-transform:none;font-size:22px;}
+.sit.alt .kicker{color:#FFECA8;}.sit.alt .start{color:var(--paper);}
+
+.phone-row{max-width:1280px;margin:0 auto;padding:16px 40px 8px;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase;}
+.phone-row b{color:var(--ink);}.phone-row a{color:var(--red);text-decoration:underline;font-weight:700;}
+
+.rule{max-width:1280px;margin:0 auto;padding:40px 40px 0;}.rule::before{content:"";display:block;height:2px;background:var(--ink);}
+
+.nora-sec{padding:80px 0 40px;}
+.nora-sec .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:72px;align-items:start;}
+.nora-sec h2{font-family:'Archivo';font-weight:900;font-size:52px;line-height:1;letter-spacing:-.025em;margin:0 0 28px;max-width:620px;text-transform:uppercase;}
+.nora-sec h2 .em{font-family:'Special Elite',monospace;font-weight:400;font-style:normal;color:var(--red);text-transform:none;letter-spacing:-.01em;}
+.nora-sec p{font-family:'Special Elite',monospace;font-size:17px;line-height:1.65;margin:0 0 18px;max-width:560px;color:var(--ink);}
+.nora-sec p b{font-family:'Archivo';font-weight:900;background:#FFECA8;padding:0 3px;}
+.nora-illus{aspect-ratio:4/5;background:var(--paper);border:2px solid var(--ink);display:flex;align-items:flex-end;justify-content:center;padding:16px;box-shadow:8px 8px 0 var(--ink);position:relative;}
+.nora-illus::before{content:"";position:absolute;inset:14px;border:1px dashed var(--ink);}
+.nora-illus .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:var(--manila);padding:6px 10px;border:1px solid var(--ink);position:relative;z-index:2;}
+.nora-link{max-width:1280px;margin:0 auto;padding:0 40px 56px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;}
+.nora-link a{color:var(--red);text-decoration:underline;font-weight:700;}
+
+.process{padding:0;border-top:2px solid var(--ink);background:var(--paper);}
+.step-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);}
+.step{padding:48px 32px;border-right:1px solid var(--ink);}
+.step:last-child{border-right:0;}
+.step .n{font-family:'Archivo';font-weight:900;font-size:44px;line-height:1;color:var(--red);margin-bottom:14px;letter-spacing:-.02em;}
+.step h4{font-family:'Archivo';font-weight:900;font-size:20px;letter-spacing:.04em;margin:0 0 12px;text-transform:uppercase;}
+.step p{font-family:'Special Elite',monospace;font-size:15px;line-height:1.6;margin:0;max-width:320px;}
+
+.stats{background:var(--ink);color:var(--paper);border-top:3px solid var(--red);border-bottom:3px solid var(--red);}
+.stats-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{padding:40px 28px;border-right:1px solid rgba(244,237,216,.15);}.stat:last-child{border-right:0;}
+.stat .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,237,216,.7);margin-bottom:10px;}
+.stat .n{font-family:'Archivo';font-weight:900;font-size:52px;line-height:.95;letter-spacing:-.03em;}
+.stat .n.r{color:var(--red);}
+
+.void{padding:72px 0;background:var(--paper);border-top:2px solid var(--ink);}
+.void .inner{max-width:820px;margin:0 auto;padding:0 40px;}
+.void h2{font-family:'Archivo';font-weight:900;font-size:44px;line-height:1.02;letter-spacing:-.025em;margin:0 0 24px;text-transform:uppercase;}
+.void p{font-family:'Special Elite',monospace;font-size:17px;line-height:1.65;margin:0 0 16px;}
+.void p b{font-family:'Archivo';font-weight:900;background:#FFECA8;padding:0 2px;}
+.void .mark{display:inline-block;width:40px;height:2px;background:var(--red);margin-top:18px;}
+
+footer{background:var(--ink);color:var(--paper);padding:48px 40px 28px;}
+.foot-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;}
+footer h6{font-family:'Archivo';font-weight:900;font-size:11px;letter-spacing:.14em;color:var(--red);margin:0 0 14px;text-transform:uppercase;}
+footer ul{list-style:none;padding:0;margin:0;}footer li{font-size:14px;margin-bottom:6px;}
+footer .word{font-family:'Archivo';font-weight:900;font-size:22px;display:flex;align-items:center;gap:10px;margin-bottom:10px;text-transform:uppercase;}
+footer .word .mark{width:22px;height:22px;background:var(--red);border:2px solid var(--paper);transform:rotate(-4deg);}
+footer .tag{color:rgba(244,237,216,.7);font-size:13px;line-height:1.55;max-width:340px;}
+.foot-bottom{max-width:1280px;margin:32px auto 0;padding-top:18px;border-top:1px solid rgba(244,237,216,.15);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(244,237,216,.5);text-transform:uppercase;display:flex;justify-content:space-between;}
+</style></head><body>
+
+<div class="announce">ACA OPEN ENROLLMENT IS LIVE — ENDS JAN 15 · <a href="#">CHECK YOUR SUBSIDY</a></div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark"><span class="mark"></span>Shophealthcare</div>
+  <div class="nav-sub"><span>STATE LICENSED BROKERAGE</span><span>NPN #19482230</span></div>
+  <div class="nav-links"><a>How it works</a><a>For businesses</a><a>Talk to a human</a></div>
+  <div class="nav-right"><a class="btn" href="#">Compare</a><a class="btn" href="#">Shop plans</a><a class="btn ghost" href="#">Sign in</a></div>
+</div></nav>
+
+<div class="crumb">HOME <span class="sep">/</span> <b>SHOPHEALTHCARE</b></div>
+
+<section class="hero"><div class="page"><div class="grid">
+  <div>
+    <h1>Health insurance was never built for the way you <em>work.</em><br><span class="fix">We fixed that.</span></h1>
+    <p class="lead">Nora, our <b>AI enrollment assistant</b>, finds your real options in 4 minutes — backed by licensed agents in your state.</p>
+    <div class="ctas"><a class="btn primary big" href="#">Check my options</a><a class="btn ghost big" href="#">Scan your card</a></div>
+  </div>
+  <div class="illus"><div class="label">HERO ILLUSTRATION · FIG. 01 · "EXHIBIT A"</div></div>
+</div></div></section>
+
+<div class="nora-chip"><div class="inner"><span class="dot"></span><span><b>Nora</b> · Licensed enrollment assistant</span><span class="meta">ACTIVE · 2:04 AVG RESPONSE</span></div></div>
+
+<section class="situations"><div class="page"><div class="sit-grid">
+  <div class="sit"><div class="kicker">CASE 01 · JOB LOSS</div><h3>I just lost my health insurance</h3><a class="start">Start here</a></div>
+  <div class="sit"><div class="kicker">CASE 02 · 1099 / 1040-SE</div><h3>I'm self-employed or freelance</h3><a class="start">Start here</a></div>
+  <div class="sit"><div class="kicker">CASE 03 · RENEWAL</div><h3>I got my 2026 renewal notice</h3><a class="start">Start here</a></div>
+  <div class="sit"><div class="kicker">CASE 04 · THE BRIDGE YEARS</div><h3>I'm 55–64, not yet on Medicare</h3><a class="start">Start here</a></div>
+  <div class="sit"><div class="kicker">CASE 05 · GUT-CHECK</div><h3>I just want to check my current plan</h3><a class="start">Start here</a></div>
+  <div class="sit alt"><div class="kicker">NONE OF THESE FIT</div><h3>Start with a few questions and we'll route you.</h3><a class="start">Route me</a></div>
+</div></div></section>
+
+<div class="phone-row"><span>PREFER TO TALK TO SOMEONE? CALL <b class="tab">(800) 555-0198</b></span><a href="#">NOT SURE WHICH APPLIES TO YOU? <b>TAKE THE 90-SECOND CHECK →</b></a></div>
+
+<div class="rule"></div>
+
+<section class="nora-sec"><div class="page"><div class="grid">
+  <div>
+    <h2>Meet Nora — Your <span class="em">Licensed Enrollment Assistant.</span></h2>
+    <p>Traditional health insurance navigators are <b>underfunded and overwhelmed</b>. Nora was designed to bridge the data gap between the complex federal marketplace and your specific instances.</p>
+    <p>By processing thousands of plan variations instantly, Nora identifies <b>hidden subsidies</b> and <b>co-option network gaps</b> that human eyes often miss during the first pass.</p>
+    <p>Every recommendation made by Nora is <b>reviewed by a state-licensed agent</b> before your final enrollment, ensuring 100% compliance and accuracy of your 2026 coverage.</p>
+  </div>
+  <div class="nora-illus"><div class="label">NORA · FIG. 02 · TYPOGRAPHIC ENTITY</div></div>
+</div></div></section>
+
+<div class="nora-link">SEE EXACTLY WHAT NORA CAN AND CAN'T DO → <a href="#">METHODOLOGY &amp; LIMITATIONS</a></div>
+
+<section class="process"><div class="step-grid">
+  <div class="step"><div class="n">01.</div><h4>SCAN OR SEARCH</h4><p>Upload your current insurance card or tell Nora about your circumstances. She starts with the facts you already have on paper. Nothing else to fill in.</p></div>
+  <div class="step"><div class="n">02.</div><h4>COMPARE</h4><p>Nora runs the diagnostic, shows your real options — what's available in your state, highlights the true cost of ownership, not just premium. Tradeoffs in plain sight.</p></div>
+  <div class="step"><div class="n">03.</div><h4>ENROLL</h4><p>Finalize your selection with a human review. A state-licensed agent verifies every detail before you enroll. No auto-renewal, no surprise decisions.</p></div>
+</div></section>
+
+<section class="stats"><div class="stats-grid">
+  <div class="stat"><div class="lbl">PLANS COMPARED</div><div class="n tab">1.2M+</div></div>
+  <div class="stat"><div class="lbl">LICENSED DIRECTORS</div><div class="n tab">180+</div></div>
+  <div class="stat"><div class="lbl">HIPAA-AUDIT ENCRYPTION</div><div class="n tab">256-BIT</div></div>
+  <div class="stat"><div class="lbl">COST TO COMPARE, COMPLETE, EXIT</div><div class="n r tab">$0.00</div></div>
+</div></section>
+
+<section class="void"><div class="inner">
+  <h2>The navigator void, and why Nora exists.</h2>
+  <p>In late 2025, federal funding for health insurance navigators was <b>reduced sixfold</b>. This left millions of Americans — specifically the self-employed and those nearing retirement — without a trusted advocate to help them decipher the changing subsidy landscape.</p>
+  <p>Nora was built as a <b>response to this void</b>. We believe that technology shouldn't just sell you a plan. It should protect your health and your wallet by providing the same level of rigorous analysis that a concierge broker would provide, accessible to everyone instantly.</p>
+  <span class="mark"></span>
+</div></section>
+
+<footer><div class="foot-grid">
+  <div><div class="word"><span class="mark"></span>Shophealthcare</div><p class="tag">A licensed, independent health insurance brokerage. Named agents, flat-fee pay, no data resold.</p></div>
+  <div><h6>CONTACT</h6><ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul></div>
+  <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+  <div><h6>DIRECTORY</h6><ul><li>NPN #19482230</li><li>HELLO@SHOPHEALTHCARE</li><li class="tab">(800) 555-0198</li></ul></div>
+</div>
+<div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED IN ALL 50 STATES</span><span>NOT A GOVERNMENT SITE</span></div>
+</footer>
+</body></html>

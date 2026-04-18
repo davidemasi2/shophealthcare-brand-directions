@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Receipt (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2E8D0;
+    --paper-2: #E8DDC1;
+    --ink: #111111;
+    --ink-soft: #2A2A2A;
+    --mute: #6B6558;
+    --rule: #111111;
+    --rule-soft: rgba(17,17,17,0.2);
+    --orange: #FF5E1A;
+    --green: #3E6A3E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(17,17,17,0.025) 27px 28px);
+  }
+  .sans { font-family: 'IBM Plex Sans', -apple-system, sans-serif; }
+  .tab { font-variant-numeric: tabular-nums; }
+  .label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+
+  /* Announce */
+  .announce {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 10px 40px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .announce a { color: var(--orange); text-decoration: underline; }
+
+  /* Nav */
+  nav.head { border-bottom: 1px solid var(--rule); }
+  nav.head .row {
+    max-width: 1280px; margin: 0 auto; padding: 20px 40px;
+    display: flex; align-items: center; gap: 28px;
+  }
+  .wordmark {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .wordmark::before { content: ""; width: 14px; height: 14px; background: var(--orange); }
+  .nav-sub {
+    margin-left: 16px;
+    display: flex; gap: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--mute);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    margin-left: auto;
+    display: flex; gap: 24px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-right { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--ink);
+    background: transparent;
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.orange { background: var(--orange); color: var(--ink); border-color: var(--orange); }
+  .btn.big { padding: 16px 22px; font-size: 13px; }
+
+  /* Crumb */
+  .crumb {
+    max-width: 1280px; margin: 0 auto; padding: 14px 40px;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute);
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between;
+  }
+  .crumb b { color: var(--ink); font-weight: 700; }
+  .crumb .r { color: var(--mute); }
+
+  /* HERO */
+  .hero { padding: 56px 0 48px; }
+  .hero .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: start; }
+  .hero .stamp {
+    display: inline-block; padding: 6px 10px;
+    border: 1.5px solid var(--orange);
+    color: var(--orange);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    transform: rotate(-1deg);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0 0 28px;
+  }
+  .hero h1 .strike { text-decoration: line-through; text-decoration-color: var(--orange); text-decoration-thickness: 4px; }
+  .hero h1 .fix { background: var(--ink); color: var(--paper); padding: 0 10px; display: inline-block; }
+  .hero .lead {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin: 0 0 28px;
+  }
+  .hero .lead b { background: #FFE9B8; padding: 0 4px; font-weight: 600; }
+  .hero .ctas { display: flex; gap: 10px; }
+
+  .hero-receipt {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 24px 28px;
+  }
+  .hero-receipt .h {
+    display: flex; justify-content: space-between;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mute);
+    border-bottom: 1px dashed var(--rule-soft);
+    padding-bottom: 10px; margin-bottom: 14px;
+  }
+  .hero-receipt .ln {
+    display: flex; justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule-soft);
+    font-size: 13px;
+  }
+  .hero-receipt .ln .k { color: var(--ink-soft); }
+  .hero-receipt .ln .v { font-weight: 600; }
+  .hero-receipt .total {
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1.5px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .hero-receipt .total .k { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+  .hero-receipt .total .v { font-size: 42px; font-weight: 500; color: var(--orange); letter-spacing: -0.03em; line-height: 1; }
+  .hero-receipt .note {
+    margin-top: 14px; padding: 10px 12px; background: var(--ink); color: var(--paper);
+    font-size: 11px; line-height: 1.5;
+  }
+  .hero-receipt .note b { color: var(--orange); }
+
+  /* Nora chip */
+  .nora-chip { max-width: 1280px; margin: 0 auto; padding: 0 40px 28px; }
+  .nora-chip .inner {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-size: 12px;
+  }
+  .nora-chip .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+  .nora-chip b { font-weight: 700; }
+  .nora-chip .meta { color: var(--mute); font-size: 10px; letter-spacing: 0.1em; }
+
+  /* SITUATIONS */
+  .situations { padding: 16px 0; }
+  .sit-head {
+    max-width: 1280px; margin: 0 auto; padding: 8px 40px 18px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute);
+  }
+  .sit-head b { color: var(--ink); font-weight: 700; }
+  .sit-grid {
+    max-width: 1280px; margin: 0 auto;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    display: grid; grid-template-columns: repeat(3, 1fr);
+  }
+  .sit {
+    padding: 24px 24px 26px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+    min-height: 200px;
+    position: relative;
+  }
+  .sit:nth-child(3n) { border-right: 0; }
+  .sit:nth-child(n+4) { border-bottom: 0; }
+  .sit .kicker {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .sit .kicker .code { color: var(--orange); }
+  .sit h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    margin: 0 0 auto;
+  }
+  .sit .start {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule-soft);
+  }
+  .sit .start::after { content: " →"; color: var(--orange); }
+  .sit.alt { background: var(--paper-2); }
+
+  /* Phone row */
+  .phone-row {
+    max-width: 1280px; margin: 0 auto; padding: 16px 40px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .phone-row b { color: var(--ink); font-weight: 700; }
+  .phone-row a { color: var(--ink); text-decoration: underline; }
+
+  /* NORA section */
+  .nora-sec { padding: 72px 0 24px; border-top: 1.5px solid var(--rule); margin-top: 40px; }
+  .nora-sec .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
+  .nora-sec .eye {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--orange); font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .nora-sec h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.08;
+    letter-spacing: -0.024em;
+    margin: 0 0 28px;
+  }
+  .nora-sec p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    max-width: 560px;
+  }
+  .nora-sec p b { font-weight: 600; background: #FFE9B8; padding: 0 3px; }
+  .nora-illus {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    aspect-ratio: 1/1;
+    padding: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+    position: relative;
+  }
+  .nora-illus .title {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute);
+    border-bottom: 1px dashed var(--rule-soft); padding-bottom: 10px; margin-bottom: 14px;
+    display: flex; justify-content: space-between;
+  }
+  .nora-illus .msg { padding: 5px 0; }
+  .nora-illus .nora { color: var(--orange); font-weight: 700; margin-right: 8px; }
+  .nora-illus .u { color: var(--ink); font-weight: 700; margin-right: 8px; }
+  .nora-illus .sys { color: var(--mute); font-size: 10px; padding: 6px 0; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .nora-link {
+    max-width: 1280px; margin: 0 auto; padding: 20px 40px 56px;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute);
+  }
+  .nora-link a { color: var(--ink); text-decoration: underline; font-weight: 700; }
+
+  /* PROCESS */
+  .process { padding: 12px 0 64px; border-top: 1.5px solid var(--rule); }
+  .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .step {
+    padding: 40px 32px 40px;
+    border-right: 1px solid var(--rule);
+  }
+  .step:last-child { border-right: 0; }
+  .step .n {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .step h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .step p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 14px;
+    max-width: 300px;
+  }
+  .step .dur {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute);
+    padding-top: 10px; border-top: 1px dashed var(--rule-soft);
+  }
+  .step .dur b { color: var(--ink); font-weight: 700; }
+
+  /* STATS */
+  .stats {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .stats-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat {
+    padding: 44px 28px;
+    border-right: 1px dashed rgba(242,232,208,0.2);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(242,232,208,0.5); margin-bottom: 12px;
+  }
+  .stat .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .stat .n.o { color: var(--orange); }
+
+  /* NAVIGATOR VOID */
+  .void {
+    padding: 88px 40px 96px;
+    text-align: center;
+    border-top: 1px solid var(--rule);
+  }
+  .void .inner { max-width: 720px; margin: 0 auto; }
+  .void .stamp {
+    display: inline-block; padding: 6px 12px;
+    border: 1.5px solid var(--rule);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 24px;
+    transform: rotate(-0.5deg);
+  }
+  .void h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    margin: 0 0 28px;
+  }
+  .void p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    text-align: left;
+  }
+  .void p b { background: #FFE9B8; padding: 0 3px; font-weight: 600; }
+
+  /* FOOTER */
+  footer { border-top: 1.5px solid var(--rule); padding: 40px 40px 28px; }
+  .foot-grid {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+  }
+  footer h6 {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute);
+    margin: 0 0 12px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 13px; margin-bottom: 7px; }
+  footer .word {
+    font-weight: 700; font-size: 16px; letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  footer .word::before { content: ""; width: 14px; height: 14px; background: var(--orange); }
+  footer .tag {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px; color: var(--mute); line-height: 1.55; max-width: 320px; margin: 0;
+  }
+  .foot-bottom {
+    max-width: 1280px; margin: 28px auto 0; padding-top: 16px;
+    border-top: 1px dashed var(--rule-soft);
+    font-size: 10px; letter-spacing: 0.08em; color: var(--mute); text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="announce">— ACA OPEN ENROLLMENT LIVE · ENDS JAN 15 · <a href="#">FILE WITH CONFIDENCE →</a> —</div>
+
+<nav class="head">
+  <div class="row">
+    <div class="wordmark">SHOPHEALTHCARE</div>
+    <div class="nav-sub">
+      <span>LICENSED · 50 STATES</span>
+      <span>NPN #19482230</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">HOW IT WORKS</a>
+      <a href="#">BUSINESSES</a>
+      <a href="#">TALK TO A HUMAN</a>
+    </div>
+    <div class="nav-right">
+      <a class="btn" href="#">Compare</a>
+      <a class="btn" href="#">Shop plans</a>
+      <a class="btn" href="#">Sign in</a>
+    </div>
+  </div>
+</nav>
+
+<div class="crumb">
+  <span>HOME <span class="r">/</span> <b>SHOPHEALTHCARE</b></span>
+  <span class="r">RECEIPT NO. SHC-2026-HOME-01</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="page">
+    <div class="grid">
+      <div>
+        <span class="stamp">★ DOCUMENT CLASS · HOMEPAGE</span>
+        <h1>Health insurance was <span class="strike">never built</span> for the way you work.<br><span class="fix">We fixed that.</span></h1>
+        <p class="lead">
+          Nora — our <b>AI enrollment assistant</b> — finds your real options in 4 minutes. Every recommendation is reviewed by a licensed agent in your state before you enroll.
+        </p>
+        <div class="ctas">
+          <a class="btn primary big" href="#">CHECK MY OPTIONS →</a>
+          <a class="btn big" href="#">SCAN YOUR CARD</a>
+        </div>
+      </div>
+      <aside class="hero-receipt">
+        <div class="h">
+          <span>QUOTE PREVIEW · RECEIPT #0042</span>
+          <span>04/18/2026</span>
+        </div>
+        <div class="ln"><span class="k">Current plan</span><span class="v">Aetna Bronze HSA</span></div>
+        <div class="ln"><span class="k">Monthly premium</span><span class="v tab">$612.00</span></div>
+        <div class="ln"><span class="k">Deductible</span><span class="v tab">$7,050</span></div>
+        <div class="ln"><span class="k">Plans found in your state</span><span class="v tab">47 · starting $334/mo</span></div>
+        <div class="ln"><span class="k">Subsidy est.</span><span class="v tab">−$184/mo</span></div>
+        <div class="total">
+          <span class="k">EST. MONTHLY SAVINGS</span>
+          <span class="v tab">$278</span>
+        </div>
+        <div class="note"><b>EXAMPLE ONLY —</b> your actual quote is computed live after you scan your card. No data stored until enrollment.</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- NORA CHIP -->
+<div class="nora-chip">
+  <div class="inner">
+    <span class="dot"></span>
+    <span><b>NORA</b> · LICENSED ENROLLMENT ASSISTANT</span>
+    <span class="meta">ACTIVE · AVG RESPONSE 2:04</span>
+  </div>
+</div>
+
+<!-- SITUATIONS -->
+<section class="situations">
+  <div class="sit-head">
+    <span>SECTION 01 · <b>SELECT YOUR SITUATION</b></span>
+    <span>5 COMMON CASES · 1 CUSTOM ROUTE</span>
+  </div>
+  <div class="page" style="padding: 0;">
+    <div class="sit-grid">
+      <div class="sit">
+        <div class="kicker"><span>CASE 01</span><span class="code">LOSS</span></div>
+        <h3>I just lost my health insurance</h3>
+        <a class="start" href="#">START HERE</a>
+      </div>
+      <div class="sit">
+        <div class="kicker"><span>CASE 02</span><span class="code">1099</span></div>
+        <h3>I'm self-employed or freelance</h3>
+        <a class="start" href="#">START HERE</a>
+      </div>
+      <div class="sit">
+        <div class="kicker"><span>CASE 03</span><span class="code">RENEWAL</span></div>
+        <h3>I got my 2026 renewal notice</h3>
+        <a class="start" href="#">START HERE</a>
+      </div>
+      <div class="sit">
+        <div class="kicker"><span>CASE 04</span><span class="code">BRIDGE</span></div>
+        <h3>I'm 55–64, not yet on Medicare</h3>
+        <a class="start" href="#">START HERE</a>
+      </div>
+      <div class="sit">
+        <div class="kicker"><span>CASE 05</span><span class="code">GUT-CHECK</span></div>
+        <h3>I just want to check my current plan</h3>
+        <a class="start" href="#">START HERE</a>
+      </div>
+      <div class="sit alt">
+        <div class="kicker"><span>CASE ?</span><span class="code" style="color: var(--orange);">CUSTOM</span></div>
+        <h3>None of these fit — route me with a few questions.</h3>
+        <a class="start" href="#">ROUTE ME</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHONE ROW -->
+<div class="phone-row">
+  <span>PREFER TO TALK TO SOMEONE? CALL <b class="tab">(800) 555-0198</b></span>
+  <a href="#">NOT SURE WHICH APPLIES? <b>TAKE THE 90-SECOND CHECK →</b></a>
+</div>
+
+<!-- NORA SECTION -->
+<section class="nora-sec">
+  <div class="page">
+    <div class="grid">
+      <div>
+        <div class="eye">SECTION 02 · MEET THE ASSISTANT</div>
+        <h2>Meet Nora — Your Licensed Enrollment Assistant.</h2>
+        <p>Traditional health insurance navigators are <b>underfunded and overwhelmed</b>. Nora was designed to bridge the data gap between the complex federal marketplace and your specific situation.</p>
+        <p>By processing thousands of plan variations instantly, Nora identifies <b>hidden subsidies</b> and network gaps that human eyes often miss during the first pass.</p>
+        <p>Every recommendation made by Nora is <b>reviewed by a state-licensed agent</b> before your final enrollment — ensuring 100% compliance and accuracy of your 2026 coverage.</p>
+      </div>
+      <div class="nora-illus">
+        <div class="title"><span>TRANSCRIPT · DEMO_02</span><span>10:04 ET</span></div>
+        <div class="sys">— SESSION OPENED · CARD UPLOADED —</div>
+        <div class="msg"><span class="nora">NORA:</span> Aetna Bronze HSA. $612/mo. Deductible $7,050. Lipitor: Tier 3.</div>
+        <div class="msg"><span class="nora">NORA:</span> 47 plans in your state. 4 cheaper at your utilization.</div>
+        <div class="msg"><span class="u">YOU:</span> keep my PCP dr. oh</div>
+        <div class="msg"><span class="nora">NORA:</span> Kaiser Silver HMO 2000. $412/mo. Dr. Oh: in-network. Lipitor: Tier 1.</div>
+        <div class="msg"><span class="nora">NORA:</span> Limit I should name first: HMO requires PCP referral for specialists. One extra step.</div>
+        <div class="sys">— LICENSED AGENT REVIEW PENDING —</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="nora-link">
+  SEE EXACTLY WHAT NORA CAN AND CAN'T DO → <a href="#">METHODOLOGY &amp; LIMITATIONS</a>
+</div>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="page" style="padding: 0;">
+    <div class="step-grid">
+      <div class="step">
+        <div class="n">01.</div>
+        <h4>SCAN OR SEARCH</h4>
+        <p>Upload your current insurance card or tell Nora about your circumstances. She starts with the facts you already have on paper — nothing else to fill in.</p>
+        <div class="dur">DURATION · <b>~90 SEC</b></div>
+      </div>
+      <div class="step">
+        <div class="n">02.</div>
+        <h4>COMPARE</h4>
+        <p>Nora runs the diagnostic, shows your real options — what's available in your state, highlights the true cost of ownership, not just premium.</p>
+        <div class="dur">DURATION · <b>~6 MIN</b></div>
+      </div>
+      <div class="step">
+        <div class="n">03.</div>
+        <h4>ENROLL</h4>
+        <p>Finalize your selection with a human review. A state-licensed agent verifies every detail before you enroll. No auto-renewal, no surprise decisions.</p>
+        <div class="dur">DURATION · <b>~2 MIN</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="lbl">PLANS COMPARED</div><div class="n tab">1.2M+</div></div>
+    <div class="stat"><div class="lbl">LICENSED AGENTS</div><div class="n tab">180+</div></div>
+    <div class="stat"><div class="lbl">HIPAA ENCRYPTION</div><div class="n tab">256-BIT</div></div>
+    <div class="stat"><div class="lbl">COST TO YOU</div><div class="n o tab">$0.00</div></div>
+  </div>
+</section>
+
+<!-- VOID -->
+<section class="void">
+  <div class="inner">
+    <div class="stamp">★ FOUNDING DOCUMENT · NOV 2025</div>
+    <h2>The navigator void, and why Nora exists.</h2>
+    <p>In late 2025, federal funding for health insurance navigators was <b>reduced sixfold</b>. This left millions of Americans — specifically the self-employed and those nearing retirement — without a trusted advocate to help decipher the changing subsidy landscape.</p>
+    <p>Nora was built as a <b>response to this void</b>. We believe that technology shouldn't just sell you a plan. It should protect your health and your wallet by providing the same level of rigorous analysis a concierge broker would, accessible to everyone instantly.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="word">SHOPHEALTHCARE</div>
+      <p class="tag">A licensed, independent health insurance brokerage. Named agents. Flat-fee compensation. No data resold. Every number disclosed.</p>
+    </div>
+    <div>
+      <h6>CONTACT</h6>
+      <ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul>
+    </div>
+    <div>
+      <h6>LEGAL</h6>
+      <ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul>
+    </div>
+    <div>
+      <h6>CONTACT</h6>
+      <ul><li>NPN #19482230</li><li>HELLO@SHOPHEALTHCARE.COM</li><li class="tab">(800) 555-0198</li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    © 2026 SHOPHEALTHCARE, INC · LICENSED IN ALL 50 STATES · NOT A GOVERNMENT SITE · NOT AFFILIATED WITH THE ACA MARKETPLACE OR MEDICARE · EVERY NUMBER ON THIS PAGE IS SOURCED FROM PUBLIC MARKETPLACE DATA OR YOUR OWN INPUT
+  </div>
+</footer>
+
+</body>
+</html>

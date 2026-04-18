@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Guide (v1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F0E4;
+    --cream-2:#EEE6D3;
+    --forest:#1E3A2C;
+    --forest-ink:#0F2419;
+    --terra:#C9683D;
+    --terra-soft:#E4A682;
+    --ink:#141611;
+    --sage:#D8D5C4;
+    --mute:#6A6658;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);}
+  body{width:1440px;margin:0;font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',Georgia,serif;font-variation-settings:"opsz" 144;font-weight:400;}
+  .tab{font-variant-numeric:tabular-nums;}
+  .mono{font-family:ui-monospace,Menlo,monospace;}
+
+  .page{max-width:1360px;margin:0 auto;padding:0 48px;}
+
+  /* Announce */
+  .announce{background:var(--forest);color:var(--cream);text-align:center;padding:11px 0;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;}
+  .announce em{font-family:'Fraunces',serif;font-style:italic;color:var(--terra-soft);letter-spacing:0;text-transform:none;font-size:14px;}
+
+  /* Nav */
+  nav.top{display:flex;align-items:center;gap:36px;padding:22px 48px;border-bottom:1px solid var(--sage);}
+  .wordmark{font-family:'Fraunces',serif;font-weight:500;font-size:24px;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px;color:var(--forest);}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--terra);}
+  .nav-credential{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mute);border-left:1px solid var(--sage);padding-left:14px;line-height:1.5;}
+  .nav-credential b{color:var(--forest);font-weight:600;}
+  .nav-links{margin-left:auto;display:flex;gap:28px;font-size:14px;color:var(--forest-ink);}
+  .nav-links a{color:inherit;text-decoration:none;}
+  .nav-right{display:flex;gap:16px;align-items:center;}
+  .nav-phone{font-weight:600;color:var(--forest);font-size:14px;letter-spacing:0.01em;}
+  .nav-phone span{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);font-weight:500;margin-right:6px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--forest);color:var(--forest);background:transparent;cursor:pointer;}
+  .btn.primary{background:var(--terra);border-color:var(--terra);color:var(--cream);}
+  .btn.dark{background:var(--forest);border-color:var(--forest);color:var(--cream);}
+  .btn.big{padding:16px 26px;font-size:15px;}
+
+  /* Hero */
+  .hero{padding:72px 48px 80px;display:grid;grid-template-columns:1.15fr 1fr;gap:72px;align-items:start;}
+  .hero .eyebrow{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--terra);margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+  .hero .eyebrow::before{content:"";width:28px;height:1px;background:var(--terra);}
+  .hero h1{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-weight:400;font-size:86px;line-height:0.98;letter-spacing:-0.028em;margin:0 0 32px;color:var(--forest-ink);}
+  .hero h1 em{font-style:italic;color:var(--terra);font-weight:400;}
+  .hero .lede{font-size:19px;line-height:1.55;color:#3A3830;max-width:520px;margin:0 0 36px;}
+  .hero .lede b{color:var(--forest);font-weight:600;}
+  .hero-ctas{display:flex;gap:12px;align-items:center;margin-bottom:28px;}
+  .hero-phone{display:flex;align-items:center;gap:14px;padding:18px 22px;background:var(--cream-2);border:1px solid var(--sage);border-radius:14px;max-width:460px;}
+  .hero-phone .ring{width:42px;height:42px;border-radius:50%;background:var(--forest);color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .hero-phone .num{font-size:22px;font-weight:600;color:var(--forest);letter-spacing:-0.01em;}
+  .hero-phone .lbl{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);margin-top:2px;}
+
+  /* Hero aside — Guide portrait + credential card */
+  .guide-stage{position:relative;}
+  .portrait-frame{
+    aspect-ratio:4/5;width:100%;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(201,104,61,0.18), transparent 60%),
+      linear-gradient(180deg, #EEE6D3 0%, #E5DBC4 100%);
+    border:1px solid var(--sage);
+    border-radius:18px;
+    position:relative;overflow:hidden;
+  }
+  /* CSS-composed illustrated portrait */
+  .p-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 110%, var(--terra-soft), transparent 55%);}
+  .p-shoulders{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:92%;height:38%;background:var(--forest);border-radius:50% 50% 0 0 / 30% 30% 0 0;}
+  .p-collar{position:absolute;bottom:22%;left:50%;transform:translateX(-50%);width:22%;height:12%;background:var(--cream);border-radius:50% 50% 0 0;}
+  .p-neck{position:absolute;bottom:34%;left:50%;transform:translateX(-50%);width:14%;height:12%;background:#C99677;border-radius:0 0 30% 30%;}
+  .p-head{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);width:38%;aspect-ratio:1/1.2;background:#D9A683;border-radius:48% 48% 42% 42% / 52% 52% 40% 40%;}
+  .p-hair{position:absolute;bottom:54%;left:50%;transform:translateX(-50%);width:42%;aspect-ratio:1/0.8;background:#3A2A1E;border-radius:50% 50% 35% 35% / 60% 60% 30% 30%;}
+  .p-hair::after{content:"";position:absolute;bottom:-12%;right:-6%;width:38%;height:40%;background:#3A2A1E;border-radius:50% 30% 40% 30%;transform:rotate(18deg);}
+  .p-eye{position:absolute;bottom:54%;width:4px;height:4px;background:var(--ink);border-radius:50%;}
+  .p-eye.l{left:42%;} .p-eye.r{right:42%;}
+  .p-smile{position:absolute;bottom:48%;left:50%;transform:translateX(-50%);width:8%;height:3%;border-bottom:1.5px solid var(--ink);border-radius:0 0 100% 100%;}
+  .p-cheek{position:absolute;bottom:50%;width:5%;height:3%;background:rgba(201,104,61,0.35);border-radius:50%;}
+  .p-cheek.l{left:36%;} .p-cheek.r{right:36%;}
+  .p-earring{position:absolute;bottom:48%;width:4px;height:4px;background:var(--terra);border-radius:50%;}
+  .p-earring.l{left:30%;} .p-earring.r{right:30%;}
+
+  .guide-caption{position:absolute;left:20px;bottom:20px;right:20px;display:flex;justify-content:space-between;align-items:end;}
+  .guide-name{background:var(--cream);padding:10px 14px;border-radius:10px;}
+  .guide-name .nm{font-family:'Fraunces',serif;font-style:italic;font-size:22px;color:var(--forest);line-height:1;}
+  .guide-name .lic{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);margin-top:4px;}
+  .guide-since{background:var(--forest);color:var(--cream);padding:8px 12px;border-radius:8px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;}
+
+  /* Membership card artifact */
+  .member-card{
+    margin-top:28px;
+    background:var(--cream-2);
+    border:1px solid var(--sage);
+    border-radius:16px;
+    padding:24px 26px 22px;
+    position:relative;
+    box-shadow:0 18px 40px -22px rgba(20,22,17,0.25);
+  }
+  .member-card::before{content:"";position:absolute;left:0;top:24px;bottom:24px;width:6px;background:var(--terra);border-radius:0 4px 4px 0;}
+  .mc-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:22px;}
+  .mc-brand{font-family:'Fraunces',serif;font-weight:500;font-size:16px;color:var(--forest);display:flex;align-items:center;gap:8px;}
+  .mc-brand .d{width:8px;height:8px;border-radius:50%;background:var(--terra);}
+  .mc-est{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mute);font-family:'Fraunces',serif;font-style:italic;letter-spacing:0.08em;text-transform:none;font-size:13px;}
+  .mc-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;}
+  .mc-lbl{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mute);margin-bottom:4px;}
+  .mc-val{font-size:14px;font-weight:600;color:var(--forest);letter-spacing:-0.005em;}
+  .mc-num{font-size:15px;letter-spacing:0.08em;}
+  .mc-bottom{margin-top:18px;padding-top:14px;border-top:1px dashed var(--sage);display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);}
+
+  /* The promise strip */
+  .promise{border-top:1px solid var(--sage);border-bottom:1px solid var(--sage);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;gap:40px;background:var(--cream-2);}
+  .promise .line{font-family:'Fraunces',serif;font-style:italic;font-size:22px;color:var(--forest);letter-spacing:-0.01em;}
+  .promise .tags{display:flex;gap:28px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);}
+  .promise .tags b{color:var(--forest);font-weight:600;}
+
+  /* Guide team */
+  .team{padding:96px 48px 72px;}
+  .team-head{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:end;margin-bottom:56px;}
+  .team-head .lbl{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--terra);margin-bottom:14px;}
+  .team-head h2{font-family:'Fraunces',serif;font-weight:400;font-size:54px;line-height:1.02;letter-spacing:-0.025em;margin:0;color:var(--forest-ink);}
+  .team-head h2 em{font-style:italic;color:var(--terra);}
+  .team-head p{font-size:16px;line-height:1.6;color:#3A3830;max-width:500px;margin:0;}
+  .team-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+  .g-card{background:var(--cream-2);border:1px solid var(--sage);border-radius:14px;padding:18px;text-align:center;}
+  .g-portrait{aspect-ratio:1/1;border-radius:50%;margin:0 auto 14px;position:relative;overflow:hidden;}
+  .g-portrait .p-shoulders{height:30%;border-radius:50% 50% 0 0 / 50% 50% 0 0;}
+  .g-portrait .p-head{width:54%;bottom:30%;aspect-ratio:1/1.15;}
+  .g-portrait .p-hair{width:58%;bottom:44%;}
+  .g-portrait .p-eye{bottom:48%;}
+  .g-portrait .p-cheek{bottom:44%;}
+  .g-portrait .p-smile{bottom:42%;}
+  .g-name{font-family:'Fraunces',serif;font-style:italic;font-size:20px;color:var(--forest);line-height:1;margin-bottom:4px;}
+  .g-state{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;}
+  .g-spec{font-size:12px;color:#3A3830;line-height:1.45;}
+
+  /* Nora (digital) as front door */
+  .nora-block{padding:80px 48px;border-top:1px solid var(--sage);display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center;background:var(--forest);color:var(--cream);}
+  .nora-block .lbl{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--terra-soft);margin-bottom:18px;}
+  .nora-block h3{font-family:'Fraunces',serif;font-weight:400;font-size:44px;line-height:1.08;letter-spacing:-0.02em;margin:0 0 22px;}
+  .nora-block h3 em{font-style:italic;color:var(--terra-soft);}
+  .nora-block p{font-size:16px;line-height:1.65;color:rgba(246,240,228,0.82);margin:0 0 16px;max-width:500px;}
+  .nora-card{background:rgba(246,240,228,0.06);border:1px solid rgba(246,240,228,0.15);border-radius:18px;padding:28px;}
+  .nora-card .pill{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--terra-soft);margin-bottom:18px;}
+  .nora-card .pill .d{width:7px;height:7px;border-radius:50%;background:var(--terra);}
+  .nora-msg{font-family:'Fraunces',serif;font-weight:400;font-size:22px;line-height:1.35;letter-spacing:-0.01em;color:var(--cream);}
+  .nora-msg em{font-style:italic;color:var(--terra-soft);}
+  .nora-meta{margin-top:22px;padding-top:18px;border-top:1px solid rgba(246,240,228,0.15);font-size:11px;letter-spacing:0.08em;color:rgba(246,240,228,0.55);}
+
+  /* Membership includes */
+  .includes{padding:96px 48px;}
+  .inc-head{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;margin-bottom:48px;align-items:end;}
+  .inc-head .lbl{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--terra);margin-bottom:14px;}
+  .inc-head h2{font-family:'Fraunces',serif;font-weight:400;font-size:48px;line-height:1.05;letter-spacing:-0.025em;margin:0;color:var(--forest-ink);}
+  .inc-head h2 em{font-style:italic;color:var(--terra);}
+  .inc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--sage);border:1px solid var(--sage);border-radius:14px;overflow:hidden;}
+  .inc-item{background:var(--cream);padding:28px 24px 30px;}
+  .inc-item .n{font-family:'Fraunces',serif;font-style:italic;font-size:32px;color:var(--terra);line-height:1;margin-bottom:16px;}
+  .inc-item h4{font-family:'Fraunces',serif;font-weight:500;font-size:20px;line-height:1.18;letter-spacing:-0.01em;margin:0 0 10px;color:var(--forest);}
+  .inc-item p{font-size:13px;line-height:1.55;color:#3A3830;margin:0;}
+
+  /* Footer */
+  footer{background:var(--forest);color:rgba(246,240,228,0.72);padding:56px 48px 32px;}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;}
+  footer h6{font-size:10px;letter-spacing:0.18em;color:var(--terra-soft);text-transform:uppercase;margin:0 0 14px;}
+  footer ul{list-style:none;padding:0;margin:0;}
+  footer li{font-size:13px;margin-bottom:8px;}
+  footer .word{font-family:'Fraunces',serif;font-weight:500;font-size:24px;color:var(--cream);display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  footer .word .d{width:10px;height:10px;border-radius:50%;background:var(--terra);}
+  footer .tag{font-size:13px;line-height:1.55;max-width:340px;}
+  .foot-bottom{margin-top:36px;padding-top:20px;border-top:1px solid rgba(246,240,228,0.12);display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(246,240,228,0.5);}
+</style>
+</head>
+<body>
+
+<div class="announce">ACA OPEN ENROLLMENT IS LIVE — ENDS JAN 15 · <em>meet your Guide today</em></div>
+
+<nav class="top">
+  <div class="wordmark"><span class="dot"></span>Shophealthcare</div>
+  <div class="nav-credential">STATE LICENSED BROKERAGE<br><b>NPN #19482230 · EST. 2026</b></div>
+  <div class="nav-links">
+    <a href="#">Plans</a><a href="#">How it works</a><a href="#">Your Guide</a><a href="#">About</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-phone"><span>CALL</span>(800) 555-0198</div>
+    <a class="btn dark" href="#">Meet your Guide</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="eyebrow">Membership healthcare · est. 2026</div>
+    <h1>Meet Rosa. She's <em>your Guide</em> for everything that comes after.</h1>
+    <p class="lede">Not a navigator. Not a call-center rotation. A <b>named, state-licensed Guide</b> who picks up when you call, checks in before renewal, and reads the fine print so you don't have to.</p>
+    <div class="hero-ctas">
+      <a class="btn primary big" href="#">Start your membership →</a>
+      <a class="btn big" href="#">See what's included</a>
+    </div>
+    <div class="hero-phone">
+      <div class="ring">☏</div>
+      <div>
+        <div class="num tab">(800) 555-0198</div>
+        <div class="lbl">Rosa's direct line · Mon–Sat 7a–9p ET</div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="guide-stage">
+    <div class="portrait-frame">
+      <div class="p-bg"></div>
+      <div class="p-shoulders"></div>
+      <div class="p-collar"></div>
+      <div class="p-neck"></div>
+      <div class="p-head"></div>
+      <div class="p-hair"></div>
+      <div class="p-eye l"></div><div class="p-eye r"></div>
+      <div class="p-cheek l"></div><div class="p-cheek r"></div>
+      <div class="p-earring l"></div><div class="p-earring r"></div>
+      <div class="p-smile"></div>
+      <div class="guide-caption">
+        <div class="guide-name">
+          <div class="nm">Rosa M.</div>
+          <div class="lic">NC #44812 · your guide since 2026</div>
+        </div>
+        <div class="guide-since">NPS<br>79</div>
+      </div>
+    </div>
+
+    <!-- MEMBERSHIP CARD ARTIFACT -->
+    <div class="member-card">
+      <div class="mc-top">
+        <div class="mc-brand"><span class="d"></span>Shophealthcare Membership</div>
+        <div class="mc-est">est. 2026</div>
+      </div>
+      <div class="mc-grid">
+        <div>
+          <div class="mc-lbl">Member</div>
+          <div class="mc-val">Your name here</div>
+        </div>
+        <div>
+          <div class="mc-lbl">Member №</div>
+          <div class="mc-val mc-num tab">SH · 00 4812</div>
+        </div>
+        <div>
+          <div class="mc-lbl">Your Guide</div>
+          <div class="mc-val">Rosa M. · NC</div>
+        </div>
+        <div>
+          <div class="mc-lbl">Direct line</div>
+          <div class="mc-val mc-num tab">(800) 555-0198</div>
+        </div>
+      </div>
+      <div class="mc-bottom">
+        <span>Valid through open enrollment 2027</span>
+        <span>Carry this. It's yours.</span>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<!-- PROMISE -->
+<div class="promise">
+  <div class="line">"A Guide, not a funnel. A membership, not a lead form."</div>
+  <div class="tags">
+    <span><b>NPS 79</b> (2025)</span>
+    <span><b>180+</b> Guides</span>
+    <span><b>50</b> states licensed</span>
+    <span><b>$0</b> to join, ever</span>
+  </div>
+</div>
+
+<!-- GUIDE TEAM -->
+<section class="team">
+  <div class="team-head">
+    <div>
+      <div class="lbl">Your Guide team · est. 2026</div>
+      <h2>Real people.<br><em>In your state.</em></h2>
+    </div>
+    <p>180+ Guides across all 50 states, salaried (not commissioned). When you join, you're matched with one — and she stays with you. Through renewals, appeals, COBRA drops, the bridge years, all of it.</p>
+  </div>
+  <div class="team-grid">
+    <div class="g-card">
+      <div class="g-portrait" style="background:radial-gradient(circle at 50% 110%, var(--terra-soft), #E5DBC4);">
+        <div class="p-shoulders"></div><div class="p-head"></div>
+        <div class="p-hair"></div>
+        <div class="p-eye l"></div><div class="p-eye r"></div>
+        <div class="p-smile"></div><div class="p-cheek l"></div><div class="p-cheek r"></div>
+      </div>
+      <div class="g-name">Rosa M.</div>
+      <div class="g-state">NC · #44812</div>
+      <div class="g-spec">Self-employed & 1099 households</div>
+    </div>
+    <div class="g-card">
+      <div class="g-portrait" style="background:radial-gradient(circle at 50% 110%, #D8C9A8, #E5DBC4);">
+        <div class="p-shoulders" style="background:#2F5446;"></div>
+        <div class="p-head" style="background:#B88A6A;"></div>
+        <div class="p-hair" style="background:#1A1410;"></div>
+        <div class="p-eye l"></div><div class="p-eye r"></div>
+        <div class="p-smile"></div>
+      </div>
+      <div class="g-name">Thomas O.</div>
+      <div class="g-state">TX · #31208</div>
+      <div class="g-spec">Pre-Medicare, 55–64 bridge</div>
+    </div>
+    <div class="g-card">
+      <div class="g-portrait" style="background:radial-gradient(circle at 50% 110%, var(--terra-soft), #E5DBC4);">
+        <div class="p-shoulders" style="background:#3A2C52;"></div>
+        <div class="p-head" style="background:#E5BEA0;"></div>
+        <div class="p-hair" style="background:#8B4513;"></div>
+        <div class="p-eye l"></div><div class="p-eye r"></div>
+        <div class="p-smile"></div><div class="p-cheek l"></div><div class="p-cheek r"></div>
+      </div>
+      <div class="g-name">Priya K.</div>
+      <div class="g-state">CA · #59104</div>
+      <div class="g-spec">SEP & job-loss coverage</div>
+    </div>
+    <div class="g-card">
+      <div class="g-portrait" style="background:radial-gradient(circle at 50% 110%, #D8C9A8, #E5DBC4);">
+        <div class="p-shoulders" style="background:var(--terra);"></div>
+        <div class="p-head" style="background:#C98F6E;"></div>
+        <div class="p-hair" style="background:#2A1810;"></div>
+        <div class="p-eye l"></div><div class="p-eye r"></div>
+        <div class="p-smile"></div>
+      </div>
+      <div class="g-name">James W.</div>
+      <div class="g-state">NY · #22087</div>
+      <div class="g-spec">Families & dependents</div>
+    </div>
+    <div class="g-card">
+      <div class="g-portrait" style="background:radial-gradient(circle at 50% 110%, var(--terra-soft), #E5DBC4);">
+        <div class="p-shoulders" style="background:#1E3A2C;"></div>
+        <div class="p-head" style="background:#D9A683;"></div>
+        <div class="p-hair" style="background:#5A3A20;"></div>
+        <div class="p-eye l"></div><div class="p-eye r"></div>
+        <div class="p-smile"></div><div class="p-cheek l"></div><div class="p-cheek r"></div>
+      </div>
+      <div class="g-name">Elena V.</div>
+      <div class="g-state">FL · #38512</div>
+      <div class="g-spec">Chronic-care formulary match</div>
+    </div>
+    <div class="g-card" style="background:var(--forest);color:var(--cream);border:1px solid var(--forest);">
+      <div class="g-portrait" style="background:rgba(246,240,228,0.08);border:1px dashed rgba(246,240,228,0.25);display:flex;align-items:center;justify-content:center;">
+        <div style="font-family:'Fraunces',serif;font-style:italic;font-size:28px;color:var(--terra-soft);">+ 175</div>
+      </div>
+      <div class="g-name" style="color:var(--cream);">Meet yours</div>
+      <div class="g-state" style="color:var(--terra-soft);">All 50 states</div>
+      <div class="g-spec" style="color:rgba(246,240,228,0.72);">Matched in 4 min. By state, language, situation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- NORA (digital front door) -->
+<section class="nora-block">
+  <div>
+    <div class="lbl">Meet Nora · the front door</div>
+    <h3>Nora takes the paperwork.<br>Your Guide <em>takes the call.</em></h3>
+    <p>Nora is our AI intake — she reads your card, your 1095-A, your renewal notice, and runs the subsidy math in four minutes. Then she hands you off to Rosa. You never re-explain yourself.</p>
+    <p>Think of Nora as the hallway. The room at the end of it is a human you already know.</p>
+  </div>
+  <div class="nora-card">
+    <div class="pill"><span class="d"></span>Nora · listening · 2:04 avg response</div>
+    <p class="nora-msg">"I read your renewal — you're looking at a 14% hike on the same plan. I've pulled three that keep your endocrinologist and save <em>$1,840 a year</em>. Rosa's on shift. Want me to connect you?"</p>
+    <div class="nora-meta">09:42 · drafted after reviewing 7 plans in NC · reviewed by Rosa M. before send</div>
+  </div>
+</section>
+
+<!-- INCLUDES -->
+<section class="includes">
+  <div class="inc-head">
+    <div>
+      <div class="lbl">Your membership, est. 2026</div>
+      <h2>What comes in the <em>envelope.</em></h2>
+    </div>
+    <p style="font-size:16px;line-height:1.6;color:#3A3830;margin:0;max-width:480px;">No $99 fee. Free to join. We're paid flat-salary by the insurer only if you enroll — never by the hour, never by the upsell.</p>
+  </div>
+  <div class="inc-grid">
+    <div class="inc-item">
+      <div class="n">i.</div>
+      <h4>A Guide with your name on her desk.</h4>
+      <p>Rosa (or one of 180+) stays with you year over year. Same voice, same inbox, same phone.</p>
+    </div>
+    <div class="inc-item">
+      <div class="n">ii.</div>
+      <h4>The membership card.</h4>
+      <p>Physical cream-and-terracotta card in the mail. Member №, direct line, Guide name. Carry it.</p>
+    </div>
+    <div class="inc-item">
+      <div class="n">iii.</div>
+      <h4>Renewal watch, every October.</h4>
+      <p>Your Guide re-runs your plan against the new marketplace before the insurer's letter hits your box.</p>
+    </div>
+    <div class="inc-item">
+      <div class="n">iv.</div>
+      <h4>Appeals support, in your state.</h4>
+      <p>Denied claim, out-of-network surprise, formulary change — your Guide drafts the appeal with you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="word"><span class="d"></span>Shophealthcare</div>
+      <p class="tag">A licensed, independent health insurance brokerage. Named Guides in all 50 states. Flat-salary compensation. Not a government site. Est. 2026.</p>
+    </div>
+    <div><h6>MEMBERSHIP</h6><ul><li>Meet your Guide</li><li>What's included</li><li>How we're paid</li><li>Card & ID</li></ul></div>
+    <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+    <div><h6>COMPLIANCE</h6><ul><li>NPN #19482230</li><li>hello@shophealthcare.com</li><li class="tab">(800) 555-0198</li></ul></div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Shophealthcare, Inc · Licensed in all 50 states + DC</span>
+    <span>Not a government site · Not affiliated with CMS or Medicare</span>
+  </div>
+</footer>
+
+</body>
+</html>

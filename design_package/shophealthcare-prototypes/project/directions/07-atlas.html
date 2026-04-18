@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Atlas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sea: #0A1628;
+    --sea-2: #0F1F33;
+    --land: #EDE4D0;
+    --land-2: #E0D4B8;
+    --paper: #F5EEDD;
+    --ink: #0A1628;
+    --mute: #5A6B7D;
+    --rule: #B8A884;
+    --rule-dark: #2A3A4F;
+    --coral: #D4603A;
+    --mustard: #C99A3F;
+    --moss: #4A6B42;
+    --rose: #B84A5C;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .serif { font-family: 'Fraunces', serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+  .page { max-width: 1360px; margin: 0 auto; padding: 0 44px; }
+
+  /* Paper grain */
+  body::before { content:""; position: fixed; inset: 0; pointer-events: none; z-index: 200; background-image: radial-gradient(circle at 1px 1px, rgba(10,22,40,0.04) 1px, transparent 1.5px); background-size: 3px 3px; opacity: 0.6; mix-blend-mode: multiply; }
+
+  /* Announce — coordinates strip */
+  .announce { background: var(--sea); color: var(--land); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 10px 0; border-bottom: 1px solid var(--rule-dark); }
+  .announce .row { max-width: 1360px; margin: 0 auto; padding: 0 44px; display: flex; justify-content: space-between; gap: 24px; }
+  .announce span { opacity: 0.8; }
+  .announce .hi { color: var(--mustard); opacity: 1; font-weight: 600; }
+
+  /* Nav */
+  nav.head { background: var(--paper); border-bottom: 2px solid var(--ink); position: relative; }
+  nav.head::after { content:""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--ink); }
+  nav.head .row { max-width: 1360px; margin: 0 auto; padding: 20px 44px; display: flex; align-items: center; gap: 28px; }
+  .wordmark { display: flex; align-items: center; gap: 14px; }
+  .wordmark .compass { width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: 50%; position: relative; }
+  .wordmark .compass::before { content:""; position: absolute; inset: 3px; border: 1px dashed var(--ink); border-radius: 50%; opacity: 0.5; }
+  .wordmark .compass::after { content:""; position: absolute; top: 4px; bottom: 4px; left: 50%; width: 1.5px; background: linear-gradient(to bottom, var(--coral) 50%, var(--ink) 50%); transform: translateX(-50%); }
+  .wordmark .name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; letter-spacing: -0.02em; }
+  .wordmark .name .it { font-style: italic; font-weight: 400; }
+  .nav-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--mute); text-transform: uppercase; border-left: 1px solid var(--rule); padding-left: 20px; }
+  .nav-links { margin-left: auto; display: flex; gap: 32px; font-size: 14px; font-weight: 500; }
+  .nav-links a { color: var(--ink); text-decoration: none; position: relative; padding-bottom: 4px; }
+  .nav-links a::after { content:""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--coral); transform: scaleX(0); transform-origin: left; transition: transform 0.2s; }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-right { display: flex; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); cursor: pointer; text-decoration: none; color: var(--ink); background: var(--paper); border-radius: 2px; }
+  .btn.primary { background: var(--sea); color: var(--land); border-color: var(--sea); }
+  .btn.big { padding: 16px 26px; font-size: 15px; }
+  .btn .arrow { font-family: 'JetBrains Mono', monospace; }
+
+  /* Docket/breadcrumb */
+  .crumb { max-width: 1360px; margin: 0 auto; padding: 14px 44px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); display: flex; justify-content: space-between; border-bottom: 1px dashed var(--rule); }
+  .crumb b { color: var(--ink); font-weight: 600; }
+  .crumb .arrow { margin: 0 8px; color: var(--rule); }
+
+  /* HERO */
+  .hero { padding: 60px 0 56px; position: relative; overflow: hidden; }
+  .hero .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: start; position: relative; z-index: 2; }
+  .hero .kick { display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--coral); margin-bottom: 28px; }
+  .hero .kick::before { content:""; width: 28px; height: 1px; background: var(--coral); }
+  .hero h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 88px; line-height: 0.98; letter-spacing: -0.035em; margin: 0 0 28px; }
+  .hero h1 .it { font-style: italic; font-weight: 400; color: var(--coral); }
+  .hero h1 .u { border-bottom: 4px solid var(--mustard); padding-bottom: 2px; }
+  .hero .lead { font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.5; max-width: 560px; margin: 0 0 36px; color: #2A3A4F; }
+  .hero .lead b { font-weight: 700; background: linear-gradient(to bottom, transparent 60%, rgba(201,154,63,0.35) 60%); padding: 0 2px; }
+  .hero .ctas { display: flex; gap: 12px; align-items: center; }
+  .hero .meta { display: flex; gap: 36px; margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--rule); }
+  .hero .meta .m { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); }
+  .hero .meta .m b { display: block; color: var(--ink); font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; letter-spacing: -0.02em; text-transform: none; margin-top: 4px; }
+
+  /* Map device — right side */
+  .atlas { background: var(--sea); border: 2px solid var(--ink); border-radius: 3px; padding: 0; position: relative; box-shadow: 18px 18px 0 -2px var(--mustard), 18px 18px 0 0 var(--ink); overflow: hidden; }
+  .atlas .cartouche { position: absolute; top: 16px; left: 16px; background: var(--land); border: 1px solid var(--ink); padding: 10px 14px; z-index: 3; max-width: 220px; }
+  .atlas .cartouche .t { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+  .atlas .cartouche .n { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; letter-spacing: -0.02em; margin-top: 2px; line-height: 1.1; }
+  .atlas .cartouche .n .it { font-style: italic; font-weight: 400; }
+  .atlas .cartouche .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--rule); }
+  .map-svg { display: block; width: 100%; height: auto; }
+
+  /* Plot points inside map */
+  .atlas .legend { position: absolute; right: 16px; bottom: 16px; background: var(--land); border: 1px solid var(--ink); padding: 10px 12px; z-index: 3; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .atlas .legend .r { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .atlas .legend .dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--ink); }
+
+  /* Nora locator chip */
+  .locator { max-width: 1360px; margin: 0 auto; padding: 14px 44px; }
+  .locator .inner { display: inline-flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--paper); border: 1.5px solid var(--ink); border-radius: 2px; box-shadow: 4px 4px 0 var(--sea); }
+  .locator .pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 3px rgba(212,96,58,0.25); }
+  .locator .name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 15px; }
+  .locator .name .it { font-style: italic; font-weight: 400; }
+  .locator .coord { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.08em; border-left: 1px solid var(--rule); padding-left: 12px; }
+
+  /* Situations — plot cards */
+  .sit-head { max-width: 1360px; margin: 0 auto; padding: 24px 44px 16px; display: flex; justify-content: space-between; align-items: end; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .sit-head h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 44px; margin: 0; letter-spacing: -0.025em; }
+  .sit-head h2 .it { font-style: italic; font-weight: 400; color: var(--coral); }
+  .sit-head .meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); text-align: right; }
+  .sit-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 2px solid var(--ink); }
+  .sit { padding: 28px 28px 24px; border-right: 1px solid var(--ink); position: relative; cursor: pointer; min-height: 260px; display: flex; flex-direction: column; overflow: hidden; }
+  .sit:nth-child(3n) { border-right: 0; }
+  .sit:nth-child(n+4) { border-top: 1px solid var(--ink); }
+  .sit::before { content: attr(data-coord); position: absolute; top: 14px; right: 16px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--mute); }
+  .sit .ring { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; background: var(--paper); margin-bottom: 16px; position: relative; }
+  .sit .ring::before, .sit .ring::after { content:""; position: absolute; border: 1px dashed var(--rule); border-radius: 50%; }
+  .sit .ring::before { inset: -6px; }
+  .sit .ring::after { inset: -12px; opacity: 0.5; }
+  .sit h3 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 26px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 auto; }
+  .sit h3 .it { font-style: italic; font-weight: 400; }
+  .sit .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coral); margin-top: 14px; }
+  .sit .go { margin-top: 8px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+  .sit .go .arrow { font-family: 'JetBrains Mono', monospace; }
+  .sit:hover { background: var(--land); }
+  .sit.unmarked { background: var(--sea); color: var(--land); }
+  .sit.unmarked .ring { background: transparent; border-color: var(--land); color: var(--land); }
+  .sit.unmarked .ring::before, .sit.unmarked .ring::after { border-color: rgba(237,228,208,0.3); }
+  .sit.unmarked::before { color: rgba(237,228,208,0.6); }
+  .sit.unmarked .tag { color: var(--mustard); }
+  .sit.unmarked .go { color: var(--land); }
+
+  /* Phone */
+  .phone-row { max-width: 1360px; margin: 0 auto; padding: 20px 44px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); border-bottom: 1px dashed var(--rule); }
+  .phone-row .tab { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--coral); padding-bottom: 2px; }
+  .phone-row a { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--coral); text-underline-offset: 3px; }
+
+  /* Nora section — survey panel */
+  .nora-sec { padding: 80px 0 72px; background: var(--sea); color: var(--land); position: relative; overflow: hidden; }
+  .nora-sec::before { content:""; position: absolute; inset: 0; background-image: linear-gradient(0deg, transparent 49.5%, rgba(184,168,132,0.07) 49.5%, rgba(184,168,132,0.07) 50.5%, transparent 50.5%), linear-gradient(90deg, transparent 49.5%, rgba(184,168,132,0.07) 49.5%, rgba(184,168,132,0.07) 50.5%, transparent 50.5%); background-size: 40px 40px; pointer-events: none; }
+  .nora-sec .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: start; position: relative; z-index: 2; }
+  .nora-sec .kick { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mustard); margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .nora-sec .kick::before { content:""; width: 32px; height: 1px; background: var(--mustard); }
+  .nora-sec h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 60px; line-height: 1; letter-spacing: -0.03em; margin: 0 0 30px; }
+  .nora-sec h2 .it { font-style: italic; font-weight: 400; color: var(--coral); }
+  .nora-sec h2 .u { border-bottom: 3px solid var(--mustard); padding-bottom: 2px; }
+  .nora-sec p { font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.55; margin: 0 0 18px; max-width: 560px; color: rgba(237,228,208,0.88); }
+  .nora-sec p b { font-weight: 700; color: var(--land); }
+
+  .plot-panel { background: var(--paper); color: var(--ink); border: 2px solid var(--land); border-radius: 3px; padding: 24px; position: relative; }
+  .plot-panel .cart { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); padding-bottom: 14px; border-bottom: 1px dashed var(--rule); display: flex; justify-content: space-between; }
+  .plot-panel .cart b { color: var(--ink); }
+  .plot-panel .plot { padding: 18px 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 40px 1fr auto; gap: 16px; align-items: center; }
+  .plot-panel .plot:last-child { border-bottom: 0; padding-bottom: 0; }
+  .plot-panel .plot .ring { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11px; }
+  .plot-panel .plot .body .n { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; letter-spacing: -0.015em; }
+  .plot-panel .plot .body .d { font-size: 13px; color: var(--mute); margin-top: 2px; }
+  .plot-panel .plot .el { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-align: right; color: var(--moss); font-weight: 600; }
+  .plot-panel .plot .el.rose { color: var(--rose); }
+  .plot-panel .plot .el b { display: block; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+
+  .nora-link { max-width: 1360px; margin: 0 auto; padding: 24px 44px 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); border-top: 1px solid var(--rule); display: flex; justify-content: space-between; }
+  .nora-link a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); font-weight: 600; }
+
+  /* Process — survey stations */
+  .process { padding: 0; background: var(--paper); border-top: 2px solid var(--ink); }
+  .proc-head { max-width: 1360px; margin: 0 auto; padding: 32px 44px 20px; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; align-items: end; }
+  .proc-head h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 48px; margin: 0; letter-spacing: -0.025em; }
+  .proc-head h2 .it { font-style: italic; font-weight: 400; color: var(--coral); }
+  .proc-head .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+  .step-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 2px solid var(--ink); }
+  .step { padding: 36px 32px 40px; border-right: 1px solid var(--ink); position: relative; }
+  .step:last-child { border-right: 0; }
+  .step .sta { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+  .step .sta .pin { width: 20px; height: 20px; border: 1.5px solid var(--ink); border-radius: 50%; position: relative; background: var(--paper); display: flex; align-items: center; justify-content: center; }
+  .step .sta .pin::after { content:""; width: 6px; height: 6px; background: var(--coral); border-radius: 50%; }
+  .step .sta .pin.filled::after { background: var(--moss); }
+  .step h4 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 32px; line-height: 1.05; margin: 0 0 14px; letter-spacing: -0.025em; }
+  .step h4 .it { font-style: italic; font-weight: 400; }
+  .step p { font-size: 15px; line-height: 1.6; margin: 0 0 20px; max-width: 320px; color: #2A3A4F; }
+  .step .dur { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); padding-top: 14px; border-top: 1px dashed var(--rule); }
+  .step .dur b { color: var(--ink); font-weight: 600; }
+
+  /* Stats strip */
+  .stats { background: var(--land); border-bottom: 2px solid var(--ink); }
+  .stats-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 40px 32px; border-right: 1px solid var(--rule-dark); position: relative; }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .stat .lbl .cc { color: var(--ink); font-weight: 600; }
+  .stat .n { font-family: 'Fraunces', serif; font-weight: 700; font-size: 64px; line-height: 0.9; letter-spacing: -0.035em; }
+  .stat .n .it { font-style: italic; font-weight: 400; }
+  .stat .n.coral { color: var(--coral); }
+  .stat .cap { font-family: 'Inter', sans-serif; font-size: 13px; margin-top: 8px; color: #2A3A4F; }
+
+  /* Manifesto */
+  .void { padding: 96px 44px; background: var(--paper); }
+  .void .inner { max-width: 920px; margin: 0 auto; position: relative; text-align: center; }
+  .void .seal { width: 120px; height: 120px; border: 1.5px solid var(--ink); border-radius: 50%; margin: 0 auto 36px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .void .seal::before { content:""; position: absolute; inset: 6px; border: 1px dashed var(--ink); border-radius: 50%; }
+  .void .seal .inside { font-family: 'Fraunces', serif; font-weight: 700; font-size: 13px; letter-spacing: 0.06em; line-height: 1.1; text-align: center; text-transform: uppercase; color: var(--coral); }
+  .void h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 64px; line-height: 1.02; letter-spacing: -0.03em; margin: 0 0 28px; }
+  .void h2 .it { font-style: italic; font-weight: 400; color: var(--coral); }
+  .void p { font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.55; margin: 0 0 20px; max-width: 720px; margin-left: auto; margin-right: auto; color: #2A3A4F; }
+  .void p b { font-weight: 700; color: var(--ink); background: linear-gradient(to bottom, transparent 60%, rgba(201,154,63,0.35) 60%); padding: 0 3px; }
+  .void .sign { margin-top: 44px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); padding-top: 24px; border-top: 1px solid var(--rule); display: flex; justify-content: center; gap: 32px; }
+  .void .sign b { color: var(--ink); font-weight: 600; }
+
+  /* Footer */
+  footer { background: var(--sea); color: var(--land); padding: 56px 44px 32px; border-top: 2px solid var(--ink); }
+  .foot-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  footer h6 { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mustard); margin: 0 0 16px; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 14px; margin-bottom: 8px; opacity: 0.8; }
+  footer .word { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  footer .word .compass { width: 34px; height: 34px; border: 1.5px solid var(--land); border-radius: 50%; position: relative; }
+  footer .word .compass::before { content:""; position: absolute; top: 4px; bottom: 4px; left: 50%; width: 1.5px; background: linear-gradient(to bottom, var(--coral) 50%, var(--land) 50%); transform: translateX(-50%); }
+  footer .word .name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 26px; letter-spacing: -0.02em; }
+  footer .word .name .it { font-style: italic; font-weight: 400; }
+  footer .tag { font-size: 14px; max-width: 360px; line-height: 1.6; opacity: 0.8; }
+  .foot-bottom { max-width: 1360px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid var(--rule-dark); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: rgba(237,228,208,0.5); text-transform: uppercase; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="announce"><div class="row">
+  <span>LAT <span class="hi">30.267°N</span> · LON <span class="hi">97.743°W</span> · SURVEY IN PROGRESS</span>
+  <span>OPEN ENROLLMENT · <span class="hi">CLOSES JAN 15 · 2026</span></span>
+  <span>ED. <span class="hi">2026.01</span> · REV. A</span>
+</div></div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark">
+    <span class="compass"></span>
+    <span class="name">Shop<span class="it">health</span>care</span>
+  </div>
+  <span class="nav-sub">LICENSED BROKERAGE · NPN #19482230</span>
+  <div class="nav-links">
+    <a href="#">How it works</a>
+    <a href="#">For businesses</a>
+    <a href="#">Talk to an agent</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn" href="#">Sign in</a>
+    <a class="btn primary" href="#">Map my options</a>
+  </div>
+</div></nav>
+
+<div class="crumb"><span>SURVEY <b>2026</b><span class="arrow">→</span>SHEET 01 OF 12<span class="arrow">→</span><b>OPEN ENROLLMENT</b></span><span>PAPER FINISH · MATTE · PRINTED JAN 2026</span></div>
+
+<section class="hero"><div class="page"><div class="grid">
+  <div>
+    <span class="kick">SHEET 01 · THE LAY OF THE LAND</span>
+    <h1>Your coverage, <br><span class="it">surveyed</span> like <span class="u">solid ground.</span></h1>
+    <p class="lead">Every plan available in your ZIP, plotted against your real income, doctors, and meds. <b>Nora — our licensed AI enrollment assistant —</b> runs the survey. A state-licensed human signs off before you enroll.</p>
+    <div class="ctas">
+      <a class="btn primary big" href="#">Start the survey <span class="arrow">→</span></a>
+      <a class="btn big" href="#">Scan my card</a>
+    </div>
+    <div class="meta">
+      <div class="m">PLANS CHARTED<b class="tab">14,820</b></div>
+      <div class="m">FLAT FEE<b>Always $0</b></div>
+      <div class="m">HUMAN SIGN-OFF<b>Required</b></div>
+    </div>
+  </div>
+  <div class="atlas">
+    <div class="cartouche">
+      <div class="t">CARTOUCHE · 01</div>
+      <div class="n">Coverage <span class="it">Atlas</span></div>
+      <div class="sub">ZIP 78704 · TRAVIS CO, TX<br>PLOTTED JAN 2026</div>
+    </div>
+    <svg class="map-svg" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1E3049" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="520" height="520" fill="#0A1628"/>
+      <rect width="520" height="520" fill="url(#grid)"/>
+      <!-- Topographic contour lines -->
+      <g fill="none" stroke="#B8A884" stroke-width="0.8" opacity="0.35">
+        <path d="M 60 440 Q 180 360 280 380 T 480 340"/>
+        <path d="M 40 400 Q 160 320 280 340 T 500 300"/>
+        <path d="M 20 360 Q 140 280 280 300 T 520 260"/>
+        <path d="M 40 320 Q 160 240 280 260 T 500 220"/>
+        <path d="M 60 280 Q 180 200 280 220 T 480 180"/>
+        <path d="M 80 240 Q 200 160 280 180 T 460 140"/>
+        <path d="M 100 200 Q 220 120 280 140 T 440 100"/>
+        <path d="M 120 160 Q 240 80 280 100 T 420 60"/>
+      </g>
+      <!-- Thicker contour -->
+      <path d="M 40 400 Q 160 320 280 340 T 500 300" fill="none" stroke="#C99A3F" stroke-width="1.5" opacity="0.6"/>
+      <!-- Elevation labels -->
+      <text x="440" y="336" fill="#C99A3F" font-family="JetBrains Mono" font-size="9" opacity="0.7">$412</text>
+      <text x="130" y="156" fill="#B8A884" font-family="JetBrains Mono" font-size="9" opacity="0.6">$1,240</text>
+      <text x="340" y="196" fill="#B8A884" font-family="JetBrains Mono" font-size="9" opacity="0.6">$780</text>
+      <!-- Compass rose -->
+      <g transform="translate(460,460)">
+        <circle r="28" fill="none" stroke="#EDE4D0" stroke-width="1" opacity="0.7"/>
+        <circle r="22" fill="none" stroke="#EDE4D0" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5"/>
+        <path d="M 0 -22 L 4 0 L 0 22 L -4 0 Z" fill="#D4603A"/>
+        <path d="M -22 0 L 0 4 L 22 0 L 0 -4 Z" fill="#EDE4D0" opacity="0.9"/>
+        <text y="-32" text-anchor="middle" fill="#EDE4D0" font-family="JetBrains Mono" font-size="10" font-weight="700">N</text>
+      </g>
+      <!-- Route/path -->
+      <path d="M 90 460 Q 180 380 240 340 T 360 280" fill="none" stroke="#D4603A" stroke-width="2" stroke-dasharray="4 4"/>
+      <!-- Plot markers -->
+      <g>
+        <!-- Start -->
+        <circle cx="90" cy="460" r="7" fill="#D4603A" stroke="#EDE4D0" stroke-width="2"/>
+        <text x="100" y="466" fill="#EDE4D0" font-family="JetBrains Mono" font-size="10" font-weight="600">YOU · TODAY</text>
+        <text x="100" y="480" fill="#B8A884" font-family="JetBrains Mono" font-size="9" opacity="0.8">$615 / mo · renewed</text>
+        <!-- Kaiser Silver -->
+        <circle cx="240" cy="340" r="10" fill="#4A6B42" stroke="#EDE4D0" stroke-width="2"/>
+        <circle cx="240" cy="340" r="16" fill="none" stroke="#4A6B42" stroke-width="1" opacity="0.5"/>
+        <circle cx="240" cy="340" r="22" fill="none" stroke="#4A6B42" stroke-width="0.5" opacity="0.3"/>
+        <text x="255" y="336" fill="#EDE4D0" font-family="Fraunces" font-size="12" font-weight="700">KAISER SILVER</text>
+        <text x="255" y="350" fill="#B8A884" font-family="JetBrains Mono" font-size="9">$412 / mo · ↓ $203</text>
+        <!-- Ambetter Gold -->
+        <circle cx="360" cy="280" r="7" fill="#C99A3F" stroke="#EDE4D0" stroke-width="2"/>
+        <text x="375" y="276" fill="#EDE4D0" font-family="Fraunces" font-size="11" font-weight="700">AMBETTER GOLD</text>
+        <text x="375" y="288" fill="#B8A884" font-family="JetBrains Mono" font-size="9">$489 / mo</text>
+        <!-- Other faint points -->
+        <circle cx="150" cy="220" r="4" fill="#B8A884" opacity="0.6"/>
+        <circle cx="290" cy="180" r="4" fill="#B8A884" opacity="0.6"/>
+        <circle cx="410" cy="160" r="4" fill="#B8A884" opacity="0.6"/>
+        <circle cx="200" cy="400" r="4" fill="#B8A884" opacity="0.6"/>
+        <circle cx="420" cy="420" r="4" fill="#B8A884" opacity="0.6"/>
+      </g>
+      <!-- Scale -->
+      <g transform="translate(40,490)">
+        <line x1="0" y1="0" x2="80" y2="0" stroke="#EDE4D0" stroke-width="1"/>
+        <line x1="0" y1="-3" x2="0" y2="3" stroke="#EDE4D0" stroke-width="1"/>
+        <line x1="40" y1="-3" x2="40" y2="3" stroke="#EDE4D0" stroke-width="1"/>
+        <line x1="80" y1="-3" x2="80" y2="3" stroke="#EDE4D0" stroke-width="1"/>
+        <text x="0" y="14" fill="#B8A884" font-family="JetBrains Mono" font-size="9">$0</text>
+        <text x="70" y="14" fill="#B8A884" font-family="JetBrains Mono" font-size="9">$1.5K / mo</text>
+      </g>
+    </svg>
+    <div class="legend">
+      <div class="r"><span class="dot" style="background: #D4603A;"></span>Your current plan</div>
+      <div class="r"><span class="dot" style="background: #4A6B42;"></span>Recommended · lower cost</div>
+      <div class="r"><span class="dot" style="background: #C99A3F;"></span>Runner-up</div>
+      <div class="r"><span class="dot" style="background: #B8A884;"></span>Also charted</div>
+    </div>
+  </div>
+</div></div></section>
+
+<div class="locator"><div class="inner">
+  <span class="pulse"></span>
+  <span class="name">Nora <span class="it">· licensed enrollment assistant</span></span>
+  <span class="coord">BEARING 114° · ON STATION · 2:04 AVG</span>
+</div></div>
+
+<div class="sit-head"><h2>Where are <span class="it">you</span> on the map?</h2><div class="meta">SHEET 02 · 5 WAYPOINTS + 1 CUSTOM ROUTE</div></div>
+<div class="sit-grid">
+  <div class="sit" data-coord="RU·01">
+    <div class="ring">01</div>
+    <h3>I just lost my <span class="it">health insurance</span>.</h3>
+    <span class="tag">WAYPOINT · RECENTLY UNCOVERED</span>
+    <div class="go">Plot this route <span class="arrow">→</span></div>
+  </div>
+  <div class="sit" data-coord="SP·02">
+    <div class="ring">02</div>
+    <h3>I'm <span class="it">self-employed</span> or freelance.</h3>
+    <span class="tag">WAYPOINT · 1099 / CONTRACTOR</span>
+    <div class="go">Plot this route <span class="arrow">→</span></div>
+  </div>
+  <div class="sit" data-coord="CL·03">
+    <div class="ring">03</div>
+    <h3>I got my <span class="it">2026 renewal</span> notice.</h3>
+    <span class="tag">WAYPOINT · RENEWAL SHOCK</span>
+    <div class="go">Plot this route <span class="arrow">→</span></div>
+  </div>
+  <div class="sit" data-coord="BR·04">
+    <div class="ring">04</div>
+    <h3>I'm <span class="it">55–64</span>, not yet on Medicare.</h3>
+    <span class="tag">WAYPOINT · BRIDGE YEARS</span>
+    <div class="go">Plot this route <span class="arrow">→</span></div>
+  </div>
+  <div class="sit" data-coord="PC·05">
+    <div class="ring">05</div>
+    <h3>I just want to <span class="it">check my current</span> plan.</h3>
+    <span class="tag">WAYPOINT · GUT CHECK</span>
+    <div class="go">Plot this route <span class="arrow">→</span></div>
+  </div>
+  <div class="sit unmarked" data-coord="??·??">
+    <div class="ring">??</div>
+    <h3>None of these. <span class="it">Chart me</span> from a few questions.</h3>
+    <span class="tag">UNMARKED TERRITORY</span>
+    <div class="go">Begin the survey <span class="arrow">→</span></div>
+  </div>
+</div>
+
+<div class="phone-row"><span>PREFER TO TALK? CALL <span class="tab">(800) 555-0198</span> · MON–SAT</span><a href="#">NOT SURE WHICH WAYPOINT? 90-SECOND INTAKE →</a></div>
+
+<section class="nora-sec"><div class="page"><div class="grid">
+  <div>
+    <div class="kick">SHEET 03 · THE SURVEYOR</div>
+    <h2>Meet <span class="it">Nora</span>.<br>She <span class="u">draws the map</span>.</h2>
+    <p>Health insurance is a landscape with no street signs — 40-page plan docs, shifting networks, hidden elevation. Nora's job is to survey it.</p>
+    <p>She reads your current card, cross-references <b>every plan available in your ZIP</b> against your real income, doctors, and meds — then plots the ones that save you money <b>without giving up your networks</b>.</p>
+    <p>A <b>state-licensed human agent</b> signs off before enrollment. Flat fee. No commissions. Not a government site.</p>
+  </div>
+  <div class="plot-panel">
+    <div class="cart"><span>PLOT TABLE · TOP 3 FOUND</span><span><b>FIG. 03</b></span></div>
+    <div class="plot">
+      <div class="ring">01</div>
+      <div class="body"><div class="n">Kaiser Silver HMO 2000</div><div class="d">4 of 4 doctors in-network · ded $2,000</div></div>
+      <div class="el"><span>ELEVATION</span><b class="tab">$412</b></div>
+    </div>
+    <div class="plot">
+      <div class="ring">02</div>
+      <div class="body"><div class="n">Ambetter Gold PPO</div><div class="d">3 of 4 doctors in-network · ded $1,500</div></div>
+      <div class="el"><span>ELEVATION</span><b class="tab">$489</b></div>
+    </div>
+    <div class="plot">
+      <div class="ring">✕</div>
+      <div class="body"><div class="n">Your current plan · on auto-renew</div><div class="d">Premium raised $127/mo · network reshuffled</div></div>
+      <div class="el rose"><span>ELEVATION</span><b class="tab">$615</b></div>
+    </div>
+  </div>
+</div></div></section>
+
+<div class="nora-link"><span>SURVEY METHODS · WHAT NORA CAN AND CAN'T DO</span><a href="#">READ THE LEGEND →</a></div>
+
+<section class="process">
+  <div class="proc-head"><h2>From <span class="it">unmarked</span> to <span class="it">charted</span>.</h2><div class="sub">SHEET 04 · THREE STATIONS</div></div>
+  <div class="step-grid">
+    <div class="step">
+      <div class="sta"><span class="pin"></span>STATION 01 · INTAKE</div>
+      <h4>Drop a <span class="it">pin</span>.</h4>
+      <p>Upload your current card or renewal letter. Nora reads the document. No 90-question wizard.</p>
+      <div class="dur">~90 SECONDS · <b>LOGGED</b></div>
+    </div>
+    <div class="step">
+      <div class="sta"><span class="pin"></span>STATION 02 · SURVEY</div>
+      <h4>Run the <span class="it">survey</span>.</h4>
+      <p>Every plan in your ZIP charted against real cost — deductibles, networks, subsidies, meds.</p>
+      <div class="dur">~6 MINUTES · <b>LOGGED</b></div>
+    </div>
+    <div class="step">
+      <div class="sta"><span class="pin filled"></span>STATION 03 · SIGN-OFF</div>
+      <h4>A human <span class="it">signs</span> the map.</h4>
+      <p>A state-licensed human agent reviews, signs off, and hits enroll. Named. Reachable. Accountable.</p>
+      <div class="dur">~2 MINUTES · <b>FILED</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats"><div class="stats-grid">
+  <div class="stat"><div class="lbl"><span>01</span><span class="cc">PEOPLE ENROLLED</span></div><div class="n tab">1.2M<span class="it" style="font-size: 32px;">+</span></div><div class="cap">Across all 50 states since 2019.</div></div>
+  <div class="stat"><div class="lbl"><span>02</span><span class="cc">LICENSED AGENTS</span></div><div class="n tab">180<span class="it" style="font-size: 32px;">+</span></div><div class="cap">Named, reachable, state-licensed.</div></div>
+  <div class="stat"><div class="lbl"><span>03</span><span class="cc">ENCRYPTION</span></div><div class="n tab">256-<span class="it">bit</span></div><div class="cap">HIPAA-compliant. Data not resold.</div></div>
+  <div class="stat"><div class="lbl"><span>04</span><span class="cc">COST TO SURVEY</span></div><div class="n coral tab">$0</div><div class="cap">Flat broker fee — never you.</div></div>
+</div></section>
+
+<section class="void"><div class="inner">
+  <div class="seal"><div class="inside">SHOP<br>HEALTH<br>CARE<br>SINCE 2019</div></div>
+  <h2>They cut the navigators. <span class="it">We drew</span> a new map.</h2>
+  <p>In late 2025, federal funding for ACA navigators was <b>cut by 90%</b>. Millions were left alone with 40-page plan documents and no one to read them.</p>
+  <p>Shophealthcare is a licensed brokerage operating on <b>public-service principles</b>. Flat fee. Named agents. No data resold. Built for the people the industry was counting on to stop looking.</p>
+  <div class="sign"><span>PUBLISHED · <b>JAN 2026</b></span><span>ED. <b>2026.01</b></span><span>SHEET · <b>12 OF 12</b></span></div>
+</div></section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="word"><span class="compass"></span><span class="name">Shop<span class="it">health</span>care</span></div>
+      <p class="tag">A licensed, independent health insurance brokerage operating on public-service principles. Flat fee, named agents, no data resold.</p>
+    </div>
+    <div><h6>NAVIGATE</h6><ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul></div>
+    <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+    <div><h6>DIRECTORY</h6><ul><li>NPN #19482230</li><li>hello@shophealthcare</li><li class="tab">(800) 555-0198</li></ul></div>
+  </div>
+  <div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED IN ALL 50 STATES</span><span>NOT A GOVERNMENT SITE · NOT AFFILIATED WITH ACA OR MEDICARE</span></div>
+</footer>
+
+</body></html>

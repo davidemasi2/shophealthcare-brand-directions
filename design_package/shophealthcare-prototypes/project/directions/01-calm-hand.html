@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Calm Hand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F2;
+    --ink: #1F2A37;
+    --ink-soft: #4A4539;
+    --mute: #7B7569;
+    --rule: #C9C2B7;
+    --card: #F2EEE6;
+    --green: #2F7D4F;
+    --terra: #C97F4A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.015em; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+  /* Announcement */
+  .announce {
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--mute);
+    text-align: center;
+    padding: 10px 0;
+    letter-spacing: 0.01em;
+  }
+  .announce b { color: var(--ink); font-weight: 500; }
+
+  /* Nav */
+  nav.top {
+    display: flex;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule);
+    gap: 40px;
+  }
+  .wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wordmark .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--terra); }
+  .wordmark .small {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-left: 2px;
+  }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--ink-soft); }
+  .nav-links a { color: inherit; text-decoration: none; }
+  .nav-right { margin-left: auto; display: flex; gap: 18px; align-items: center; font-size: 13px; color: var(--mute); }
+  .nav-right .call { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 80px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0 0 36px;
+    color: var(--ink);
+  }
+  .hero h1 em { font-style: italic; font-weight: 300; }
+  .hero .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 480px;
+    margin: 0 0 36px;
+  }
+  .cta-row { display: flex; gap: 14px; align-items: center; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn .arrow { transition: transform 0.2s; }
+  .hero-aside {
+    padding-top: 12px;
+  }
+  .portrait {
+    aspect-ratio: 4/5;
+    width: 100%;
+    background:
+      linear-gradient(135deg, rgba(201,127,74,0.12), rgba(31,42,55,0.08)),
+      repeating-linear-gradient(45deg, #EDE6D8 0 2px, #E6DFD1 2px 4px);
+    position: relative;
+    overflow: hidden;
+  }
+  .portrait .caption {
+    position: absolute;
+    left: 20px; bottom: 20px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+    background: rgba(250,247,242,0.9);
+    padding: 6px 10px;
+  }
+  .small-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--mute);
+    line-height: 1.55;
+  }
+
+  /* Section frame */
+  section.block { padding: 96px 0; border-top: 1px solid var(--rule); }
+  .sec-head { margin-bottom: 56px; display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: end; }
+  .sec-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .sec-head h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 16px 0 0;
+  }
+  .sec-head p { font-size: 16px; color: var(--ink-soft); max-width: 520px; margin: 0; line-height: 1.55; }
+
+  /* Situations grid */
+  .sit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+  .sit {
+    padding: 32px 28px 36px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 220px;
+  }
+  .sit:nth-child(3n) { border-right: 0; }
+  .sit .tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .sit h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 4px 0 6px;
+  }
+  .sit p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+  .sit .start {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    padding-top: 18px;
+  }
+  .sit .start .arrow { margin-left: 6px; }
+
+  /* Process */
+  .process { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px; }
+  .step { }
+  .step .num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--terra);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .step h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 18px 0 10px;
+  }
+  .step p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+  /* Nora block */
+  .nora-block {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .nora-body h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 12px 0 24px;
+  }
+  .nora-body p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+    max-width: 520px;
+  }
+  .nora-link {
+    margin-top: 28px;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .nora-card {
+    background: var(--card);
+    padding: 36px 32px;
+    position: relative;
+  }
+  .nora-card .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .nora-card .pill .d { width: 8px; height: 8px; border-radius: 50%; background: var(--terra); }
+  .nora-card .portrait-sm {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(145deg, #D9BFA2, #B78A66);
+    margin: 20px 0 18px;
+  }
+  .nora-card .name { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .nora-card .msg {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .nora-card .msg em { font-style: italic; }
+  .nora-card .tstamp {
+    margin-top: 22px;
+    font-size: 11px;
+    color: var(--mute);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+
+  /* Savings */
+  .savings-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .saving-card {
+    background: var(--card);
+    padding: 44px 40px 40px;
+    position: relative;
+  }
+  .saving-card .tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 20px;
+  }
+  .saving-card .num {
+    font-family: 'Inter', sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 88px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--green);
+  }
+  .saving-card .num .unit { font-size: 20px; color: var(--ink-soft); font-weight: 400; margin-left: 4px; letter-spacing: 0; }
+  .saving-card .rule-line { height: 1px; background: var(--rule); margin: 24px 0 20px; }
+  .saving-card .desc { font-size: 14px; color: var(--ink-soft); line-height: 1.55; max-width: 360px; }
+
+  /* Proof numbers */
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    padding: 72px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat .n {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .l { font-size: 12px; color: var(--mute); letter-spacing: 0.05em; margin-top: 12px; max-width: 200px; line-height: 1.5; }
+
+  /* Note block */
+  .note-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 72px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .note {
+    background: var(--card);
+    padding: 32px 28px;
+  }
+  .note .from { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); margin-bottom: 14px; }
+  .note q {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    quotes: "“" "”";
+    color: var(--ink);
+  }
+  .note .sig { margin-top: 22px; font-size: 12px; color: var(--mute); }
+
+  .agent {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .agent .tag { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(250,247,242,0.55); }
+  .agent h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 1.15;
+    margin: 12px 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .agent p { font-size: 13px; color: rgba(250,247,242,0.7); line-height: 1.55; margin: 0 0 24px; max-width: 340px; }
+  .agent .phone {
+    font-family: 'Inter', sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-top: auto;
+  }
+  .agent .hrs { font-size: 11px; color: rgba(250,247,242,0.55); margin-top: 6px; letter-spacing: 0.04em; }
+
+  /* FAQ-lite band */
+  .band {
+    padding: 96px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    border-top: 1px solid var(--rule);
+  }
+  .band h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 16px 0 0;
+    max-width: 500px;
+  }
+  .band .items .item { padding: 20px 0; border-top: 1px solid var(--rule); }
+  .band .items .item:last-child { border-bottom: 1px solid var(--rule); }
+  .band .item h5 { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+  .band .item p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+  /* Footer */
+  footer {
+    padding: 80px 0 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 64px;
+  }
+  footer h6 {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin: 0 0 16px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer ul li { font-size: 14px; color: var(--ink-soft); margin-bottom: 10px; }
+  .foot-bottom {
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--mute);
+  }
+  .foot-brand {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .foot-brand p { font-size: 13px; color: var(--ink-soft); margin-top: 12px; max-width: 340px; line-height: 1.55; }
+</style>
+</head>
+<body>
+
+<div class="announce"><b>Open Enrollment is live.</b> &nbsp; Coverage for 2026 before January 15.</div>
+
+<div class="page">
+  <nav class="top">
+    <div class="wordmark">
+      <span class="dot"></span>
+      Shophealthcare
+      <span class="small">est. 2026</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">How it works</a>
+      <a href="#">For freelancers</a>
+      <a href="#">For 55–64</a>
+      <a href="#">Agents</a>
+    </div>
+    <div class="nav-right">
+      <span>Licensed in 50 states</span>
+      <span class="call">(800) 555-0198</span>
+      <a class="btn ghost" href="#" style="padding:10px 16px; font-size:13px;">Start quietly</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="eyebrow">A calmer way to read the fine print</div>
+      <h1>Health&nbsp;insurance, <em>quietly&nbsp;sorted.</em></h1>
+      <p class="lede">Four minutes, a few honest questions, and the plans that actually fit your state, your household, and your doctor. No urgency. No upsell.</p>
+      <div class="cta-row">
+        <a class="btn" href="#">See what you qualify for <span class="arrow">→</span></a>
+        <a class="btn ghost" href="#">Scan your card</a>
+      </div>
+      <div class="small-note">Free to use. We're paid by the insurer only if you choose a plan.</div>
+    </div>
+    <div class="hero-aside">
+      <div class="portrait"><span class="caption">Portrait · BR-1 · morning light, mail between them</span></div>
+      <div class="small-note">Members save <span style="color:var(--green); font-weight:600;" class="tab">$2,100/yr</span> on average after switching. Verified across 7 plans in all 50 states.</div>
+    </div>
+  </section>
+
+  <!-- SITUATIONS -->
+  <section class="block" style="padding-top:0; border-top:0;">
+    <div class="sec-head">
+      <div>
+        <div class="sec-label">Where to start</div>
+        <h2>Begin where you&nbsp;are.</h2>
+      </div>
+      <p>Five common situations. Pick the one that sounds most like yours — we'll take it from there.</p>
+    </div>
+    <div class="sit-grid">
+      <div class="sit">
+        <span class="tag">01 · Loss of coverage</span>
+        <h3>I just lost my health insurance.</h3>
+        <p>A Special Enrollment Period may apply. We'll check the date and walk you through what's next.</p>
+        <span class="start">Start here <span class="arrow">→</span></span>
+      </div>
+      <div class="sit">
+        <span class="tag">02 · Self-employed</span>
+        <h3>I'm self-employed or freelance.</h3>
+        <p>Your 1099 income changes the subsidy math. We'll run it cleanly and show you four routes.</p>
+        <span class="start">Start here <span class="arrow">→</span></span>
+      </div>
+      <div class="sit">
+        <span class="tag">03 · Renewal notice</span>
+        <h3>I got my 2026 renewal notice.</h3>
+        <p>Premiums are rising an average of 14% this year. Let's see what else you can reach.</p>
+        <span class="start">Start here <span class="arrow">→</span></span>
+      </div>
+      <div class="sit">
+        <span class="tag">04 · Pre-Medicare</span>
+        <h3>I'm 55–64, not yet on Medicare.</h3>
+        <p>Bridge coverage with care. A licensed agent is on every step — no pressure, no scripts.</p>
+        <span class="start">Start here <span class="arrow">→</span></span>
+      </div>
+      <div class="sit">
+        <span class="tag">05 · Just checking</span>
+        <h3>I just want to check my current plan.</h3>
+        <p>A quiet second opinion. Scan your card, see the comparison, decide later.</p>
+        <span class="start">Start here <span class="arrow">→</span></span>
+      </div>
+      <div class="sit" style="background:var(--card); justify-content:center;">
+        <span class="tag">Any state · any age</span>
+        <h3>Not sure which of these you are?</h3>
+        <p>Answer four questions. We'll sort it.</p>
+        <span class="start">Take the path test <span class="arrow">→</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="block">
+    <div class="sec-head">
+      <div>
+        <div class="sec-label">How it works</div>
+        <h2>Three steps.<br>No surprises.</h2>
+      </div>
+      <p>We'd rather under-promise and explain the math. Each step takes about a minute, and you can stop at any point without losing what you've entered.</p>
+    </div>
+    <div class="process">
+      <div class="step">
+        <div class="num">01</div>
+        <h4>Understand your options.</h4>
+        <p>Nora reads the marketplace for your state and your household, and names the three to five plans that genuinely fit. No phantom filters. No dark patterns.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h4>Compare the real math.</h4>
+        <p>Premiums, deductibles, networks, drug tiers — shown side by side in plain English. The subsidy math is already built in.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h4>Talk to a human, if you'd like.</h4>
+        <p>A licensed, state-credentialed agent can review the final choice with you before you enroll. They're paid the same either way.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NORA -->
+  <section class="block">
+    <div class="nora-block">
+      <div class="nora-body">
+        <div class="sec-label">Meet Nora</div>
+        <h3>Your licensed enrollment assistant.</h3>
+        <p>Nora was designed to sit quietly between the fine print and the decision. She reads the marketplace the way a careful friend would read it for you — slowly, completely, and without an agenda.</p>
+        <p>Every recommendation Nora makes is reviewed by a state-licensed agent before your final enrollment, ensuring 100% compliance and accuracy for your 2026 coverage.</p>
+        <div class="nora-link">See exactly what Nora can and can't do →</div>
+      </div>
+      <div class="nora-card">
+        <div class="pill"><span class="d"></span> Nora · listening</div>
+        <div class="portrait-sm"></div>
+        <div class="name">Nora</div>
+        <p class="msg">“I can see your current plan. Let me walk through the three alternatives that keep your primary care doctor and <em>cost less</em> — one at a time.”</p>
+        <div class="tstamp">09:42 · drafted after reviewing 7 plans in Texas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVINGS -->
+  <section class="block">
+    <div class="sec-head">
+      <div>
+        <div class="sec-label">A recent example</div>
+        <h2>What members saved last week.</h2>
+      </div>
+      <p>Two anonymized savings reveals from last week. Real math, real subsidy, real people who clicked through.</p>
+    </div>
+    <div class="savings-wrap">
+      <div class="saving-card">
+        <div class="tag">COBRA extension · Houston, TX</div>
+        <div class="num tab">$1,140<span class="unit">/mo</span></div>
+        <div class="rule-line"></div>
+        <p class="desc">Switched from a 36-month COBRA continuation to a Silver marketplace plan at the same PCP. Saved <b style="color:var(--green);" class="tab">$9,420/yr</b> after subsidy.</p>
+      </div>
+      <div class="saving-card">
+        <div class="tag">Bridge-tier Silver 60 · Asheville, NC</div>
+        <div class="num tab">$645<span class="unit">/mo</span></div>
+        <div class="rule-line"></div>
+        <p class="desc">Pre-Medicare couple, 61 and 59. Kept their cardiologist. Lowered their deductible by <b style="color:var(--green);" class="tab">$2,800</b> for next year.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF STATS -->
+  <div class="page" style="padding: 0;">
+    <div class="proof">
+      <div class="stat"><div class="n tab">50K+</div><div class="l">members enrolled in 2025</div></div>
+      <div class="stat"><div class="n tab">4.9<span style="font-size:30px; color:var(--mute);">/5</span></div><div class="l">average licensed-agent review</div></div>
+      <div class="stat"><div class="n tab">12M</div><div class="l">plans read by Nora this year</div></div>
+      <div class="stat"><div class="n tab">100%</div><div class="l">licensed-agent compliance check</div></div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIAL + AGENT -->
+  <div class="note-block">
+    <div class="note">
+      <div class="from">A note — from a member in Denver</div>
+      <q>I was staring at an 18% hike and a letter I didn't understand. Nora walked me through it in the time it takes to drink a cup of coffee. No push. I renewed at a lower premium.</q>
+      <div class="sig">— Carla S., 58, self-employed photographer</div>
+    </div>
+    <div class="agent">
+      <span class="tag">Licensed agent</span>
+      <h4>When you'd rather speak to a person.</h4>
+      <p>A state-credentialed enrollment agent is available every weekday and Saturdays. They're paid the same whether you enroll or not.</p>
+      <div class="phone tab">(800) 555-0198</div>
+      <div class="hrs">Mon–Fri 7a–10p · Sat 9a–6p · Eastern</div>
+    </div>
+  </div>
+
+  <!-- BAND: What Nora won't do -->
+  <section class="band">
+    <div>
+      <div class="sec-label">What we won't do</div>
+      <h2>We'd rather be honest about the edges than pretend they don't exist.</h2>
+    </div>
+    <div class="items">
+      <div class="item"><h5>We don't sell Medicare Advantage.</h5><p>Different product, different rules, different agents. We'll point you to someone who does it well.</p></div>
+      <div class="item"><h5>We don't auto-renew without you.</h5><p>Every renewal gets a fresh read. Insurance changes; so should the comparison.</p></div>
+      <div class="item"><h5>We don't share your data.</h5><p>Not with carriers beyond what enrollment requires. Not with marketers. Not ever.</p></div>
+      <div class="item"><h5>We can't beat the marketplace.</h5><p>Plans are the same everywhere. We just help you read them.</p></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Shophealthcare.</div>
+        <p>A licensed, independent health insurance brokerage. Not a government site. We represent carriers in all 50 states and are compensated by them, not by you.</p>
+      </div>
+      <div>
+        <h6>Product</h6>
+        <ul><li>How it works</li><li>Nora, explained</li><li>The fine print</li><li>Changelog</li></ul>
+      </div>
+      <div>
+        <h6>For</h6>
+        <ul><li>Freelancers</li><li>Pre-Medicare</li><li>Job loss (SEP)</li><li>Small business</li></ul>
+      </div>
+      <div>
+        <h6>Company</h6>
+        <ul><li>About</li><li>Agents</li><li>Careers</li><li>Press</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Shophealthcare, Inc. · NPN #19482230 · Licensed in all 50 states + DC</span>
+      <span>Terms · Privacy · Accessibility</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

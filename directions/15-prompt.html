@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Prompt (v1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEE5;
+    --paper-2:#E8E0D1;
+    --ink:#141413;
+    --ink-soft:#2B2A28;
+    --mute:#8E857A;
+    --lime:#CFFF4C;
+    --rule:#D9D0BE;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{width:1440px;margin:0;font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',Georgia,serif;font-variation-settings:"opsz" 144;letter-spacing:-0.025em;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;}
+  .tab{font-variant-numeric:tabular-nums;}
+  .caps{font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:0.14em;font-size:11px;font-weight:500;color:var(--mute);}
+
+  .page{max-width:1280px;margin:0 auto;padding:0 64px;}
+
+  /* Announce */
+  .announce{background:var(--ink);color:var(--paper);text-align:center;padding:10px 0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;}
+  .announce a{color:var(--lime);text-decoration:underline;text-underline-offset:3px;}
+
+  /* Nav */
+  nav.top{border-bottom:1px solid var(--rule);}
+  nav.top .row{max-width:1280px;margin:0 auto;padding:22px 64px;display:flex;align-items:center;gap:28px;}
+  .wordmark{font-family:'Fraunces',serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;font-variation-settings:"opsz" 144;}
+  .nav-links{margin-left:auto;display:flex;gap:28px;font-size:14px;font-weight:500;}
+  .nav-links a{color:var(--ink);text-decoration:none;}
+  .nav-right{display:flex;gap:12px;align-items:center;}
+  .phone{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;font-family:'Inter';font-size:14px;font-weight:600;border:1px solid var(--ink);border-radius:4px;text-decoration:none;color:var(--ink);background:transparent;}
+  .btn.primary{background:var(--ink);color:var(--paper);}
+  .btn.big{padding:16px 24px;font-size:15px;}
+
+  /* Folio */
+  .folio{max-width:1280px;margin:0 auto;padding:18px 64px;display:flex;justify-content:space-between;align-items:baseline;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--rule);}
+  .folio b{color:var(--ink);font-weight:600;}
+  .folio .pgno{font-variant-numeric:tabular-nums;}
+
+  /* HERO — single big fillable prompt */
+  .hero{padding:92px 0 80px;}
+  .hero .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mute);margin-bottom:28px;display:flex;align-items:center;gap:14px;}
+  .hero .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);display:inline-block;box-shadow:0 0 0 4px rgba(207,255,76,0.25);}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144,"wght" 650;font-size:116px;line-height:0.94;letter-spacing:-0.035em;margin:0 0 36px;color:var(--ink);}
+  .hero h1 em{font-style:italic;font-weight:500;}
+  .hero h1 .blank{display:inline-block;position:relative;min-width:320px;padding:0 16px 2px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:54px;letter-spacing:-0.01em;color:var(--mute);font-style:normal;vertical-align:baseline;border-bottom:4px solid var(--ink);margin:0 6px;transform:translateY(-16px);}
+  .hero h1 .blank.lime{background:var(--lime);color:var(--ink);border-bottom-color:var(--ink);padding:4px 18px 6px;}
+  .hero .sub{margin-top:12px;display:grid;grid-template-columns:1.2fr 1fr;gap:64px;align-items:start;}
+  .hero .sub p{font-size:18px;line-height:1.55;color:var(--ink-soft);max-width:540px;margin:0 0 24px;}
+  .hero .sub p b{font-weight:600;}
+  .hero .ctas{display:flex;gap:12px;align-items:center;}
+  .aside{border-left:2px solid var(--ink);padding:4px 0 4px 24px;}
+  .aside .caps{margin-bottom:10px;display:block;}
+  .aside p{font-size:14px;line-height:1.55;color:var(--ink-soft);margin:0;}
+  .aside .mono-line{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mute);letter-spacing:0.04em;}
+
+  /* Section rule */
+  .sec-rule{max-width:1280px;margin:0 auto;height:1px;background:var(--ink);}
+  .sec-head{max-width:1280px;margin:0 auto;padding:56px 64px 24px;display:grid;grid-template-columns:160px 1fr;gap:48px;align-items:baseline;}
+  .sec-head .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144;font-size:40px;line-height:1.08;letter-spacing:-0.022em;margin:0;max-width:760px;}
+  .sec-head h2 em{font-style:italic;font-weight:500;}
+
+  /* STACK of prompts */
+  .stack{padding:12px 0 40px;}
+  .prompt-row{max-width:1280px;margin:0 auto;padding:36px 64px;border-top:1px solid var(--rule);display:grid;grid-template-columns:60px 1fr 180px;gap:32px;align-items:baseline;}
+  .prompt-row:last-child{border-bottom:1px solid var(--rule);}
+  .prompt-row .n{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-weight:500;font-style:italic;font-size:22px;color:var(--mute);}
+  .prompt-row .q{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144;font-size:46px;line-height:1.08;letter-spacing:-0.022em;color:var(--ink);}
+  .prompt-row .q .fill{display:inline-block;min-width:180px;padding:0 10px 2px;font-family:'JetBrains Mono',monospace;font-weight:400;font-size:26px;letter-spacing:0;color:var(--mute);border-bottom:3px solid var(--ink);margin:0 4px;transform:translateY(-6px);}
+  .prompt-row .q .fill.wide{min-width:260px;}
+  .prompt-row .meta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--mute);text-transform:uppercase;text-align:right;line-height:1.6;}
+  .prompt-row .meta b{display:block;color:var(--ink);font-weight:600;margin-top:4px;}
+  .prompt-row.featured{background:linear-gradient(180deg,transparent 0%,transparent 58%,var(--lime) 58%,var(--lime) 78%,transparent 78%);}
+  .prompt-row.featured .q .fill{border-bottom-color:var(--ink);}
+
+  .stack-foot{max-width:1280px;margin:0 auto;padding:28px 64px 8px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mute);}
+  .stack-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  /* How it reads — editorial strip */
+  .reads{padding:88px 0 56px;border-top:1px solid var(--ink);margin-top:64px;}
+  .reads .grid{max-width:1280px;margin:0 auto;padding:0 64px;display:grid;grid-template-columns:repeat(3,1fr);gap:48px;}
+  .reads .item .n{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-weight:500;font-size:48px;line-height:1;letter-spacing:-0.02em;margin-bottom:18px;}
+  .reads .item h4{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 16px;}
+  .reads .item p{font-size:15px;line-height:1.6;color:var(--ink-soft);margin:0;max-width:320px;}
+
+  /* SHORTLIST — Warby style 3 plans */
+  .shortlist{padding:96px 0 80px;background:var(--paper-2);margin-top:72px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);}
+  .shortlist .head{max-width:1280px;margin:0 auto;padding:0 64px 48px;display:flex;justify-content:space-between;align-items:baseline;}
+  .shortlist .head .caps{margin-bottom:12px;display:block;}
+  .shortlist .head h2{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144;font-size:68px;line-height:0.98;letter-spacing:-0.028em;margin:0;max-width:720px;}
+  .shortlist .head h2 em{font-style:italic;font-weight:500;}
+  .shortlist .head .aside{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--mute);text-align:right;max-width:220px;border:none;padding:0;}
+  .cards{max-width:1280px;margin:0 auto;padding:0 64px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .card{background:var(--paper);border:1px solid var(--ink);padding:32px 28px 28px;display:flex;flex-direction:column;min-height:500px;box-shadow:4px 4px 0 var(--ink);}
+  .card .hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mute);}
+  .card .hdr b{color:var(--ink);}
+  .card .carrier{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144;font-size:30px;line-height:1.05;letter-spacing:-0.02em;margin:0 0 6px;}
+  .card .tier{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--mute);text-transform:uppercase;margin-bottom:24px;}
+  .card .price{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-weight:600;font-size:64px;line-height:1;letter-spacing:-0.035em;font-variant-numeric:tabular-nums;margin-bottom:6px;}
+  .card .price .unit{font-size:18px;color:var(--mute);font-weight:500;margin-left:2px;letter-spacing:0;}
+  .card .sub-price{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.06em;color:var(--mute);text-transform:uppercase;margin-bottom:24px;}
+  .card .rule{height:1px;background:var(--rule);margin:20px 0;}
+  .card q{font-family:'Fraunces',serif;font-weight:500;font-style:italic;font-size:18px;line-height:1.38;letter-spacing:-0.01em;color:var(--ink);quotes:"“" "”";display:block;margin:0 0 16px;}
+  .card .attribution{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mute);margin-bottom:24px;}
+  .card ul{list-style:none;padding:0;margin:0 0 24px;}
+  .card li{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dotted var(--rule);color:var(--ink-soft);}
+  .card li b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;}
+  .card .pick{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--ink);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;}
+  .card.editor{background:var(--lime);}
+  .card.editor .ribbon{display:inline-block;background:var(--ink);color:var(--lime);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:20px;font-weight:600;}
+
+  /* Masthead band */
+  .masthead{padding:72px 64px;border-bottom:1px solid var(--rule);}
+  .masthead .inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:72px;align-items:center;}
+  .masthead h3{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-variation-settings:"opsz" 144;font-size:52px;line-height:1.05;letter-spacing:-0.022em;margin:0;}
+  .masthead p{font-size:17px;line-height:1.65;color:var(--ink-soft);margin:0 0 16px;}
+  .masthead p b{color:var(--ink);font-weight:600;}
+  .masthead .sig{margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mute);}
+
+  /* Final line */
+  .final{padding:120px 64px;text-align:center;}
+  .final h2{font-family:'Fraunces',serif;font-weight:600;font-variation-settings:"opsz" 144;font-size:84px;line-height:0.98;letter-spacing:-0.032em;margin:0 0 28px;max-width:1100px;margin-left:auto;margin-right:auto;}
+  .final h2 em{font-style:italic;font-weight:500;}
+  .final h2 .blank{display:inline-block;min-width:220px;padding:2px 14px;font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:400;color:var(--ink);background:var(--lime);vertical-align:baseline;}
+  .final .ctas{display:flex;justify-content:center;gap:12px;}
+
+  /* Footer */
+  footer{border-top:1px solid var(--ink);padding:56px 64px 36px;}
+  .foot-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2.4fr 1fr 1fr 1.2fr;gap:48px;}
+  footer h6{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;}
+  footer ul{list-style:none;padding:0;margin:0;}
+  footer li{font-size:14px;margin-bottom:8px;}
+  footer .word{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-size:22px;font-weight:700;margin-bottom:12px;}
+  footer .tag{color:var(--mute);font-size:13px;line-height:1.6;max-width:320px;margin:0;}
+  .foot-bottom{max-width:1280px;margin:36px auto 0;padding-top:20px;border-top:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--mute);text-transform:uppercase;display:flex;justify-content:space-between;}
+</style>
+</head>
+<body>
+
+<div class="announce">ACA OPEN ENROLLMENT IS LIVE — ENDS JAN 15 · <a href="#">CHECK YOUR SUBSIDY</a></div>
+
+<nav class="top">
+  <div class="row">
+    <div class="wordmark">Shophealthcare</div>
+    <div class="nav-links"><a>Plans</a><a>How it works</a><a>Nora</a><a>About</a></div>
+    <div class="nav-right">
+      <span class="phone tab">(800) 555-0198</span>
+      <a class="btn primary" href="#">Start →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="folio">
+  <span>HOME <span style="color:var(--rule);">/</span> <b>SHOPHEALTHCARE</b> <span style="color:var(--rule);">/</span> THE INTAKE</span>
+  <span>ISSUE №. 01 · WINTER 2026 · <span class="pgno">FOLIO 001</span></span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="page">
+    <div class="eyebrow"><span class="dot"></span>AN INTAKE, WRITTEN AS A PROFILE · FILL IN THE ONE THAT RESONATES</div>
+    <h1>The last medical bill I didn't understand was <span class="blank lime">a $1,240 ER copay</span> and I never figured out <em>why.</em></h1>
+    <div class="sub">
+      <div>
+        <p>Forget the form. Tell us the <b>one sentence that sounds like you</b> and Nora — our licensed enrollment assistant — reads the marketplace against the truth you just told her.</p>
+        <div class="ctas">
+          <a class="btn primary big" href="#">Answer a prompt →</a>
+          <a class="btn big" href="#">Scan your card instead</a>
+        </div>
+      </div>
+      <div class="aside">
+        <span class="caps">Editor's note</span>
+        <p>We noticed that insurance forms ask you 47 questions before they earn one. We reversed it. Pick the sentence that describes your last year — that's the intake.</p>
+        <div class="mono-line">~ 4 MIN READ · NO EMAIL REQUIRED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK of prompts -->
+<div class="sec-rule"></div>
+<div class="sec-head">
+  <span class="lbl">§ 01 · THE STACK</span>
+  <h2>Scroll the stack. Fill in the <em>one that resonates.</em><br>One sentence is enough to route you.</h2>
+</div>
+
+<section class="stack">
+  <div class="prompt-row">
+    <div class="n">i.</div>
+    <div class="q">I pay <span class="fill">$_____</span> a month for health insurance and I <em>don't know why.</em></div>
+    <div class="meta">PREMIUM CONFUSION<b>PC-1</b></div>
+  </div>
+  <div class="prompt-row featured">
+    <div class="n">ii.</div>
+    <div class="q">My deductible is <span class="fill">$_____</span> and that means <span class="fill wide">_____</span> to me.</div>
+    <div class="meta">COST LITERACY<b>PC-1 / SP-1</b></div>
+  </div>
+  <div class="prompt-row">
+    <div class="n">iii.</div>
+    <div class="q">I lost coverage when <span class="fill wide">_____</span>.</div>
+    <div class="meta">SEP ELIGIBLE<b>CASE 01</b></div>
+  </div>
+  <div class="prompt-row">
+    <div class="n">iv.</div>
+    <div class="q">The last time I actually read my plan document was <span class="fill wide">_____</span>.</div>
+    <div class="meta">RENEWAL DRIFT<b>CASE 03</b></div>
+  </div>
+  <div class="prompt-row">
+    <div class="n">v.</div>
+    <div class="q">The last medical bill I didn't understand was <span class="fill wide">_____</span>.</div>
+    <div class="meta">EOB INTAKE<b>SP-1</b></div>
+  </div>
+
+  <div class="stack-foot">
+    <span>NONE OF THESE FIT? <a href="#">WRITE YOUR OWN SENTENCE →</a></span>
+    <span>05 OF 05 PROMPTS · <span class="tab">PG 002</span></span>
+  </div>
+</section>
+
+<!-- HOW IT READS -->
+<section class="reads">
+  <div class="grid">
+    <div class="item">
+      <div class="n serif">01</div>
+      <h4>YOU WRITE ONE SENTENCE</h4>
+      <p>Not a form. Not a quiz. One honest fill-in becomes the seed Nora uses to read every plan in your state against your actual circumstance.</p>
+    </div>
+    <div class="item">
+      <div class="n serif">02</div>
+      <h4>NORA READS THE MARKETPLACE</h4>
+      <p>She parses your subsidy math, your county's carrier list, and the network your doctor is in — then drafts a shortlist, not a catalog.</p>
+    </div>
+    <div class="item">
+      <div class="n serif">03</div>
+      <h4>YOU GET THREE PLANS, NOT FORTY-SEVEN</h4>
+      <p>Curated like a Warby shortlist. Each plan has a pull-quote, the real math, and a licensed agent who signs off before you enroll.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SHORTLIST -->
+<section class="shortlist">
+  <div class="head">
+    <div>
+      <span class="caps">§ 02 · THE SHORTLIST</span>
+      <h2>Your three plans. <em>Not forty-seven.</em></h2>
+    </div>
+    <div class="aside">DRAFTED FOR YOU · NC · 37 · $74K AGI · REVIEWED BY MAYA OKAFOR NC #44812</div>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="hdr"><span>PLAN 01 / BRONZE</span><span><b>BLUE NC</b></span></div>
+      <div class="carrier">Blue Advantage Bronze 60</div>
+      <div class="tier">HMO · TRIANGLE NETWORK</div>
+      <div class="price tab">$212<span class="unit">/mo</span></div>
+      <div class="sub-price">AFTER $418 SUBSIDY · DED $7,500</div>
+      <div class="rule"></div>
+      <q>The cheapest monthly number on the page — but the deductible means you'll feel every doctor visit until November.</q>
+      <div class="attribution">— NORA, ON THIS PLAN</div>
+      <ul>
+        <li><span>Keeps your PCP</span><b>Yes</b></li>
+        <li><span>Therapist in-network</span><b>Yes</b></li>
+        <li><span>Rx tier-2</span><b>$45</b></li>
+        <li><span>Hidden reset</span><b>None</b></li>
+      </ul>
+      <div class="pick"><span>Pick this plan</span><span>→</span></div>
+    </div>
+
+    <div class="card editor">
+      <span class="ribbon">NORA'S PICK · 01 OF 03</span>
+      <div class="hdr"><span>PLAN 02 / SILVER</span><span><b>AETNA CVS</b></span></div>
+      <div class="carrier">Aetna Silver 73 PPO</div>
+      <div class="tier">PPO · STATEWIDE</div>
+      <div class="price tab">$284<span class="unit">/mo</span></div>
+      <div class="sub-price">AFTER $418 SUBSIDY · DED $2,950</div>
+      <div class="rule"></div>
+      <q>The honest middle. Your therapist stays. The deductible is half what Bronze asks. Worth the $72 extra per month.</q>
+      <div class="attribution">— NORA, ON THIS PLAN</div>
+      <ul>
+        <li><span>Keeps your PCP</span><b>Yes</b></li>
+        <li><span>Therapist in-network</span><b>Yes</b></li>
+        <li><span>Rx tier-2</span><b>$30</b></li>
+        <li><span>Hidden reset</span><b>None</b></li>
+      </ul>
+      <div class="pick"><span>Pick this plan</span><span>→</span></div>
+    </div>
+
+    <div class="card">
+      <div class="hdr"><span>PLAN 03 / GOLD</span><span><b>UNITED</b></span></div>
+      <div class="carrier">UHC Gold Select EPO</div>
+      <div class="tier">EPO · METRO NETWORK</div>
+      <div class="price tab">$412<span class="unit">/mo</span></div>
+      <div class="sub-price">AFTER $418 SUBSIDY · DED $1,500</div>
+      <div class="rule"></div>
+      <q>If 2026 is the year you finally deal with the thing you've been avoiding — this is the plan that won't flinch at the bill.</q>
+      <div class="attribution">— NORA, ON THIS PLAN</div>
+      <ul>
+        <li><span>Keeps your PCP</span><b>Yes</b></li>
+        <li><span>Therapist in-network</span><b>Partial</b></li>
+        <li><span>Rx tier-2</span><b>$20</b></li>
+        <li><span>Hidden reset</span><b>October</b></li>
+      </ul>
+      <div class="pick"><span>Pick this plan</span><span>→</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MASTHEAD -->
+<section class="masthead">
+  <div class="inner">
+    <h3>Nobody else in insurance <br>treats intake <em>this way.</em></h3>
+    <div>
+      <p>Every other marketplace asks you to become a spreadsheet before you're allowed to see a plan. We think a sentence is more honest than a ZIP + 47 dropdowns.</p>
+      <p>The prompt you answered is how we segment — not a dark funnel, not a retarget pixel. <b>A real editorial read</b> of your situation, forwarded to a state-licensed agent who signs their name on the recommendation.</p>
+      <div class="sig">— THE EDITORS · SHOPHEALTHCARE · ISSUE №.01</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <h2>Answer <em>one.</em> We'll read the rest.<br>Start with <span class="blank">_____</span>.</h2>
+  <div class="ctas">
+    <a class="btn primary big" href="#">Answer a prompt →</a>
+    <a class="btn big" href="#">Talk to a human · (800) 555-0198</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="word">Shophealthcare</div>
+      <p class="tag">An independent, state-licensed brokerage. Named agents, flat-fee pay, no data resold. Not a government site.</p>
+    </div>
+    <div>
+      <h6>CONTACT</h6>
+      <ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul>
+    </div>
+    <div>
+      <h6>LEGAL</h6>
+      <ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul>
+    </div>
+    <div>
+      <h6>COMPLIANCE</h6>
+      <ul><li>NPN #19482230</li><li>hello@shophealthcare.com</li><li class="tab">(800) 555-0198</li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 SHOPHEALTHCARE, INC · LICENSED IN ALL 50 STATES</span>
+    <span>NOT AFFILIATED WITH THE ACA MARKETPLACE OR MEDICARE</span>
+  </div>
+</footer>
+
+</body>
+</html>

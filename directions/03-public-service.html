@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Public Service</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0A4B55;
+    --teal-dark: #073640;
+    --yellow: #FFC43D;
+    --bone: #F7F4EE;
+    --bone-2: #EFEBE1;
+    --ink: #0E0E0E;
+    --ink-2: #3A3A3A;
+    --mute: #6E6E6E;
+    --line: #C9C5BD;
+    --red: #C6392B;
+    --green: #1E6F3E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bone); color: var(--ink); }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "tnum";
+  }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+  /* Top status bar — transit-announcement feel */
+  .status-bar {
+    background: var(--teal);
+    color: var(--bone);
+  }
+  .status-bar .row {
+    max-width: 1280px; margin: 0 auto; padding: 9px 48px;
+    display: flex; align-items: center; gap: 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .status-bar .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--yellow);
+    box-shadow: 0 0 0 4px rgba(255,196,61,0.18);
+  }
+  .status-bar .sep { color: rgba(247,244,238,0.35); }
+  .status-bar b { color: var(--yellow); font-weight: 500; }
+
+  /* Primary nav */
+  nav.primary {
+    background: var(--bone);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.primary .row {
+    max-width: 1280px; margin: 0 auto; padding: 22px 48px;
+    display: flex; align-items: center; gap: 40px;
+  }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .wordmark .seal {
+    width: 32px; height: 32px;
+    background: var(--teal);
+    position: relative;
+    display: grid; place-items: center;
+  }
+  .wordmark .seal::after {
+    content: ""; width: 10px; height: 10px; background: var(--yellow);
+  }
+  .wordmark .est {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+
+  .nav-links { display: flex; gap: 28px; font-size: 14px; font-weight: 500; }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-right { margin-left: auto; display: flex; gap: 14px; align-items: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--bone);
+    background: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 0;
+  }
+  .btn.ghost { background: transparent; color: var(--teal); }
+  .btn.yellow { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
+
+  /* Hero */
+  .hero {
+    max-width: 1280px; margin: 0 auto; padding: 64px 48px 72px;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 56px;
+    align-items: end;
+    border-bottom: 3px solid var(--teal);
+  }
+  .hero .crumb { margin-bottom: 28px; display: flex; align-items: center; gap: 14px; }
+  .hero .crumb .pill {
+    background: var(--yellow);
+    padding: 6px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .hero .crumb span { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); }
+
+  .hero h1 {
+    font-weight: 600;
+    font-size: 68px;
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    margin: 0 0 28px;
+    color: var(--ink);
+  }
+  .hero h1 .teal { color: var(--teal); }
+  .hero h1 u { text-decoration: none; background: var(--yellow); padding: 0 6px; }
+  .hero .sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 560px;
+    margin: 0 0 32px;
+  }
+  .hero .ctas { display: flex; gap: 12px; margin-bottom: 28px; }
+  .hero .meta {
+    display: flex; gap: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .hero .meta b { color: var(--ink); font-weight: 500; }
+
+  /* Wayfinding info-board */
+  .board {
+    background: var(--teal);
+    color: var(--bone);
+    padding: 28px 32px;
+    position: relative;
+  }
+  .board::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: var(--yellow);
+  }
+  .board .h {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.65);
+    margin: 10px 0 22px;
+  }
+  .board .key {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.65);
+  }
+  .board .big {
+    font-weight: 600;
+    font-size: 88px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--yellow);
+    font-variant-numeric: tabular-nums;
+    margin: 10px 0 4px;
+  }
+  .board .big .u { font-size: 22px; color: var(--bone); letter-spacing: 0; margin-left: 4px; }
+  .board .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: rgba(247,244,238,0.75);
+    margin-top: 14px;
+    line-height: 1.6;
+    border-top: 1px solid rgba(247,244,238,0.2);
+    padding-top: 14px;
+  }
+  .board .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
+    margin-top: 18px;
+  }
+  .board .grid .k {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.6);
+  }
+  .board .grid .v {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--bone);
+    letter-spacing: -0.01em;
+    margin-top: 2px;
+  }
+
+  /* State coverage strip */
+  .coverage {
+    background: var(--bone-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .coverage .row {
+    max-width: 1280px; margin: 0 auto; padding: 20px 48px;
+    display: flex; align-items: center; gap: 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .coverage .badge {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .coverage .badge::before {
+    content: ""; width: 10px; height: 10px; background: var(--green);
+  }
+  .coverage .warn {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--red);
+    font-weight: 600;
+  }
+  .coverage .warn::before {
+    content: ""; width: 10px; height: 10px; background: var(--red);
+  }
+  .coverage .sep { color: var(--line); }
+  .coverage .phone { margin-left: auto; color: var(--ink); }
+  .coverage .phone b { color: var(--teal); }
+
+  /* Section frame */
+  section { border-bottom: 1px solid var(--line); }
+  .sec { max-width: 1280px; margin: 0 auto; padding: 72px 48px 80px; }
+  .sec-head {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 48px; align-items: end;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-head .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+  .sec-head .tag::before { content: "§ "; color: var(--yellow); font-weight: 700; }
+  .sec-head h2 {
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 12px 0 0;
+  }
+  .sec-head p { font-size: 16px; color: var(--ink-2); margin: 0; max-width: 560px; line-height: 1.55; }
+
+  /* Situations — wayfinding cards */
+  .sit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .sit {
+    background: var(--bone);
+    padding: 28px 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    min-height: 240px;
+  }
+  .sit .code {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .sit .code .sq { width: 10px; height: 10px; background: var(--teal); }
+  .sit.yellow-tag .code .sq { background: var(--yellow); }
+  .sit h3 {
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    margin: 4px 0 6px;
+  }
+  .sit p { font-size: 14px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+  .sit .stat-line {
+    margin-top: auto;
+    padding-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+  }
+  .sit .stat-line b { color: var(--teal); font-weight: 600; }
+  .sit .go {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal);
+    margin-top: 14px;
+  }
+
+  /* Process — numbered wayfinding rows */
+  .process { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 2px solid var(--teal); }
+  .step {
+    padding: 32px 28px;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .step:last-child { border-right: 0; }
+  .step .pn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .step .pn .bar {
+    flex: 1; height: 2px; background: var(--teal);
+  }
+  .step h4 {
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    margin: 0 0 12px;
+  }
+  .step p { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin: 0 0 20px; }
+  .step .meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .step .meta b { color: var(--ink); }
+
+  /* NORA */
+  .nora-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .nora-body h3 {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin: 14px 0 20px;
+  }
+  .nora-body p { font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0 0 18px; max-width: 500px; }
+  .nora-body ul {
+    list-style: none; padding: 0; margin: 24px 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .nora-body ul li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 20px;
+    font-size: 14px;
+    align-items: center;
+  }
+  .nora-body ul li .st {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    text-align: center;
+  }
+  .st.ok { background: var(--green); color: var(--bone); }
+  .st.no { background: var(--red); color: var(--bone); }
+
+  .nora-card {
+    background: var(--bone);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--teal);
+  }
+  .nora-card .top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nora-card .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--teal);
+    position: relative;
+  }
+  .nora-card .avatar::after {
+    content: ""; position: absolute; top: 10px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--yellow);
+  }
+  .nora-card .name-stack .n { font-weight: 600; font-size: 15px; }
+  .nora-card .name-stack .r { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--mute); letter-spacing: 0.08em; text-transform: uppercase; }
+  .nora-card .badge {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nora-card .badge::before { content: ""; width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+  .nora-card .body { padding: 22px 24px 24px; }
+  .nora-card .msg { font-size: 16px; color: var(--ink); line-height: 1.55; margin: 0 0 14px; }
+  .nora-card .msg .y { background: var(--yellow); padding: 0 4px; }
+  .nora-card .notice {
+    margin-top: 22px;
+    padding: 14px 16px;
+    background: var(--bone-2);
+    border-left: 4px solid var(--teal);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+  .nora-card .notice b { color: var(--teal); }
+
+  /* Plan comparison block */
+  .compare-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
+  .compare-table {
+    background: var(--bone);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .compare-table .th {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    background: var(--teal); color: var(--bone);
+    padding: 12px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .compare-table .tr {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    align-items: center;
+  }
+  .compare-table .tr:last-child { border-bottom: 0; }
+  .compare-table .tr.hl { background: #FFF7DC; }
+  .compare-table .plan { font-weight: 600; }
+  .compare-table .mono { font-family: 'IBM Plex Mono', monospace; }
+  .compare-table .hl .mono.best { color: var(--teal); font-weight: 700; }
+
+  .savings-display {
+    background: var(--teal); color: var(--bone);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .savings-display .h {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(247,244,238,0.7);
+  }
+  .savings-display .n {
+    font-weight: 600;
+    font-size: 96px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--yellow);
+    font-variant-numeric: tabular-nums;
+    margin: 20px 0 6px;
+  }
+  .savings-display .n .u { font-size: 24px; color: var(--bone); letter-spacing: 0; margin-left: 4px; }
+  .savings-display .yr { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(247,244,238,0.75); letter-spacing: 0.06em; }
+  .savings-display .note {
+    margin-top: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(247,244,238,0.7);
+    padding-top: 24px;
+    border-top: 1px solid rgba(247,244,238,0.25);
+    line-height: 1.6;
+  }
+
+  /* Stats strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid var(--teal);
+    border-bottom: 2px solid var(--teal);
+  }
+  .stat {
+    padding: 36px 28px;
+    border-right: 1px solid var(--line);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 16px;
+  }
+  .stat .n {
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .n.teal { color: var(--teal); }
+  .stat .d { font-size: 13px; color: var(--ink-2); margin-top: 12px; line-height: 1.55; max-width: 220px; }
+
+  /* Why / void block */
+  .void {
+    display: grid; grid-template-columns: 1fr 1.3fr; gap: 64px;
+  }
+  .void h3 { font-weight: 600; font-size: 40px; line-height: 1.05; letter-spacing: -0.025em; margin: 16px 0 0; }
+  .void .body p { font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0 0 16px; max-width: 620px; }
+  .void .body p:first-of-type { font-size: 18px; color: var(--ink); }
+
+  /* Footer */
+  footer {
+    background: var(--teal);
+    color: var(--bone);
+  }
+  footer .sec { padding: 64px 48px 40px; }
+  .foot-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(247,244,238,0.2);
+  }
+  footer .wordmark .seal { background: var(--yellow); }
+  footer .wordmark .seal::after { background: var(--teal); }
+  footer .wordmark { color: var(--bone); }
+  footer .wordmark .est { color: rgba(247,244,238,0.65); }
+  footer h6 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin: 0 0 18px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 14px; margin-bottom: 10px; color: rgba(247,244,238,0.85); }
+  .foot-bottom {
+    display: flex; justify-content: space-between;
+    padding-top: 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(247,244,238,0.65);
+  }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="row">
+    <span class="dot"></span>
+    <span><b>SERVICE STATUS:</b> Open Enrollment · All Systems Operational</span>
+    <span class="sep">|</span>
+    <span>DEADLINE · <b>JAN 15 2026</b></span>
+    <span class="sep">|</span>
+    <span>LICENSED IN <b>50 STATES + DC</b></span>
+    <span class="sep">|</span>
+    <span style="margin-left:auto;">UPDATED 04/18/2026 · 09:42 ET</span>
+  </div>
+</div>
+
+<!-- PRIMARY NAV -->
+<nav class="primary">
+  <div class="row">
+    <div class="wordmark">
+      <div class="seal"></div>
+      <div>
+        <div>Shophealthcare</div>
+        <div class="est">Public-service brokerage · est. 2026</div>
+      </div>
+    </div>
+    <div class="nav-links" style="margin-left:16px;">
+      <a href="#">How it works</a>
+      <a href="#">Routes</a>
+      <a href="#">Coverage map</a>
+      <a href="#">Agents</a>
+      <a href="#">Disclosures</a>
+    </div>
+    <div class="nav-right">
+      <span class="tab">(800) 555-0198</span>
+      <a class="btn ghost" href="#">Scan card</a>
+      <a class="btn" href="#">Check options →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="crumb">
+      <span class="pill">§ Public notice</span>
+      <span>2026 Open Enrollment · Routes for 5 situations</span>
+    </div>
+    <h1>
+      <span class="teal">Every plan</span> in your state.<br>
+      One number. <u>Scan your card.</u>
+    </h1>
+    <p class="sub">The federal Navigator program lost 90% of its funding in late 2025. We stepped into the gap. A licensed, independent brokerage that looks like the public infrastructure America deserved.</p>
+    <div class="ctas">
+      <a class="btn yellow" href="#">Check my options →</a>
+      <a class="btn ghost" href="#">Scan your insurance card</a>
+    </div>
+    <div class="meta">
+      <span>FREE · <b>$0 to you</b></span>
+      <span>TIME · <b>4 minutes</b></span>
+      <span>ENCRYPTION · <b>256-bit</b></span>
+      <span>COMPLIANCE · <b>HIPAA + SOC 2</b></span>
+    </div>
+  </div>
+
+  <aside class="board">
+    <span class="key">Public rate board · TX</span>
+    <div class="h">AVERAGE ANNUAL SAVINGS AFTER SWITCH</div>
+    <div class="big tab">$2,100<span class="u">/yr</span></div>
+    <div class="grid">
+      <div><div class="k">Plans in your state</div><div class="v tab">7 · from $183/mo</div></div>
+      <div><div class="k">Current plan premium</div><div class="v tab">$412/mo</div></div>
+      <div><div class="k">Subsidy you may claim</div><div class="v tab">$246/mo</div></div>
+      <div><div class="k">Time to check</div><div class="v">~4 min</div></div>
+    </div>
+    <div class="sub">Public marketplace data · last pulled 04/18/2026 · 09:42 ET. Numbers personalize when you enter your ZIP and household.</div>
+  </aside>
+</div>
+
+<!-- COVERAGE STRIP -->
+<section class="coverage">
+  <div class="row">
+    <span class="badge">43 STATES · FULL SERVICE</span>
+    <span class="sep">|</span>
+    <span class="warn">AL · AK · HI · NV · AGENT ONLY</span>
+    <span class="sep">|</span>
+    <span>Service languages: <b>EN · ES · ZH · VI</b></span>
+    <span class="phone">Talk to a licensed agent <b>(800) 555-0198</b></span>
+  </div>
+</section>
+
+<!-- SITUATIONS -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <div>
+        <div class="tag">ROUTES · SECTION 01</div>
+        <h2>Pick the route that matches your situation.</h2>
+      </div>
+      <p>Five common situations. Each route names the specific program, window, and next step. No marketing, no dead ends — just wayfinding.</p>
+    </div>
+    <div class="sit-grid">
+      <div class="sit">
+        <div class="code"><span class="sq"></span>ROUTE-01 · LOSS OF COVERAGE</div>
+        <h3>I just lost my health insurance.</h3>
+        <p>Special Enrollment Period applies for 60 days from your last day of coverage. We'll verify eligibility and show every marketplace plan open to you.</p>
+        <div class="stat-line"><span>SEP WINDOW · <b>60 DAYS</b></span><span>PLANS · <b>12–38</b></span></div>
+        <div class="go">Start route →</div>
+      </div>
+      <div class="sit">
+        <div class="code"><span class="sq"></span>ROUTE-02 · SELF-EMPLOYED</div>
+        <h3>I'm self-employed or freelance.</h3>
+        <p>1099 income changes your subsidy eligibility. We run the math against prior-year and projected-year income, then show the 4 coverage routes.</p>
+        <div class="stat-line"><span>PATHS · <b>4</b></span><span>AVG SAVE · <b>$2,100/YR</b></span></div>
+        <div class="go">Start route →</div>
+      </div>
+      <div class="sit">
+        <div class="code"><span class="sq"></span>ROUTE-03 · RENEWAL NOTICE</div>
+        <h3>I got my 2026 renewal notice.</h3>
+        <p>Marketplace premiums are up 14% on average in 2026. Before you auto-renew, compare the 6 alternative plans at your current PCP.</p>
+        <div class="stat-line"><span>RATE HIKE · <b>+14%</b></span><span>ALTERNATIVES · <b>6</b></span></div>
+        <div class="go">Start route →</div>
+      </div>
+      <div class="sit yellow-tag">
+        <div class="code"><span class="sq"></span>ROUTE-04 · PRE-MEDICARE</div>
+        <h3>I'm 55–64, not yet on Medicare.</h3>
+        <p>Bridge coverage between COBRA, retiree benefits, and Medicare. A licensed agent is attached to every step. No pressure, no scripts.</p>
+        <div class="stat-line"><span>PATHS · <b>3</b></span><span>AGENT · <b>STATE-LICENSED</b></span></div>
+        <div class="go">Start route →</div>
+      </div>
+      <div class="sit">
+        <div class="code"><span class="sq"></span>ROUTE-05 · CHECK CURRENT PLAN</div>
+        <h3>I just want to check my current plan.</h3>
+        <p>No signup. Scan your insurance card; we return every plan in your state that costs less and keeps your PCP in-network.</p>
+        <div class="stat-line"><span>TIME · <b>90 SEC</b></span><span>SIGNUP · <b>NONE</b></span></div>
+        <div class="go">Scan card →</div>
+      </div>
+      <div class="sit" style="background: var(--teal); color: var(--bone);">
+        <div class="code" style="color: rgba(247,244,238,0.65);"><span class="sq" style="background: var(--yellow);"></span>NOT SURE WHICH ROUTE</div>
+        <h3 style="color: var(--bone);">Answer 4 questions, we'll route you.</h3>
+        <p style="color: rgba(247,244,238,0.85);">We ask four specific things — your state, your household size, whether you have a 2026 notice, and whether you have a current PCP. That's enough to route.</p>
+        <div class="stat-line" style="color: rgba(247,244,238,0.65); border-top-color: rgba(247,244,238,0.2);"><span>QUESTIONS · <b style="color:var(--yellow);">4</b></span><span>ROUTES RETURNED · <b style="color:var(--yellow);">1–2</b></span></div>
+        <div class="go" style="color: var(--yellow);">Take path test →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <div>
+        <div class="tag">HOW IT WORKS · SECTION 02</div>
+        <h2>Three steps. Numbered. No dead ends.</h2>
+      </div>
+      <p>Every step has a defined input, a defined output, and a defined time-cost. Stop at any point — your progress is saved for 30 days, then deleted.</p>
+    </div>
+    <div class="process">
+      <div class="step">
+        <div class="pn"><span>01 · SCAN / ENTER</span><span class="bar"></span></div>
+        <h4>Tell Nora where you are.</h4>
+        <p>Scan your current insurance card, upload your renewal letter, or type your ZIP. We parse the plan, premium, PCP, and deductible from the image — no retyping.</p>
+        <div class="meta">INPUT · <b>Card or ZIP</b> &nbsp;·&nbsp; TIME · <b>30 sec</b></div>
+      </div>
+      <div class="step">
+        <div class="pn"><span>02 · COMPARE</span><span class="bar"></span></div>
+        <h4>See every plan available, ranked.</h4>
+        <p>Every plan in your state, ranked by total annual cost at your exact utilization. Subsidy applied. Network conflicts flagged in yellow. Fine print surfaced, not buried.</p>
+        <div class="meta">OUTPUT · <b>Ranked list</b> &nbsp;·&nbsp; TIME · <b>2 min</b></div>
+      </div>
+      <div class="step">
+        <div class="pn"><span>03 · ENROLL</span><span class="bar"></span></div>
+        <h4>A licensed human reviews it.</h4>
+        <p>A state-licensed agent reviews your selection before enrollment. They're salaried, not commissioned. 100% of enrollments pass a compliance check — not 99%.</p>
+        <div class="meta">OUTPUT · <b>Enrollment confirmation</b> &nbsp;·&nbsp; TIME · <b>90 sec</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NORA -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <div>
+        <div class="tag">MEET NORA · SECTION 03</div>
+        <h2>Your licensed enrollment assistant.</h2>
+      </div>
+      <p>Nora reads plan documents — not emotions. Every recommendation she makes is reviewed by a state-credentialed human before your enrollment. Limits disclosed up front, every time.</p>
+    </div>
+    <div class="nora-grid">
+      <div class="nora-body">
+        <div class="label">What Nora can and can't do</div>
+        <h3>Competent, steady, civic. Not your friend — your guide.</h3>
+        <p>Nora is not a chatbot dressed up as a mascot. She is a structured assistant that reads the marketplace, applies your subsidy, and names the plans that actually fit. When she can't help, she says so — in the first sentence, not in a pop-up later.</p>
+        <ul>
+          <li><span class="st ok">Can</span><span>Recommend marketplace plans in 43 states with subsidy math applied</span><span class="mono label">TIER 1</span></li>
+          <li><span class="st ok">Can</span><span>Flag network conflicts for your current PCP and specialists</span><span class="mono label">TIER 1</span></li>
+          <li><span class="st ok">Can</span><span>Estimate total annual cost at your real-world utilization</span><span class="mono label">TIER 1</span></li>
+          <li><span class="st no">Can't</span><span>Recommend plans in AL, AK, HI, NV — handed to a licensed human</span><span class="mono label">TIER 2</span></li>
+          <li><span class="st no">Can't</span><span>Sell or refer Medicare Advantage — different product, different rules</span><span class="mono label">TIER 2</span></li>
+          <li><span class="st no">Can't</span><span>Use urgency language or hide limits to drive enrollment</span><span class="mono label">POLICY</span></li>
+        </ul>
+      </div>
+      <div class="nora-card">
+        <div class="top">
+          <div class="avatar"></div>
+          <div class="name-stack">
+            <div class="n">Nora</div>
+            <div class="r">Enrollment Assistant · Rev. 026</div>
+          </div>
+          <div class="badge">Available</div>
+        </div>
+        <div class="body">
+          <p class="msg">I have your plan and your subsidy eligibility on file. Here's what's available.</p>
+          <p class="msg">In Texas, 7 marketplace plans are open to you. 3 cost under <span class="y">$200/mo</span>. 5 keep Dr. Shah in-network. 1 lowers your deductible to $2,000.</p>
+          <p class="msg">I can recommend any of them — but I'll hand you to a licensed agent for final review before we enroll.</p>
+          <div class="notice">
+            <b>NOTICE:</b> Nora is licensed in 43 states. For AL, AK, HI, NV, you'll be routed to a human agent at (800) 555-0198. No exceptions, no workaround.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <div>
+        <div class="tag">RATE TABLE · SECTION 04</div>
+        <h2>One example. Real math. Real marketplace data.</h2>
+      </div>
+      <p>An anonymized comparison from last week: single filer, Houston TX, household of one, $64K projected 2026 income. Subsidy eligibility verified.</p>
+    </div>
+    <div class="compare-wrap">
+      <div class="compare-table">
+        <div class="th">
+          <span>PLAN</span><span>PREMIUM</span><span>DEDUCTIBLE</span><span>ANNUAL TOTAL</span>
+        </div>
+        <div class="tr">
+          <span class="plan">Ambetter Essential 5 <span class="label" style="display:block; margin-top:2px;">CURRENT</span></span>
+          <span class="mono tab">$412/mo</span>
+          <span class="mono tab">$7,500</span>
+          <span class="mono tab">$6,796/yr</span>
+        </div>
+        <div class="tr">
+          <span class="plan">Oscar Bronze 3</span>
+          <span class="mono tab">$183/mo</span>
+          <span class="mono tab">$9,200</span>
+          <span class="mono tab">$4,912/yr</span>
+        </div>
+        <div class="tr hl">
+          <span class="plan">BCBS Silver 73 <span class="label" style="display:block; margin-top:2px; color:var(--teal);">NORA'S PICK</span></span>
+          <span class="mono tab best">$247/mo</span>
+          <span class="mono tab best">$2,000</span>
+          <span class="mono tab best">$4,048/yr</span>
+        </div>
+        <div class="tr">
+          <span class="plan">Aetna CVS Gold 83</span>
+          <span class="mono tab">$318/mo</span>
+          <span class="mono tab">$1,500</span>
+          <span class="mono tab">$4,480/yr</span>
+        </div>
+        <div class="tr">
+          <span class="plan">+3 more plans</span>
+          <span class="mono tab">—</span>
+          <span class="mono tab">—</span>
+          <span class="mono tab">$4,200–$5,900</span>
+        </div>
+      </div>
+      <div class="savings-display">
+        <span class="h">Potential monthly savings</span>
+        <div class="n tab">$229<span class="u">/mo</span></div>
+        <div class="yr">= $2,748 / YR · LESS THAN CURRENT</div>
+        <div class="note">Subsidy eligibility verified against 2026 projected income ($64,000). Household of 1. All plans shown keep primary care physician in-network.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stat-strip">
+  <div class="stat"><div class="lbl">PLANS COMPARED</div><div class="n teal tab">1.2M+</div><div class="d">Across every U.S. ZIP code marketplace.</div></div>
+  <div class="stat"><div class="lbl">LICENSED AGENTS</div><div class="n tab">180+</div><div class="d">State-credentialed, salaried, on staff.</div></div>
+  <div class="stat"><div class="lbl">ENCRYPTION</div><div class="n tab">256-BIT</div><div class="d">End-to-end. Scans never leave the session.</div></div>
+  <div class="stat"><div class="lbl">COST TO YOU</div><div class="n teal tab">$0.00</div><div class="d">Broker fees paid by carrier, only on enrollment.</div></div>
+</div>
+
+<!-- VOID / WHY -->
+<section>
+  <div class="sec">
+    <div class="void">
+      <div>
+        <div class="label">Background</div>
+        <h3>The Navigator void — and why Nora exists.</h3>
+      </div>
+      <div class="body">
+        <p>In late 2025, federal funding for health insurance navigators was reduced significantly. This left millions of Americans — specifically the self-employed and those nearing retirement — flood-bound to trusted advocates to help them decipher the changing subsidy landscape.</p>
+        <p>Nora was built as a response to that void. We believe that technology shouldn't just get you a plan; it should protect your health and your wallet by providing the same level of rigorous analysis that a concierge broker would provide — accessible to everyone instantly.</p>
+        <p>We are a licensed, independent brokerage. We are not a government site and do not speak for any agency. Our compensation comes from insurers, not from you, and only when you enroll.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="sec">
+    <div class="foot-top">
+      <div>
+        <div class="wordmark">
+          <div class="seal"></div>
+          <div>
+            <div>Shophealthcare</div>
+            <div class="est">Public-service brokerage · est. 2026</div>
+          </div>
+        </div>
+        <p style="font-size: 14px; color: rgba(247,244,238,0.75); margin-top: 20px; max-width: 340px; line-height: 1.6;">A licensed, independent health insurance brokerage. Not a government site. Licensed in all 50 states + DC.</p>
+        <div class="label" style="color: var(--yellow); margin-top: 20px;">(800) 555-0198 · MON–FRI 7a–10p ET</div>
+      </div>
+      <div>
+        <h6>ROUTES</h6>
+        <ul><li>Loss of coverage</li><li>Self-employed</li><li>Renewal notice</li><li>Pre-Medicare</li><li>Plan check-up</li></ul>
+      </div>
+      <div>
+        <h6>ABOUT</h6>
+        <ul><li>How it works</li><li>Nora, explained</li><li>Coverage map</li><li>Our agents</li><li>Press</li></ul>
+      </div>
+      <div>
+        <h6>LEGAL</h6>
+        <ul><li>Terms</li><li>Privacy</li><li>Accessibility</li><li>HIPAA notice</li><li>NPN #19482230</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 SHOPHEALTHCARE, INC. · ALL RIGHTS RESERVED</span>
+      <span>UPDATED 04/18/2026 · 09:42 ET</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

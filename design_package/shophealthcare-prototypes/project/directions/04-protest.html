@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Protest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800;900&family=Recoleta:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Recoleta isn't on google fonts; fall back to Fraktur... actually let's use a bold serif stand-in -->
+<style>
+  :root {
+    --cream: #F4EDDA;
+    --cream-2: #EDE3C4;
+    --ink: #111111;
+    --red: #E8291C;
+    --red-dark: #B91409;
+    --hivis: #F5E02E;
+    --mute: #6B6558;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--cream); color: var(--ink); }
+  body {
+    font-family: 'Archivo', -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Newsprint/halftone texture */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(17,17,17,0.08) 1px, transparent 1.5px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+  }
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      repeating-linear-gradient(27deg, rgba(17,17,17,0.04) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(-63deg, rgba(17,17,17,0.03) 0 1px, transparent 1px 4px);
+  }
+
+  .display {
+    font-family: 'Archivo Black', 'Archivo', sans-serif;
+    font-weight: 900;
+    font-stretch: 125%;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 0.88;
+  }
+  .serif {
+    font-family: 'Recoleta', Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  /* Scrolling alert bar */
+  .alert {
+    background: var(--ink);
+    color: var(--hivis);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 4px solid var(--red);
+  }
+  .alert .track {
+    display: inline-flex;
+    gap: 48px;
+    animation: scroll 45s linear infinite;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .alert .track span { display: inline-flex; align-items: center; gap: 48px; }
+  .alert .track span::after { content: "★"; color: var(--red); }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Nav */
+  nav.head {
+    background: var(--cream);
+    border-bottom: 3px solid var(--ink);
+    position: relative;
+  }
+  nav.head .row {
+    max-width: 1440px; margin: 0 auto; padding: 22px 48px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .wordmark {
+    display: flex; align-items: center; gap: 0;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+  .wordmark .shop { background: var(--ink); color: var(--cream); padding: 6px 10px 5px; }
+  .wordmark .care { background: var(--red); color: var(--cream); padding: 6px 10px 5px; transform: rotate(-2deg); transform-origin: left center; }
+  .nav-links {
+    display: flex; gap: 28px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-links a.active { background: var(--hivis); padding: 2px 6px; }
+  .nav-right { margin-left: auto; display: flex; gap: 12px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 20px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 3px solid var(--ink);
+    background: var(--cream);
+    color: var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn.red { background: var(--red); color: var(--cream); }
+  .btn.hivis { background: var(--hivis); color: var(--ink); }
+  .btn.ink { background: var(--ink); color: var(--hivis); }
+  .btn.big { padding: 20px 28px; font-size: 18px; box-shadow: 6px 6px 0 var(--ink); }
+
+  /* HERO — poster */
+  .hero {
+    background: var(--red);
+    color: var(--cream);
+    border-bottom: 4px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner {
+    max-width: 1440px; margin: 0 auto; padding: 56px 48px 64px;
+    position: relative; z-index: 2;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 10px 16px 9px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    border: 3px solid var(--ink);
+  }
+  .hero-tag::before { content: ""; width: 14px; height: 14px; background: var(--red); border: 2px solid var(--ink); }
+  .hero h1 {
+    margin: 0 0 32px;
+    font-size: 170px;
+    color: var(--cream);
+  }
+  .hero h1 .serif {
+    display: inline-block;
+    color: var(--hivis);
+    font-size: 180px;
+    line-height: 0.92;
+    padding: 0 8px;
+    transform: translateY(6px);
+  }
+  .hero h1 .strike { text-decoration: line-through; text-decoration-thickness: 12px; text-decoration-color: var(--hivis); }
+  .hero h1 .outline {
+    -webkit-text-stroke: 3px var(--cream);
+    color: transparent;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .hero-lead {
+    font-family: 'Recoleta', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 32px;
+    line-height: 1.15;
+    max-width: 680px;
+    margin: 0 0 28px;
+  }
+  .hero-lead u { text-decoration: underline; text-decoration-color: var(--hivis); text-decoration-thickness: 4px; text-underline-offset: 6px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-side {
+    background: var(--ink);
+    color: var(--cream);
+    border: 4px solid var(--ink);
+    padding: 24px 24px 26px;
+  }
+  .hero-side .k {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hivis);
+    margin-bottom: 10px;
+  }
+  .hero-side .big-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 92px;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--hivis);
+  }
+  .hero-side .d { font-family: 'Archivo', sans-serif; font-size: 13px; line-height: 1.45; margin-top: 14px; color: rgba(244,237,218,0.8); }
+  .hero-side .rule { height: 3px; background: var(--red); margin: 18px 0; }
+
+  /* Stamps / badges */
+  .stamp {
+    display: inline-block;
+    padding: 6px 10px 5px;
+    border: 2.5px solid currentColor;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transform: rotate(-3deg);
+  }
+
+  /* SECTIONS */
+  section { border-bottom: 3px solid var(--ink); }
+  .sec { max-width: 1440px; margin: 0 auto; padding: 64px 48px 72px; position: relative; }
+
+  /* Manifesto block */
+  .manifesto {
+    background: var(--hivis);
+    border-bottom: 4px solid var(--ink);
+  }
+  .manifesto .sec { padding: 72px 48px 80px; }
+  .manifesto .kicker {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: inline-block;
+    background: var(--ink);
+    color: var(--hivis);
+    padding: 6px 12px;
+  }
+  .manifesto h2 {
+    margin: 0 0 32px;
+    font-size: 110px;
+    max-width: 1200px;
+  }
+  .manifesto h2 .serif { color: var(--red); font-size: 118px; padding: 0 4px; }
+  .manifesto .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    max-width: 1100px;
+  }
+  .manifesto .body p {
+    font-family: 'Recoleta', Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .manifesto .body .sign {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 24px;
+    font-style: normal;
+  }
+  .manifesto .stamps {
+    margin-top: 40px;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .manifesto .stamp { background: var(--cream); font-size: 14px; padding: 10px 14px; }
+  .manifesto .stamp:nth-child(1) { transform: rotate(-2deg); }
+  .manifesto .stamp:nth-child(2) { transform: rotate(1.5deg); background: var(--red); color: var(--cream); border-color: var(--cream); }
+  .manifesto .stamp:nth-child(3) { transform: rotate(-1deg); background: var(--ink); color: var(--hivis); border-color: var(--hivis); }
+  .manifesto .stamp:nth-child(4) { transform: rotate(2deg); }
+
+  /* Them vs Us */
+  .vs .sec-head {
+    margin-bottom: 40px;
+  }
+  .sec-head h3 {
+    font-size: 72px;
+    margin: 0;
+  }
+  .sec-head .sub {
+    font-family: 'Recoleta', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 22px;
+    margin-top: 14px;
+    max-width: 780px;
+    line-height: 1.35;
+  }
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; border: 3px solid var(--ink); }
+  .vs-col { padding: 32px 36px 40px; position: relative; }
+  .vs-col.them {
+    background: var(--cream-2);
+    border-right: 3px solid var(--ink);
+  }
+  .vs-col.them::before { content: "THEM"; }
+  .vs-col.us { background: var(--ink); color: var(--cream); }
+  .vs-col.us::before { content: "US"; color: var(--hivis); }
+  .vs-col::before {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 36px;
+    letter-spacing: -0.01em;
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    background: var(--hivis);
+    color: var(--ink);
+    padding: 4px 12px 2px;
+    transform: rotate(3deg);
+  }
+  .vs-col.them::before { background: var(--red); color: var(--cream); transform: rotate(-3deg); }
+  .vs-col h4 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px;
+    margin: 0 0 24px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+  .vs-col ul { list-style: none; padding: 0; margin: 0; }
+  .vs-col li {
+    padding: 18px 0;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+  .vs-col.us li { border-top-color: rgba(244,237,218,0.3); }
+  .vs-col li:first-child { border-top: 0; }
+  .vs-col li .mark {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 20px;
+    flex-shrink: 0;
+    width: 32px;
+  }
+  .vs-col.them li .mark { color: var(--red); }
+  .vs-col.us li .mark { color: var(--hivis); }
+  .vs-col li b { font-weight: 900; }
+  .vs-col li .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* How it works — poster numbers */
+  .how { background: var(--cream-2); border-bottom: 3px solid var(--ink); }
+  .how .sec { padding: 64px 48px 80px; }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .how-card {
+    background: var(--cream);
+    border: 3px solid var(--ink);
+    padding: 32px;
+    position: relative;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .how-card:nth-child(1) { transform: rotate(-0.6deg); }
+  .how-card:nth-child(2) { transform: rotate(0.5deg); }
+  .how-card:nth-child(3) { transform: rotate(-0.4deg); }
+  .how-card .n {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 140px;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--red);
+    -webkit-text-stroke: 1px var(--ink);
+    margin-bottom: 12px;
+  }
+  .how-card h4 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 32px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    line-height: 0.95;
+  }
+  .how-card p { margin: 0 0 18px; font-size: 16px; line-height: 1.55; }
+  .how-card .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-top: 16px;
+    border-top: 2px dashed var(--ink);
+    color: var(--mute);
+  }
+  .how-card .stamp {
+    position: absolute;
+    top: -14px; right: 20px;
+    background: var(--hivis);
+    border-color: var(--ink);
+  }
+
+  /* NORA — zine spread */
+  .nora {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .nora .sec { padding: 72px 48px 88px; }
+  .nora .hdr { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px; }
+  .nora .hdr .k {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    color: var(--hivis);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .nora .hdr .date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(244,237,218,0.5);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nora h3 {
+    font-size: 88px;
+    color: var(--cream);
+    max-width: 1100px;
+    margin: 0 0 40px;
+  }
+  .nora h3 .hl { background: var(--hivis); color: var(--ink); padding: 0 14px; }
+  .nora h3 .strike { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 10px; }
+  .nora-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .nora-grid .body p {
+    font-family: 'Recoleta', Georgia, serif;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.4;
+    margin: 0 0 22px;
+    color: rgba(244,237,218,0.95);
+  }
+  .nora-grid .body p b { color: var(--hivis); font-style: normal; }
+  .nora-script {
+    background: var(--cream);
+    color: var(--ink);
+    border: 4px solid var(--hivis);
+    padding: 24px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .nora-script .hd {
+    display: flex; justify-content: space-between;
+    padding-bottom: 12px; margin-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .nora-script .msg { padding: 8px 0; }
+  .nora-script .who { font-weight: 700; margin-right: 10px; }
+  .nora-script .who.n { color: var(--red); }
+  .nora-script .who.u { color: var(--ink); }
+  .nora-script .sys { color: var(--mute); font-size: 11px; padding: 8px 0; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nora-script .callout {
+    background: var(--hivis);
+    padding: 12px 14px;
+    margin: 12px -4px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
+  }
+
+  /* Culprits — list of industry tactics */
+  .culprits { background: var(--red); color: var(--cream); border-bottom: 4px solid var(--ink); }
+  .culprits .sec { padding: 72px 48px 80px; }
+  .culprits .head h3 { color: var(--cream); }
+  .culprits .head h3 .hi { background: var(--hivis); color: var(--ink); padding: 0 10px; }
+  .culprits .head .sub { color: var(--cream); }
+  .culprits .list { margin-top: 40px; border-top: 3px solid var(--cream); }
+  .culprit {
+    display: grid;
+    grid-template-columns: 140px 1fr 360px;
+    gap: 32px;
+    padding: 28px 0;
+    border-bottom: 3px solid var(--cream);
+    align-items: center;
+  }
+  .culprit .n {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 72px;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--hivis);
+  }
+  .culprit h4 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    line-height: 1;
+  }
+  .culprit p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 640px;
+  }
+  .culprit .our {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+  .culprit .our b { color: var(--hivis); font-family: 'Archivo Black', sans-serif; display: block; font-size: 11px; letter-spacing: 0.14em; margin-bottom: 4px; }
+
+  /* Testimonial poster */
+  .testimonial {
+    background: var(--cream);
+    border-bottom: 3px solid var(--ink);
+  }
+  .testimonial .sec { padding: 96px 48px 88px; text-align: center; }
+  .testimonial .quote-kicker {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    color: var(--red);
+  }
+  .testimonial blockquote {
+    margin: 0 auto;
+    max-width: 1080px;
+    font-family: 'Recoleta', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+  .testimonial blockquote .hi { background: var(--hivis); font-style: normal; padding: 0 10px; font-family: 'Archivo Black', sans-serif; font-weight: 900; }
+  .testimonial .attrib {
+    margin-top: 40px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .testimonial .attrib .name { color: var(--red); }
+
+  /* Final CTA — poster */
+  .final {
+    background: var(--ink);
+    color: var(--cream);
+    border-bottom: 4px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .final .sec { padding: 112px 48px 120px; text-align: center; position: relative; z-index: 2; }
+  .final::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(135deg, rgba(232,41,28,0.18) 0 24px, transparent 24px 48px);
+    pointer-events: none;
+  }
+  .final h2 {
+    font-size: 180px;
+    margin: 0 0 40px;
+    color: var(--cream);
+  }
+  .final h2 .hi { background: var(--hivis); color: var(--ink); padding: 0 14px; }
+  .final h2 .serif { color: var(--red); font-size: 190px; padding: 0 6px; }
+  .final .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .final .dis {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--hivis);
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--cream);
+    border-top: 4px solid var(--ink);
+  }
+  footer .sec { padding: 56px 48px 40px; }
+  .foot-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid var(--ink);
+  }
+  footer h6 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 14px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .foot-bottom {
+    padding-top: 24px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+    color: var(--mute);
+    text-transform: uppercase;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- SCROLLING ALERT -->
+<div class="alert">
+  <div class="track">
+    <span>LETTER YOU GOT IS DESIGNED TO CONFUSE YOU</span>
+    <span>RENEW = CARRIERS' CHOICE, NOT YOURS</span>
+    <span>YOUR PREMIUM WENT UP 14% ON AVERAGE LAST YEAR</span>
+    <span>ACA OPEN ENROLLMENT · NOV 1 – JAN 15</span>
+    <span>NO ONE IS COMING TO SIMPLIFY THIS FOR YOU. WE WILL.</span>
+    <span>LETTER YOU GOT IS DESIGNED TO CONFUSE YOU</span>
+    <span>RENEW = CARRIERS' CHOICE, NOT YOURS</span>
+    <span>YOUR PREMIUM WENT UP 14% ON AVERAGE LAST YEAR</span>
+    <span>ACA OPEN ENROLLMENT · NOV 1 – JAN 15</span>
+    <span>NO ONE IS COMING TO SIMPLIFY THIS FOR YOU. WE WILL.</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="head">
+  <div class="row">
+    <div class="wordmark">
+      <span class="shop">SHOP</span>
+      <span class="care">HEALTHCARE</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Fight</a>
+      <a href="#">Scan</a>
+      <a href="#">Plans</a>
+      <a href="#">Nora</a>
+      <a href="#">Manifesto</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="nav-right">
+      <a class="btn" href="#">Upload card</a>
+      <a class="btn red" href="#">Start — it's free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero grain">
+  <div class="hero-inner">
+    <div class="hero-tag">PUBLIC SERVICE ANNOUNCEMENT · OPEN ENROLLMENT 2026</div>
+    <h1 class="display">
+      HEALTH <span class="serif">insurance</span><br>
+      IS <span class="strike">HARD</span><br>
+      <span class="outline">ON PURPOSE.</span>
+    </h1>
+    <div class="hero-grid">
+      <div>
+        <p class="hero-lead">
+          The forms, the letters, the 40-page PDFs — <u>not accidental</u>. It is a business model that <u>makes money when you give up</u>. We built Shophealthcare to end that.
+        </p>
+        <div class="hero-actions">
+          <a class="btn hivis big" href="#">SCAN YOUR CARD · SEE EVERY OPTION →</a>
+          <a class="btn big" style="background: var(--cream); color: var(--ink);" href="#">READ THE MANIFESTO</a>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <div class="k">HOW MUCH THE INDUSTRY COLLECTED LAST YEAR</div>
+        <div class="big-num tab">$1.4T</div>
+        <div class="d">Gross premiums collected by U.S. private health insurers in 2024. Profits hit record highs. So did your deductible.</div>
+        <div class="rule"></div>
+        <div class="k">WHAT IT COSTS TO USE US</div>
+        <div class="big-num tab" style="color: var(--cream);">$0</div>
+        <div class="d">Brokers paid by the carrier, fixed rate, only on enrollment. We never upsell, never auto-renew, never touch your data.</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <div class="sec grain">
+    <div class="kicker">THE MANIFESTO · 2026</div>
+    <h2 class="display">
+      WE DON'T WORK<br>
+      FOR THE <span class="serif">carriers.</span><br>
+      WE WORK FOR<br>
+      <span class="serif">you.</span>
+    </h2>
+    <div class="body">
+      <div>
+        <p>Every form, deadline, and denial letter exists to make you tired enough to give up. That tiredness is the product. Dropped coverage is revenue. Auto-renewal into a worse plan is revenue. A 47-page SBC that nobody reads — revenue.</p>
+        <p class="sign">— SHOPHEALTHCARE, NOV 2026</p>
+      </div>
+      <div>
+        <p>We are a licensed brokerage. We are paid a flat fee by the carrier, only when you actually enroll in a plan. We will tell you when a plan is <b>wrong</b> for you even if we'd get paid for the enrollment. And we will never, ever share your data.</p>
+        <p class="sign">— NO FINE PRINT. THIS IS THE WHOLE THING.</p>
+      </div>
+    </div>
+    <div class="stamps">
+      <div class="stamp">FLAT-FEE BROKERS</div>
+      <div class="stamp">NO DATA RESALE</div>
+      <div class="stamp">NO AUTO-RENEWAL</div>
+      <div class="stamp">LICENSED IN 50 STATES</div>
+    </div>
+  </div>
+</div>
+
+<!-- THEM vs US -->
+<section class="vs grain">
+  <div class="sec">
+    <div class="sec-head">
+      <h3 class="display">THEM <span style="color: var(--red);">vs.</span> US.</h3>
+      <p class="sub">Two business models on one page. One profits when you're confused. One profits when you actually pick the right plan.</p>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col them">
+        <h4>The industry playbook</h4>
+        <ul>
+          <li><span class="mark">01</span><div><b>Auto-renewal by default.</b> You do nothing → you get moved to whatever the carrier's algorithm picks next. <span class="tag">ALL MAJOR CARRIERS · 2025</span></div></li>
+          <li><span class="mark">02</span><div><b>Deductibles buried on page 23.</b> Monthly premium is page 1. What you actually pay when you get sick — page 23, subsection 4. <span class="tag">AVG SBC LENGTH: 47 PP</span></div></li>
+          <li><span class="mark">03</span><div><b>Network changes mid-year.</b> Your oncologist was in-network in March. In July, they weren't. You were not notified. <span class="tag">KFF STUDY · 2024</span></div></li>
+          <li><span class="mark">04</span><div><b>Commission-driven agents.</b> Your agent gets paid more for Plan A than Plan B. You don't know which one. <span class="tag">NAIC · 2023</span></div></li>
+          <li><span class="mark">05</span><div><b>30-second enrollment windows.</b> Countdown timers, "only 2 left at this price," fake urgency to force the click. <span class="tag">DARK PATTERN CATALOG</span></div></li>
+        </ul>
+      </div>
+      <div class="vs-col us">
+        <h4>How we work</h4>
+        <ul>
+          <li><span class="mark">01</span><div><b>Never auto-renewed.</b> You compare every year. Takes 6 minutes. We email you a side-by-side before Jan 15. <span class="tag">EVERY SINGLE MEMBER</span></div></li>
+          <li><span class="mark">02</span><div><b>Receipt-style quotes.</b> Premium, deductible, drug tier, specialist network — top of the page. Italics are for humans, not lawyers. <span class="tag">BY DEFAULT</span></div></li>
+          <li><span class="mark">03</span><div><b>Network changes = alert.</b> Your doctor leaves your network → you get an email + a phone call within 48 hours. With 3 alternatives. <span class="tag">REAL-TIME</span></div></li>
+          <li><span class="mark">04</span><div><b>Flat-fee brokers, salaried.</b> Same pay whether you pick Plan A, B, or nothing. Our agents are not sales. <span class="tag">ALL 180+ AGENTS</span></div></li>
+          <li><span class="mark">05</span><div><b>No countdown timers. Ever.</b> Take a week. Take a month. The deadline is Jan 15 and it's the government's, not ours. <span class="tag">NO EXCEPTIONS</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how grain">
+  <div class="sec">
+    <div class="sec-head">
+      <h3 class="display">HOW WE FIGHT<br>FOR YOU.</h3>
+      <p class="sub">Three steps. About nine minutes total. No account. No email gate.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <span class="stamp">STEP ONE</span>
+        <div class="n tab">01</div>
+        <h4>Upload the letter they sent you.</h4>
+        <p>Snap a photo of your insurance card or paste your current plan. Nora reads it, pulls the SBC, and flags every lever they changed on you this year — premium, deductible, co-pay, drug tier, network. In plain English.</p>
+        <div class="meta">~90 seconds · no email required</div>
+      </div>
+      <div class="how-card">
+        <span class="stamp">STEP TWO</span>
+        <div class="n tab">02</div>
+        <h4>See every plan they didn't show you.</h4>
+        <p>Every plan in your state, ranked by real annual cost at your real utilization. Subsidy already applied. Networks checked against your doctors. Fine print surfaced, not buried. Zero upsells.</p>
+        <div class="meta">~6 min · compare up to 4 side by side</div>
+      </div>
+      <div class="how-card">
+        <span class="stamp">STEP THREE</span>
+        <div class="n tab">03</div>
+        <h4>Enroll in a plan that actually fits.</h4>
+        <p>One click, directly with the carrier. No data resold. No follow-up phone spam. And if you ever need a human, a licensed, salaried agent picks up in &lt; 45 seconds. Their name is on the file.</p>
+        <div class="meta">~90 seconds · receipt emailed · no auto-renew</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CULPRITS / TACTICS -->
+<div class="culprits grain">
+  <div class="sec">
+    <div class="head sec-head">
+      <h3 class="display">THE <span class="hi">FIVE</span> TACTICS<br>WE REFUSE TO USE.</h3>
+      <p class="sub">These are industry-standard. We threw them out on day one. If we ever use them, call us out in public — we'll print the correction.</p>
+    </div>
+    <div class="list">
+      <div class="culprit">
+        <span class="n tab">01.</span>
+        <div>
+          <h4>Dark-pattern countdowns</h4>
+          <p>"Only 2 plans left at this price." "Price expires in 2:47." Manufactured scarcity designed to spike your cortisol and force the click. It's the oldest trick in e-commerce. It has no place in health insurance.</p>
+        </div>
+        <div class="our">
+          <b>OUR POLICY</b>
+          No timers. No "this might not be available tomorrow." The deadline is Jan 15. Everything else is a lie.
+        </div>
+      </div>
+      <div class="culprit">
+        <span class="n tab">02.</span>
+        <div>
+          <h4>Commission-optimized recommendations</h4>
+          <p>Your agent gets paid 2.4% on Plan A and 4.8% on Plan B. Guess which one they recommend. Industry average: 82% of agents surfaced the higher-commission plan first in KFF's 2023 mystery-shopper study.</p>
+        </div>
+        <div class="our">
+          <b>OUR POLICY</b>
+          Salaried agents. Same paycheck no matter what plan you pick — or if you pick nothing at all. Every quote is ranked by fit, not commission.
+        </div>
+      </div>
+      <div class="culprit">
+        <span class="n tab">03.</span>
+        <div>
+          <h4>Data resale to third parties</h4>
+          <p>Your health profile is worth $40–$200 per record on the secondary data market. Many brokers sell it. Some sell it before you've even finished the quote form. You then receive calls for the next 18 months.</p>
+        </div>
+        <div class="our">
+          <b>OUR POLICY</b>
+          Zero data resale. Ever. Contractually binding. We've turned down $6M in data-partnership revenue since 2023. Our CFO hates us. You shouldn't.
+        </div>
+      </div>
+      <div class="culprit">
+        <span class="n tab">04.</span>
+        <div>
+          <h4>Auto-renewal without comparison</h4>
+          <p>Do nothing → you are moved to whatever the carrier's algorithm picks next. Usually a plan with a worse formulary and a higher deductible. Millions of Americans are silently re-enrolled this way every December.</p>
+        </div>
+        <div class="our">
+          <b>OUR POLICY</b>
+          Never auto-renewed. Every November we email a side-by-side of your current plan vs. every option in your state. Opt-in only. Takes six minutes to review.
+        </div>
+      </div>
+      <div class="culprit">
+        <span class="n tab">05.</span>
+        <div>
+          <h4>47-page SBCs written by lawyers</h4>
+          <p>The "Summary of Benefits and Coverage" is required by the ACA. It averages 47 pages, 11th-grade reading level, four fonts, two columns, no summary. It is a compliance document, not a user document.</p>
+        </div>
+        <div class="our">
+          <b>OUR POLICY</b>
+          Every plan on Shophealthcare shows a one-page plain-English summary. The full SBC is linked, always, and we highlight the four things that actually matter for your situation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NORA -->
+<div class="nora grain">
+  <div class="sec">
+    <div class="hdr">
+      <span class="k">NORA · YOUR AI ON YOUR SIDE</span>
+      <span class="date">SESSION TRANSCRIPT · 2026.11.04 · 14:09 ET · ANONYMIZED</span>
+    </div>
+    <h3 class="display">
+      NORA <span class="strike">WORKS FOR THEM.</span><br>
+      NORA WORKS FOR <span class="hl">YOU.</span>
+    </h3>
+    <div class="nora-grid">
+      <div class="body">
+        <p>Most AI in healthcare is on the carrier's payroll. Nora is on <b>yours</b>. She was trained on every state's marketplace data, every major carrier's formulary, and every SBC filed since 2021 — and she is instructed, in her system prompt, to <b>always disclose the worst case first</b>.</p>
+        <p>If she recommends a plan, she shows the math. If she can't help in your state, she says so in the first sentence. If the plan she'd pick for you isn't on Shophealthcare, she tells you to go to HealthCare.gov. We've lost ~600 enrollments that way. Worth it.</p>
+        <p>And she will <b>never, ever</b> upsell dental. Or vision. Or a "wellness stipend." Or a short-term plan that looks cheap until you get sick.</p>
+      </div>
+      <div class="nora-script">
+        <div class="hd">
+          <span>TRANSCRIPT · SESSION #A41-883</span>
+          <span>NORA v3.2</span>
+        </div>
+        <div class="sys">— USER UPLOADED AETNA BRONZE HSA 2025 CARD —</div>
+        <div class="msg"><span class="who n">NORA:</span> Read your card. Aetna Bronze HSA. $389/mo. Deductible $7,050. Drug tier 3 for your Lipitor → $84/refill.</div>
+        <div class="msg"><span class="who n">NORA:</span> First, worst case: you hit your deductible. You'd pay $7,050 + $389 × 12 = $11,718 out of pocket before the plan fully helps.</div>
+        <div class="msg"><span class="who u">YOU:</span> is there something cheaper</div>
+        <div class="msg"><span class="who n">NORA:</span> Yes — 4 plans in your state are cheaper at your utilization. Ranked below. Shophealthcare offers 3 of them. The 4th — Oscar Silver 4 — is not on our platform; enroll directly at HealthCare.gov for that one.</div>
+        <div class="callout">★ NORA WILL TELL YOU TO LEAVE THE PLATFORM IF THAT'S THE RIGHT CALL.</div>
+        <div class="msg"><span class="who u">YOU:</span> why would you tell me to leave</div>
+        <div class="msg"><span class="who n">NORA:</span> Because I'm on your side, not the company's. That's the whole deal.</div>
+        <div class="sys">— SESSION SAVED LOCALLY · NOT TRANSMITTED TO ANY CARRIER —</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="testimonial grain">
+  <div class="sec">
+    <div class="quote-kicker">A REAL MESSAGE FROM A REAL MEMBER</div>
+    <blockquote>
+      "I'd renewed the <span class="hi">same bad plan</span> for four years because the letter looked confusing and nobody had time to explain it. Shophealthcare saved me <span class="hi">$3,840 a year</span>. I almost cried. Then I got angry."
+    </blockquote>
+    <div class="attrib">
+      <span class="name">DARIA M.</span> · 42 · GRAPHIC DESIGNER · SANTA FE, NM · ENROLLED DEC 2025
+    </div>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<div class="final grain">
+  <div class="sec">
+    <h2 class="display">
+      STOP <span class="serif">overpaying.</span><br>
+      START <span class="hi">SEEING.</span>
+    </h2>
+    <div class="cta-row">
+      <a class="btn hivis big" href="#">★ SCAN YOUR CARD — 90 SECONDS →</a>
+      <a class="btn red big" href="#">COMPARE EVERY PLAN IN YOUR STATE</a>
+    </div>
+    <p class="dis">NO EMAIL REQUIRED · NO ACCOUNT REQUIRED · NO DATA RESALE EVER · LICENSED IN ALL 50 STATES · NPN #19482230</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="sec">
+    <div class="foot-top">
+      <div>
+        <div class="wordmark" style="margin-bottom: 20px;">
+          <span class="shop">SHOP</span>
+          <span class="care">HEALTHCARE</span>
+        </div>
+        <p style="font-family: 'Recoleta', Georgia, serif; font-weight: 700; font-style: italic; font-size: 20px; line-height: 1.35; max-width: 400px; margin: 0;">
+          A licensed health insurance brokerage on the side of the person paying the premium.
+        </p>
+      </div>
+      <div>
+        <h6>THE FIGHT</h6>
+        <ul><li>Manifesto</li><li>Them vs. Us</li><li>Five tactics we refuse</li><li>Press kit</li></ul>
+      </div>
+      <div>
+        <h6>THE TOOLS</h6>
+        <ul><li>Card scan</li><li>Compare plans</li><li>Nora</li><li>Human agent</li></ul>
+      </div>
+      <div>
+        <h6>THE FINE PRINT</h6>
+        <ul><li>How we're paid</li><li>Data policy</li><li>Accessibility</li><li>Licensing</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 SHOPHEALTHCARE, INC · NPN #19482230 · LICENSED IN ALL 50 STATES · NOT A GOVERNMENT SITE · NOT AFFILIATED WITH MEDICARE OR THE ACA MARKETPLACE</div>
+      <div>THIS IS A BROKERAGE. WE ARE PAID FLAT FEES BY CARRIERS UPON ENROLLMENT. WE ARE NOT COMPENSATED BASED ON WHICH PLAN YOU CHOOSE. OUR AGENTS ARE SALARIED. NONE OF YOUR DATA IS SOLD, EVER.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

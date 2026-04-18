@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Ten Brand Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E0E10;
+    --bg-2: #17171A;
+    --panel: #1E1E22;
+    --line: #2A2A30;
+    --text: #F2F2F0;
+    --mute: #9A9A9F;
+    --mute-2: #6A6A6F;
+    --accent: #FF5E1A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+  body { font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  header {
+    padding: 48px 56px 40px;
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  header h1 {
+    font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05;
+    margin: 0 0 14px;
+  }
+  header .sub { color: var(--mute); font-size: 17px; max-width: 640px; line-height: 1.55; }
+  header .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--mute-2);
+    text-transform: uppercase;
+    line-height: 1.9;
+  }
+  header .meta b { color: var(--text); font-weight: 600; }
+
+  .toolbar {
+    display: flex; gap: 12px; align-items: center;
+    padding: 20px 56px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .toolbar .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--mute);
+    text-transform: uppercase;
+    margin-right: 6px;
+  }
+  .switch {
+    display: flex; gap: 4px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px;
+  }
+  .switch button {
+    appearance: none; border: 0;
+    background: transparent;
+    color: var(--mute);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .switch button:hover { color: var(--text); }
+  .switch button.active { background: var(--text); color: var(--bg); font-weight: 600; }
+
+  .viewport-switch { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .viewport-switch .zoom { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--mute); }
+  .viewport-switch input[type="range"] { width: 140px; accent-color: var(--accent); }
+
+  /* GRID MODE */
+  .grid {
+    padding: 40px 56px 80px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px;
+  }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-1 { grid-template-columns: 1fr; max-width: 1280px; margin: 0 auto; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover {
+    border-color: var(--mute-2);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .card .frame {
+    aspect-ratio: 16/10;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    container-type: inline-size;
+  }
+  .card .frame iframe {
+    position: absolute; top: 0; left: 0;
+    width: 1440px; height: 1600px;
+    border: 0;
+    transform: scale(var(--s, 0.42));
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  @container (min-width: 0px) {
+    .card .frame iframe { --s: calc(100cqw / 1440); }
+  }
+  .grid.cols-1 .card .frame { aspect-ratio: 16/9; }
+
+  .card .meta {
+    padding: 20px 24px 22px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--mute);
+    text-transform: uppercase;
+    display: flex; gap: 10px;
+  }
+  .card h3 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+  .card .desc { font-size: 14px; color: var(--mute); line-height: 1.5; margin: 0; }
+  .card .swatches { display: flex; gap: 4px; margin-top: 8px; }
+  .card .swatch { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); }
+  .card .actions { display: flex; gap: 8px; margin-top: 10px; }
+  .card .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: transparent;
+  }
+  .card .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* SOLO MODE — fullscreen single direction */
+  .solo {
+    padding: 0;
+    height: calc(100vh - 140px);
+    display: none;
+  }
+  .solo.active { display: block; }
+  .solo iframe {
+    width: 100%; height: 100%; border: 0; background: #fff;
+  }
+
+  .empty-state {
+    padding: 80px 40px;
+    text-align: center;
+    color: var(--mute);
+  }
+
+  /* footer note */
+  footer {
+    padding: 40px 56px 64px;
+    border-top: 1px solid var(--line);
+    background: var(--bg-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--mute-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.9;
+  }
+  footer b { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Shophealthcare — ten brand directions.</h1>
+    <p class="sub">Each direction is a full homepage comp at 1440px. Switch between them, or view them side by side. Every card opens to the full design in a new tab.</p>
+  </div>
+  <div class="meta">
+    <div>PROJECT · <b>BRAND EXPLORATION</b></div>
+    <div>SCOPE · <b>HOMEPAGE × 10</b></div>
+    <div>FIDELITY · <b>DESIGN COMP</b></div>
+    <div>VIEWPORT · <b>1440 DESKTOP</b></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <span class="lbl">VIEW</span>
+  <div class="switch" id="modeSwitch">
+    <button data-mode="grid-2" class="active">Grid · 2-up</button>
+    <button data-mode="grid-3">Grid · 3-up</button>
+    <button data-mode="solo">One at a time</button>
+  </div>
+  <span class="lbl" style="margin-left: 28px;">VERSION</span>
+  <div class="switch" id="verSwitch">
+    <button data-ver="v1" class="active">v1 · Free</button>
+    <button data-ver="v2">v2 · Wireframe-loyal</button>
+  </div>
+  <span class="lbl" style="margin-left: 28px;">DIRECTION</span>
+  <div class="switch" id="dirSwitch">
+    <button data-dir="all" class="active">All</button>
+    <button data-dir="01">01 · Calm Hand</button>
+    <button data-dir="02">02 · Receipt</button>
+    <button data-dir="03">03 · Public Service</button>
+    <button data-dir="04">04 · Protest</button>
+    <button data-dir="05">05 · Receipt × Bridge</button>
+    <button data-dir="06">06 · Tape</button>
+    <button data-dir="07">07 · Atlas</button>
+    <button data-dir="08">08 · Score</button>
+    <button data-dir="09">09 · Broadcast</button>
+    <button data-dir="10">10 · Vitals</button>
+    <button data-dir="11">11 · Clinic</button>
+    <button data-dir="12">12 · Lemon</button>
+    <button data-dir="13">13 · Agent</button>
+    <button data-dir="14">14 Diagram</button>
+  </div>
+</div>
+
+<div class="grid cols-2" id="grid">
+  <!-- 01 Calm Hand -->
+  <div class="card" data-dir="01">
+    <div class="frame"><iframe src="directions/01-calm-hand.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 01</span><span>·</span><span>CALM HAND</span></div>
+      <h3>Monocle-quiet. Considered. Editorial.</h3>
+      <p class="desc">GT Sectra display, Inter text. Paper + Morning Ink + Ledger Green. For the anxious professional who wants their brokerage to feel like a private banker, not an ad.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #F3EEE4;"></div>
+        <div class="swatch" style="background: #1A1A1A;"></div>
+        <div class="swatch" style="background: #2F5F3E;"></div>
+        <div class="swatch" style="background: #B85C38;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/01-calm-hand.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('01')">Focus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 Receipt -->
+  <div class="card" data-dir="02">
+    <div class="frame"><iframe src="directions/02-receipt.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 02</span><span>·</span><span>RECEIPT</span></div>
+      <h3>Document-forward. Radically transparent.</h3>
+      <p class="desc">GT America Mono everywhere. Manila + Carbon + Safety Orange. Every page looks like a receipt: dashed rules, stamped blocks, tabular numerics, nothing hidden.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #F2E8D0;"></div>
+        <div class="swatch" style="background: #111111;"></div>
+        <div class="swatch" style="background: #FF5E1A;"></div>
+        <div class="swatch" style="background: #6B6558;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/02-receipt.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('02')">Focus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 Public Service -->
+  <div class="card" data-dir="03">
+    <div class="frame"><iframe src="directions/03-public-service.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 03</span><span>·</span><span>PUBLIC SERVICE</span></div>
+      <h3>Civic wayfinding. Institutional trust.</h3>
+      <p class="desc">Inter + IBM Plex Mono. Deep Teal + Sunlit Yellow + Bone. Feels like a well-designed government portal — the one that actually works. Dense but generous.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #0F3B3A;"></div>
+        <div class="swatch" style="background: #FFCF3C;"></div>
+        <div class="swatch" style="background: #F4EFE1;"></div>
+        <div class="swatch" style="background: #1A1A1A;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/03-public-service.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('03')">Focus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 Protest -->
+  <div class="card" data-dir="04">
+    <div class="frame"><iframe src="directions/04-protest.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 04</span><span>·</span><span>PROTEST</span></div>
+      <h3>Activist poster. Loud. On your side.</h3>
+      <p class="desc">Archivo Black + Recoleta italic. Alarm Red + Cream + Hi-Vis Yellow. Halftone grain, stamps, scrolling alert bar. Angry at the industry, not at you.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #E8291C;"></div>
+        <div class="swatch" style="background: #F4EDDA;"></div>
+        <div class="swatch" style="background: #F5E02E;"></div>
+        <div class="swatch" style="background: #111111;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/04-protest.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('04')">Focus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 Receipt x Bridge -->
+  <div class="card" data-dir="05">
+    <div class="frame"><iframe src="directions/05-receipt-bridge.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 05</span><span>·</span><span>RECEIPT × BRIDGE</span></div>
+      <h3>Receipt, adapted for the 55–64 decision.</h3>
+      <p class="desc">Same doc-forward DNA as Receipt, tuned for the Bridge persona: larger type, slower pacing, Agent Blue added, phone number on every page, named human reviewer.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #F3EEE0;"></div>
+        <div class="swatch" style="background: #1A5276;"></div>
+        <div class="swatch" style="background: #FF5E1A;"></div>
+        <div class="swatch" style="background: #0E0E0E;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/05-receipt-bridge.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('05')">Focus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 Score -->
+  <div class="card" data-dir="08">
+    <div class="frame"><iframe src="directions/08-score.html" loading="lazy"></iframe></div>
+    <div class="meta">
+      <div class="tag"><span>DIRECTION 08</span><span>·</span><span>SCORE</span></div>
+      <h3>Credit-Karma for coverage. One number.</h3>
+      <p class="desc">Sora + Geist Mono. Indigo/violet gradient on deep navy. Your plan gets a Coverage Score; Nora explains every point. Gamified, but transparent — all weights published.</p>
+      <div class="swatches">
+        <div class="swatch" style="background: #0B0B1A;"></div>
+        <div class="swatch" style="background: #6366F1;"></div>
+        <div class="swatch" style="background: #A78BFA;"></div>
+        <div class="swatch" style="background: #22D3EE;"></div>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="directions/08-score.html" target="_blank">Open full →</a>
+        <button class="btn" onclick="setSolo('08')">Focus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="solo" id="solo">
+  <iframe id="soloFrame" src=""></iframe>
+</div>
+
+<footer>
+  © 2026 SHOPHEALTHCARE · BRAND EXPLORATION · PHASE 1 · <b>10 DIRECTIONS</b> · <b>1 HOMEPAGE EACH</b> · <b>V1 FREE + V2 WIREFRAME-LOYAL</b> · NEXT STEPS: PICK 2–3, DEVELOP TO BRIDGE PAGE + MOBILE + COMPONENT SET
+</footer>
+
+<script>
+  const grid = document.getElementById('grid');
+  const solo = document.getElementById('solo');
+  const soloFrame = document.getElementById('soloFrame');
+  const modeSwitch = document.getElementById('modeSwitch');
+  const dirSwitch = document.getElementById('dirSwitch');
+
+  const pathsV1 = {
+    '01': 'directions/01-calm-hand.html',
+    '02': 'directions/02-receipt.html',
+    '03': 'directions/03-public-service.html',
+    '04': 'directions/04-protest.html',
+    '05': 'directions/05-receipt-bridge.html',
+    '06': 'directions/06-tape.html',
+    '07': 'directions/07-atlas.html',
+    '08': 'directions/08-score.html',
+    '09': 'directions/09-broadcast.html',
+    '10': 'directions/10-vitals.html',
+    '11': 'directions/11-clinic.html',
+    '12': 'directions/12-lemon.html',
+    '13': 'directions/13-agent.html',
+    '14': 'directions/14-diagram.html',
+  };
+  const pathsV2 = {
+    '01': 'directions/01-calm-hand-v2.html',
+    '02': 'directions/02-receipt-v2.html',
+    '03': 'directions/03-public-service-v2.html',
+    '04': 'directions/04-protest-v2.html',
+    '05': 'directions/05-receipt-bridge-v2.html',
+    '06': 'directions/06-tape-v2.html',
+    '07': 'directions/07-atlas-v2.html',
+    '08': 'directions/08-score-v2.html',
+    '09': 'directions/09-broadcast-v2.html',
+    '10': 'directions/10-vitals-v2.html',
+    '11': 'directions/11-clinic-v2.html',
+    '12': 'directions/12-lemon-v2.html',
+    '13': 'directions/13-agent.html',
+    '14': 'directions/14-diagram.html',
+  };
+  const extraMeta = {
+    '06': { tag: 'DIRECTION 06 · TAPE', title: 'Evidence room. Chain of custody.', desc: 'Typewriter + Archivo Black on manila. Police-tape strip, exhibit bag, redacted affidavit. Treats the industry like a case file — logged, stamped, signed.', swatches: ['#E8D9B0','#0E0E0E','#C8171C','#FFECA8'] },
+    '07': { tag: 'DIRECTION 07 · ATLAS', title: 'Cartographic. Surveyed like solid ground.', desc: 'Fraunces italic + Inter on oatmeal paper. Plans plotted on a topographic chart, compass rose, elevation labels. Wayfinding, not wayshouting.', swatches: ['#0A1628','#F5EEDD','#D4603A','#C99A3F'] },
+    '09': { tag: 'DIRECTION 09 · BROADCAST', title: 'Public-radio station. Still on the air.', desc: 'Anton + IBM Plex Mono on black. WSHC callsign, VU meter, live transmission log, ECG-style waveform. Protest lineage via signal, not slogans.', swatches: ['#0A0A0A','#F2EAD3','#FFB020','#FF3B2F'] },
+    '10': { tag: 'DIRECTION 10 · VITALS', title: 'Clinical bedside monitor. Reassuring.', desc: 'Instrument Serif + Inter on clinic paper. Live ECG, vital signs flags, signed chart notes, teal + sun accents. Score-lineage rendered as a check-up, not a credit app.', swatches: ['#F4F6F5','#0A6B63','#E8A13A','#D85B4F'] },
+    '11': { tag: 'DIRECTION 11 · CLINIC', title: 'Hims/Hers warmth. Editorial consult.', desc: 'DM Serif Display on peach cream. Score ring in the hero, soft pill cards, a single red manifesto stripe for teeth. Quiet confidence, not hype.', swatches: ['#F6E8DB','#D96A5C','#C9B7D8','#1F1A17'] },
+    '13': { tag: 'DIRECTION 13 · AGENT', title: 'Human-first. A wall of people, not plans.', desc: 'Libre Caslon Text on warm legal-pad cream. 180-agent directory as hero, named licensed agents, signed pledge. Nora is positioned as the front desk that hands you to a person.', swatches: ['#F1ECE2','#7A1E23','#B38A3E','#1B1915'] },
+    '14': { tag: 'DIRECTION 14 · DIAGRAM', title: 'Blueprint. The system, drawn in full.', desc: 'IBM Plex Serif + Mono on grid vellum. Schematic hero with labeled nodes, 5-layer spec sheet, annotated transcript, worked case example. Technical drawing aesthetic, nothing hidden.', swatches: ['#EEE8DA','#1F3A7A','#B5341F','#C78A2B'] },
+    '12': { tag: 'DIRECTION 12 · LEMON', title: 'Lemonade playful. Serious underneath.', desc: 'Fraunces + chunky rounded tiles on blush + lemon + pink. Speech-bubble Nora, tilted manifesto tape, colored stat blocks. Friendly, but signed.', swatches: ['#FFE4DB','#FFE86E','#FF6A5C','#1A1322'] }
+  };
+
+  let state = { mode: 'grid-2', dir: 'all', ver: 'v1' };
+  const paths = () => state.ver === 'v2' ? pathsV2 : pathsV1;
+
+  const originalGridHTML = grid.innerHTML;
+
+  function ensureExtraCards() {
+    // append A/B/C/D cards if missing
+    Object.entries(extraMeta).forEach(([dir, m]) => {
+      if (grid.querySelector(`[data-dir="${dir}"]`)) return;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.dir = dir;
+      card.innerHTML = `
+        <div class="frame"><iframe src="${pathsV1[dir]}" loading="lazy"></iframe></div>
+        <div class="meta">
+          <div class="tag"><span>${m.tag}</span></div>
+          <h3>${m.title}</h3>
+          <p class="desc">${m.desc}</p>
+          <div class="swatches">${m.swatches.map(s=>`<div class="swatch" style="background:${s};"></div>`).join('')}</div>
+          <div class="actions">
+            <a class="btn primary" href="${pathsV1[dir]}" target="_blank">Open full →</a>
+            <button class="btn" onclick="setSolo('${dir}')">Focus</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function applyVersionToCards() {
+    const p = paths();
+    ensureExtraCards();
+    [...grid.querySelectorAll('.card')].forEach(card => {
+      const dir = card.dataset.dir;
+      const iframe = card.querySelector('iframe');
+      const link = card.querySelector('a.btn.primary');
+      if (iframe && p[dir]) {
+        if (iframe.getAttribute('src') !== p[dir]) iframe.src = p[dir];
+      }
+      if (link && p[dir]) link.href = p[dir];
+    });
+  }
+
+  function render() {
+    // mode switch buttons
+    [...modeSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b.dataset.mode === state.mode));
+    [...dirSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b.dataset.dir === state.dir));
+    [...verSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b.dataset.ver === state.ver));
+
+    if (state.mode === 'solo' || state.dir !== 'all') {
+      // solo mode
+      grid.style.display = 'none';
+      solo.classList.add('active');
+      const p = paths();
+      const dir = (state.dir === 'all' || !p[state.dir]) ? '01' : state.dir;
+      const newSrc = p[dir];
+      if (soloFrame.getAttribute('src') !== newSrc) soloFrame.src = newSrc;
+    } else {
+      grid.style.display = 'grid';
+      solo.classList.remove('active');
+      grid.classList.remove('cols-2', 'cols-3', 'cols-1');
+      if (state.mode === 'grid-3') grid.classList.add('cols-3');
+      else grid.classList.add('cols-2');
+      // show all cards
+      [...grid.children].forEach(c => c.style.display = '');
+    }
+  }
+
+  const verSwitch = document.getElementById('verSwitch');
+  verSwitch.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.ver = b.dataset.ver;
+    applyVersionToCards();
+    render();
+  });
+
+  modeSwitch.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.mode = b.dataset.mode;
+    if (state.mode === 'solo' && state.dir === 'all') state.dir = '01';
+    if (state.mode !== 'solo' && state.dir !== 'all') state.dir = 'all';
+    render();
+  });
+
+  dirSwitch.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.dir = b.dataset.dir;
+    if (state.dir !== 'all') state.mode = 'solo';
+    else if (state.mode === 'solo') state.mode = 'grid-2';
+    render();
+  });
+
+  function setSolo(dir) {
+    state.dir = dir;
+    state.mode = 'solo';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  window.setSolo = setSolo;
+
+  applyVersionToCards();
+  render();
+</script>
+
+</body>
+</html>

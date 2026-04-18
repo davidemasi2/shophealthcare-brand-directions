@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Score (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B1A;
+    --bg-2: #111127;
+    --card: #16163A;
+    --card-2: #1E1E47;
+    --line: #2A2A55;
+    --text: #E9E9F5;
+    --mute: #9A9ACB;
+    --mute-2: #6E6EA5;
+    --indigo: #6366F1;
+    --indigo-2: #818CF8;
+    --violet: #A78BFA;
+    --cyan: #22D3EE;
+    --green: #34D399;
+    --amber: #FBBF24;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font-family: 'Sora', sans-serif; font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+    background: radial-gradient(1000px 600px at 80% -10%, rgba(99,102,241,0.25), transparent 60%), radial-gradient(900px 500px at -10% 20%, rgba(34,211,238,0.1), transparent 60%), var(--bg); }
+  .mono { font-family: 'Geist Mono', monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+  .page { max-width: 1360px; margin: 0 auto; padding: 0 40px; }
+
+  /* Announce */
+  .announce { background: rgba(99,102,241,0.15); border-bottom: 1px solid var(--line); text-align: center; padding: 10px 40px; font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--indigo-2); }
+  .announce a { color: var(--violet); text-decoration: underline; }
+
+  /* Nav */
+  nav.head { border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); background: rgba(11,11,26,0.8); }
+  nav.head .row { max-width: 1360px; margin: 0 auto; padding: 18px 40px; display: flex; align-items: center; gap: 32px; }
+  .wordmark { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+  .wordmark .dot { width: 24px; height: 24px; border-radius: 50%; background: conic-gradient(from 0deg, var(--indigo), var(--violet), var(--cyan), var(--indigo)); }
+  .nav-sub { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--mute-2); text-transform: uppercase; }
+  .nav-links { margin-left: auto; display: flex; gap: 28px; font-size: 14px; font-weight: 500; }
+  .nav-links a { color: var(--mute); text-decoration: none; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; font-weight: 600; font-size: 14px; border: 1px solid var(--line); cursor: pointer; text-decoration: none; color: var(--text); background: transparent; border-radius: 10px; }
+  .btn.primary { background: linear-gradient(135deg, var(--indigo), var(--violet)); border-color: transparent; box-shadow: 0 0 0 1px rgba(167,139,250,0.4), 0 10px 30px -10px rgba(99,102,241,0.6); }
+  .btn.big { padding: 16px 22px; font-size: 15px; border-radius: 12px; }
+
+  .crumb { max-width: 1360px; margin: 0 auto; padding: 12px 40px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute-2); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
+  .crumb b { color: var(--text); }
+
+  /* Hero */
+  .hero { padding: 60px 0 48px; }
+  .hero .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
+  .hero .tag { display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4); color: var(--indigo-2); font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 22px; border-radius: 999px; }
+  .hero h1 { font-weight: 700; font-size: 68px; line-height: 1.04; letter-spacing: -0.03em; margin: 0 0 24px; }
+  .hero h1 .hi { background: linear-gradient(135deg, var(--indigo-2), var(--violet), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .lead { font-size: 19px; line-height: 1.55; max-width: 540px; margin: 0 0 32px; color: var(--mute); }
+  .hero .lead b { color: var(--text); font-weight: 600; }
+  .hero .ctas { display: flex; gap: 12px; }
+
+  /* Score card */
+  .score-card { background: linear-gradient(165deg, var(--card), var(--card-2)); border: 1px solid var(--line); border-radius: 24px; padding: 28px; position: relative; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(99,102,241,0.4); }
+  .score-card::before { content: ""; position: absolute; inset: -1px; border-radius: 24px; padding: 1px; background: linear-gradient(135deg, rgba(99,102,241,0.6), transparent 40%, rgba(167,139,250,0.4)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .sc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .sc-head .lbl { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--mute-2); text-transform: uppercase; }
+  .sc-head .badge { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em; background: rgba(52,211,153,0.15); color: var(--green); padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+  .gauge { position: relative; display: flex; align-items: center; justify-content: center; padding: 12px 0 8px; }
+  .gauge svg { width: 280px; height: 180px; }
+  .gauge .num { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; }
+  .gauge .num .n { font-weight: 700; font-size: 72px; line-height: 1; letter-spacing: -0.035em; background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gauge .num .max { font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--mute-2); letter-spacing: 0.1em; }
+  .gauge .num .lab { font-weight: 600; font-size: 14px; color: var(--green); margin-top: 2px; }
+  .sc-bars { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+  .sc-bar { display: grid; grid-template-columns: 110px 1fr 50px; align-items: center; gap: 12px; font-size: 13px; }
+  .sc-bar .name { color: var(--mute); font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .sc-bar .track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .sc-bar .fill { height: 100%; background: linear-gradient(90deg, var(--indigo), var(--violet)); border-radius: 3px; }
+  .sc-bar .val { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--text); text-align: right; }
+
+  /* Nora chip */
+  .nora-chip { max-width: 1360px; margin: 0 auto; padding: 8px 40px; }
+  .nora-chip .inner { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(22,22,58,0.6); border: 1px solid var(--line); border-radius: 999px; font-size: 13px; color: var(--mute); }
+  .nora-chip .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 3px rgba(52,211,153,0.2); }
+  .nora-chip b { color: var(--text); font-weight: 600; }
+  .nora-chip .meta { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute-2); }
+
+  /* Situations */
+  .situations { padding: 28px 0 16px; }
+  .sit-head { max-width: 1360px; margin: 0 auto; padding: 8px 40px 18px; display: flex; justify-content: space-between; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute-2); }
+  .sit-head b { color: var(--text); }
+  .sit-grid { max-width: 1360px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .sit { padding: 28px 24px; background: linear-gradient(165deg, var(--card), var(--card-2)); border: 1px solid var(--line); border-radius: 18px; display: flex; flex-direction: column; min-height: 220px; position: relative; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+  .sit:hover { transform: translateY(-2px); border-color: var(--indigo); }
+  .sit .kicker { display: flex; gap: 10px; align-items: center; font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute-2); margin-bottom: 16px; }
+  .sit .kicker .no { background: rgba(99,102,241,0.15); color: var(--indigo-2); padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+  .sit h3 { font-weight: 600; font-size: 22px; line-height: 1.25; letter-spacing: -0.018em; margin: 0 0 auto; color: var(--text); }
+  .sit .boost { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--green); margin-top: 16px; letter-spacing: 0.06em; }
+  .sit .start { margin-top: 8px; font-size: 13px; font-weight: 500; color: var(--indigo-2); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .sit .start::after { content: "→"; }
+  .sit.alt { background: linear-gradient(165deg, rgba(99,102,241,0.2), rgba(167,139,250,0.15)); border-color: rgba(167,139,250,0.4); }
+  .sit.alt .kicker .no { background: rgba(167,139,250,0.25); color: var(--violet); }
+
+  /* Phone */
+  .phone-row { max-width: 1360px; margin: 0 auto; padding: 24px 40px 8px; display: flex; justify-content: space-between; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute-2); }
+  .phone-row b { color: var(--text); font-size: 13px; }
+  .phone-row a { color: var(--indigo-2); text-decoration: underline; }
+
+  /* Nora section */
+  .nora-sec { padding: 96px 0 48px; margin-top: 48px; border-top: 1px solid var(--line); background: linear-gradient(180deg, transparent, rgba(99,102,241,0.06)); }
+  .nora-sec .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+  .nora-sec .eye { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--indigo-2); font-weight: 500; text-transform: uppercase; margin-bottom: 18px; }
+  .nora-sec h2 { font-weight: 700; font-size: 46px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 28px; }
+  .nora-sec h2 .hi { background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nora-sec p { font-size: 17px; line-height: 1.6; color: var(--mute); margin: 0 0 16px; max-width: 540px; }
+  .nora-sec p b { color: var(--text); font-weight: 600; }
+
+  .nora-illus { background: linear-gradient(165deg, var(--card), var(--card-2)); border: 1px solid var(--line); border-radius: 20px; padding: 24px; position: relative; }
+  .nora-illus .t { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--indigo-2); text-transform: uppercase; margin-bottom: 18px; display: flex; justify-content: space-between; }
+  .nora-illus .card { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; font-size: 13px; line-height: 1.55; color: var(--text); }
+  .nora-illus .card b { color: var(--indigo-2); font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.12em; display: block; margin-bottom: 6px; text-transform: uppercase; font-weight: 500; }
+
+  .nora-link { max-width: 1360px; margin: 0 auto; padding: 20px 40px 56px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute-2); }
+  .nora-link a { color: var(--indigo-2); text-decoration: underline; }
+
+  /* Process */
+  .process { padding: 32px 0 72px; border-top: 1px solid var(--line); }
+  .step-grid { max-width: 1360px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .step { background: linear-gradient(165deg, var(--card), var(--card-2)); border: 1px solid var(--line); border-radius: 18px; padding: 36px 28px; }
+  .step .n { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--mute-2); margin-bottom: 14px; display: flex; gap: 10px; align-items: center; text-transform: uppercase; }
+  .step .n .no { background: linear-gradient(135deg, var(--indigo), var(--violet)); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
+  .step h4 { font-weight: 600; font-size: 24px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 14px; color: var(--text); }
+  .step p { font-size: 15px; color: var(--mute); line-height: 1.55; margin: 0 0 14px; }
+  .step .dur { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute-2); }
+  .step .dur b { color: var(--indigo-2); }
+
+  /* Stats */
+  .stats { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(99,102,241,0.06); }
+  .stats-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 44px 32px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute-2); margin-bottom: 12px; }
+  .stat .n { font-weight: 700; font-size: 52px; line-height: 0.95; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat .n.g { background: linear-gradient(135deg, var(--green), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* Void */
+  .void { padding: 96px 40px; border-top: 1px solid var(--line); text-align: center; }
+  .void .inner { max-width: 780px; margin: 0 auto; }
+  .void .eye { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--indigo-2); margin-bottom: 18px; }
+  .void h2 { font-weight: 700; font-size: 42px; line-height: 1.12; letter-spacing: -0.025em; margin: 0 0 28px; }
+  .void h2 .hi { background: linear-gradient(135deg, var(--indigo-2), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .void p { font-size: 17px; line-height: 1.7; color: var(--mute); margin: 0 0 16px; text-align: left; }
+  .void p b { color: var(--text); font-weight: 600; }
+
+  /* Footer */
+  footer { background: var(--bg-2); color: var(--mute); padding: 56px 40px 32px; border-top: 1px solid var(--line); }
+  .foot-grid { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  footer h6 { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--indigo-2); margin: 0 0 14px; font-weight: 500; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 14px; margin-bottom: 8px; }
+  footer .word { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 12px; color: var(--text); }
+  footer .word .dot { width: 22px; height: 22px; border-radius: 50%; background: conic-gradient(from 0deg, var(--indigo), var(--violet), var(--cyan), var(--indigo)); }
+  footer .tag { font-size: 14px; line-height: 1.6; max-width: 360px; margin: 0; }
+  .foot-bottom { max-width: 1360px; margin: 32px auto 0; padding-top: 20px; border-top: 1px solid var(--line); font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--mute-2); text-transform: uppercase; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="announce">◆ OPEN ENROLLMENT LIVE · ENDS JAN 15, 2026 · <a href="#">CHECK YOUR COVERAGE SCORE →</a></div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark"><span class="dot"></span>shophealthcare</div>
+  <div class="nav-sub">LICENSED BROKERAGE · NPN #19482230</div>
+  <div class="nav-links">
+    <a href="#">How it works</a>
+    <a href="#">For businesses</a>
+    <a href="#">Talk to a human</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn" href="#">Sign in</a>
+    <a class="btn primary" href="#">Shop plans</a>
+  </div>
+</div></nav>
+
+<div class="crumb"><span>HOME / <b>SHOPHEALTHCARE</b> / PORTAL</span><span>2026 COVERAGE CYCLE · LIVE</span></div>
+
+<section class="hero">
+  <div class="page"><div class="grid">
+    <div>
+      <span class="tag">● OPEN ENROLLMENT · 2026 · LIVE</span>
+      <h1>Health insurance was never built for the way you work. <span class="hi">We fixed that.</span></h1>
+      <p class="lead">Nora — our <b>licensed AI enrollment assistant</b> — scores every plan against your real life and finds the right one in 4 minutes. Every match is reviewed by a <b>state-licensed agent</b> before you enroll.</p>
+      <div class="ctas">
+        <a class="btn primary big" href="#">Check my score</a>
+        <a class="btn big" href="#">Scan your card →</a>
+      </div>
+    </div>
+    <div class="score-card">
+      <div class="sc-head">
+        <span class="lbl">YOUR COVERAGE SCORE · 2026</span>
+        <span class="badge">● GOOD MATCH</span>
+      </div>
+      <div class="gauge">
+        <svg viewBox="0 0 280 180">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#6366F1"/><stop offset="1" stop-color="#A78BFA"/></linearGradient>
+          </defs>
+          <path d="M 20 160 A 120 120 0 0 1 260 160" stroke="#2A2A55" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M 20 160 A 120 120 0 0 1 230 80" stroke="url(#g1)" stroke-width="14" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="num"><div class="n tab">742</div><div class="max mono">/ 850</div><div class="lab">GOOD MATCH</div></div>
+      </div>
+      <div class="sc-bars">
+        <div class="sc-bar"><span class="name">PREMIUM</span><div class="track"><div class="fill" style="width: 82%;"></div></div><span class="val tab">82</span></div>
+        <div class="sc-bar"><span class="name">NETWORK</span><div class="track"><div class="fill" style="width: 91%;"></div></div><span class="val tab">91</span></div>
+        <div class="sc-bar"><span class="name">SUBSIDY</span><div class="track"><div class="fill" style="width: 88%;"></div></div><span class="val tab">88</span></div>
+        <div class="sc-bar"><span class="name">DEDUCTIBLE</span><div class="track"><div class="fill" style="width: 74%;"></div></div><span class="val tab">74</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<div class="nora-chip"><div class="inner"><span class="dot"></span><span><b>Nora</b> · Licensed enrollment assistant</span><span class="meta">ACTIVE · 2:04 AVG</span></div></div>
+
+<section class="situations">
+  <div class="sit-head"><span>SECTION 01 · <b>SELECT YOUR SITUATION</b></span><span>5 CASES · 1 CUSTOM</span></div>
+  <div class="sit-grid">
+    <div class="sit"><div class="kicker"><span class="no">01</span><span>JOB LOSS</span></div><h3>I just lost my health insurance</h3><div class="boost">Est. score boost +140</div><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">02</span><span>1099 / 1040-SE</span></div><h3>I'm self-employed or freelance</h3><div class="boost">Est. score boost +180</div><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">03</span><span>RENEWAL</span></div><h3>I got my 2026 renewal notice</h3><div class="boost">Est. score boost +90</div><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">04</span><span>BRIDGE YEARS</span></div><h3>I'm 55–64, not yet on Medicare</h3><div class="boost">Est. score boost +220</div><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">05</span><span>GUT CHECK</span></div><h3>I just want to check my current plan</h3><div class="boost">See your score today</div><a class="start" href="#">Start here</a></div>
+    <div class="sit alt"><div class="kicker"><span class="no">?</span><span>CUSTOM ROUTE</span></div><h3>None of these fit — route me with a few questions.</h3><div class="boost">Personalized in 90 sec</div><a class="start" href="#">Route me</a></div>
+  </div>
+</section>
+
+<div class="phone-row">
+  <span>PREFER TO TALK? CALL <b class="tab">(800) 555-0198</b> · MON–SAT</span>
+  <a href="#">NOT SURE WHICH APPLIES? 90-SECOND CHECK →</a>
+</div>
+
+<section class="nora-sec"><div class="page"><div class="grid">
+  <div>
+    <div class="eye">SECTION 02 · THE ASSISTANT</div>
+    <h2>Meet Nora — <span class="hi">your licensed enrollment assistant</span>.</h2>
+    <p>Health insurance doesn't come with a score. Nora gives it one. She pulls every plan in your ZIP, runs it against your real income, doctors, and meds, and shows you exactly where each falls short.</p>
+    <p>Every recommendation is <b>reviewed by a state-licensed agent</b> before you enroll. Flat fee. No commissions. Your data stays yours.</p>
+  </div>
+  <div class="nora-illus">
+    <div class="t"><span>Nora · Score breakdown</span><span>FIG. 02</span></div>
+    <div class="card"><b>Top match</b>Kaiser Silver HMO 2000 · $412/mo · Score <b style="display:inline; color: var(--green)">742</b></div>
+    <div class="card"><b>Network check</b>4 of 4 your doctors in-network</div>
+    <div class="card"><b>Subsidy applied</b>−$184/mo · verified against 2026 income</div>
+    <div class="card"><b>Pending</b>Licensed agent review · Marsha D., TX #4478291</div>
+  </div>
+</div></div></section>
+
+<div class="nora-link">SEE EXACTLY WHAT NORA CAN AND CAN'T DO → <a href="#">METHODOLOGY &amp; LIMITATIONS</a></div>
+
+<section class="process"><div class="step-grid">
+  <div class="step"><div class="n"><span class="no">01</span>STEP ONE</div><h4>Scan or tell.</h4><p>Upload your current card or tell Nora what changed. We build a baseline score from what you already have on paper.</p><div class="dur">TAKES · <b>~90 SEC</b></div></div>
+  <div class="step"><div class="n"><span class="no">02</span>STEP TWO</div><h4>See your score.</h4><p>Every plan in your ZIP, ranked by match — not just premium. Deductibles, networks, subsidies, all weighted against your real life.</p><div class="dur">TAKES · <b>~6 MIN</b></div></div>
+  <div class="step"><div class="n"><span class="no">03</span>STEP THREE</div><h4>Enroll, reviewed.</h4><p>A state-licensed human agent signs off before anything gets filed. No auto-renewal. No surprise broker fees.</p><div class="dur">TAKES · <b>~2 MIN</b></div></div>
+</div></section>
+
+<section class="stats"><div class="stats-grid">
+  <div class="stat"><div class="lbl">PLANS SCORED</div><div class="n tab">1.2M+</div></div>
+  <div class="stat"><div class="lbl">LICENSED AGENTS</div><div class="n tab">180+</div></div>
+  <div class="stat"><div class="lbl">HIPAA ENCRYPTION</div><div class="n tab">256-BIT</div></div>
+  <div class="stat"><div class="lbl">COST TO YOU</div><div class="n g tab">$0.00</div></div>
+</div></section>
+
+<section class="void"><div class="inner">
+  <div class="eye">SECTION 03 · WHY WE EXIST</div>
+  <h2>They cut the navigators. <span class="hi">We built the score.</span></h2>
+  <p>In late 2025, federal funding for ACA navigators was <b>cut by 90%</b>. Millions of Americans — especially the self-employed and the 55–64 crowd bridging to Medicare — were left to read 40-page plan docs alone.</p>
+  <p>Shophealthcare is a <b>public-service brokerage</b>, redesigned around a simple idea: every plan should have a score, every score should be explainable, and a licensed human should sign it off. Not a government site.</p>
+</div></section>
+
+<footer>
+  <div class="foot-grid">
+    <div><div class="word"><span class="dot"></span>shophealthcare</div><p class="tag">A licensed, independent health insurance brokerage operating on public-service principles. Named agents, flat-fee pay, no data resold.</p></div>
+    <div><h6>CONTACT</h6><ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul></div>
+    <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+    <div><h6>DIRECTORY</h6><ul><li>NPN #19482230</li><li>hello@shophealthcare</li><li class="tab">(800) 555-0198</li></ul></div>
+  </div>
+  <div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED IN ALL 50 STATES</span><span>NOT A GOVERNMENT SITE · NOT AFFILIATED WITH ACA OR MEDICARE</span></div>
+</footer>
+
+</body></html>

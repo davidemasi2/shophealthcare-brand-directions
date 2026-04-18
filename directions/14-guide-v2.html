@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Guide (v2 wireframe-loyal)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F0E4;
+    --cream-2:#EEE6D3;
+    --forest:#1E3A2C;
+    --forest-ink:#0F2419;
+    --terra:#C9683D;
+    --terra-soft:#E4A682;
+    --ink:#141611;
+    --sage:#D8D5C4;
+    --mute:#6A6658;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);}
+  body{width:1440px;margin:0;font-family:'Inter',-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .tab{font-variant-numeric:tabular-nums;}
+
+  .page{max-width:1360px;margin:0 auto;padding:0 48px;}
+
+  /* Announce */
+  .announce{background:var(--forest);color:var(--cream);text-align:center;padding:10px 48px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;}
+  .announce a{color:var(--terra-soft);text-decoration:underline;text-underline-offset:3px;}
+
+  /* Nav */
+  nav.head{border-bottom:1px solid var(--sage);}
+  nav.head .row{display:flex;align-items:center;gap:24px;padding:20px 48px;}
+  .wordmark{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:-0.02em;color:var(--forest);display:flex;align-items:center;gap:10px;}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--terra);}
+  .nav-sub{margin-left:18px;display:flex;gap:20px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mute);}
+  .nav-links{margin-left:auto;display:flex;gap:26px;font-size:14px;font-weight:500;color:var(--forest-ink);}
+  .nav-links a{color:inherit;text-decoration:none;}
+  .nav-right{display:flex;gap:10px;align-items:center;}
+  .nav-phone{font-weight:600;font-size:14px;color:var(--forest);margin-right:6px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--forest);color:var(--forest);background:transparent;cursor:pointer;}
+  .btn.primary{background:var(--terra);border-color:var(--terra);color:var(--cream);}
+  .btn.dark{background:var(--forest);border-color:var(--forest);color:var(--cream);}
+
+  /* Crumb */
+  .crumb{padding:14px 48px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--sage);}
+  .crumb b{color:var(--forest);}
+  .crumb .sep{margin:0 10px;color:var(--sage);}
+
+  /* HERO */
+  .hero{padding:72px 48px 48px;display:grid;grid-template-columns:1.2fr 1fr;gap:72px;align-items:start;}
+  .hero h1{font-family:'Fraunces',serif;font-variation-settings:"opsz" 144;font-weight:400;font-size:78px;line-height:0.98;letter-spacing:-0.028em;margin:0 0 30px;color:var(--forest-ink);}
+  .hero h1 em{font-style:italic;color:var(--terra);font-weight:400;}
+  .hero h1 .fix{background:var(--forest);color:var(--cream);padding:0 14px;font-weight:500;display:inline-block;}
+  .hero .lead{font-size:18px;line-height:1.6;color:#3A3830;max-width:520px;margin:0 0 28px;}
+  .hero .lead b{color:var(--forest);font-weight:600;}
+  .hero .ctas{display:flex;gap:12px;}
+
+  /* Hero illustration: warm portrait + terracotta/forest composition */
+  .illus{position:relative;aspect-ratio:5/5.2;border:1px solid var(--sage);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#EEE6D3 0%,#E5DBC4 100%);}
+  .illus::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%, rgba(201,104,61,0.16), transparent 60%);}
+  /* portrait */
+  .p-shoulders{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:88%;height:36%;background:var(--forest);border-radius:50% 50% 0 0 / 30% 30% 0 0;}
+  .p-collar{position:absolute;bottom:24%;left:50%;transform:translateX(-50%);width:22%;height:10%;background:var(--cream);border-radius:50% 50% 0 0;}
+  .p-neck{position:absolute;bottom:34%;left:50%;transform:translateX(-50%);width:13%;height:11%;background:#C99677;border-radius:0 0 30% 30%;}
+  .p-head{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);width:36%;aspect-ratio:1/1.2;background:#D9A683;border-radius:48% 48% 42% 42% / 52% 52% 40% 40%;}
+  .p-hair{position:absolute;bottom:54%;left:50%;transform:translateX(-50%);width:40%;aspect-ratio:1/0.78;background:#3A2A1E;border-radius:50% 50% 35% 35% / 60% 60% 30% 30%;}
+  .p-eye{position:absolute;bottom:54%;width:4px;height:4px;background:var(--ink);border-radius:50%;}
+  .p-eye.l{left:43%;} .p-eye.r{right:43%;}
+  .p-smile{position:absolute;bottom:48%;left:50%;transform:translateX(-50%);width:7%;height:3%;border-bottom:1.5px solid var(--ink);border-radius:0 0 100% 100%;}
+  .p-cheek{position:absolute;bottom:50%;width:4.5%;height:3%;background:rgba(201,104,61,0.32);border-radius:50%;}
+  .p-cheek.l{left:37%;} .p-cheek.r{right:37%;}
+  /* terracotta stripe badge */
+  .illus-badge{position:absolute;left:20px;top:20px;background:var(--terra);color:var(--cream);font-family:'Fraunces',serif;font-style:italic;font-size:16px;padding:10px 14px;border-radius:10px;letter-spacing:-0.01em;}
+  .illus-badge .n{font-style:normal;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.85;}
+  .illus-stripe{position:absolute;right:0;bottom:50px;width:34%;height:8px;background:var(--terra);}
+
+  /* Nora chip */
+  .nora-chip{padding:0 48px 20px;}
+  .nora-chip .inner{display:inline-flex;align-items:center;gap:14px;padding:11px 16px;border:1px solid var(--sage);background:var(--cream-2);border-radius:999px;font-size:13px;}
+  .nora-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--terra);box-shadow:0 0 0 3px rgba(201,104,61,0.2);}
+  .nora-chip b{font-weight:600;color:var(--forest);}
+  .nora-chip .meta{color:var(--mute);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;}
+
+  /* Situations */
+  .situations{padding:16px 48px 8px;}
+  .sit-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--sage);border-radius:14px;background:var(--cream);overflow:hidden;}
+  .sit{padding:28px 26px 30px;border-right:1px solid var(--sage);border-bottom:1px solid var(--sage);display:flex;flex-direction:column;min-height:200px;}
+  .sit:nth-child(3n){border-right:0;}
+  .sit:nth-child(n+4){border-bottom:0;}
+  .sit .kicker{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--terra);margin-bottom:14px;}
+  .sit h3{font-family:'Fraunces',serif;font-weight:500;font-size:24px;line-height:1.18;letter-spacing:-0.015em;margin:0 0 auto;color:var(--forest-ink);}
+  .sit .start{margin-top:22px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--forest);text-decoration:none;}
+  .sit .start::after{content:" →";color:var(--terra);}
+  .sit.overflow{background:var(--cream-2);}
+  .sit.overflow h3{font-style:italic;color:var(--terra);}
+
+  /* Phone row */
+  .phone-row{padding:22px 48px 8px;display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:0.06em;color:var(--mute);}
+  .phone-row b{color:var(--forest);font-weight:700;font-size:18px;letter-spacing:-0.01em;margin-left:8px;}
+  .phone-row a{color:var(--forest);text-decoration:underline;text-underline-offset:3px;font-weight:600;}
+
+  /* Section rule */
+  .rule{padding:40px 48px 0;}
+  .rule::before{content:"";display:block;height:1px;background:var(--forest);}
+
+  /* Nora section */
+  .nora-sec{padding:72px 48px 36px;display:grid;grid-template-columns:1.2fr 1fr;gap:72px;align-items:start;}
+  .nora-sec h2{font-family:'Fraunces',serif;font-weight:400;font-size:44px;line-height:1.08;letter-spacing:-0.022em;margin:0 0 28px;color:var(--forest-ink);max-width:600px;}
+  .nora-sec h2 .em{font-family:'Fraunces',serif;font-style:italic;color:var(--terra);font-weight:400;}
+  .nora-sec p{font-size:17px;line-height:1.65;color:#3A3830;margin:0 0 18px;max-width:560px;}
+  .nora-sec p b{color:var(--forest);font-weight:600;}
+  .nora-illus{aspect-ratio:1/1;background:linear-gradient(180deg,#EEE6D3 0%,#E5DBC4 100%);border:1px solid var(--sage);border-radius:18px;position:relative;overflow:hidden;}
+  .nora-illus::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 55%, rgba(30,58,44,0.12), transparent 60%);}
+  .nora-glyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-variation-settings:"opsz" 144;font-weight:400;font-size:180px;color:var(--forest);letter-spacing:-0.04em;}
+  .nora-glyph em{color:var(--terra);font-style:italic;}
+  .nora-badge{position:absolute;left:20px;bottom:20px;background:var(--cream);border:1px solid var(--sage);padding:8px 12px;border-radius:8px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);}
+
+  /* Nora link */
+  .nora-link{padding:0 48px 64px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mute);}
+  .nora-link a{color:var(--forest);text-decoration:underline;text-underline-offset:3px;font-weight:600;}
+
+  /* Process */
+  .process{border-top:1px solid var(--forest);}
+  .step-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+  .step{padding:48px 40px 44px;border-right:1px solid var(--sage);}
+  .step:last-child{border-right:0;}
+  .step .n{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:20px;color:var(--terra);margin-bottom:14px;}
+  .step h4{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;margin:0 0 18px;color:var(--forest);}
+  .step p{font-size:15px;line-height:1.6;color:#3A3830;margin:0;max-width:320px;}
+
+  /* Stats */
+  .stats{background:var(--forest);color:var(--cream);}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+  .stat{padding:48px 32px;border-right:1px solid rgba(246,240,228,0.14);}
+  .stat:last-child{border-right:0;}
+  .stat .lbl{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(246,240,228,0.55);margin-bottom:16px;}
+  .stat .n{font-family:'Fraunces',serif;font-weight:400;font-size:52px;line-height:0.95;letter-spacing:-0.025em;}
+  .stat .n.terra{color:var(--terra-soft);}
+
+  /* Void */
+  .void{padding:96px 48px 104px;text-align:center;border-top:1px solid var(--sage);}
+  .void .inner{max-width:760px;margin:0 auto;}
+  .void h2{font-family:'Fraunces',serif;font-weight:400;font-style:italic;font-size:42px;line-height:1.15;letter-spacing:-0.02em;margin:0 0 32px;color:var(--forest-ink);}
+  .void p{font-size:16px;line-height:1.7;color:#3A3830;margin:0 0 18px;text-align:left;}
+  .void p b{font-weight:600;color:var(--forest);}
+  .void .mark{display:inline-block;width:40px;height:1px;background:var(--forest);margin-top:32px;}
+
+  /* Footer */
+  footer{border-top:1px solid var(--forest);padding:48px 48px 32px;background:var(--cream);}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;}
+  footer h6{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;}
+  footer ul{list-style:none;padding:0;margin:0;}
+  footer li{font-size:14px;margin-bottom:8px;color:#3A3830;}
+  footer .word{font-family:'Fraunces',serif;font-weight:500;font-size:22px;color:var(--forest);display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  footer .word .d{width:10px;height:10px;border-radius:50%;background:var(--terra);}
+  footer .tag{color:var(--mute);font-size:13px;line-height:1.55;max-width:340px;margin:0;}
+  .foot-bottom{margin-top:32px;padding-top:20px;border-top:1px solid var(--sage);font-size:10px;letter-spacing:0.12em;color:var(--mute);text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- 1. ANNOUNCE -->
+<div class="announce">ACA OPEN ENROLLMENT IS LIVE — ENDS JAN 15 · <a href="#">CHECK YOUR SUBSIDY</a></div>
+
+<!-- 2. NAV -->
+<nav class="head">
+  <div class="row">
+    <div class="wordmark"><span class="dot"></span>Shophealthcare</div>
+    <div class="nav-sub">
+      <span>STATE LICENSED BROKERAGE</span>
+      <span>NPN #19482230</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Plans</a><a href="#">How it works</a><a href="#">Nora</a><a href="#">About</a>
+    </div>
+    <div class="nav-right">
+      <span class="nav-phone tab">(800) 555-0198</span>
+      <a class="btn dark" href="#">Start</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 3. CRUMB -->
+<div class="crumb">HOME <span class="sep">/</span> <b>SHOPHEALTHCARE</b></div>
+
+<!-- 4. HERO -->
+<section class="hero">
+  <div>
+    <h1>Health insurance was never built for the way you <em>work.</em><br><span class="fix">We fixed that.</span></h1>
+    <p class="lead">Nora, our <b>licensed enrollment assistant</b>, hands you off to a named Guide in your state — state-licensed, salaried, yours for as long as you're a member.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#">Check my options</a>
+      <a class="btn" href="#">Scan your card</a>
+    </div>
+  </div>
+  <div class="illus">
+    <div class="illus-badge"><span class="n">YOUR GUIDE · EST. 2026</span><br>Rosa M.</div>
+    <div class="p-shoulders"></div>
+    <div class="p-collar"></div>
+    <div class="p-neck"></div>
+    <div class="p-head"></div>
+    <div class="p-hair"></div>
+    <div class="p-eye l"></div><div class="p-eye r"></div>
+    <div class="p-cheek l"></div><div class="p-cheek r"></div>
+    <div class="p-smile"></div>
+    <div class="illus-stripe"></div>
+  </div>
+</section>
+
+<!-- 5. NORA CHIP -->
+<div class="nora-chip">
+  <div class="inner">
+    <span class="dot"></span>
+    <span><b>Nora</b> · Licensed enrollment assistant</span>
+    <span class="meta">ACTIVE · 2:04 AVG RESPONSE</span>
+  </div>
+</div>
+
+<!-- 6. SITUATIONS -->
+<section class="situations">
+  <div class="sit-grid">
+    <div class="sit">
+      <div class="kicker">CASE 01</div>
+      <h3>I just lost my health insurance</h3>
+      <a class="start" href="#">Start here</a>
+    </div>
+    <div class="sit">
+      <div class="kicker">CASE 02</div>
+      <h3>I'm self-employed</h3>
+      <a class="start" href="#">Start here</a>
+    </div>
+    <div class="sit">
+      <div class="kicker">CASE 03</div>
+      <h3>My renewal just went up</h3>
+      <a class="start" href="#">Start here</a>
+    </div>
+    <div class="sit">
+      <div class="kicker">CASE 04</div>
+      <h3>I'm 55–64, not yet on Medicare</h3>
+      <a class="start" href="#">Start here</a>
+    </div>
+    <div class="sit">
+      <div class="kicker">CASE 05</div>
+      <h3>I just want a check-up</h3>
+      <a class="start" href="#">Start here</a>
+    </div>
+    <div class="sit overflow">
+      <div class="kicker">&nbsp;</div>
+      <h3>None of these fit →</h3>
+      <a class="start" href="#">Route me</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7. PHONE ROW -->
+<div class="phone-row">
+  <span>PREFER TO TALK TO SOMEONE? CALL <b class="tab">(800) 555-0198</b></span>
+  <a href="#">90-second check · no email required →</a>
+</div>
+
+<!-- 8. NORA SECTION -->
+<section class="nora-sec">
+  <div>
+    <h2>Meet Nora — Your <span class="em">Licensed Enrollment Assistant.</span></h2>
+    <p>Traditional health insurance navigators are <b>underfunded and overwhelmed</b>. Nora was designed to bridge the data gap between the complex federal marketplace and your specific circumstances.</p>
+    <p>By processing thousands of plan variations instantly, Nora identifies <b>hidden subsidies</b> and <b>network gaps</b> that human eyes often miss during the first pass — then hands you to a Guide in your state.</p>
+    <p>Every recommendation made by Nora is <b>reviewed by a state-licensed agent</b> before your final enrollment, ensuring 100% compliance and accuracy for your 2026 coverage.</p>
+  </div>
+  <div class="nora-illus">
+    <div class="nora-glyph">N<em>.</em></div>
+    <div class="nora-badge">NORA · FIG. 02 · TYPOGRAPHIC ENTITY</div>
+  </div>
+</section>
+
+<!-- 9. NORA LINK -->
+<div class="nora-link">
+  SEE EXACTLY WHAT NORA CAN AND CAN'T DO → <a href="#">METHODOLOGY & LIMITATIONS</a>
+</div>
+
+<!-- 10. PROCESS -->
+<section class="process">
+  <div class="step-grid">
+    <div class="step">
+      <div class="n">01.</div>
+      <h4>SCAN OR SEARCH</h4>
+      <p>Upload your current insurance card or tell Nora about your circumstances. She starts with the facts you already have on paper. Nothing else to fill in.</p>
+    </div>
+    <div class="step">
+      <div class="n">02.</div>
+      <h4>COMPARE</h4>
+      <p>Nora runs the diagnostic, shows your real options — what's available in your state, highlights the true cost of ownership, not just premium. Tradeoffs in plain sight.</p>
+    </div>
+    <div class="step">
+      <div class="n">03.</div>
+      <h4>ENROLL</h4>
+      <p>Finalize your selection with a human review. A state-licensed agent — your Guide — verifies every detail before you enroll. No auto-renewal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="lbl">PLANS COMPARED</div>
+      <div class="n tab">1.2M+</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">LICENSED DIRECTORS</div>
+      <div class="n tab">180+</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">HIPAA-AUDIT ENCRYPTION</div>
+      <div class="n tab">256-BIT</div>
+    </div>
+    <div class="stat">
+      <div class="lbl">COST</div>
+      <div class="n terra tab">$0.00</div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. NAVIGATOR VOID -->
+<section class="void">
+  <div class="inner">
+    <h2>The navigator void, and why Nora exists.</h2>
+    <p>In late 2025, federal funding for health insurance navigators was <b>reduced sixfold</b>. This left millions of Americans — specifically the self-employed and those nearing retirement — without a trusted advocate to help them decipher the changing subsidy landscape.</p>
+    <p>Nora was built as a <b>response to this void</b>. We believe that technology shouldn't just sell you a plan. It should protect your health and your wallet by providing the same level of rigorous analysis that a concierge broker would provide, accessible to everyone instantly.</p>
+    <span class="mark"></span>
+  </div>
+</section>
+
+<!-- 13. FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="word"><span class="d"></span>Shophealthcare</div>
+      <p class="tag">A licensed, independent health insurance brokerage serving all 50 states. Named Guides. Flat-salary compensation. No data resold. Est. 2026.</p>
+    </div>
+    <div><h6>CONTACT</h6><ul><li>About us</li><li>Talk to a Guide</li><li>Press inquiries</li><li>Partnerships</li></ul></div>
+    <div><h6>LEGAL</h6><ul><li>Privacy policy</li><li>Terms of service</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+    <div><h6>COMPLIANCE</h6><ul><li>NPN #19482230</li><li>hello@shophealthcare.com</li><li class="tab">(800) 555-0198</li></ul></div>
+  </div>
+  <div class="foot-bottom">
+    © 2026 SHOPHEALTHCARE, INC · LICENSED IN ALL 50 STATES · NOT A GOVERNMENT SITE · NOT AFFILIATED WITH THE ACA MARKETPLACE OR MEDICARE
+  </div>
+</footer>
+
+</body>
+</html>

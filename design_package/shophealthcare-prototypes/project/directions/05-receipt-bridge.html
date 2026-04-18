@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Receipt × Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3EEE0;
+    --paper-2: #EAE3D1;
+    --ink: #0E0E0E;
+    --ink-soft: #3A3A3A;
+    --mute: #6E6757;
+    --rule: #1A1A1A;
+    --orange: #FF5E1A;
+    --blue: #1A5276;
+    --blue-2: #143D57;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(14,14,14,0.014) 27px 28px);
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Top agent bar — Bridge adds this */
+  .agent-bar {
+    background: var(--blue);
+    color: var(--paper);
+  }
+  .agent-bar .row {
+    max-width: 1280px; margin: 0 auto; padding: 14px 48px;
+    display: flex; align-items: center; gap: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .agent-bar .avail { display: flex; align-items: center; gap: 10px; }
+  .agent-bar .avail::before {
+    content: ""; width: 10px; height: 10px; border-radius: 50%;
+    background: #7FD0A6;
+    box-shadow: 0 0 0 3px rgba(127,208,166,0.25);
+  }
+  .agent-bar .phone {
+    margin-left: auto;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .agent-bar .hrs { color: rgba(243,238,224,0.7); }
+
+  /* Nav */
+  nav.head {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  nav.head .row {
+    max-width: 1280px; margin: 0 auto; padding: 24px 48px;
+    display: flex; align-items: center; gap: 36px;
+  }
+  .wordmark {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .wordmark .sq { width: 12px; height: 12px; background: var(--orange); }
+  .wordmark .sq2 { width: 12px; height: 12px; background: var(--blue); }
+  .wordmark .rev { font-size: 11px; color: var(--mute); font-weight: 500; margin-left: 4px; letter-spacing: 0.08em; }
+  .nav-links {
+    display: flex; gap: 26px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-links a.active { border-bottom: 2px solid var(--blue); padding-bottom: 3px; }
+  .nav-right { margin-left: auto; display: flex; gap: 14px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--rule);
+  }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.orange { background: var(--orange); color: var(--ink); border-color: var(--orange); }
+  .btn.blue { background: var(--blue); color: var(--paper); border-color: var(--blue); }
+  .btn.big { padding: 20px 28px 19px; font-size: 15px; }
+
+  /* Breadcrumb */
+  .crumb-row {
+    max-width: 1280px; margin: 0 auto; padding: 18px 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+    border-bottom: 1px solid var(--rule);
+  }
+  .crumb-row b { color: var(--ink); }
+  .crumb-row .sep { color: var(--mute); margin: 0 10px; }
+
+  /* Hero — generous vertical spacing */
+  section { border-bottom: 1px solid var(--rule); }
+  .sec { max-width: 1280px; margin: 0 auto; padding: 72px 48px 88px; }
+  .hero { padding: 88px 48px 96px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 72px;
+    align-items: start;
+  }
+  .hero h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 1.05;
+    letter-spacing: -0.028em;
+    margin: 0 0 32px;
+  }
+  .hero h1 .ink { background: var(--ink); color: var(--paper); padding: 0 10px; }
+  .hero h1 .orange { color: var(--orange); }
+  .hero h1 .blue { color: var(--blue); }
+
+  .hero .sub {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 0 32px;
+  }
+  .hero .sub b { background: #FFF1DD; padding: 0 4px; font-weight: 600; }
+  .hero .ctas { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+
+  .agent-callout {
+    margin-top: 28px;
+    padding: 24px 28px;
+    background: var(--blue);
+    color: var(--paper);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 22px;
+    align-items: center;
+  }
+  .agent-callout .portrait {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #C9C5BD, #8A8474);
+    border-radius: 50%;
+    border: 3px solid var(--paper);
+    position: relative;
+  }
+  .agent-callout .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(243,238,224,0.7);
+    margin-bottom: 6px;
+  }
+  .agent-callout .h {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.35;
+    max-width: 440px;
+    margin: 0 0 8px;
+  }
+  .agent-callout .credential {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(243,238,224,0.7);
+  }
+  .agent-callout .phone-box {
+    text-align: right;
+    padding-left: 20px;
+    border-left: 1px solid rgba(243,238,224,0.3);
+  }
+  .agent-callout .phone-box .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(243,238,224,0.7);
+  }
+  .agent-callout .phone-box .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+    margin-top: 6px;
+  }
+
+  /* Receipt summary in hero */
+  .receipt {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 32px 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+  }
+  .receipt .h {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 20px;
+  }
+  .receipt .line {
+    display: flex; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(14,14,14,0.25);
+  }
+  .receipt .line:last-child { border-bottom: 0; }
+  .receipt .lbl { color: var(--ink-soft); }
+  .receipt .val { color: var(--ink); font-weight: 600; }
+  .receipt .total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .receipt .total .k {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .receipt .total .v {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: var(--orange);
+    line-height: 1;
+  }
+  .receipt .total .v .u { font-size: 15px; color: var(--ink); letter-spacing: 0; margin-left: 4px; }
+  .receipt .agent-note {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--blue);
+    color: var(--paper);
+    font-size: 13px;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+  }
+  .receipt .agent-note b { color: #FFF1DD; }
+
+  /* Section heads */
+  .sec-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 20px; padding-bottom: 24px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .sec-head .title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .sec-head .title::before { content: "— "; color: var(--orange); }
+  .sec-head .title::after { content: " —"; color: var(--orange); }
+  .sec-head .ts {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sec-intro {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 64px;
+    margin-bottom: 48px;
+  }
+  .sec-intro h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .sec-intro p { font-size: 18px; line-height: 1.65; color: var(--ink-soft); margin: 0; max-width: 560px; }
+
+  /* Situations list — larger, slower */
+  .situations { border: 1px solid var(--rule); }
+  .sit {
+    display: grid;
+    grid-template-columns: 80px 1.2fr 1fr 180px;
+    gap: 32px;
+    padding: 32px 32px;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+  }
+  .sit:last-child { border-bottom: 0; }
+  .sit .no {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+  }
+  .sit h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin: 0 0 10px;
+  }
+  .sit p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .sit .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+  .sit .meta b { color: var(--ink); display: block; font-size: 16px; font-weight: 600; margin-top: 2px; letter-spacing: 0; }
+  .sit .act {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .sit .act .go { color: var(--ink); display: block; }
+  .sit .act .ph {
+    color: var(--blue);
+    display: block;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(26,82,118,0.3);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  .sit.highlight { background: var(--paper-2); }
+
+  /* Process — slow, three labeled rows */
+  .process { border: 1px solid var(--rule); }
+  .p-row {
+    display: grid;
+    grid-template-columns: 88px 1.2fr 1.8fr 200px;
+    padding: 36px 32px;
+    border-bottom: 1px solid var(--rule);
+    gap: 32px;
+    align-items: start;
+  }
+  .p-row:last-child { border-bottom: 0; }
+  .p-row .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 0.08em;
+  }
+  .p-row h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+  }
+  .p-row .explain { font-size: 16px; line-height: 1.65; color: var(--ink-soft); margin: 0; }
+  .p-row .dur {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mute);
+    line-height: 1.6;
+    text-align: right;
+  }
+  .p-row .dur b { display: block; color: var(--ink); font-size: 15px; font-weight: 600; margin-top: 4px; letter-spacing: 0; }
+  .p-row .dur .agent-link {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Nora transcript */
+  .nora-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; }
+  .nora-left .caveat {
+    background: var(--blue);
+    color: var(--paper);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+  .nora-left .caveat b { color: #FFF1DD; }
+  .nora-left h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+  }
+  .nora-left p { font-size: 17px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 18px; max-width: 460px; }
+
+  .transcript {
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .tr-head {
+    display: flex; justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .tr-body { padding: 26px 24px 24px; }
+  .tr-body .msg { padding: 10px 0; }
+  .tr-body .nora { color: var(--orange); font-weight: 700; margin-right: 10px; }
+  .tr-body .u { color: var(--ink); font-weight: 700; margin-right: 10px; }
+  .tr-body .sys { color: var(--mute); font-size: 12px; padding: 8px 0; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tr-body .agent-msg {
+    background: var(--blue);
+    color: var(--paper);
+    padding: 14px 16px;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .tr-body .agent-msg .tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: #FFF1DD;
+    margin-bottom: 6px;
+  }
+
+  /* Savings */
+  .savings {
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    padding: 56px 56px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: end;
+  }
+  .savings .head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 20px;
+  }
+  .savings h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+  }
+  .savings ul {
+    list-style: none; padding: 0; margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+  }
+  .savings li {
+    display: flex; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(14,14,14,0.25);
+    line-height: 1.5;
+  }
+  .savings li b { font-weight: 600; }
+  .savings .display {
+    text-align: right;
+    border-left: 1px solid var(--rule);
+    padding-left: 56px;
+  }
+  .savings .display .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 112px;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--orange);
+  }
+  .savings .display .num .u { font-size: 22px; color: var(--ink); letter-spacing: 0; margin-left: 6px; }
+  .savings .display .yr { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--mute); margin-top: 12px; letter-spacing: 0.06em; }
+  .savings .review {
+    grid-column: 1 / -1;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    background: var(--blue);
+    color: var(--paper);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  .savings .review .txt { font-size: 15px; line-height: 1.55; }
+  .savings .review .txt b { background: rgba(243,238,224,0.15); padding: 0 6px; }
+  .savings .review .ph {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 22px;
+  }
+
+  /* Portrait block — BR-1 warm environmental */
+  .portrait-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .portrait {
+    aspect-ratio: 5/4;
+    background:
+      linear-gradient(150deg, rgba(26,82,118,0.08), rgba(255,94,26,0.08)),
+      repeating-linear-gradient(45deg, #ECE5D3 0 2px, #E4DCC6 2px 4px);
+    border: 1px solid var(--rule);
+    position: relative;
+  }
+  .portrait .cap {
+    position: absolute; left: 20px; bottom: 20px;
+    background: var(--paper);
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+    border: 1px solid var(--rule);
+  }
+  .portrait-block h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+  }
+  .portrait-block p { font-size: 17px; line-height: 1.7; color: var(--ink-soft); margin: 0 0 20px; }
+  .portrait-block blockquote {
+    margin: 24px 0 0; padding: 20px 24px;
+    border-left: 3px solid var(--blue);
+    background: var(--paper-2);
+    font-size: 17px;
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .portrait-block blockquote .sig {
+    display: block;
+    font-style: normal;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat {
+    padding: 56px 32px;
+    border-right: 1px solid var(--rule);
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 18px;
+  }
+  .stat .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .n.o { color: var(--orange); }
+  .stat .n.b { color: var(--blue); }
+  .stat .d { font-size: 14px; color: var(--ink-soft); margin-top: 14px; line-height: 1.55; max-width: 220px; }
+
+  /* Footer */
+  footer .sec { padding: 56px 48px 36px; }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 40px;
+  }
+  footer h6 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin: 0 0 16px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .foot-agent {
+    background: var(--blue);
+    color: var(--paper);
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .foot-agent h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin: 0 0 8px;
+  }
+  .foot-agent p { font-size: 16px; line-height: 1.55; color: rgba(243,238,224,0.8); margin: 0; max-width: 520px; }
+  .foot-agent .phone {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 32px;
+    text-align: right;
+  }
+  .foot-agent .phone .hrs {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 6px;
+    letter-spacing: 0.08em;
+    color: rgba(243,238,224,0.65);
+  }
+  .foot-disc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--mute);
+    border-top: 1px dashed var(--rule);
+    padding-top: 20px;
+    line-height: 1.65;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<!-- AGENT BAR — always visible -->
+<div class="agent-bar">
+  <div class="row">
+    <span class="avail">Licensed agent available now</span>
+    <span>Marsha D. · TX License #4478291 · 18 yrs individual market</span>
+    <span class="hrs" style="margin-left:auto;">Mon–Fri 7a–10p · Sat 9a–6p ET</span>
+    <span class="phone tab">(800) 555-0198</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="head">
+  <div class="row">
+    <div class="wordmark">
+      <span class="sq"></span>
+      <span class="sq2"></span>
+      SHOPHEALTHCARE
+      <span class="rev">/ BRIDGE</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Pre-Medicare</a>
+      <a href="#">Routes</a>
+      <a href="#">Agents</a>
+      <a href="#">Disclosures</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="nav-right">
+      <a class="btn ghost" href="#">Scan card</a>
+      <a class="btn blue" href="#">Talk to an agent →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- CRUMB -->
+<div class="crumb-row">HOME <span class="sep">/</span> <b>BRIDGE THE GAP UNTIL MEDICARE</b> <span class="sep">/</span> RECEIPT NO. SHC-2026-BR-HOME <span class="sep">/</span> UPDATED 04/18/2026</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="page" style="padding:0;">
+    <div class="hero-grid">
+      <div>
+        <h1>
+          <span class="blue">Your plan costs</span><br>
+          <span class="tab">$412/mo.</span><br>
+          Before you renew —<br>
+          <span class="ink">here's what else exists.</span>
+        </h1>
+        <p class="sub">
+          You spent decades paying into this. You deserve clarity, not fine print. A state-licensed agent will walk through every option with you — no urgency, no scripts, <b>no auto-renewal</b>.
+        </p>
+        <div class="ctas">
+          <a class="btn orange big" href="#">See what else exists →</a>
+          <a class="btn blue big" href="#">Talk to Marsha now</a>
+        </div>
+
+        <div class="agent-callout">
+          <div class="portrait"></div>
+          <div>
+            <div class="name">Your licensed agent</div>
+            <p class="h">"I'll walk you through every plan in your state. We'll take as long as you need."</p>
+            <div class="credential">MARSHA D. · TX #4478291 · SALARIED · 18 YEARS EXPERIENCE</div>
+          </div>
+          <div class="phone-box">
+            <div class="k">Direct line</div>
+            <div class="num tab">(800) 555-0198</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="receipt">
+        <div class="h">Current quote · 61F · Asheville, NC · HH 2</div>
+        <div class="line"><span class="lbl">Current plan</span><span class="val">BCBS NC Blue Advantage</span></div>
+        <div class="line"><span class="lbl">Monthly premium</span><span class="val tab">$1,140.00</span></div>
+        <div class="line"><span class="lbl">Deductible</span><span class="val tab">$6,800</span></div>
+        <div class="line"><span class="lbl">Cardiologist (Dr. Estrada)</span><span class="val">In-network</span></div>
+        <div class="line"><span class="lbl">Bridge-tier plans found</span><span class="val tab">9 · starting at $495/mo</span></div>
+        <div class="line"><span class="lbl">Subsidy applied</span><span class="val tab">$312/mo</span></div>
+        <div class="total">
+          <span class="k">You could save</span>
+          <span class="v tab">$645<span class="u">/mo</span></span>
+        </div>
+        <div class="agent-note">
+          <b>MARSHA D.:</b> I reviewed this quote this morning. Dr. Estrada stays in-network on the BCBS Silver 73 option. Call me when you're ready — I'll walk through the specialist referral process.
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- SITUATIONS -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <span class="title">YOUR SITUATION</span>
+      <span class="ts">SECTION 01 · PATHS BETWEEN JOB COVERAGE AND MEDICARE</span>
+    </div>
+    <div class="sec-intro">
+      <h2>Between 55 and 64,<br>you have three paths.</h2>
+      <p>Each path has different tradeoffs — cost, doctor access, tax implications. A licensed agent will review your specific situation before you choose. No pressure to commit today. No obligation after the call. We've done this 40,000+ times.</p>
+    </div>
+    <div class="situations">
+      <div class="sit highlight">
+        <span class="no">PATH 01</span>
+        <div>
+          <h3>Marketplace with subsidy</h3>
+          <p>The most common path. Your household income likely qualifies you for a premium tax credit. We'll verify with your 2026 projected income and show every plan that keeps your doctors.</p>
+        </div>
+        <div class="meta">
+          Avg monthly savings<br><b class="tab">$645</b><br>
+          At your cardiologist<br><b>Yes · 7 plans</b>
+        </div>
+        <div class="act">
+          <span class="go">Start path →</span>
+          <span class="ph">Or call Marsha</span>
+        </div>
+      </div>
+      <div class="sit">
+        <span class="no">PATH 02</span>
+        <div>
+          <h3>COBRA continuation</h3>
+          <p>If you just left a job, COBRA may be cheaper short-term — especially if you've already hit your deductible. We'll run the math against the marketplace honestly, both sides.</p>
+        </div>
+        <div class="meta">
+          Duration<br><b>Up to 18 months</b><br>
+          Typically worth it if<br><b>Deductible already met</b>
+        </div>
+        <div class="act">
+          <span class="go">Compare paths →</span>
+          <span class="ph">Or call Marsha</span>
+        </div>
+      </div>
+      <div class="sit">
+        <span class="no">PATH 03</span>
+        <div>
+          <h3>Spouse's employer plan</h3>
+          <p>If your spouse still works and qualifies, their plan may be the cleanest bridge until you reach 65. There are specific eligibility windows and notification rules.</p>
+        </div>
+        <div class="meta">
+          Window<br><b>30 days · qualifying event</b><br>
+          Paperwork<br><b>HR · 2 forms</b>
+        </div>
+        <div class="act">
+          <span class="go">Start path →</span>
+          <span class="ph">Or call Marsha</span>
+        </div>
+      </div>
+      <div class="sit">
+        <span class="no">PATH ?</span>
+        <div>
+          <h3>Not sure which applies to you</h3>
+          <p>This is the most common starting point. We'll ask four questions — your state, current coverage, household income, and a short list of doctors you want to keep — and route from there.</p>
+        </div>
+        <div class="meta">
+          Questions<br><b>4</b><br>
+          Call option<br><b>Always visible</b>
+        </div>
+        <div class="act">
+          <span class="go">Route me →</span>
+          <span class="ph">Or call Marsha</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <span class="title">HOW IT WORKS</span>
+      <span class="ts">SECTION 02 · 3 STEPS · AT YOUR PACE</span>
+    </div>
+    <div class="sec-intro">
+      <h2>Three steps.<br>As slow as you'd like.</h2>
+      <p>Nora does the reading. A licensed agent reviews the choice. You take as long as you need — there is no countdown on this page, and there never will be. Your progress is saved automatically.</p>
+    </div>
+    <div class="process">
+      <div class="p-row">
+        <span class="n">STEP 01</span>
+        <h4>Understand your options</h4>
+        <p class="explain">Nora walks through the three paths — marketplace, COBRA, and spouse's plan — and names which are actually open to you, given your state, age, income, and current coverage. Nothing is hidden. Nothing is assumed.</p>
+        <div class="dur">
+          At your pace<br><b>~6 min read</b>
+          <div class="agent-link">OR CALL AN AGENT →</div>
+        </div>
+      </div>
+      <div class="p-row">
+        <span class="n">STEP 02</span>
+        <h4>Compare the real math</h4>
+        <p class="explain">Every plan available to you, ranked by total annual cost at your real utilization. Premium, deductible, drug tier, specialist network — shown side by side. Your subsidy is already applied. Fine print is surfaced, not buried.</p>
+        <div class="dur">
+          At your pace<br><b>~8 min</b>
+          <div class="agent-link">OR CALL AN AGENT →</div>
+        </div>
+      </div>
+      <div class="p-row">
+        <span class="n">STEP 03</span>
+        <h4>Review it with a licensed agent</h4>
+        <p class="explain">Before you enroll, a state-credentialed agent reviews your choice with you on the phone. They're salaried — paid the same whether you enroll or not. 100% of Bridge enrollments pass a compliance check, not "best effort." You will not be rushed. Ever.</p>
+        <div class="dur">
+          Agent review<br><b>~20 min call</b>
+          <div class="agent-link">SCHEDULE NOW →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NORA -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <span class="title">MEET NORA</span>
+      <span class="ts">SECTION 03 · TRANSCRIPT · BRIDGE_DEMO_01</span>
+    </div>
+    <div class="nora-grid">
+      <div class="nora-left">
+        <div class="caveat">
+          <b>NOTICE:</b> Nora is an AI enrollment assistant, not a licensed human agent. Every recommendation Nora makes is reviewed by a state-credentialed agent <b>before</b> you enroll. You can talk to the human at any point — the direct line is at the top of every page.
+        </div>
+        <h3>Your AI enrollment assistant — reviewed by a human every time.</h3>
+        <p>Nora reads the fine print for you. She's a typographic entity, not a mascot — a transcript voice that names facts, surfaces limits, and hands you to a licensed agent for final review.</p>
+        <p>Nora will never use urgency language, auto-renew you into anything, or hide a network limit to make a plan look better than it is. If she can't help in your state, she says so in the first sentence.</p>
+      </div>
+      <div class="transcript">
+        <div class="tr-head">
+          <span>TRANSCRIPT · BRIDGE_DEMO_01</span>
+          <span>SESSION 10:04:22 ET</span>
+        </div>
+        <div class="tr-body">
+          <div class="sys">— SESSION OPENED · RENEWAL LETTER UPLOADED · BCBS NC ADVANTAGE —</div>
+          <div class="msg"><span class="nora">NORA:</span> I have your plan and subsidy eligibility on file. I'm going to walk through each option — and if you'd prefer to talk to a person, a licensed agent is available at (800) 555-0198.</div>
+          <div class="msg"><span class="nora">NORA:</span> Your plan: BCBS NC Blue Advantage. $1,140/mo. Deductible $6,800. Dr. Estrada (cardiologist): in-network.</div>
+          <div class="msg"><span class="nora">NORA:</span> 9 marketplace plans are available to you and your spouse in Buncombe County. 5 keep Dr. Estrada. 3 lower your premium by at least $400/mo.</div>
+          <div class="msg"><span class="u">YOU:</span> I want to keep dr. estrada and lower the deductible if I can</div>
+          <div class="msg"><span class="nora">NORA:</span> BCBS Silver 73. $495/mo after your subsidy ($312/mo). Deductible $3,400. Dr. Estrada: in-network. Drug tier: same as current.</div>
+          <div class="msg"><span class="nora">NORA:</span> Limit I should name before the total: the specialist referral process on Silver 73 is slightly stricter than your current plan. It adds one step. Not a blocker — a step.</div>
+          <div class="agent-msg">
+            <div class="tag">★ LICENSED AGENT · MARSHA D. · JOINED SESSION</div>
+            "I just reviewed Nora's comparison. Silver 73 is a strong fit — but let's talk through the referral process together before you enroll. Call me when you have 20 minutes. I'll block the hour. No rush."
+          </div>
+          <div class="sys">— SESSION SAVED · RESUME ANYTIME FOR 30 DAYS —</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTRAIT BLOCK -->
+<section>
+  <div class="sec">
+    <div class="portrait-block">
+      <div class="portrait"><span class="cap">BR-1 · couple at kitchen table · natural light · renewal letter between them</span></div>
+      <div>
+        <h3>We designed Bridge for the most important coverage decision of your life.</h3>
+        <p>55 to 64 is the hardest stretch of the individual market. Premiums are highest, specialist networks matter most, and the subsidy math gets complicated by retirement accounts, spousal income, and early Social Security.</p>
+        <p>We built Receipt × Bridge for this specific decision. Same radical transparency as our standard product — every number visible, every limit disclosed — with a licensed human attached to every step, and a phone number on every page.</p>
+        <blockquote>
+          "I was staring at an 18% hike and a letter I didn't understand. Marsha walked me through it at my pace. No push. She told me the parts that were worse, not just the parts that were better. I renewed at a lower premium a week later, after I'd thought it through."
+          <span class="sig">— CARLA S. · 58 · SELF-EMPLOYED · CHARLOTTE NC · SWITCHED JAN 2026</span>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAVINGS -->
+<section>
+  <div class="sec">
+    <div class="sec-head">
+      <span class="title">SAVINGS ESTIMATE</span>
+      <span class="ts">SECTION 04 · ONE RECENT EXAMPLE · NOT A QUOTE</span>
+    </div>
+    <div class="savings">
+      <div>
+        <div class="head">Couple · 61 & 59 · Asheville, NC · Household 2 · $96K projected 2026 income</div>
+        <h3>Current plan vs. the 9 Bridge-tier plans available in your state.</h3>
+        <ul>
+          <li><span>Current · BCBS NC Blue Advantage</span><b class="tab">$1,140/mo</b></li>
+          <li><span>Cheapest available · Ambetter Bronze 2</span><b class="tab">$495/mo</b></li>
+          <li><span>Best fit at your utilization · BCBS Silver 73</span><b class="tab">$495/mo</b></li>
+          <li><span>Subsidy applied (income verified)</span><b class="tab">−$312/mo</b></li>
+          <li><span>Deductible reduction</span><b class="tab">−$3,400</b></li>
+        </ul>
+      </div>
+      <div class="display">
+        <div class="head">You could save</div>
+        <div class="num tab">$645<span class="u">/mo</span></div>
+        <div class="yr">= $7,740 / YR · LESS</div>
+      </div>
+      <div class="review">
+        <div class="txt">
+          <b>REVIEWED BY LICENSED AGENT</b> — Marsha D., TX #4478291, confirmed Silver 73 keeps Dr. Estrada (cardiology) in-network, drug tiers match your current formulary, and your subsidy eligibility is verified against 2026 projected household income.
+        </div>
+        <div class="ph tab">(800) 555-0198</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section>
+  <div class="stats">
+    <div class="stat"><div class="lbl">BRIDGE ENROLLMENTS</div><div class="n o tab">12,400</div><div class="d">Pre-Medicare members enrolled through Bridge in the last 12 months.</div></div>
+    <div class="stat"><div class="lbl">LICENSED AGENTS</div><div class="n b tab">180+</div><div class="d">State-credentialed. Salaried. On staff. No commissions.</div></div>
+    <div class="stat"><div class="lbl">AVG AGENT CALL</div><div class="n tab">24 MIN</div><div class="d">We take the time. Longest call last month: 2h 18m. Not a complaint.</div></div>
+    <div class="stat"><div class="lbl">COST TO YOU</div><div class="n o tab">$0.00</div><div class="d">Broker fees paid by the carrier. Only on enrollment.</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="sec">
+    <div class="foot-agent">
+      <div>
+        <h4>When you'd rather speak to a person.</h4>
+        <p>A state-credentialed enrollment agent is available every weekday and Saturdays. They're salaried — paid the same whether you enroll or not. We'll take as long as you need, including zero commitment calls.</p>
+      </div>
+      <div class="phone tab">(800) 555-0198
+        <span class="hrs">MON–FRI 7A–10P · SAT 9A–6P ET</span>
+      </div>
+    </div>
+    <div class="foot-grid">
+      <div>
+        <div class="wordmark" style="margin-bottom: 20px;">
+          <span class="sq"></span>
+          <span class="sq2"></span>
+          SHOPHEALTHCARE
+          <span class="rev">/ BRIDGE</span>
+        </div>
+        <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.65; max-width: 340px;">A licensed, independent health insurance brokerage. Bridge is our program for 55–64 year olds navigating the gap between employer coverage and Medicare.</p>
+      </div>
+      <div>
+        <h6>BRIDGE PATHS</h6>
+        <ul><li>Marketplace</li><li>COBRA continuation</li><li>Spouse's plan</li><li>Retiree benefits</li></ul>
+      </div>
+      <div>
+        <h6>ABOUT</h6>
+        <ul><li>How it works</li><li>Our agents</li><li>Nora, explained</li><li>Press</li></ul>
+      </div>
+      <div>
+        <h6>LEGAL</h6>
+        <ul><li>Terms</li><li>Privacy</li><li>Accessibility</li><li>HIPAA notice</li><li>NPN #19482230</li></ul>
+      </div>
+    </div>
+    <div class="foot-disc">
+      © 2026 SHOPHEALTHCARE, INC. — BRIDGE IS A LICENSED BROKERAGE PROGRAM. WE ARE NOT A GOVERNMENT SITE AND DO NOT SELL MEDICARE ADVANTAGE. EVERY NUMBER ON THIS PAGE IS SOURCED FROM PUBLIC MARKETPLACE DATA OR YOUR OWN INPUT. DISCLOSURES ARE FEATURES, NOT FINE PRINT.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shophealthcare — Receipt × Bridge (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3EEE0;
+    --paper-2: #EAE3D1;
+    --ink: #0E0E0E;
+    --mute: #6E6757;
+    --rule: #1A1A1A;
+    --orange: #FF5E1A;
+    --blue: #1A5276;
+    --blue-2: #143D57;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body { font-family: 'IBM Plex Sans', sans-serif; font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(14,14,14,0.014) 27px 28px); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .tab { font-variant-numeric: tabular-nums; }
+  .page { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Agent bar */
+  .agent-bar { background: var(--blue); color: var(--paper); }
+  .agent-bar .row { max-width: 1280px; margin: 0 auto; padding: 14px 48px; display: flex; align-items: center; gap: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .agent-bar .avail { display: flex; align-items: center; gap: 10px; }
+  .agent-bar .avail::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #7FD0A6; box-shadow: 0 0 0 3px rgba(127,208,166,0.25); }
+  .agent-bar .phone { margin-left: auto; font-size: 20px; font-weight: 700; }
+  .agent-bar .hrs { color: rgba(243,238,224,0.7); }
+
+  /* Nav */
+  nav.head { border-bottom: 1px solid var(--rule); background: var(--paper); }
+  nav.head .row { max-width: 1280px; margin: 0 auto; padding: 22px 48px; display: flex; align-items: center; gap: 32px; }
+  .wordmark { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .wordmark::before { content: "◼"; color: var(--orange); margin-right: 8px; }
+  .nav-sub { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--mute); text-transform: uppercase; }
+  .nav-links { margin-left: auto; display: flex; gap: 28px; font-size: 16px; font-weight: 500; }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-right { display: flex; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 20px; font-weight: 600; font-size: 16px; border: 1px solid var(--ink); cursor: pointer; text-decoration: none; color: var(--ink); background: transparent; border-radius: 2px; font-family: 'IBM Plex Sans', sans-serif; }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.orange { background: var(--orange); color: var(--ink); border-color: var(--ink); }
+  .btn.big { padding: 18px 26px; font-size: 17px; }
+
+  /* Crumb */
+  .crumb { max-width: 1280px; margin: 0 auto; padding: 14px 48px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; }
+  .crumb b { color: var(--ink); }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--rule); }
+  .hero .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: start; }
+  .hero .tag { display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px; background: var(--orange); color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 22px; }
+  .hero h1 { font-weight: 700; font-size: 60px; line-height: 1.05; letter-spacing: -0.025em; margin: 0 0 26px; }
+  .hero h1 .hi { background: var(--orange); padding: 0 6px; }
+  .hero .lead { font-size: 20px; line-height: 1.55; max-width: 560px; margin: 0 0 28px; color: var(--ink); }
+  .hero .lead b { font-weight: 700; }
+  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Receipt */
+  .receipt { background: var(--paper); border: 1px solid var(--rule); padding: 22px 26px; position: relative; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; box-shadow: 6px 6px 0 var(--ink); }
+  .receipt::before, .receipt::after { content: ""; position: absolute; left: 0; right: 0; height: 10px; background-image: radial-gradient(circle at 5px 5px, var(--paper) 5px, transparent 5px); background-size: 10px 10px; background-color: transparent; }
+  .receipt::before { top: -10px; background-image: radial-gradient(circle at 5px 5px, var(--paper) 5px, transparent 5px); filter: drop-shadow(0 -1px 0 var(--rule)); }
+  .receipt::after { bottom: -10px; filter: drop-shadow(0 1px 0 var(--rule)); }
+  .receipt .head { text-align: center; border-bottom: 1px dashed var(--rule); padding-bottom: 10px; margin-bottom: 12px; }
+  .receipt .head h4 { font-size: 14px; letter-spacing: 0.12em; margin: 0 0 4px; }
+  .receipt .head .meta { color: var(--mute); font-size: 11px; letter-spacing: 0.08em; }
+  .receipt .row { display: flex; justify-content: space-between; padding: 3px 0; }
+  .receipt .row.total { border-top: 1px dashed var(--rule); margin-top: 8px; padding-top: 8px; font-weight: 700; }
+  .receipt .sub { color: var(--mute); font-size: 11px; }
+  .receipt .highlight { background: var(--orange); padding: 0 4px; }
+
+  /* Nora chip */
+  .nora-chip { max-width: 1280px; margin: 0 auto; padding: 20px 48px; }
+  .nora-chip .inner { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--paper-2); border: 1px solid var(--rule); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .nora-chip .dot { width: 10px; height: 10px; background: #7FD0A6; border-radius: 50%; box-shadow: 0 0 0 3px rgba(127,208,166,0.25); }
+  .nora-chip b { font-weight: 700; }
+  .nora-chip .meta { color: var(--mute); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Situations */
+  .situations { padding: 24px 0 16px; }
+  .sit-head { max-width: 1280px; margin: 0 auto; padding: 12px 48px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .sit-head b { color: var(--ink); }
+  .sit-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .sit { padding: 32px 30px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; min-height: 240px; }
+  .sit:nth-child(3n) { border-right: 0; }
+  .sit:nth-child(n+4) { border-bottom: 0; }
+  .sit .kicker { display: flex; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); margin-bottom: 16px; }
+  .sit .kicker .no { background: var(--ink); color: var(--paper); padding: 3px 8px; font-weight: 700; }
+  .sit h3 { font-weight: 700; font-size: 26px; line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 auto; }
+  .sit .start { margin-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.04em; font-weight: 700; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; }
+  .sit .start::after { content: "→"; background: var(--orange); color: var(--ink); width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; border: 1px solid var(--ink); }
+  .sit.bridge { background: var(--blue); color: var(--paper); border-color: var(--blue); position: relative; }
+  .sit.bridge::before { content: "FEATURED"; position: absolute; top: 10px; right: 10px; background: var(--orange); color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; font-weight: 700; letter-spacing: 0.12em; }
+  .sit.bridge .kicker { color: rgba(243,238,224,0.7); }
+  .sit.bridge .kicker .no { background: var(--orange); color: var(--ink); }
+  .sit.bridge .start { color: var(--orange); }
+  .sit.alt { background: var(--paper-2); }
+
+  /* Phone */
+  .phone-row { max-width: 1280px; margin: 0 auto; padding: 16px 48px 8px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute); }
+  .phone-row b { color: var(--ink); font-size: 16px; }
+  .phone-row a { color: var(--ink); text-decoration: underline; }
+
+  /* Nora section */
+  .nora-sec { padding: 80px 0 40px; border-top: 1px solid var(--rule); margin-top: 40px; background: var(--paper-2); }
+  .nora-sec .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
+  .nora-sec .eye { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--orange); font-weight: 700; text-transform: uppercase; margin-bottom: 18px; }
+  .nora-sec h2 { font-weight: 700; font-size: 46px; line-height: 1.1; letter-spacing: -0.024em; margin: 0 0 28px; }
+  .nora-sec h2 .hi { background: var(--orange); padding: 0 6px; }
+  .nora-sec p { font-size: 18px; line-height: 1.65; margin: 0 0 16px; max-width: 560px; }
+  .nora-sec p b { font-weight: 700; }
+
+  .nora-illus { background: var(--ink); color: var(--paper); padding: 24px; aspect-ratio: 1/1; position: relative; }
+  .nora-illus .t { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--orange); text-transform: uppercase; margin-bottom: 18px; display: flex; justify-content: space-between; }
+  .nora-illus .card { background: rgba(255,94,26,0.05); border: 1px solid rgba(255,94,26,0.4); padding: 14px 16px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.55; }
+  .nora-illus .card b { color: var(--orange); font-size: 11px; letter-spacing: 0.1em; display: block; margin-bottom: 6px; text-transform: uppercase; }
+
+  .nora-link { max-width: 1280px; margin: 0 auto; padding: 20px 48px 48px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+  .nora-link a { color: var(--orange); text-decoration: underline; font-weight: 700; }
+
+  /* Process */
+  .process { padding: 0; border-top: 1px solid var(--rule); background: var(--paper); }
+  .step-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .step { padding: 48px 36px; border-right: 1px solid var(--rule); }
+  .step:last-child { border-right: 0; }
+  .step .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; margin-bottom: 14px; display: flex; gap: 10px; align-items: center; text-transform: uppercase; }
+  .step .n .no { background: var(--orange); color: var(--ink); padding: 4px 10px; border: 1px solid var(--ink); font-weight: 700; }
+  .step h4 { font-weight: 700; font-size: 28px; line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 14px; }
+  .step p { font-size: 17px; line-height: 1.6; margin: 0 0 14px; max-width: 340px; }
+  .step .dur { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+  .step .dur b { color: var(--ink); }
+
+  /* Stats */
+  .stats { background: var(--ink); color: var(--paper); }
+  .stats-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 48px 32px; border-right: 1px solid rgba(243,238,224,0.15); }
+  .stat:last-child { border-right: 0; }
+  .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(243,238,224,0.6); margin-bottom: 14px; }
+  .stat .n { font-weight: 700; font-size: 56px; line-height: 1; letter-spacing: -0.03em; }
+  .stat .n.o { color: var(--orange); }
+
+  /* Void */
+  .void { padding: 88px 48px; background: var(--paper); border-top: 1px solid var(--rule); }
+  .void .inner { max-width: 820px; margin: 0 auto; }
+  .void .eye { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: var(--blue); margin-bottom: 18px; }
+  .void h2 { font-weight: 700; font-size: 44px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 28px; }
+  .void p { font-size: 18px; line-height: 1.7; margin: 0 0 18px; }
+  .void p b { font-weight: 700; background: var(--orange); padding: 0 4px; }
+
+  /* Footer */
+  footer { background: var(--ink); color: var(--paper); padding: 56px 48px 32px; }
+  .foot-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  footer h6 { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin: 0 0 14px; font-weight: 700; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { font-size: 15px; margin-bottom: 8px; color: var(--paper); }
+  footer .word { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 20px; margin-bottom: 14px; }
+  footer .word::before { content: "◼"; color: var(--orange); margin-right: 8px; }
+  footer .tag { font-size: 15px; color: rgba(243,238,224,0.7); line-height: 1.6; max-width: 360px; margin: 0; }
+  .foot-bottom { max-width: 1280px; margin: 36px auto 0; padding-top: 20px; border-top: 1px solid rgba(243,238,224,0.15); font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: rgba(243,238,224,0.5); text-transform: uppercase; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="agent-bar"><div class="row">
+  <span class="avail">LICENSED AGENT ON THE LINE</span>
+  <span class="hrs">MON–SAT · 8AM–8PM ET</span>
+  <span class="phone tab">(800) 555-0198</span>
+</div></div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark">SHOPHEALTHCARE</div>
+  <div class="nav-sub">LICENSED BROKERAGE · NPN #19482230</div>
+  <div class="nav-links">
+    <a href="#">How it works</a>
+    <a href="#">For businesses</a>
+    <a href="#">Talk to a human</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn" href="#">Sign in</a>
+    <a class="btn primary" href="#">Shop plans</a>
+  </div>
+</div></nav>
+
+<div class="crumb"><span>HOME / <b>SHOPHEALTHCARE</b> / PORTAL</span><span>ISSUED · JAN 2026 · RECEIPT #HC-2026-0001</span></div>
+
+<section class="hero">
+  <div class="page"><div class="grid">
+    <div>
+      <span class="tag">◆ OPEN ENROLLMENT · 2026 · LIVE</span>
+      <h1>Health insurance was never built for the way you work. <span class="hi">We fixed that.</span></h1>
+      <p class="lead">Nora — our <b>licensed AI enrollment assistant</b> — finds your real options in 4 minutes. Every match is reviewed by a <b>state-licensed agent</b> before you enroll. No commissions. Your data stays yours.</p>
+      <div class="ctas">
+        <a class="btn primary big" href="#">Check my options</a>
+        <a class="btn big" href="#">Scan your card →</a>
+      </div>
+    </div>
+    <div class="receipt">
+      <div class="head"><h4>SHOPHEALTHCARE · HOME</h4><div class="meta">RECEIPT #HC-2026-0001 · OPEN ENROLLMENT</div></div>
+      <div class="row"><span>HERO LEAD</span><span>~4 MIN</span></div>
+      <div class="row"><span>PLAN OPTIONS SHOWN</span><span class="tab">1,240,381</span></div>
+      <div class="row"><span>LICENSED AGENTS</span><span class="tab">180</span></div>
+      <div class="row"><span>STATES COVERED</span><span class="tab">50 of 50</span></div>
+      <div class="row"><span>YOUR DATA RESOLD</span><span>NEVER</span></div>
+      <div class="row total"><span>COST TO YOU</span><span class="highlight tab">$0.00</span></div>
+      <div class="sub" style="text-align: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--rule);">THANK YOU FOR SHOPPING PUBLICLY</div>
+    </div>
+  </div></div>
+</section>
+
+<div class="nora-chip"><div class="inner"><span class="dot"></span><span><b>NORA</b> · LICENSED ENROLLMENT ASSISTANT</span><span class="meta">ACTIVE · AVG 2:04</span></div></div>
+
+<section class="situations">
+  <div class="sit-head"><span>SECTION 01 · <b>SELECT YOUR SITUATION</b></span><span>5 CASES · 1 CUSTOM</span></div>
+  <div class="sit-grid">
+    <div class="sit"><div class="kicker"><span class="no">01</span><span>JOB LOSS</span></div><h3>I just lost my health insurance</h3><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">02</span><span>1099 / 1040-SE</span></div><h3>I'm self-employed or freelance</h3><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">03</span><span>RENEWAL</span></div><h3>I got my 2026 renewal notice</h3><a class="start" href="#">Start here</a></div>
+    <div class="sit bridge"><div class="kicker"><span class="no">04</span><span>BRIDGE YEARS</span></div><h3>I'm 55–64, not yet on Medicare</h3><a class="start" href="#">Start here</a></div>
+    <div class="sit"><div class="kicker"><span class="no">05</span><span>GUT CHECK</span></div><h3>I just want to check my current plan</h3><a class="start" href="#">Start here</a></div>
+    <div class="sit alt"><div class="kicker"><span class="no">?</span><span>CUSTOM ROUTE</span></div><h3>None of these fit — route me with a few questions.</h3><a class="start" href="#">Route me</a></div>
+  </div>
+</section>
+
+<div class="phone-row">
+  <span>PREFER TO TALK? CALL <b class="tab">(800) 555-0198</b> · MON–SAT</span>
+  <a href="#">NOT SURE WHICH APPLIES? 90-SECOND CHECK →</a>
+</div>
+
+<section class="nora-sec"><div class="page"><div class="grid">
+  <div>
+    <div class="eye">SECTION 02 · THE ASSISTANT</div>
+    <h2>Meet Nora — your <span class="hi">licensed</span> enrollment assistant.</h2>
+    <p>Shopping for health insurance is full of fine print designed to confuse you. <b>Nora reads it out loud.</b></p>
+    <p>She pulls every plan available in your ZIP, applies your real subsidy, and checks your doctors against each network — in plain English, receipt-clean.</p>
+    <p>Every recommendation is reviewed by a <b>state-licensed human agent</b> before you enroll. Flat fee. No commissions. No data resold.</p>
+  </div>
+  <div class="nora-illus">
+    <div class="t"><span>NORA · PORTAL</span><span>FIG. 02</span></div>
+    <div class="card"><b>PLAN FOUND</b>Kaiser Silver HMO 2000 · $412/mo · Deductible $2,000</div>
+    <div class="card"><b>NETWORK CHECK</b>4 of 4 your doctors in-network</div>
+    <div class="card"><b>SUBSIDY APPLIED</b>−$184/mo · verified against 2026 income</div>
+    <div class="card"><b>PENDING</b>Licensed agent review · Marsha D., TX #4478291</div>
+  </div>
+</div></div></section>
+
+<div class="nora-link">SEE EXACTLY WHAT NORA CAN AND CAN'T DO → <a href="#">METHODOLOGY &amp; LIMITATIONS</a></div>
+
+<section class="process"><div class="step-grid">
+  <div class="step"><div class="n"><span class="no">01</span>STEP ONE</div><h4>Scan or tell.</h4><p>Upload your current card or tell Nora what changed. We start from what you already have on paper — no 90-question wizard.</p><div class="dur">TAKES · <b>~90 SEC</b></div></div>
+  <div class="step"><div class="n"><span class="no">02</span>STEP TWO</div><h4>Compare, line by line.</h4><p>Every plan available in your ZIP, ranked by real cost — not just premium. Deductibles, networks, subsidies, all shown as receipts.</p><div class="dur">TAKES · <b>~6 MIN</b></div></div>
+  <div class="step"><div class="n"><span class="no">03</span>STEP THREE</div><h4>Enroll, reviewed.</h4><p>A state-licensed human agent signs off before anything gets filed. No auto-renewal. No surprise broker fees.</p><div class="dur">TAKES · <b>~2 MIN</b></div></div>
+</div></section>
+
+<section class="stats"><div class="stats-grid">
+  <div class="stat"><div class="lbl">PLANS COMPARED</div><div class="n tab">1.2M+</div></div>
+  <div class="stat"><div class="lbl">LICENSED AGENTS</div><div class="n tab">180+</div></div>
+  <div class="stat"><div class="lbl">HIPAA ENCRYPTION</div><div class="n tab">256-BIT</div></div>
+  <div class="stat"><div class="lbl">COST TO YOU</div><div class="n o tab">$0.00</div></div>
+</div></section>
+
+<section class="void"><div class="inner">
+  <div class="eye">SECTION 03 · WHY WE EXIST</div>
+  <h2>They cut the navigators. We filled the gap.</h2>
+  <p>In late 2025, federal funding for ACA navigators was <b>cut by 90%</b>. Millions of Americans — especially the self-employed and the 55–64 crowd bridging to Medicare — were left to read 40-page plan docs alone.</p>
+  <p>Shophealthcare is a <b>public-service brokerage</b>: flat fee, licensed humans, no hidden commissions. Every choice shown like a receipt — line by line, in plain English. Not a government site.</p>
+</div></section>
+
+<footer>
+  <div class="foot-grid">
+    <div><div class="word">SHOPHEALTHCARE</div><p class="tag">A licensed, independent health insurance brokerage operating on public-service principles. Named agents, flat-fee pay, no data resold.</p></div>
+    <div><h6>CONTACT</h6><ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul></div>
+    <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+    <div><h6>DIRECTORY</h6><ul><li>NPN #19482230</li><li>HELLO@SHOPHEALTHCARE</li><li class="tab">(800) 555-0198</li></ul></div>
+  </div>
+  <div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED IN ALL 50 STATES</span><span>NOT A GOVERNMENT SITE · NOT AFFILIATED WITH ACA OR MEDICARE</span></div>
+</footer>
+
+</body></html>
