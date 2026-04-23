@@ -1,9 +1,11 @@
+@charset "UTF-8";
 /* =============================================================
    LEMON — shared visual language
    Faithful port of /Claude Design Pass/directions/12-lemon-v2.html
    3 themes (original / heritage / disruptor)
    × 2 motif intensities (quiet / loud) = 6 variants
    ============================================================= */
+html, body { overflow-x: clip; }
 
 /* -----------------------------------------------------------
    THEME A — Lemon-Original (canonical, "in the middle")
