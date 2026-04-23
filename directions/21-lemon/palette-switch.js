@@ -8,8 +8,9 @@
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'lemonTheme21';
-
+  /* No localStorage persistence: each variant always boots with its intended
+     theme so V1-V6 stay visually distinct on first land. The chip is a
+     per-page exploration tool — it does NOT follow you across pages. */
   var palettes = [
     { id: 'theme-original',  name: 'Original',  p1: '#FFE4DB', p2: '#FFE86E', p3: '#FF6A5C' },
     { id: 'theme-heritage',  name: 'Heritage',  p1: '#F4F8FB', p2: '#FFD25C', p3: '#3D9AB3' },
@@ -48,7 +49,6 @@
     if (!/theme-/.test(document.body.className)) {
       document.body.className += ' ' + t;
     }
-    try { localStorage.setItem(STORAGE_KEY, t); } catch (_) { /* ignore */ }
     Array.prototype.forEach.call(
       document.querySelectorAll('.palette-switch .ps-chip'),
       function (c) { c.classList.toggle('active', c.dataset.theme === t); }
@@ -58,12 +58,6 @@
   function build() {
     if (document.querySelector('.palette-switch')) return;
 
-    var saved;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) { saved = null; }
-    if (saved && palettes.some(function (p) { return p.id === saved; })) {
-      document.body.className = (document.body.className || '')
-        .replace(/theme-[\w-]+/, saved);
-    }
     var active = currentTheme();
     var here = currentPage();
 
