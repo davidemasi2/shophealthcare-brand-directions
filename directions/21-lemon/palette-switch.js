@@ -31,6 +31,7 @@
     { href: 'homepage-v5-disruptor-quiet.html', label: 'V5 · Disr Quiet'                    },
     { href: 'homepage-v6-disruptor-loud.html',  label: 'V6 · Disr Loud'                     },
     { href: 'homepage-v7-com-clone.html',       label: 'V7 · .com Clone', klass: 'ps-reskin' },
+    { href: 'homepage-v8-clone-optimized.html', label: 'V8 · Switchboard + Quiz', klass: 'ps-reskin' },
     { href: 'reskin-shophealthcare-com.html',   label: 'Reskin · .com',  klass: 'ps-reskin' }
   ];
 
