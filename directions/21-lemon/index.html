@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lemon · Direction 21 · Contents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lemon.css">
+<script src="palette-switch.js" defer></script>
+<style>
+  .toc-head { padding: 56px 40px 24px; max-width: 1280px; margin: 0 auto; }
+  .toc-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; color: var(--pink-dark); text-transform: uppercase; font-weight: 700; margin-bottom: 14px; }
+  .toc-head h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 72px; line-height: 1; letter-spacing: -.025em; margin: 0 0 14px; max-width: 920px; }
+  .toc-head h1 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .toc-head .lede { font-size: 18px; color: var(--mute); max-width: 720px; line-height: 1.55; margin: 0; }
+  .toc-section { padding: 32px 40px; max-width: 1280px; margin: 0 auto; }
+  .toc-section h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 32px; margin: 0 0 24px; letter-spacing: -.02em; }
+  .toc-section h2 em { font-style: italic; color: var(--pink); font-weight: 400; }
+
+  .palette-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+  .pp-card {
+    border: 2px solid var(--ink); border-radius: 18px;
+    padding: 20px; box-shadow: 4px 4px 0 var(--ink);
+    background: var(--cream);
+    cursor: pointer; transition: transform .12s, box-shadow .12s;
+  }
+  .pp-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .pp-card .pp-bar {
+    display: flex; height: 32px; border-radius: 8px; overflow: hidden;
+    border: 1.5px solid var(--ink); margin-bottom: 14px;
+  }
+  .pp-card .pp-bar i { flex: 1; }
+  .pp-card .name {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 22px; letter-spacing: -.015em;
+    margin: 0 0 4px;
+  }
+  .pp-card .desc {
+    font-size: 13px; line-height: 1.45;
+    color: var(--mute); margin: 0;
+  }
+  .pp-card .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .12em;
+    color: var(--pink-dark); text-transform: uppercase;
+    font-weight: 700; margin-top: 12px;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .pp-card .meta::before { content: "→"; color: var(--ink); }
+
+  .file-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .file-grid.two { grid-template-columns: repeat(2, 1fr); }
+  .file-card {
+    background: var(--cream); border: 2px solid var(--ink); border-radius: 20px;
+    padding: 24px; box-shadow: 4px 4px 0 var(--ink);
+    display: flex; flex-direction: column;
+    text-decoration: none; color: var(--ink);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .file-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .file-card.lemon { background: var(--lemon); }
+  .file-card.pink { background: var(--pink); color: var(--cream); }
+  .file-card.ink { background: var(--ink); color: var(--cream); }
+  .file-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; font-weight: 700;
+    margin-bottom: 12px; opacity: .7;
+  }
+  .file-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; margin: 0 0 8px; letter-spacing: -.015em;
+  }
+  .file-card h3 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .file-card.pink h3 em, .file-card.ink h3 em { color: var(--lemon); }
+  .file-card p {
+    font-size: 13px; line-height: 1.5;
+    margin: 0 0 18px; opacity: .85;
+  }
+  .file-card .go {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; font-weight: 700;
+    margin-top: auto;
+  }
+  .file-card .go::after { content: " →"; }
+  .file-card .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--mute); margin-bottom: 14px;
+  }
+  .file-card.pink .meta, .file-card.ink .meta { color: rgba(255,250,242,.65); }
+
+  .how-band {
+    background: var(--lemon-2);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 56px 40px;
+    margin-top: 32px;
+  }
+  .how-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .how-inner h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 36px; margin: 0 0 14px; letter-spacing: -.02em; }
+  .how-inner h3 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .how-inner p { font-size: 16px; line-height: 1.6; color: #3A2F40; margin: 0 0 12px; }
+  .how-inner ol {
+    margin: 0; padding-left: 22px;
+    font-size: 15px; line-height: 1.6; color: #3A2F40;
+  }
+  .how-inner ol li { margin-bottom: 8px; }
+  .how-mock {
+    background: var(--cream); border: 2px solid var(--ink); border-radius: 20px;
+    padding: 24px; box-shadow: 6px 6px 0 var(--ink);
+    transform: rotate(-1deg);
+  }
+  .how-mock .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase;
+    font-weight: 700; margin-bottom: 14px;
+  }
+  .how-mock .stack { display: flex; flex-direction: column; gap: 6px; }
+  .how-mock .stack .row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border: 1.5px solid var(--ink);
+    border-radius: 8px; font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .how-mock .stack .row.active { background: var(--lemon); }
+  .how-mock .stack .row .swatch {
+    width: 32px; height: 18px; border-radius: 4px;
+    border: 1px solid var(--ink); flex-shrink: 0;
+  }
+
+  hr.div { border: 0; border-top: 2px solid var(--ink); margin: 48px 40px; max-width: 1280px; }
+  footer.toc-foot { padding: 40px; max-width: 1280px; margin: 0 auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  @media (max-width: 980px) {
+    .palette-preview-grid, .file-grid, .file-grid.two { grid-template-columns: 1fr; }
+    .how-inner { grid-template-columns: 1fr; gap: 24px; }
+    .toc-head h1 { font-size: 44px; }
+  }
+</style>
+</head>
+<body class="theme-original motif-quiet">
+
+<div class="toc-head">
+  <div class="toc-kicker">★ DIRECTION 21 · LEMON · CONTENTS</div>
+  <h1>Lemon — six homepage <em>variants</em>, six palettes, one reskin.</h1>
+  <p class="lede">Pick a palette from the floating tray (top-right) to recolor every page in this direction. Open any variant or the live-site reskin from the cards below — the palette and page navigator follow you.</p>
+</div>
+
+<!-- PALETTE PREVIEW -->
+<div class="toc-section">
+  <h2>Eight <em>palettes</em></h2>
+  <div class="palette-preview-grid">
+    <div class="pp-card" data-go="theme-original">
+      <div class="pp-bar"><i style="background:#FFE4DB"></i><i style="background:#FFE86E"></i><i style="background:#FF6A5C"></i><i style="background:#1A1322"></i></div>
+      <div class="name">Original</div>
+      <p class="desc">Warm signature — blush + lemon + pink + plum. The canonical Lemon read.</p>
+      <div class="meta">Apply Original</div>
+    </div>
+    <div class="pp-card" data-go="theme-heritage">
+      <div class="pp-bar"><i style="background:#F4F8FB"></i><i style="background:#FFD25C"></i><i style="background:#3D9AB3"></i><i style="background:#0B2545"></i></div>
+      <div class="name">Heritage</div>
+      <p class="desc">SHC mimic — borrows live blue/teal under the Lemon motif system.</p>
+      <div class="meta">Apply Heritage</div>
+    </div>
+    <div class="pp-card" data-go="theme-disruptor">
+      <div class="pp-bar"><i style="background:#FAF6E8"></i><i style="background:#D8FF4A"></i><i style="background:#FF2E63"></i><i style="background:#0F0F0F"></i></div>
+      <div class="name">Disruptor</div>
+      <p class="desc">Loud / Gen-Z neon — lime + magenta + ink. Rage-against-broker mode.</p>
+      <div class="meta">Apply Disruptor</div>
+    </div>
+    <div class="pp-card" data-go="theme-sunset">
+      <div class="pp-bar"><i style="background:#FFE9D6"></i><i style="background:#FFB347"></i><i style="background:#C0392B"></i><i style="background:#2D1B14"></i></div>
+      <div class="name">Sunset</div>
+      <p class="desc">Premium dusk — terracotta + amber + clay + espresso. Stripe-meets-Aesop.</p>
+      <div class="meta">Apply Sunset</div>
+    </div>
+    <div class="pp-card" data-go="theme-clinic">
+      <div class="pp-bar"><i style="background:#F0F5EC"></i><i style="background:#F5DC6B"></i><i style="background:#2F8060"></i><i style="background:#1B2D2A"></i></div>
+      <div class="name">Clinic</div>
+      <p class="desc">Medical legitimacy — sage + cream + forest. Doctor-grade trust.</p>
+      <div class="meta">Apply Clinic</div>
+    </div>
+    <div class="pp-card" data-go="theme-almanac">
+      <div class="pp-bar"><i style="background:#F2EBDB"></i><i style="background:#E8C547"></i><i style="background:#C8273A"></i><i style="background:#1A1A1A"></i></div>
+      <div class="name">Almanac</div>
+      <p class="desc">Editorial newsprint — parchment + cherry + press-black. NYT-trust.</p>
+      <div class="meta">Apply Almanac</div>
+    </div>
+    <div class="pp-card" data-go="theme-shc-match">
+      <div class="pp-bar"><i style="background:#FFFFFF"></i><i style="background:#FFC857"></i><i style="background:#00B5D8"></i><i style="background:#0E2A3A"></i></div>
+      <div class="name">SHC-Match</div>
+      <p class="desc">Exact shophealthcare.com — bright SHC teal + warm yellow CTA + deep navy on white.</p>
+      <div class="meta">Apply SHC-Match</div>
+    </div>
+    <div class="pp-card" data-go="theme-y2k">
+      <div class="pp-bar"><i style="background:#FFE7F5"></i><i style="background:#FFDE3A"></i><i style="background:#00D9FF"></i><i style="background:#6B0F8E"></i></div>
+      <div class="name">Y2K</div>
+      <p class="desc">Totally different — cotton-candy + electric cyan + violet. Anti-healthcare-conservatism.</p>
+      <div class="meta">Apply Y2K</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-band">
+  <div class="how-inner">
+    <div>
+      <div class="toc-kicker" style="margin-bottom:10px;">★ HOW THE WIDGET WORKS</div>
+      <h3>One <em>tray</em>, every page.</h3>
+      <p>The fixed top-right tray on every variant lets you swap palette without leaving the page — your choice persists in <code>localStorage</code> and follows you across the gallery.</p>
+      <ol>
+        <li>Click any of the 8 paint chips to recolor the page</li>
+        <li>Open <b>Pages</b> to jump between variants and the reskin</li>
+        <li>Choice persists across the entire 21-lemon set</li>
+      </ol>
+    </div>
+    <div class="how-mock">
+      <div class="label">Palette tray (top-right of every page)</div>
+      <div class="stack">
+        <div class="row active"><div class="swatch" style="background:linear-gradient(to right,#FFE4DB 33%,#FFE86E 33% 66%,#FF6A5C 66%);"></div>Original</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#F4F8FB 33%,#FFD25C 33% 66%,#3D9AB3 66%);"></div>Heritage</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#FAF6E8 33%,#D8FF4A 33% 66%,#FF2E63 66%);"></div>Disruptor</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#FFE9D6 33%,#FFB347 33% 66%,#C0392B 66%);"></div>Sunset</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#F0F5EC 33%,#F5DC6B 33% 66%,#2F8060 66%);"></div>Clinic</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#F2EBDB 33%,#E8C547 33% 66%,#C8273A 66%);"></div>Almanac</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#FFFFFF 33%,#FFC857 33% 66%,#00B5D8 66%);"></div>SHC-Match</div>
+        <div class="row"><div class="swatch" style="background:linear-gradient(to right,#FFE7F5 33%,#FFDE3A 33% 66%,#00D9FF 66%);"></div>Y2K</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOMEPAGE VARIANTS -->
+<div class="toc-section">
+  <h2>Six homepage <em>variants</em></h2>
+  <div class="file-grid">
+    <a class="file-card" href="homepage-v1-original-quiet.html">
+      <div class="num">V1 · ORIGINAL · QUIET</div>
+      <div class="meta">No rotation · canonical baseline</div>
+      <h3>The "in the middle" <em>Lemon</em> read.</h3>
+      <p>Original palette default with motif rotation stripped. The brand-safe baseline.</p>
+      <span class="go">Open V1</span>
+    </a>
+    <a class="file-card lemon" href="homepage-v2-original-loud.html">
+      <div class="num">V2 · ORIGINAL · LOUD</div>
+      <div class="meta">Tilted marquee · bigger H1</div>
+      <h3>The full <em>Lemon</em> swing.</h3>
+      <p>Original palette default with the full motif system: rotated tape, tilted stat cards.</p>
+      <span class="go">Open V2</span>
+    </a>
+    <a class="file-card" href="homepage-v3-heritage-quiet.html">
+      <div class="num">V3 · HERITAGE · QUIET</div>
+      <div class="meta">SHC teal/navy · no rotation</div>
+      <h3>The <em>brand-mimic</em> baseline.</h3>
+      <p>Heritage palette default — borrows the live SHC blue/teal under Lemon motif.</p>
+      <span class="go">Open V3</span>
+    </a>
+    <a class="file-card" href="homepage-v4-heritage-loud.html">
+      <div class="num">V4 · HERITAGE · LOUD</div>
+      <div class="meta">SHC teal/navy · tilted</div>
+      <h3>Heritage with the <em>full</em> motif.</h3>
+      <p>SHC teal/navy carrying the rotated marquee and tilted stats.</p>
+      <span class="go">Open V4</span>
+    </a>
+    <a class="file-card pink" href="homepage-v5-disruptor-quiet.html">
+      <div class="num">V5 · DISRUPTOR · QUIET</div>
+      <div class="meta">Lime/magenta · no rotation</div>
+      <h3>"Really crazy," <em>turned down.</em></h3>
+      <p>Disruptor palette default with rotation stripped. Disciplined neon.</p>
+      <span class="go">Open V5</span>
+    </a>
+    <a class="file-card ink" href="homepage-v6-disruptor-loud.html">
+      <div class="num">V6 · DISRUPTOR · LOUD</div>
+      <div class="meta">Lime/magenta · tilted</div>
+      <h3>Maximum <em>Lemon.</em></h3>
+      <p>Lime/magenta default with full motif: tilted marquee, rotated cards, biggest H1.</p>
+      <span class="go">Open V6</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- LIVE-SITE RESKIN -->
+<div class="toc-section">
+  <h2>Live-site <em>reskin</em></h2>
+  <div class="file-grid two">
+    <a class="file-card lemon" href="reskin-shophealthcare-com.html" style="grid-column: 1 / -1;">
+      <div class="num">★ RESKIN · CONTENT-FAITHFUL PORT</div>
+      <div class="meta">Reproduces shophealthcare.com section-by-section</div>
+      <h3>Shophealthcare.com — full content reskin in <em>Lemon</em> language.</h3>
+      <p>Hero (Meet Nora · 24/7 AI Insurance Agent + chat mock) → THE PROCESS → BREAKDOWN (with report card mock) → THE INNOVATION (3 stats) → PRODUCT OVERVIEW → KEY BENEFITS (Choose Your Path) → HOW IT WORKS (scan card mock) → PRICING ($89/$175/$320) → WALL OF LOVE (3 testimonials + stats) → FAQ → Final CTA → Footer w/ Core Value Insurance Associates legal. Compliance-cleaned (Susie → Nora, no fictional human reviewers, no banned terms).</p>
+      <span class="go">Open the reskin</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- REFERENCES -->
+<div class="toc-section">
+  <h2>Reference <em>sources</em></h2>
+  <div class="file-grid two">
+    <a class="file-card" href="_reference-12-lemon-v2.html">
+      <div class="num">REF · V2 WIREFRAME-LOYAL</div>
+      <div class="meta">Source: /Claude Design Pass/directions/12-lemon-v2.html</div>
+      <h3>Lemon v2 — the wireframe-loyal version we're <em>porting from.</em></h3>
+      <p>The faithful design language reference. Used to align all 6 variants and the reskin.</p>
+      <span class="go">Open</span>
+    </a>
+    <a class="file-card" href="_reference-12-lemon-v1-free.html">
+      <div class="num">REF · V1 FREE</div>
+      <div class="meta">Source: /Claude Design Pass/directions/12-lemon.html</div>
+      <h3>Lemon v1 — the original <em>free</em> version with extra vocabulary.</h3>
+      <p>v1 has additional motifs (.ticker, .wheel, .bignum rotated, .spread dark Nora, .giveback, .final yellow band) we pulled selectively into the v2 baseline.</p>
+      <span class="go">Open</span>
+    </a>
+  </div>
+</div>
+
+<footer class="toc-foot">
+  <span>© 2026 SHOPHEALTHCARE · DIRECTION 21 · LEMON</span>
+  <span>6 VARIANTS × 6 PALETTES + 1 RESKIN · SHARED LEMON.CSS</span>
+</footer>
+
+<script>
+  // Wire palette-preview cards on this page to trigger the same theme apply
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.pp-card[data-go]').forEach(function (c) {
+      c.addEventListener('click', function () {
+        var t = c.dataset.go;
+        document.body.className = (document.body.className || '').replace(/theme-[\w-]+/, t);
+        try { localStorage.setItem('lemonTheme21', t); } catch (_) {}
+        // sync the floating tray's active state
+        document.querySelectorAll('.palette-switch .ps-chip').forEach(function (x) {
+          x.classList.toggle('active', x.dataset.theme === t);
+        });
+      });
+    });
+  });
+</script>
+
+</body></html>

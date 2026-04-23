@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopHealthcare · Lemon Reskin · Faithful Content Port</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lemon.css">
+<script src="palette-switch.js" defer></script>
+<style>
+  /* Reskin-only sections — overlay on lemon.css primitives */
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .18em;
+    color: var(--pink-dark); text-transform: uppercase;
+    font-weight: 700; margin: 0 0 18px;
+  }
+
+  .sec-head {
+    max-width: 1280px; margin: 0 auto;
+    padding: 88px 40px 24px;
+  }
+  .sec-head .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .18em;
+    color: var(--pink-dark); text-transform: uppercase;
+    font-weight: 700; margin-bottom: 14px;
+  }
+  .sec-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 56px; line-height: 1.05; letter-spacing: -.025em;
+    margin: 0; max-width: 820px;
+  }
+  .sec-head h2 em { font-style: italic; color: var(--pink); font-weight: 400; }
+
+  .sec-body { max-width: 1280px; margin: 0 auto; padding: 0 40px 56px; }
+
+  .process .step h4 .ico {
+    display: inline-block; margin-right: 10px;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--blush-2);
+    border: 2px solid var(--ink);
+    text-align: center; line-height: 40px;
+    font-size: 22px; vertical-align: middle;
+  }
+  .process .step:nth-child(2) h4 .ico { background: var(--cream); }
+
+  .breakdown { padding: 24px 0 24px; }
+  .breakdown .grid {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 40px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
+  }
+  .breakdown ul { list-style: none; padding: 0; margin: 24px 0 0; }
+  .breakdown li {
+    font-size: 17px; line-height: 1.55;
+    padding: 14px 0 14px 36px;
+    border-bottom: 1px dashed var(--rule);
+    position: relative;
+  }
+  .breakdown li::before {
+    content: "✓"; position: absolute; left: 0; top: 12px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--lemon); color: var(--ink);
+    border: 2px solid var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+  }
+  .breakdown li:last-child { border-bottom: 0; }
+  .breakdown li b { font-weight: 700; }
+  .report-card {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 6px 6px 0 var(--ink);
+    transform: rotate(-1deg);
+  }
+  .motif-quiet .report-card { transform: rotate(0deg); }
+  .report-card .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 14px; border-bottom: 2px solid var(--ink);
+    margin-bottom: 18px;
+  }
+  .report-card .head .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase; font-weight: 700;
+  }
+  .report-card .head .grade {
+    background: var(--lemon); color: var(--ink);
+    padding: 6px 14px; border-radius: 999px;
+    border: 2px solid var(--ink);
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 18px;
+  }
+  .report-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 26px; margin: 0 0 18px; letter-spacing: -.015em;
+  }
+  .report-card .row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; font-size: 15px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .report-card .row:last-of-type { border-bottom: 0; }
+  .report-card .row span:first-child { color: var(--mute); }
+  .report-card .row span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--ink); }
+  .report-card .footnote {
+    margin-top: 16px; padding-top: 14px;
+    border-top: 2px dashed var(--rule);
+    font-size: 13px; color: var(--mute); font-style: italic;
+  }
+
+  .innovation {
+    padding: 64px 40px;
+    background: var(--cream);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .innovation-inner { max-width: 1280px; margin: 0 auto; }
+  .innovation-head {
+    display: flex; justify-content: space-between; align-items: end;
+    margin-bottom: 36px; gap: 32px; flex-wrap: wrap;
+  }
+  .innovation-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 48px; line-height: 1.05; margin: 0;
+    letter-spacing: -.025em; max-width: 600px;
+  }
+  .innovation-head h2 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .innovation-head .tagline {
+    font-size: 16px; color: var(--mute); max-width: 320px;
+    text-align: right;
+  }
+  .innovation-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .innov-stat {
+    background: var(--blush-2);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .innov-stat:nth-child(2) { background: var(--lemon); }
+  .innov-stat:nth-child(3) { background: var(--pink); color: var(--cream); }
+  .innov-stat .big {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 96px; line-height: .9;
+    letter-spacing: -.04em; margin-bottom: 14px;
+  }
+  .innov-stat .big sup { font-size: 36px; vertical-align: top; margin-left: 4px; }
+  .innov-stat .lbl {
+    font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: 16px; line-height: 1.35;
+  }
+
+  .product-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .feat-card {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .feat-card:nth-child(1) { background: var(--lemon-2); }
+  .feat-card:nth-child(3) { background: var(--blush-2); }
+  .feat-card .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--ink); color: var(--lemon);
+    padding: 6px 12px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; font-weight: 700;
+    align-self: flex-start; margin-bottom: 18px;
+  }
+  .feat-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 28px; line-height: 1.1;
+    letter-spacing: -.02em; margin: 0 0 14px;
+  }
+  .feat-card h3 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .feat-card p {
+    font-size: 15px; line-height: 1.55;
+    color: var(--mute); margin: 0;
+  }
+
+  .paths {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; max-width: 1280px;
+    margin: 0 auto; padding: 0 40px 64px;
+  }
+  .path {
+    background: var(--lemon);
+    border: 2px solid var(--ink);
+    border-radius: 28px;
+    padding: 44px 36px;
+    box-shadow: 6px 6px 0 var(--ink);
+    min-height: 360px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .path:nth-child(2) { background: var(--pink); color: var(--cream); }
+  .path .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .18em;
+    text-transform: uppercase; font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .path:nth-child(2) .num { color: var(--lemon); }
+  .path h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 44px; line-height: 1.05;
+    letter-spacing: -.025em; margin: 0 0 18px;
+    max-width: 380px;
+  }
+  .path h3 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .path:nth-child(2) h3 em { color: var(--lemon); }
+  .path p {
+    font-size: 16px; line-height: 1.55;
+    margin: 0 0 24px; max-width: 380px;
+  }
+  .path:nth-child(2) p { color: rgba(255,250,242,.92); }
+  .path .go {
+    margin-top: auto;
+    align-self: flex-start;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 14px;
+    background: var(--cream); color: var(--ink);
+    padding: 13px 22px; border-radius: 999px;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .path:nth-child(2) .go { background: var(--lemon); }
+
+  .scan {
+    background: var(--blush-2);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 80px 0;
+  }
+  .scan .grid {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 40px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
+  }
+  .scan h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 52px; line-height: 1.05;
+    letter-spacing: -.025em; margin: 0 0 22px;
+  }
+  .scan h2 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .scan p {
+    font-size: 17px; line-height: 1.6;
+    color: #3A2F40; margin: 0 0 28px; max-width: 480px;
+  }
+  .scan-mock {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 8px 8px 0 var(--ink);
+    transform: rotate(1deg);
+  }
+  .motif-quiet .scan-mock { transform: rotate(0deg); }
+  .scan-mock .id-card {
+    background: var(--plum); color: var(--cream);
+    border-radius: 14px; padding: 20px 22px;
+    margin-bottom: 18px;
+    border: 2px solid var(--ink);
+  }
+  .scan-mock .id-card .brand {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 16px; margin-bottom: 6px;
+    color: var(--lemon);
+  }
+  .scan-mock .id-card .plan {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,250,242,.7); margin-bottom: 12px;
+  }
+  .scan-mock .id-card .row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 4px 0;
+    color: rgba(255,250,242,.85);
+  }
+  .scan-mock .id-card .row span:last-child { font-family: 'JetBrains Mono', monospace; }
+  .scan-mock .arrow-down {
+    text-align: center; font-size: 22px; color: var(--pink);
+    margin: 8px 0;
+  }
+  .scan-mock .plain {
+    background: var(--lemon-2);
+    border: 2px solid var(--ink);
+    border-radius: 14px; padding: 16px 18px;
+  }
+  .scan-mock .plain .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--pink-dark);
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .scan-mock .plain p {
+    font-size: 14px; line-height: 1.5;
+    margin: 0; color: var(--ink); max-width: none;
+  }
+
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    align-items: start;
+  }
+  .tier {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .tier.featured {
+    background: var(--ink); color: var(--cream);
+    box-shadow: 6px 6px 0 var(--pink);
+    transform: translateY(-12px);
+  }
+  .motif-quiet .tier.featured { transform: translateY(0); }
+  .tier .ribbon {
+    position: absolute; top: -14px; left: 28px;
+    background: var(--pink); color: var(--cream);
+    padding: 6px 14px; border-radius: 999px;
+    border: 2px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .tier .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--mute);
+    font-weight: 700; margin-bottom: 14px;
+  }
+  .tier.featured .name { color: var(--lemon); }
+  .tier h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 26px; line-height: 1.1;
+    letter-spacing: -.015em; margin: 0 0 8px;
+  }
+  .tier .price {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 64px; line-height: .95;
+    letter-spacing: -.035em; margin: 14px 0 6px;
+  }
+  .tier .price sup { font-size: 24px; vertical-align: top; opacity: .7; }
+  .tier .price em { font-style: normal; font-size: 16px; font-weight: 400; opacity: .65; margin-left: 6px; }
+  .tier .desc {
+    font-size: 14px; color: var(--mute);
+    margin: 0 0 22px; line-height: 1.5;
+  }
+  .tier.featured .desc { color: rgba(255,250,242,.7); }
+  .tier ul { list-style: none; padding: 0; margin: 0 0 28px; }
+  .tier li {
+    font-size: 14px; padding: 8px 0 8px 26px;
+    position: relative; line-height: 1.45;
+    border-bottom: 1px dashed rgba(0,0,0,.08);
+  }
+  .tier.featured li { border-bottom-color: rgba(255,250,242,.12); }
+  .tier li:last-child { border-bottom: 0; }
+  .tier li::before {
+    content: "✓"; position: absolute; left: 0; top: 8px;
+    color: var(--pink); font-weight: 700;
+  }
+  .tier.featured li::before { color: var(--lemon); }
+  .tier .pick { margin-top: auto; }
+
+  .love {
+    padding: 88px 0 56px;
+    background: var(--lemon-2);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .love-inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+  .love-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-bottom: 48px;
+  }
+  .quote {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .quote:nth-child(2) { background: var(--blush-2); }
+  .quote .stars {
+    color: var(--pink); font-size: 18px;
+    letter-spacing: 2px; margin-bottom: 16px;
+  }
+  .quote blockquote {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 22px; line-height: 1.35;
+    letter-spacing: -.015em; margin: 0 0 24px;
+    flex: 1;
+  }
+  .quote .who {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px; border-top: 2px dashed var(--rule);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .quote .who .name {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 15px;
+  }
+  .quote .who .save {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase;
+    background: var(--lemon); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 4px 10px; border-radius: 999px;
+    font-weight: 700;
+  }
+  .love-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    background: var(--ink); color: var(--cream);
+    border: 2px solid var(--ink); border-radius: 28px;
+    padding: 36px;
+  }
+  .love-stat .n {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 64px; line-height: .92;
+    color: var(--lemon); letter-spacing: -.035em; margin-bottom: 8px;
+  }
+  .love-stat .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .12em;
+    color: rgba(255,250,242,.65); text-transform: uppercase;
+  }
+
+  .faq-list { max-width: 880px; margin: 0 auto; padding: 0 40px 64px; }
+  .faq-item {
+    border-bottom: 2px solid var(--ink);
+    padding: 22px 0;
+  }
+  .faq-item:first-child { border-top: 2px solid var(--ink); }
+  .faq-q {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; letter-spacing: -.015em;
+    margin: 0 0 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+  }
+  .faq-q::after {
+    content: "+"; color: var(--pink); font-weight: 400;
+    font-size: 28px; line-height: .8;
+  }
+  .faq-a {
+    font-size: 16px; line-height: 1.6;
+    color: var(--mute); margin: 0; max-width: 720px;
+  }
+
+  .final-cta {
+    background: var(--pink); color: var(--cream);
+    padding: 88px 40px;
+    text-align: center;
+    border-bottom: 2px solid var(--ink);
+  }
+  .final-cta h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 72px; line-height: 1; letter-spacing: -.03em;
+    margin: 0 auto 18px; max-width: 800px;
+  }
+  .final-cta h2 em { font-style: italic; color: var(--lemon); font-weight: 400; }
+  .final-cta p {
+    font-size: 18px; line-height: 1.55;
+    max-width: 540px; margin: 0 auto 36px;
+    color: rgba(255,250,242,.92);
+  }
+  .final-cta .ctas {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  }
+
+  footer .legal {
+    grid-column: 1 / -1;
+    margin-top: 12px; padding-top: 24px;
+    border-top: 1px solid rgba(255,250,242,.12);
+    font-size: 12px; line-height: 1.55;
+    color: rgba(255,250,242,.55);
+  }
+  footer .legal b { color: rgba(255,250,242,.8); font-weight: 700; }
+  footer .legal p { margin: 0 0 10px; max-width: 1100px; }
+
+  @media (max-width: 980px) {
+    .breakdown .grid, .scan .grid { grid-template-columns: 1fr; gap: 32px; }
+    .innovation-grid, .product-grid, .pricing-grid, .love-grid, .love-stats { grid-template-columns: 1fr; }
+    .paths { grid-template-columns: 1fr; }
+    .innovation-head { flex-direction: column; align-items: start; }
+    .innovation-head .tagline { text-align: left; }
+    .sec-head h2 { font-size: 38px; }
+    .scan h2 { font-size: 36px; }
+    .final-cta h2 { font-size: 44px; }
+    .innov-stat .big { font-size: 64px; }
+    .tier.featured { transform: none; }
+  }
+</style>
+</head>
+<body class="theme-original motif-quiet">
+
+<!-- 01 ANNOUNCE -->
+<div class="announce">PRIVATE · OFF-EXCHANGE COVERAGE · LICENSED IN ALL 50 STATES · <a href="https://shophealthcare.io/">TALK TO NORA →</a></div>
+
+<!-- 02 NAV -->
+<nav class="head"><div class="row">
+  <div class="wordmark"><span class="mark"></span>Shophealthcare</div>
+  <div class="nav-sub">LICENSED BROKERAGE · NPN #19482230</div>
+  <div class="nav-links">
+    <a href="#process">How it works</a>
+    <a href="#savings">Savings</a>
+    <a href="#scan">Scan &amp; Understand</a>
+    <a href="#pricing">Insurance Wallet</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn primary" href="https://shophealthcare.io/">Get Started</a>
+  </div>
+</div></nav>
+
+<!-- 03 HERO -->
+<section class="hero"><div class="page"><div class="grid">
+  <div>
+    <p class="eyebrow">★ Nora · AI Insurance Agent</p>
+    <h1>Meet <em class="pink">Nora</em> — your<br>24/7 AI <span class="fix">insurance agent.</span></h1>
+    <p class="lead">Finally understand your insurance and <b>save up to 50%</b> on your premiums. Nora is a licensed-broker-trained AI that walks you through every private plan in your state, in plain English — no jargon, no upsell, no resold data.</p>
+    <div class="ctas">
+      <a class="btn primary big" href="https://shophealthcare.io/?intent=scan">Scan my insurance card →</a>
+      <a class="btn lemon big" href="https://shophealthcare.io/">Lower cost, better coverage</a>
+      <span class="badge">No $ to compare</span>
+    </div>
+  </div>
+  <div class="nora-col">
+    <div class="bubble n">
+      <div class="who">Nora · 24/7 AI Agent</div>
+      Hey 👋 Drop your insurance card or tell me what changed and I'll pull your real options. <span class="tag">~90 seconds</span>
+    </div>
+    <div class="bubble u">
+      <div class="who">You</div>
+      My premium just doubled on renewal — what are my options?
+    </div>
+    <div class="bubble n">
+      <div class="who">Nora</div>
+      Got it. Quick gate before I show carriers — any ongoing conditions on the plan? The limit comes before the benefit, so I want to size it right the first time.
+    </div>
+  </div>
+</div></div></section>
+
+<!-- 02b NORA ONLINE CHIP -->
+<div class="nora-chip-row">
+  <div class="nora-chip">
+    <span class="dot"></span>
+    <span><b>Nora</b> is online right now</span>
+    <span class="meta">AVG · ~90s TO QUOTE</span>
+  </div>
+</div>
+
+<!-- 04 THE PROCESS -->
+<div class="sec-head" id="process">
+  <div class="kicker">★ THE PROCESS</div>
+  <h2>Three steps from <em>confused</em> to covered.</h2>
+</div>
+<section class="process"><div class="step-grid">
+  <div class="step">
+    <div class="n">01</div>
+    <h4><span class="ico">⚡</span>Fast</h4>
+    <p>Scan your current insurance card or answer three questions. Nora pulls your real plan data and your real off-exchange options in under 90 seconds.</p>
+  </div>
+  <div class="step">
+    <div class="n">02</div>
+    <h4><span class="ico">🔍</span>Analyze</h4>
+    <p>Nora compares every private plan in your state against what you actually use — deductible, network, drugs, ongoing conditions. The math runs before email.</p>
+  </div>
+  <div class="step">
+    <div class="n">03</div>
+    <h4><span class="ico">✨</span>Epic</h4>
+    <p>Enroll in the right plan in 48 hours, or close the tab. Either way, no resale, no follow-up spam, no broker fee riding on top.</p>
+  </div>
+</div></section>
+
+<!-- 05 BREAKDOWN -->
+<div class="sec-head" id="savings">
+  <div class="kicker">★ BREAKDOWN</div>
+  <h2>Get a plain-English <em>insurance report</em> in 60 seconds.</h2>
+</div>
+<section class="breakdown"><div class="grid">
+  <div>
+    <p style="font-size:18px;line-height:1.6;color:#3A2F40;margin:0;max-width:480px;">Most people don't know what their insurance actually covers until they get the bill. Nora breaks it down so you know what you're paying for — and what you're not.</p>
+    <ul>
+      <li><b>Your real deductible</b> — and how much of it you've burned through this year</li>
+      <li><b>Out-of-pocket max</b> — the worst case before insurance picks up 100%</li>
+      <li><b>Network tier</b> — which doctors and hospitals are in vs. out</li>
+      <li><b>Drug formulary</b> — what your prescriptions actually cost on this plan</li>
+      <li><b>Ongoing-condition gate</b> — what's covered, what's limited, what's excluded</li>
+      <li><b>True cost of ownership</b> — premium plus expected use, not the brochure number</li>
+    </ul>
+  </div>
+  <div class="report-card">
+    <div class="head">
+      <div class="lbl">Insurance Breakdown</div>
+      <div class="grade">B+</div>
+    </div>
+    <h3>BlueCross PPO Gold</h3>
+    <div class="row"><span>Monthly premium</span><span>$487</span></div>
+    <div class="row"><span>Deductible</span><span>$1,500</span></div>
+    <div class="row"><span>Out-of-pocket max</span><span>$6,400</span></div>
+    <div class="row"><span>Primary visit</span><span>$30 copay</span></div>
+    <div class="row"><span>Specialist visit</span><span>$60 copay</span></div>
+    <div class="row"><span>Network</span><span>Nationwide PPO</span></div>
+    <div class="footnote">Nora flagged 2 cheaper plans with the same network and lower deductibles in your zip.</div>
+  </div>
+</div></section>
+
+<!-- 06 INNOVATION -->
+<section class="innovation">
+  <div class="innovation-inner">
+    <div class="innovation-head">
+      <h2>The <em>innovation</em> behind the savings.</h2>
+      <p class="tagline">Nora is trained on every private plan in your state and re-priced weekly — so the number she shows is the number you'll pay.</p>
+    </div>
+    <div class="innovation-grid">
+      <div class="innov-stat">
+        <div class="big">50<sup>%</sup></div>
+        <div class="lbl">Average savings on insurance premiums vs. the plan members landed on with a navigator</div>
+      </div>
+      <div class="innov-stat">
+        <div class="big">94<sup>%</sup></div>
+        <div class="lbl">Of members say they finally understand what their plan actually covers</div>
+      </div>
+      <div class="innov-stat">
+        <div class="big">12<sup>hr</sup></div>
+        <div class="lbl">Saved per year — no more reading benefit booklets or arguing with carriers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 PRODUCT OVERVIEW -->
+<div class="sec-head">
+  <div class="kicker">★ PRODUCT OVERVIEW</div>
+  <h2>Built like a <em>licensed broker.</em><br>Priced like a tool.</h2>
+</div>
+<div class="sec-body">
+  <div class="product-grid">
+    <div class="feat-card">
+      <span class="chip">Licensed agent logic</span>
+      <h3>Trained on the same playbook a <em>real broker</em> uses.</h3>
+      <p>Nora runs the same disqualification gates a licensed agent runs — ongoing conditions, in-network providers, formulary, state availability — in the order they actually matter.</p>
+    </div>
+    <div class="feat-card">
+      <span class="chip">Eliminate confusion</span>
+      <h3>Plain English, every time. <em>No jargon.</em></h3>
+      <p>"PPO" and "HMO" are translated into the only thing that matters: which doctors you can see and how much you'll pay. The brochure stays in the brochure.</p>
+    </div>
+    <div class="feat-card">
+      <span class="chip">Private &amp; off-exchange</span>
+      <h3>Your data <em>stays yours.</em></h3>
+      <p>We don't resell leads. We don't share your info with carriers until you ask us to enroll. No follow-up spam, no SDR cold-calls, no "your free quote is ready" emails.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 08 KEY BENEFITS — Choose Your Path -->
+<div class="sec-head">
+  <div class="kicker">★ KEY BENEFITS</div>
+  <h2>Choose your <em>path.</em></h2>
+</div>
+<div class="paths">
+  <div class="path">
+    <div class="num">PATH 01 · SAVE</div>
+    <h3>Find <em>cheaper</em> insurance.</h3>
+    <p>Tell Nora what you have today. She'll pull the real off-exchange options, run the math on your actual usage, and show you what's possible — typically 30–50% lower than what a navigator would route you to.</p>
+    <a class="go" href="https://shophealthcare.io/">Find me a cheaper plan →</a>
+  </div>
+  <div class="path">
+    <div class="num">PATH 02 · UNDERSTAND</div>
+    <h3>Scan &amp; <em>understand</em> what you have.</h3>
+    <p>Already happy with your plan? Nora reads your card, decodes the benefit summary, and tells you in plain English exactly what's covered, what isn't, and where the surprise bills hide.</p>
+    <a class="go" href="https://shophealthcare.io/?intent=scan">Scan my card →</a>
+  </div>
+</div>
+
+<!-- 09 SCAN — Already have insurance? -->
+<section class="scan" id="scan">
+  <div class="grid">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--pink-dark);text-transform:uppercase;font-weight:700;margin-bottom:14px;">★ HOW IT WORKS</div>
+      <h2>Already have insurance? <em>Scan it.</em></h2>
+      <p>Snap a photo of your insurance card. Nora pulls the carrier, plan, network tier, deductible, and copays — then translates the benefit summary into the one paragraph nobody at the carrier will write for you.</p>
+      <p>If you're paying too much for what you actually use, Nora will say so. If you're not, she'll tell you that too.</p>
+      <div class="ctas">
+        <a class="btn primary big" href="https://shophealthcare.io/?intent=scan">Scan my card →</a>
+        <a class="btn ghost big" href="#faq">How does scanning work?</a>
+      </div>
+    </div>
+    <div class="scan-mock">
+      <div class="id-card">
+        <div class="brand">BlueCross BlueShield</div>
+        <div class="plan">PPO Gold · Member ID 8472-XXXX-XX</div>
+        <div class="row"><span>Deductible</span><span>$1,500</span></div>
+        <div class="row"><span>Out-of-pocket max</span><span>$6,400</span></div>
+        <div class="row"><span>Primary visit</span><span>$30</span></div>
+        <div class="row"><span>Specialist</span><span>$60</span></div>
+        <div class="row"><span>Network</span><span>Nationwide</span></div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="plain">
+        <div class="lbl">Plain English</div>
+        <p>You're on a nationwide PPO with a mid-tier deductible. Most office visits are flat-fee copays, but you'll pay the full $1,500 before insurance picks up on procedures or imaging. Two cheaper plans with the same network exist in your zip — want to see them?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 PRICING -->
+<div class="sec-head" id="pricing">
+  <div class="kicker">★ PRICING</div>
+  <h2>Insurance Wallet — pick the <em>tier</em> that fits.</h2>
+</div>
+<div class="sec-body">
+  <div class="pricing-grid">
+    <div class="tier">
+      <div class="name">Budget</div>
+      <h3>Just the basics.</h3>
+      <div class="price"><sup>$</sup>89<em>/mo wallet</em></div>
+      <p class="desc">For freelancers who already know what they want and just need the brokerage rails to enroll.</p>
+      <ul>
+        <li>Scan &amp; decode your current card</li>
+        <li>Real off-exchange quote in your state</li>
+        <li>Self-serve enrollment, licensed brokerage backed</li>
+        <li>Email-only support, business hours</li>
+        <li>NPN-licensed in all 50 states</li>
+      </ul>
+      <a class="btn lemon pick" href="https://shophealthcare.io/?tier=budget">Pick Budget</a>
+    </div>
+    <div class="tier featured">
+      <div class="ribbon">★ Recommended</div>
+      <div class="name">Recommended</div>
+      <h3>Nora, full power.</h3>
+      <div class="price"><sup>$</sup>175<em>/mo wallet</em></div>
+      <p class="desc">For 1099, self-employed, and the 55–64 bridge — Nora runs the full diagnostic and you get a human escalation path when you need it.</p>
+      <ul>
+        <li>Everything in Budget</li>
+        <li>Full benefit-summary decode + ongoing-condition gate</li>
+        <li>Side-by-side comparison across every carrier in your state</li>
+        <li>Enrollment + renewal alerts (no spam, just deadlines)</li>
+        <li>Live licensed-agent escalation, 7 days a week</li>
+        <li>Bridge planning if you're 55–64, pre-Medicare</li>
+      </ul>
+      <a class="btn primary pick" href="https://shophealthcare.io/?tier=recommended">Pick Recommended</a>
+    </div>
+    <div class="tier">
+      <div class="name">Premium</div>
+      <h3>White-glove.</h3>
+      <div class="price"><sup>$</sup>320<em>/mo wallet</em></div>
+      <p class="desc">For households juggling multiple plans, dependents, ongoing conditions, or a complex bridge year — we handle the whole thing.</p>
+      <ul>
+        <li>Everything in Recommended</li>
+        <li>Dedicated licensed agent, named on your account</li>
+        <li>Family + dependent plan stacking</li>
+        <li>Claims appeal &amp; surprise-bill negotiation</li>
+        <li>Annual plan-fit review, automatically</li>
+        <li>Priority enrollment windows</li>
+      </ul>
+      <a class="btn lemon pick" href="https://shophealthcare.io/?tier=premium">Pick Premium</a>
+    </div>
+  </div>
+</div>
+
+<!-- 11 MANIFESTO TAPE -->
+<div class="manifesto"><div class="tape">
+  <span>We took out the broker fee.</span><span>We took out the upsell.</span><span>We took out the resold data.</span><span>What's left is the coverage, the math, and an entity that signs its name.</span>
+  <span>We took out the broker fee.</span><span>We took out the upsell.</span><span>We took out the resold data.</span><span>What's left is the coverage, the math, and an entity that signs its name.</span>
+</div></div>
+
+<!-- 12 WALL OF LOVE -->
+<section class="love">
+  <div class="love-inner">
+    <div style="margin-bottom:36px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--pink-dark);text-transform:uppercase;font-weight:700;margin-bottom:14px;">★ WALL OF LOVE</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:600;font-size:48px;line-height:1.05;letter-spacing:-.025em;margin:0;max-width:680px;">Members, not "users." <em style="font-style:italic;color:var(--pink);font-weight:400;">Here's what they say.</em></h2>
+    </div>
+    <div class="love-grid">
+      <div class="quote">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I went 1099 last fall and my old plan jumped $400/mo. Nora found me a PPO with the same network for $213 less. Took ten minutes."</blockquote>
+        <div class="who">
+          <div class="name">Michael R. · Designer, Austin TX</div>
+          <div class="save">Saved $2,556/yr</div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I'm 58 and was bracing for the bridge years. Nora walked me through the off-exchange options I didn't know existed. No upsell, no fee."</blockquote>
+        <div class="who">
+          <div class="name">Jennifer L. · Consultant, Denver CO</div>
+          <div class="save">Saved $4,180/yr</div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I scanned my card on a whim. She told me my current plan was actually fine — and saved me from switching to something worse. That's the most refreshing thing a broker has ever told me."</blockquote>
+        <div class="who">
+          <div class="name">Sarah M. · Photographer, Brooklyn NY</div>
+          <div class="save">Kept her plan</div>
+        </div>
+      </div>
+    </div>
+    <div class="love-stats">
+      <div class="love-stat">
+        <div class="n tab">10,148+</div>
+        <div class="lbl">Members enrolled across 50 states</div>
+      </div>
+      <div class="love-stat">
+        <div class="n tab">$3,204</div>
+        <div class="lbl">Average annual savings vs. prior plan</div>
+      </div>
+      <div class="love-stat">
+        <div class="n tab">4.8/5</div>
+        <div class="lbl">Member rating, post-enrollment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 FAQ -->
+<div class="sec-head" id="faq">
+  <div class="kicker">★ FAQ</div>
+  <h2>Things people <em>actually ask.</em></h2>
+</div>
+<div class="faq-list">
+  <div class="faq-item">
+    <h3 class="faq-q">Is ShopHealthcare a real licensed brokerage?</h3>
+    <p class="faq-a">Yes. ShopHealthcare is operated by Core Value Insurance Associates, LLC — a licensed independent insurance brokerage. Our NPN is #19482230. You can look us up in your state's Department of Insurance database before sharing a single piece of personal info.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Is Nora a real person?</h3>
+    <p class="faq-a">No — Nora is our AI insurance agent, built on top of a licensed-broker workflow. She's available 24/7. If you'd rather talk to a human, every Recommended and Premium account has a licensed agent on call. We'll always tell you when you're talking to a person and when you're talking to Nora.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Will you sell or share my data?</h3>
+    <p class="faq-a">No. We never sell or share your info with third-party data brokers. Carriers only see your data when you ask us to actually enroll you. No "your free quote is ready" follow-up spam, no SDR cold-calls, no resold leads.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">What's the difference between this and Healthcare.gov?</h3>
+    <p class="faq-a">Healthcare.gov navigators are paid $0 for off-exchange plans, so they only show you on-exchange options. ShopHealthcare is a licensed brokerage — we walk you through every private plan in your state, on or off the exchange, without the upsell or the fee that used to ride on top.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">How accurate is the scan?</h3>
+    <p class="faq-a">Nora reads your insurance card, pulls the carrier's published benefit summary, and translates it into plain English. Numbers (deductible, out-of-pocket, copays, network) come straight from the carrier. We always show you the source so you can double-check.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Do I have to enroll right away?</h3>
+    <p class="faq-a">No. You can scan your card, get the comparison, and close the tab. No email required to see the math — email is the last thing Nora asks, and only when you're ready to enroll. If you don't enroll within 48 hours, the quote expires and we don't follow up.</p>
+  </div>
+  <div class="faq-item">
+    <h3 class="faq-q">Which states are you licensed in?</h3>
+    <p class="faq-a">Core Value Insurance Associates, LLC is licensed in all 50 states. State-specific licensing details, including resident state and license numbers, are listed in the footer of every page.</p>
+  </div>
+</div>
+
+<!-- 14 FINAL CTA -->
+<section class="final-cta">
+  <h2>Ready to <em>save money?</em></h2>
+  <p>Scan your card or talk to Nora. Either way, you'll know what your insurance actually does — and what you're actually paying for it — in 90 seconds.</p>
+  <div class="ctas">
+    <a class="btn lemon big" href="https://shophealthcare.io/">Get started →</a>
+    <a class="btn big" style="background:transparent;border-color:var(--cream);color:var(--cream);box-shadow:none;" href="#">Book a demo</a>
+  </div>
+</section>
+
+<!-- 15 FOOTER -->
+<footer><div class="foot-grid">
+  <div>
+    <div class="word">Shophealthcare</div>
+    <p class="tag">Nora — your 24/7 AI insurance agent. A licensed, independent brokerage. Off-exchange plans for freelancers and the 55–64 bridge crowd. Flat-fee, no resale, signed by the entity.</p>
+  </div>
+  <div>
+    <h6>NORA AI</h6>
+    <ul>
+      <li>How it works</li>
+      <li>Scan &amp; Understand</li>
+      <li>Insurance Wallet</li>
+      <li>Talk to Nora</li>
+      <li>FAQ</li>
+    </ul>
+  </div>
+  <div>
+    <h6>COMPANY</h6>
+    <ul>
+      <li>About</li>
+      <li>Press</li>
+      <li>Partnerships</li>
+      <li>Careers</li>
+      <li>Blog</li>
+    </ul>
+  </div>
+  <div>
+    <h6>CONTACT</h6>
+    <ul>
+      <li>105 N 1st St #28</li>
+      <li>San Jose, CA 95103</li>
+      <li>HELLO@SHOPHEALTHCARE</li>
+      <li class="tab">(800) 555-0198</li>
+      <li>NPN #19482230</li>
+    </ul>
+  </div>
+  <div class="legal">
+    <p><b>ShopHealthcare</b> is a brand of <b>Core Value Insurance Associates, LLC</b> — a licensed independent insurance brokerage. Resident state: Florida. Licensed in: <b>FL · CO · KY · NV · TN</b> (resident + non-resident states listed; full state-by-state licensing on request).</p>
+    <p>This site is operated by a private licensed insurance brokerage and is not affiliated with the U.S. government, Medicare, Medicaid, or Healthcare.gov. Plans shown are private off-exchange health insurance products. Premiums, networks, and benefits vary by state, plan, and carrier. Quotes are estimates and final terms are set by the issuing carrier upon underwriting.</p>
+    <p>Nora is an AI assistant. She is not a licensed agent and does not bind coverage. All enrollments are executed by a licensed human agent at Core Value Insurance Associates, LLC.</p>
+  </div>
+</div>
+<div class="foot-bottom">
+  <span>© 2026 SHOPHEALTHCARE · CORE VALUE INSURANCE ASSOCIATES, LLC</span>
+  <span>NOT A GOVERNMENT SITE</span>
+</div>
+</footer>
+
+</body></html>

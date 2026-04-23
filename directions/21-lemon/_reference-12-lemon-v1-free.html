@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Shophealthcare — Lemon (free)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--blush:#FFE4DB;--blush-2:#FFD3C2;--lemon:#FFE86E;--lemon-2:#FFF1A6;--cream:#FFFAF2;--pink:#FF6A5C;--pink-dark:#D94A3E;--ink:#1A1322;--mute:#6A5E70;--rule:#EED9D0;--mint:#7FC8A6;--plum:#3B2A4A;--sky:#BEE3F8;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;background:var(--blush);color:var(--ink);overflow-x:hidden;}
+body{font-family:'Inter',sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+.serif{font-family:'Fraunces',serif;}.mono{font-family:'JetBrains Mono',monospace;}.tab{font-variant-numeric:tabular-nums;}
+
+.announce{background:var(--plum);color:var(--lemon);text-align:center;padding:11px 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;}
+.announce b{color:var(--cream);}.announce a{color:var(--cream);text-decoration:underline;}
+
+nav.head .row{max-width:1280px;margin:0 auto;padding:22px 40px;display:flex;align-items:center;gap:24px;}
+.wordmark{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:900;font-size:26px;letter-spacing:-.02em;}
+.wordmark .mark{width:34px;height:34px;border-radius:50%;background:var(--lemon);display:flex;align-items:center;justify-content:center;}
+.wordmark .mark::after{content:"";width:14px;height:14px;border-radius:50%;background:var(--pink);}
+.nav-links{margin-left:auto;display:flex;gap:28px;font-size:15px;font-weight:500;}
+.nav-links a{color:var(--ink);text-decoration:none;}
+.btn{padding:13px 22px;font-size:14px;font-weight:600;border:2px solid var(--ink);text-decoration:none;color:var(--ink);background:var(--cream);border-radius:999px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:all .12s;}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+.btn.primary{background:var(--pink);color:var(--cream);}
+.btn.lemon{background:var(--lemon);}
+.btn.big{padding:18px 30px;font-size:16px;}
+
+/* MANIFESTO HERO — big full-bleed statement, no grid */
+.hero{padding:40px 0 60px;position:relative;}
+.hero .kicker{text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;color:var(--pink-dark);text-transform:uppercase;margin-bottom:40px;}
+.hero .kicker span{background:var(--lemon);padding:4px 10px;border-radius:4px;}
+.hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(80px,16vw,220px);line-height:.86;letter-spacing:-.045em;text-align:center;margin:0;max-width:1500px;margin-left:auto;margin-right:auto;padding:0 20px;}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--pink);}
+.hero h1 .stamp{background:var(--ink);color:var(--lemon);padding:0 14px;border-radius:18px;display:inline-block;transform:rotate(-1.5deg);font-style:normal;}
+.hero .blobs{position:absolute;inset:0;pointer-events:none;z-index:-1;}
+.hero .blob{position:absolute;border-radius:50%;}
+.hero .blob.b1{width:180px;height:180px;background:var(--lemon);top:140px;left:80px;}
+.hero .blob.b2{width:120px;height:120px;background:var(--pink);top:420px;right:120px;}
+.hero .blob.b3{width:200px;height:200px;background:var(--sky);bottom:-40px;left:40%;opacity:.7;}
+.hero .subline{max-width:680px;margin:40px auto 32px;text-align:center;font-size:21px;line-height:1.5;color:#3A2F40;}
+.hero .subline b{font-weight:700;background:var(--lemon);padding:0 4px;border-radius:3px;}
+.hero .ctas{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+/* BIG TICKER — tilted, loud */
+.ticker{background:var(--lemon);color:var(--ink);padding:18px 0;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);overflow:hidden;transform:rotate(-1.4deg);margin:48px -20px;}
+.ticker .tape{display:flex;gap:56px;white-space:nowrap;animation:scroll 32s linear infinite;font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:30px;letter-spacing:-.02em;}
+.ticker .tape span::before{content:"★";color:var(--pink);margin-right:14px;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ROTATING WHEEL of situations */
+.wheel{padding:80px 0;text-align:center;}
+.wheel h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(56px,7vw,96px);line-height:.94;letter-spacing:-.03em;margin:0 0 12px;}
+.wheel h2 em{font-style:italic;font-weight:400;color:var(--pink);}
+.wheel .hint{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin-bottom:44px;}
+.wheel-inner{max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.ring{aspect-ratio:1/1;border-radius:50%;border:2px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;cursor:pointer;transition:all .18s;box-shadow:4px 4px 0 var(--ink);position:relative;}
+.ring:nth-child(1){background:var(--blush-2);}.ring:nth-child(2){background:var(--lemon-2);}.ring:nth-child(3){background:var(--sky);}.ring:nth-child(4){background:var(--lemon);}.ring:nth-child(5){background:var(--pink);color:var(--cream);}
+.ring:hover{transform:translate(-2px,-2px) rotate(-2deg);box-shadow:6px 6px 0 var(--ink);}
+.ring .num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;font-weight:700;margin-bottom:10px;opacity:.7;}
+.ring h3{font-family:'Fraunces',serif;font-weight:700;font-size:18px;line-height:1.12;letter-spacing:-.015em;margin:0 0 10px;}
+.ring h3 em{font-style:italic;font-weight:400;}
+.ring .arrow{font-size:18px;opacity:.6;}
+.wheel .noneOfThese{margin-top:30px;font-family:'Fraunces',serif;font-style:italic;font-size:22px;}
+.wheel .noneOfThese a{color:var(--pink-dark);text-decoration:underline;font-weight:600;}
+
+/* STATS — giant number zine panels */
+.numbers{padding:80px 0;}
+.numbers-head{text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase;margin-bottom:32px;}
+.n-stack{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.bignum{background:var(--cream);border:2px solid var(--ink);border-radius:20px;padding:30px 26px;box-shadow:5px 5px 0 var(--ink);transform:rotate(var(--r,0deg));}
+.bignum:nth-child(1){background:var(--blush-2);--r:-1.5deg;}
+.bignum:nth-child(2){background:var(--lemon);--r:1deg;}
+.bignum:nth-child(3){background:var(--sky);--r:-0.8deg;}
+.bignum:nth-child(4){background:var(--pink);color:var(--cream);--r:1.2deg;}
+.bignum .n{font-family:'Fraunces',serif;font-weight:900;font-size:92px;line-height:.9;letter-spacing:-.04em;margin-bottom:8px;}
+.bignum .n em{font-style:italic;font-weight:400;}
+.bignum .lbl{font-size:14px;line-height:1.4;opacity:.85;}
+
+/* NORA consult zine spread */
+.spread{padding:80px 40px;background:var(--plum);color:var(--cream);}
+.spread-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;}
+.spread h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(48px,6vw,88px);line-height:.94;letter-spacing:-.03em;margin:0 0 28px;color:var(--cream);}
+.spread h2 em{font-style:italic;font-weight:400;color:var(--lemon);}
+.spread p{font-size:19px;line-height:1.6;color:rgba(255,250,242,.9);margin:0 0 20px;}
+.spread p b{color:var(--lemon);font-weight:700;}
+.chat{background:var(--cream);color:var(--ink);border-radius:26px;padding:26px;border:2px solid var(--ink);box-shadow:6px 6px 0 rgba(0,0,0,0.3);}
+.bubble{padding:14px 18px;border:2px solid var(--ink);border-radius:18px;margin-bottom:10px;font-size:15px;line-height:1.45;max-width:86%;}
+.bubble.n{background:var(--cream);border-bottom-right-radius:6px;}
+.bubble.u{background:var(--lemon-2);border-bottom-left-radius:6px;margin-left:auto;}
+.bubble .who{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink-dark);font-weight:700;margin-bottom:5px;}
+.bubble.u .who{color:var(--plum);}
+.bubble b{font-weight:700;background:var(--lemon);padding:0 3px;border-radius:3px;}
+.chat .signed{margin-top:18px;padding-top:14px;border-top:2px dashed var(--rule);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase;display:flex;justify-content:space-between;}
+.chat .signed b{color:var(--ink);font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:15px;text-transform:none;letter-spacing:-.01em;}
+
+/* GIVEBACK — Lemonade signature */
+.giveback{padding:100px 40px;background:var(--cream);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);}
+.giveback-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-items:center;}
+.giveback .pill{display:inline-block;background:var(--lemon);border:2px solid var(--ink);padding:8px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;margin-bottom:24px;box-shadow:3px 3px 0 var(--ink);}
+.giveback h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(44px,5.5vw,72px);line-height:.98;letter-spacing:-.025em;margin:0 0 24px;}
+.giveback h2 em{font-style:italic;font-weight:400;color:var(--pink);}
+.giveback p{font-size:18px;line-height:1.6;color:#3A2F40;margin:0 0 18px;}
+.giveback p b{font-weight:700;background:var(--lemon);padding:0 3px;border-radius:3px;}
+.pie{width:280px;aspect-ratio:1/1;border-radius:50%;background:conic-gradient(var(--pink) 0 55%,var(--lemon) 55% 82%,var(--sky) 82% 96%,var(--plum) 96% 100%);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);margin:0 auto;position:relative;}
+.pie .hole{position:absolute;inset:28%;background:var(--cream);border:2px solid var(--ink);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.pie .hole .n{font-family:'Fraunces',serif;font-weight:900;font-size:44px;line-height:1;letter-spacing:-.02em;}
+.pie .hole .lb{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin-top:4px;}
+.legend{margin-top:24px;display:flex;flex-direction:column;gap:8px;}
+.leg{display:flex;align-items:center;gap:10px;font-size:14px;}
+.leg .sw{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--ink);}
+.leg b{font-weight:700;font-family:'JetBrains Mono',monospace;}
+
+/* VOID */
+.void{padding:100px 0;}
+.void .inner{max-width:820px;margin:0 auto;padding:0 40px;}
+.void h2{font-family:'Fraunces',serif;font-weight:900;font-size:56px;line-height:1.02;letter-spacing:-.025em;margin:0 0 28px;}
+.void h2 .em{font-style:italic;font-weight:400;color:var(--pink);}
+.void p{font-size:19px;line-height:1.65;margin:0 0 20px;color:#3A2F40;}
+.void p b{font-weight:700;background:var(--lemon);padding:0 3px;border-radius:3px;}
+
+/* Final CTA — big friendly button */
+.final{padding:120px 40px;text-align:center;background:var(--lemon);border-top:3px solid var(--ink);}
+.final h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(72px,10vw,160px);line-height:.92;letter-spacing:-.04em;margin:0 0 30px;}
+.final h2 em{font-style:italic;font-weight:400;color:var(--pink);}
+.final p{font-size:18px;color:var(--ink);margin:0 0 36px;}
+
+footer{background:var(--ink);color:rgba(255,250,242,.75);padding:56px 40px 32px;}
+.foot-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;}
+footer h6{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--lemon);margin:0 0 14px;text-transform:uppercase;}
+footer ul{list-style:none;padding:0;margin:0;}footer li{font-size:14px;margin-bottom:8px;}
+footer .word{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--cream);margin-bottom:12px;}
+footer .tag{font-size:14px;line-height:1.55;max-width:340px;}
+.foot-bottom{max-width:1280px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(255,250,242,.12);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(255,250,242,.5);text-transform:uppercase;display:flex;justify-content:space-between;}
+</style></head><body>
+
+<div class="announce">ACA OPEN ENROLLMENT IS LIVE — ENDS JAN 15 · <a href="#">CHECK YOUR SUBSIDY</a></div>
+
+<nav class="head"><div class="row">
+  <div class="wordmark"><span class="mark"></span>Shophealthcare</div>
+  <div class="nav-links"><a>How it works</a><a>For businesses</a><a>Our agents</a><a>Sign in</a></div>
+  <a class="btn primary" href="#">Check my options</a>
+</div></nav>
+
+<section class="hero">
+  <div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="kicker"><span>A love letter to the self-employed · 2026</span></div>
+  <h1>Health insurance <em>was never built</em><br>for the way you work.<br><span class="stamp">We fixed that.</span></h1>
+  <p class="subline">Nora, our <b>AI enrollment assistant</b>, finds your real options in four minutes — backed by a licensed agent in your state who signs their name.</p>
+  <div class="ctas">
+    <a class="btn primary big" href="#">Check my options →</a>
+    <a class="btn lemon big" href="#">Scan your card</a>
+  </div>
+</section>
+
+<div class="ticker"><div class="tape">
+  <span>We took the fee.</span><span>We took the upsell.</span><span>We took the resold data.</span><span>What's left is the coverage, the math, and a human who signs their name.</span>
+  <span>We took the fee.</span><span>We took the upsell.</span><span>We took the resold data.</span><span>What's left is the coverage, the math, and a human who signs their name.</span>
+</div></div>
+
+<!-- WHEEL of situations (circles, not grid) -->
+<section class="wheel">
+  <h2>Pick the one that <em>sounds like you.</em></h2>
+  <div class="hint">Five ways we start — or just tell Nora what happened</div>
+  <div class="wheel-inner">
+    <div class="ring"><div class="num">01 · JOB LOSS</div><h3>I lost my <em>insurance.</em></h3><div class="arrow">→</div></div>
+    <div class="ring"><div class="num">02 · 1099</div><h3>I'm <em>self-employed.</em></h3><div class="arrow">→</div></div>
+    <div class="ring"><div class="num">03 · RENEWAL</div><h3>I got a <em>renewal notice.</em></h3><div class="arrow">→</div></div>
+    <div class="ring"><div class="num">04 · BRIDGE YEARS</div><h3>I'm <em>55 to 64.</em></h3><div class="arrow">→</div></div>
+    <div class="ring"><div class="num">05 · GUT-CHECK</div><h3>Just <em>checking</em> my plan.</h3><div class="arrow">→</div></div>
+  </div>
+  <div class="noneOfThese">None of these? <a href="#">Start a 90-second check instead →</a></div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers">
+  <div class="numbers-head">The ledger · by the numbers</div>
+  <div class="n-stack">
+    <div class="bignum"><div class="n tab">1.2<em>m</em></div><div class="lbl">plans compared across the marketplace</div></div>
+    <div class="bignum"><div class="n tab">180<em>+</em></div><div class="lbl">licensed agents on call in-state</div></div>
+    <div class="bignum"><div class="n tab">4:12</div><div class="lbl">average minutes to your first recommendation</div></div>
+    <div class="bignum"><div class="n tab"><em>$0</em></div><div class="lbl">to compare, complete, or walk away</div></div>
+  </div>
+</section>
+
+<!-- NORA SPREAD -->
+<section class="spread"><div class="spread-inner">
+  <div>
+    <h2>Meet <em>Nora.</em></h2>
+    <p>She reads your actual paperwork — renewal notice, insurance card, last year's 1095-A — and compares you against <b>every plan</b> in your county, every carrier, every network, every formulary.</p>
+    <p>Then she walks you through the three that actually fit, explains why the rest don't, and flags the hidden reset clauses nobody else reads.</p>
+    <p>Every recommendation is <b>signed by a state-licensed agent</b> before you enroll. A real person, in your state, paid a flat salary — not commission.</p>
+  </div>
+  <div class="chat">
+    <div class="bubble u"><div class="who">You</div>I went 1099 and my premium doubled on renewal.</div>
+    <div class="bubble n"><div class="who">Nora · Licensed assistant</div>Got it. In NC at $74k AGI, you qualify for <b>$418/month</b> in subsidy. Three plans keep your therapist in-network. Want the breakdown?</div>
+    <div class="bubble u"><div class="who">You</div>Yes, and flag anything weird.</div>
+    <div class="bubble n"><div class="who">Nora</div>One plan has a <b>hidden reset clause in October</b>. I'd skip it. Plan A is your cleanest option — Maya is reviewing now.</div>
+    <div class="signed"><span>REVIEWED BY</span><b>Maya Okafor, NC #44812</b></div>
+  </div>
+</div></section>
+
+<!-- GIVEBACK (Lemonade signature) -->
+<section class="giveback"><div class="giveback-inner">
+  <div>
+    <span class="pill">How we make money</span>
+    <h2>Your fee pays <em>agents</em>, not execs.</h2>
+    <p>We publish the breakdown. Nobody hides compensation at Shophealthcare. The flat brokerage fee passed through by the marketplace goes to the people and systems that protect you.</p>
+    <p>If there's anything left over at year-end, it goes to the <b>Navigator Fund</b> — community health organizations picking up the slack the government left behind in 2025.</p>
+    <a class="btn" href="#">See our 2025 ledger →</a>
+  </div>
+  <div>
+    <div class="pie"><div class="hole"><div class="n">100%</div><div class="lb">Accounted for</div></div></div>
+    <div class="legend">
+      <div class="leg"><span class="sw" style="background:var(--pink)"></span><span>Licensed agents &amp; support <b>· 55%</b></span></div>
+      <div class="leg"><span class="sw" style="background:var(--lemon)"></span><span>Technology &amp; security <b>· 27%</b></span></div>
+      <div class="leg"><span class="sw" style="background:var(--sky)"></span><span>Operations &amp; compliance <b>· 14%</b></span></div>
+      <div class="leg"><span class="sw" style="background:var(--plum)"></span><span>Navigator Fund (giveback) <b>· 4%</b></span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- VOID -->
+<section class="void"><div class="inner">
+  <h2>The navigator void, and <span class="em">why Nora exists.</span></h2>
+  <p>In late 2025, federal funding for health insurance navigators was <b>reduced sixfold</b>. This left millions of Americans — specifically the self-employed and those nearing retirement — without a trusted advocate to decipher the changing subsidy landscape.</p>
+  <p>Shophealthcare was built as a <b>response to this void</b>. Technology shouldn't just sell you a plan. It should protect your health and your wallet by providing the same rigorous analysis a concierge broker would — with a human signature at the end.</p>
+</div></section>
+
+<!-- FINAL -->
+<section class="final">
+  <h2>Four minutes. <em>Actually.</em></h2>
+  <p>Free to compare. Free to walk away. Free to ask again next year.</p>
+  <a class="btn primary big" href="#">Check my options →</a>
+</section>
+
+<footer><div class="foot-grid">
+  <div><div class="word">Shophealthcare</div><p class="tag">A licensed, independent health insurance brokerage. Named agents, flat-fee pay, no data resold.</p></div>
+  <div><h6>CONTACT</h6><ul><li>About</li><li>Talk to an agent</li><li>Press</li><li>Partnerships</li></ul></div>
+  <div><h6>LEGAL</h6><ul><li>Privacy</li><li>Terms</li><li>HIPAA notice</li><li>Accessibility</li></ul></div>
+  <div><h6>DIRECTORY</h6><ul><li>NPN #19482230</li><li>HELLO@SHOPHEALTHCARE</li><li class="tab">(800) 555-0198</li></ul></div>
+</div>
+<div class="foot-bottom"><span>© 2026 SHOPHEALTHCARE · LICENSED IN ALL 50 STATES</span><span>NOT A GOVERNMENT SITE</span></div>
+</footer>
+
+</body></html>
