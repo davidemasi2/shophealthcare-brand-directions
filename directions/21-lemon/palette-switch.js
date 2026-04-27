@@ -33,6 +33,7 @@
     { href: 'homepage-v7-com-clone.html',       label: 'V7 · .com Clone', klass: 'ps-reskin' },
     { href: 'homepage-v8-clone-optimized.html', label: 'V8 · Switchboard + Quiz', klass: 'ps-reskin' },
     { href: 'homepage-v9-journey-fork.html',    label: 'V9 · Journey Fork', klass: 'ps-reskin' },
+    { href: 'homepage-v10-simplified.html',     label: 'V10 · Simplified', klass: 'ps-reskin' },
     { href: 'reskin-shophealthcare-com.html',   label: 'Reskin · .com',  klass: 'ps-reskin' }
   ];
 
