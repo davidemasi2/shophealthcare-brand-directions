@@ -1589,6 +1589,182 @@
   .v8-switch-card.pink .sb-num { color: rgba(255,255,255,.14); }
 
   /* ================================================================
+     V9 — Switchboard ART-FIRST (illustrations replace plain cards)
+     Each card: bleed-to-edge scene (~200px) + tight copy block
+     ================================================================ */
+  .v9-switchboard {
+    max-width: 1240px;
+    margin: -40px auto 110px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 3;
+  }
+  .v9-switchboard .sb-head {
+    display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+    gap: 18px; margin-bottom: 32px;
+  }
+  .v9-switchboard .eyebrow-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--pink);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .v9-switchboard .eyebrow-mono::before { content: '\2605'; color: var(--lemon); }
+  .v9-switchboard h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(36px, 4.2vw, 56px); line-height: 1.03;
+    color: var(--ink); margin: 6px 0 0; letter-spacing: -.01em; max-width: 860px;
+  }
+  .v9-switchboard h2 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v9-switchboard .sb-sub {
+    font-family: 'Inter', sans-serif; font-size: 15px; color: rgba(14,42,58,.7);
+    max-width: 380px; text-align: right; line-height: 1.5;
+  }
+  .v9-switch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 980px) { .v9-switch-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .v9-switch-grid { grid-template-columns: 1fr; } }
+
+  .v9-sw {
+    position: relative;
+    background: var(--cream, #FFFAEA);
+    border: 2px solid var(--ink, #0E2A3A);
+    border-radius: 22px;
+    box-shadow: 6px 6px 0 var(--ink, #0E2A3A);
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    text-align: left;
+    font-family: inherit; color: var(--ink);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+  }
+  .v9-sw:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--ink, #0E2A3A);
+  }
+  .v9-sw:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+
+  /* Illustration scene — bleeds card edges, clipped */
+  .v9-sw .scene {
+    position: relative;
+    height: 210px;
+    border-bottom: 2px solid var(--ink);
+    overflow: hidden;
+    background: var(--cream);
+  }
+  .v9-sw .scene svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+  .v9-sw .scene .case-tag {
+    position: absolute; top: 14px; left: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: .18em;
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--ink); color: var(--cream);
+    z-index: 2;
+  }
+  .v9-sw .scene .num-tag {
+    position: absolute; top: 14px; right: 14px;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    font-size: 24px; line-height: 1;
+    width: 38px; height: 38px;
+    border: 2px solid var(--ink);
+    background: var(--cream);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    box-shadow: 2px 2px 0 var(--ink);
+    z-index: 2;
+  }
+
+  /* Copy block — tight, illustration-led */
+  .v9-sw .body {
+    padding: 22px 24px 22px;
+    display: flex; flex-direction: column; gap: 10px;
+    flex: 1;
+  }
+  .v9-sw h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 24px; line-height: 1.14; margin: 0;
+    letter-spacing: -.005em;
+  }
+  .v9-sw h3 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v9-sw .body p {
+    font-size: 14px; line-height: 1.5; color: rgba(14,42,58,.78); margin: 0;
+  }
+  .v9-sw .foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: 12px; border-top: 1px dashed rgba(14,42,58,.2);
+  }
+  .v9-sw .foot .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--lemon-2, #FFF4C7);
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+  }
+  .v9-sw .foot .cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: gap .2s ease;
+  }
+  .v9-sw:hover .foot .cta { gap: 12px; }
+
+  /* Per-persona scene tints */
+  .v9-sw.lemon  .scene { background: #FFE86E; }
+  .v9-sw.blush  .scene { background: #FFD0C2; }
+  .v9-sw.mint   .scene { background: #C9EAD8; }
+  .v9-sw.sky    .scene { background: #BFE3EC; }
+  .v9-sw.pink   .scene { background: #FF6A5C; }
+  .v9-sw.pink   .scene .case-tag { background: var(--cream); color: var(--pink); }
+  .v9-sw.pink   .scene .num-tag  { background: var(--cream); color: var(--pink); }
+  .v9-sw.outline { background: transparent; border-style: dashed; box-shadow: none; }
+  .v9-sw.outline:hover { background: var(--cream); box-shadow: 5px 5px 0 var(--ink); }
+  .v9-sw.outline .scene { background: #FFF6E0; }
+
+  /* Subtle scene animation on card hover (sparkle drift, dash march) */
+  .v9-sw .anim-spark { transform-origin: center; animation: v9-spark 4s ease-in-out infinite; }
+  .v9-sw:nth-of-type(2n) .anim-spark { animation-delay: -1.3s; }
+  .v9-sw:nth-of-type(3n) .anim-spark { animation-delay: -2.6s; }
+  @keyframes v9-spark {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: .65; }
+    50%      { transform: translateY(-4px) rotate(8deg); opacity: 1; }
+  }
+  .v9-sw .anim-dash {
+    stroke-dasharray: 4 5;
+    animation: v9-dash 12s linear infinite;
+  }
+  @keyframes v9-dash { to { stroke-dashoffset: -100; } }
+  .v9-sw:hover .anim-dash { animation-duration: 4s; }
+  .v9-sw .anim-arrow { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .v9-sw:hover .anim-arrow { transform: translateX(8px); }
+  .v9-sw .anim-pulse {
+    transform-origin: center;
+    animation: v9-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes v9-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .v9-sw .anim-spark,
+    .v9-sw .anim-dash,
+    .v9-sw .anim-pulse { animation: none; }
+    .v9-sw .anim-arrow { transition: none; }
+  }
+
+  /* ================================================================
      V8 — Lemon marquee band (replaces inherited dark ticker look)
      ================================================================ */
   .v8-marquee {
@@ -2160,123 +2336,360 @@
   </div>
 </header>
 
-<!-- ============================== PERSONA SWITCHBOARD ============================== -->
-<section class="v8-switchboard" id="switchboard">
+<!-- ============================== PERSONA SWITCHBOARD (V9 ART-FIRST) ============================== -->
+<section class="v9-switchboard" id="switchboard">
   <div class="sb-head">
     <div>
       <div class="eyebrow-mono">THE SWITCHBOARD</div>
-      <h2>Pick the case that looks <em>most like your life right now.</em></h2>
+      <h2>Six lives. <em>One Nora.</em><br>Pick the one that looks like yours.</h2>
     </div>
-    <p class="sb-sub">Nora works cases, not funnels. Tell her what changed and she&rsquo;ll route you in ~90 seconds &mdash; plain English, limit before benefit, no sales calls.</p>
+    <p class="sb-sub">Nora works cases, not funnels. Tell her what changed &mdash; she&rsquo;ll route you in ~90 seconds. Plain English, limit before benefit, no sales calls.</p>
   </div>
-  <div class="v8-switch-grid" id="switchGrid">
+  <div class="v9-switch-grid" id="switchGrid">
 
-    <button class="v8-switch-card lemon" data-quiz-open data-case="coverage-loss" type="button">
-      <span class="sb-num">01</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="6" width="18" height="12" rx="2"/>
-          <path d="M3 10h18"/>
-          <path d="m5 14 2 2 4-4" stroke-dasharray="2 2"/>
+    <!-- ============== 01 · COVERAGE GAP ============== -->
+    <button class="v9-sw lemon" data-quiz-open data-case="coverage-loss" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 01 &middot; GAP</span>
+        <span class="num-tag">01</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Office building (left) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="42" y="78" width="92" height="98" fill="#FFFAEA"/>
+            <rect x="56" y="92" width="14" height="14" fill="#0E2A3A"/>
+            <rect x="78" y="92" width="14" height="14" fill="#FFFAEA"/>
+            <rect x="100" y="92" width="14" height="14" fill="#0E2A3A"/>
+            <rect x="56" y="114" width="14" height="14" fill="#FFFAEA"/>
+            <rect x="78" y="114" width="14" height="14" fill="#0E2A3A"/>
+            <rect x="100" y="114" width="14" height="14" fill="#FFFAEA"/>
+            <!-- Closing door -->
+            <rect x="78" y="142" width="22" height="34" fill="#FF6A5C"/>
+            <circle cx="95" cy="160" r="1.6" fill="#0E2A3A"/>
+            <!-- Roof flag -->
+            <path d="M88 78 V60" />
+            <path d="M88 60 L106 65 L88 70 Z" fill="#FF6A5C"/>
+          </g>
+          <!-- Dashed gap path (the bridge) -->
+          <path class="anim-dash" d="M138 168 Q 200 130 268 168" stroke="#0E2A3A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Person walking (right) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="290" cy="128" r="9" fill="#FFFAEA"/>
+            <path d="M290 137 L290 162" />
+            <path d="M290 144 L278 156" />
+            <path d="M290 144 L302 154" />
+            <path d="M290 162 L282 178" />
+            <path d="M290 162 L298 178" />
+            <!-- briefcase -->
+            <rect x="296" y="148" width="14" height="10" fill="#FFE86E"/>
+          </g>
+          <!-- Calendar with X -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <rect x="346" y="56" width="92" height="76" fill="#FFFAEA"/>
+            <path d="M346 76 H438" />
+            <path d="M362 50 V64" />
+            <path d="M422 50 V64" />
+            <text x="392" y="108" font-family="Fraunces, serif" font-size="34" font-weight="700" fill="#FF6A5C" text-anchor="middle">26</text>
+          </g>
+          <!-- Sparkles -->
+          <g fill="#FF6A5C" class="anim-spark">
+            <path d="M170 60 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z"/>
+          </g>
+          <g fill="#0E2A3A" class="anim-spark" opacity=".55">
+            <path d="M232 188 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
+          <!-- Ground line -->
+          <path d="M20 198 H460" stroke="#0E2A3A" stroke-width="2" opacity=".18" stroke-dasharray="3 4"/>
         </svg>
       </div>
-      <div class="sb-case">CASE 01 · COVERAGE GAP</div>
-      <h3>My employer plan just <em>ended.</em></h3>
-      <p>Layoff, role change, COBRA ticking. Nora finds a bridge before the gap starts &mdash; no lapse in meds or labs.</p>
-      <div class="sb-row">
-        <span class="sb-chip">~90s route</span>
-        <span class="sb-cta">Start case &rarr;</span>
+      <div class="body">
+        <h3>My employer plan just <em>ended.</em></h3>
+        <p>Layoff, role change, COBRA ticking. Nora finds a bridge before the gap starts &mdash; no lapse in meds or labs.</p>
+        <div class="foot">
+          <span class="chip">~90s route</span>
+          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
-    <button class="v8-switch-card blush" data-quiz-open data-case="1099" type="button">
-      <span class="sb-num">02</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 21V9l8-5 8 5v12"/>
-          <path d="M9 21v-6h6v6"/>
-          <circle cx="12" cy="11" r="1.4" fill="#FF6A5C" stroke="none"/>
+    <!-- ============== 02 · 1099 / SELF-EMPLOYED ============== -->
+    <button class="v9-sw blush" data-quiz-open data-case="1099" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 02 &middot; 1099</span>
+        <span class="num-tag">02</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Desk surface -->
+          <path d="M30 168 H450" stroke="#0E2A3A" stroke-width="2" opacity=".22" stroke-dasharray="3 4"/>
+          <!-- Laptop -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <rect x="120" y="62" width="180" height="106" rx="6" fill="#FFFAEA"/>
+            <rect x="132" y="74" width="156" height="76" fill="#FFE4DB"/>
+            <path d="M108 168 H312" stroke-width="2.5"/>
+            <path d="M108 168 L120 178 H300 L312 168" fill="#0E2A3A"/>
+            <!-- Invoice on screen -->
+            <text x="142" y="92" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#0E2A3A">INVOICE #001</text>
+            <path d="M142 100 H262" stroke-width="1" opacity=".4"/>
+            <path d="M142 110 H230" stroke-width="1" opacity=".4"/>
+            <path d="M142 120 H250" stroke-width="1" opacity=".4"/>
+            <path d="M142 130 H210" stroke-width="1" opacity=".4"/>
+            <text x="278" y="142" font-family="Fraunces, serif" font-size="18" font-weight="700" fill="#FF6A5C" text-anchor="end">$2,400</text>
+          </g>
+          <!-- Coffee cup (left) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M44 112 L52 162 H86 L94 112 Z" fill="#FFFAEA"/>
+            <path d="M94 124 Q108 124 108 138 Q108 152 94 152" />
+            <path d="M58 102 Q60 96 64 102 Q68 96 72 102" stroke-width="1.5"/>
+            <path d="M44 112 H94" stroke-width="2.5"/>
+            <text x="69" y="148" font-family="Fraunces, serif" font-size="14" font-weight="700" fill="#0E2A3A" text-anchor="middle" font-style="italic">solo</text>
+          </g>
+          <!-- Briefcase tag (right) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <rect x="338" y="98" width="100" height="68" rx="6" fill="#FFE86E"/>
+            <path d="M362 98 V90 Q362 84 368 84 H408 Q414 84 414 90 V98" />
+            <path d="M338 130 H438" stroke-dasharray="3 3"/>
+            <text x="388" y="124" font-family="JetBrains Mono, monospace" font-size="14" font-weight="800" fill="#0E2A3A" text-anchor="middle">1099</text>
+          </g>
+          <!-- Sparkles / dollars -->
+          <g fill="#FF6A5C" class="anim-spark">
+            <text x="332" y="62" font-family="Fraunces, serif" font-size="22" font-weight="700">$</text>
+          </g>
+          <g fill="#0E2A3A" class="anim-spark" opacity=".5">
+            <path d="M48 56 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
         </svg>
       </div>
-      <div class="sb-case">CASE 02 · SELF-EMPLOYED</div>
-      <h3>I just went <em>1099.</em></h3>
-      <p>Freelance, consulting, LLC-of-one. Nora sizes deductible &harr; premium against actual income &mdash; not &ldquo;family of four&rdquo; assumptions.</p>
-      <div class="sb-row">
-        <span class="sb-chip">Income-sized</span>
-        <span class="sb-cta">Start case &rarr;</span>
+      <div class="body">
+        <h3>I just went <em>1099.</em></h3>
+        <p>Freelance, consulting, LLC-of-one. Nora sizes deductible &harr; premium against your actual income &mdash; not &ldquo;family of four&rdquo; assumptions.</p>
+        <div class="foot">
+          <span class="chip">Income-sized</span>
+          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
-    <button class="v8-switch-card mint" data-quiz-open data-case="renewal" type="button">
-      <span class="sb-num">03</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3v6"/>
-          <path d="m7 8 5-5 5 5"/>
-          <rect x="4" y="12" width="16" height="9" rx="2"/>
-          <path d="M8 16h8"/>
+    <!-- ============== 03 · RENEWAL SPIKE ============== -->
+    <button class="v9-sw mint" data-quiz-open data-case="renewal" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 03 &middot; RENEWAL</span>
+        <span class="num-tag">03</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Bill envelope (left) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <rect x="34" y="62" width="146" height="118" rx="4" fill="#FFFAEA"/>
+            <text x="46" y="84" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#FF6A5C">RENEWAL 2026</text>
+            <path d="M46 96 H168" stroke-width="1" opacity=".3"/>
+            <text x="46" y="116" font-family="Inter, sans-serif" font-size="9" fill="#0E2A3A">Premium</text>
+            <text x="166" y="116" font-family="Fraunces, serif" font-size="14" font-weight="700" fill="#0E2A3A" text-anchor="end">$648</text>
+            <path d="M46 124 H168" stroke-width="1" opacity=".2" stroke-dasharray="2 3"/>
+            <text x="46" y="144" font-family="Inter, sans-serif" font-size="9" fill="#0E2A3A">New rate</text>
+            <text x="166" y="144" font-family="Fraunces, serif" font-size="16" font-weight="700" fill="#FF6A5C" text-anchor="end">$894</text>
+            <path d="M46 152 H168" stroke-width="1" opacity=".2" stroke-dasharray="2 3"/>
+            <text x="46" y="170" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#FF6A5C">+38% ▲</text>
+          </g>
+          <!-- Bar chart (right) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <path d="M214 178 H440" stroke-width="2"/>
+            <rect x="226" y="148" width="22" height="30" fill="#FFFAEA"/>
+            <rect x="258" y="138" width="22" height="40" fill="#FFFAEA"/>
+            <rect x="290" y="124" width="22" height="54" fill="#FFE86E"/>
+            <rect x="322" y="110" width="22" height="68" fill="#FFE86E"/>
+            <rect x="354" y="78" width="22" height="100" fill="#FF6A5C"/>
+            <rect x="386" y="60" width="22" height="118" fill="#FF6A5C"/>
+            <!-- Trend arrow -->
+            <path d="M226 158 Q 290 130 408 70" stroke="#0E2A3A" stroke-width="2.5" stroke-dasharray="4 4" class="anim-dash"/>
+            <path d="M408 70 L398 76 M408 70 L402 80" stroke-width="2.5"/>
+          </g>
+          <!-- Magnifying glass over chart -->
+          <g stroke="#0E2A3A" stroke-width="2.5" fill="none" stroke-linejoin="round" class="anim-pulse">
+            <circle cx="370" cy="128" r="22" fill="rgba(255,250,234,.7)"/>
+            <path d="M386 144 L402 162" stroke-linecap="round"/>
+          </g>
+          <!-- Sparkle -->
+          <g fill="#FF6A5C" class="anim-spark">
+            <path d="M196 50 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
         </svg>
       </div>
-      <div class="sb-case">CASE 03 · 2026 RENEWAL</div>
-      <h3>My premium <em>spiked</em> at renewal.</h3>
-      <p>Auto-renewed plan, same benefits, higher bill. Nora reads your EOB and shows where the cost moved &mdash; and what shifts back.</p>
-      <div class="sb-row">
-        <span class="sb-chip">Rx + network check</span>
-        <span class="sb-cta">Start case &rarr;</span>
+      <div class="body">
+        <h3>My premium <em>spiked</em> at renewal.</h3>
+        <p>Auto-renewed plan, same benefits, higher bill. Nora reads your EOB and shows where the cost moved &mdash; and what shifts back.</p>
+        <div class="foot">
+          <span class="chip">Rx + network check</span>
+          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
-    <button class="v8-switch-card sky" data-quiz-open data-case="bridge" type="button">
-      <span class="sb-num">04</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="8" r="3"/>
-          <path d="M5 21c0-4 3-7 7-7s7 3 7 7"/>
-          <path d="m16 4 2 2-2 2"/>
+    <!-- ============== 04 · BRIDGE YEARS (60-65) ============== -->
+    <button class="v9-sw sky" data-quiz-open data-case="bridge" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 04 &middot; BRIDGE</span>
+        <span class="num-tag">04</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Cliff left (60) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <path d="M30 154 H140 V196 H30 Z" fill="#FFFAEA"/>
+            <path d="M30 154 H140" stroke-width="2.5"/>
+            <text x="85" y="186" font-family="Fraunces, serif" font-size="28" font-weight="700" fill="#FF6A5C" text-anchor="middle" font-style="italic">60</text>
+            <!-- Flag -->
+            <path d="M52 154 V120" stroke-width="2"/>
+            <path d="M52 120 L78 126 L52 132 Z" fill="#FF6A5C"/>
+          </g>
+          <!-- Cliff right (65) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round">
+            <path d="M340 154 H450 V196 H340 Z" fill="#FFFAEA"/>
+            <path d="M340 154 H450" stroke-width="2.5"/>
+            <text x="395" y="186" font-family="Fraunces, serif" font-size="28" font-weight="700" fill="#FF6A5C" text-anchor="middle" font-style="italic">65</text>
+            <!-- Flag -->
+            <path d="M422 154 V112" stroke-width="2"/>
+            <path d="M422 112 L398 118 L422 124 Z" fill="#FFE86E"/>
+            <text x="411" y="118" font-family="JetBrains Mono, monospace" font-size="7" font-weight="700" fill="#0E2A3A" text-anchor="middle">MEDICARE</text>
+          </g>
+          <!-- Bridge (rope-style) -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none">
+            <path d="M140 154 Q 240 132 340 154" stroke-width="2.5"/>
+            <path d="M140 158 Q 240 178 340 158" class="anim-dash" stroke-width="2"/>
+            <!-- Bridge slats -->
+            <path d="M170 150 V172"/>
+            <path d="M198 145 V172"/>
+            <path d="M226 142 V172"/>
+            <path d="M254 142 V172"/>
+            <path d="M282 145 V172"/>
+            <path d="M310 150 V172"/>
+          </g>
+          <!-- Walker on bridge -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <circle cx="240" cy="118" r="8" fill="#FFFAEA"/>
+            <path d="M240 126 L240 146"/>
+            <path d="M240 132 L230 142"/>
+            <path d="M240 132 L250 140"/>
+            <path d="M240 146 L233 158"/>
+            <path d="M240 146 L246 158"/>
+            <!-- Pill bottle in hand -->
+            <rect x="248" y="136" width="9" height="12" rx="1.5" fill="#FFE86E"/>
+            <path d="M248 140 H257"/>
+          </g>
+          <!-- Sparkles -->
+          <g fill="#FF6A5C" class="anim-spark">
+            <path d="M196 80 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
+          <g fill="#0E2A3A" class="anim-spark" opacity=".5">
+            <path d="M310 70 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 z"/>
+          </g>
+          <!-- Sun -->
+          <circle cx="240" cy="44" r="14" fill="#FFE86E" stroke="#0E2A3A" stroke-width="2" class="anim-pulse"/>
         </svg>
       </div>
-      <div class="sb-case">CASE 04 · BRIDGE YEARS</div>
-      <h3>I&rsquo;m in the <em>gap before Medicare.</em></h3>
-      <p>60 to 65, early retirement, or a spouse carrying the plan. Nora routes around the donut and keeps your specialist in-network.</p>
-      <div class="sb-row">
-        <span class="sb-chip">Specialist-locked</span>
-        <span class="sb-cta">Start case &rarr;</span>
+      <div class="body">
+        <h3>I&rsquo;m in the <em>gap before Medicare.</em></h3>
+        <p>60 to 65, early retirement, or a spouse carrying the plan. Nora routes around the donut and keeps your specialist in-network.</p>
+        <div class="foot">
+          <span class="chip">Specialist-locked</span>
+          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
-    <button class="v8-switch-card pink" data-quiz-open data-case="gut-check" type="button">
-      <span class="sb-num">05</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-          <circle cx="9" cy="11" r=".8" fill="currentColor"/>
-          <circle cx="13" cy="11" r=".8" fill="currentColor"/>
-          <circle cx="17" cy="11" r=".8" fill="currentColor"/>
+    <!-- ============== 05 · GUT CHECK / SCAN MY CARD ============== -->
+    <button class="v9-sw pink" data-quiz-open data-case="gut-check" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 05 &middot; SCAN</span>
+        <span class="num-tag">05</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Insurance card (skewed) -->
+          <g stroke="#FFFAEA" stroke-width="2" fill="none" stroke-linejoin="round">
+            <g transform="translate(132 50) rotate(-6)">
+              <rect x="0" y="0" width="220" height="130" rx="10" fill="#FFFAEA" stroke="#0E2A3A"/>
+              <rect x="0" y="0" width="220" height="32" rx="10" fill="#FFE86E" stroke="#0E2A3A"/>
+              <text x="14" y="22" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#0E2A3A">PPO &middot; PLATINUM</text>
+              <text x="14" y="58" font-family="Fraunces, serif" font-size="14" font-weight="600" fill="#0E2A3A">MEMBER</text>
+              <text x="14" y="76" font-family="Fraunces, serif" font-size="16" font-weight="700" fill="#0E2A3A">Sara D.</text>
+              <text x="14" y="100" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#0E2A3A" opacity=".7">ID 4827-1129-0042</text>
+              <text x="14" y="118" font-family="JetBrains Mono, monospace" font-size="8" fill="#FF6A5C" opacity=".8">DEDUCTIBLE $5,500</text>
+              <!-- Hidden caveat -->
+              <path d="M120 88 H210" stroke="#FF6A5C" stroke-width="2" stroke-dasharray="3 3" class="anim-dash"/>
+              <text x="120" y="106" font-family="JetBrains Mono, monospace" font-size="6" fill="#0E2A3A" opacity=".4">*OUT OF NETWORK</text>
+            </g>
+          </g>
+          <!-- Scanner beam -->
+          <g class="anim-pulse">
+            <rect x="100" y="98" width="280" height="4" fill="#FFFAEA" opacity=".7"/>
+            <rect x="100" y="100" width="280" height="2" fill="#FFE86E"/>
+          </g>
+          <!-- Magnifier from above-right -->
+          <g stroke="#FFFAEA" stroke-width="2.5" fill="none" stroke-linecap="round">
+            <circle cx="368" cy="56" r="26" fill="rgba(255,250,234,.18)"/>
+            <path d="M384 76 L408 100"/>
+          </g>
+          <!-- Verdict ticks/X -->
+          <g stroke="#FFFAEA" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M40 158 L52 170 L72 150" />
+            <text x="46" y="194" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#FFFAEA">PAYS</text>
+          </g>
+          <g stroke="#FFFAEA" stroke-width="2.5" fill="none" stroke-linecap="round">
+            <path d="M414 154 L432 172"/>
+            <path d="M432 154 L414 172"/>
+            <text x="423" y="194" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#FFFAEA" text-anchor="middle">DOESN&apos;T</text>
+          </g>
+          <!-- Sparkles -->
+          <g fill="#FFFAEA" class="anim-spark">
+            <path d="M58 50 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
         </svg>
       </div>
-      <div class="sb-case">CASE 05 · GUT CHECK</div>
-      <h3>I have a plan &mdash; I want a <em>second opinion.</em></h3>
-      <p>Nora scans your card, reads the fine print, and flags what actually pays (and what doesn&rsquo;t). No switch required.</p>
-      <div class="sb-row">
-        <span class="sb-chip">Scan &amp; decode</span>
-        <span class="sb-cta">Start case &rarr;</span>
+      <div class="body">
+        <h3>I have a plan &mdash; I want a <em>second opinion.</em></h3>
+        <p>Nora scans your card, reads the fine print, and flags what actually pays (and what doesn&rsquo;t). No switch required.</p>
+        <div class="foot">
+          <span class="chip">Scan &amp; decode</span>
+          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
-    <button class="v8-switch-card outline" data-quiz-open data-case="other" type="button">
-      <span class="sb-num">06</span>
-      <div class="sb-ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/>
-          <circle cx="12" cy="16.5" r=".8" fill="#0E2A3A"/>
+    <!-- ============== 06 · SOMETHING ELSE ============== -->
+    <button class="v9-sw outline" data-quiz-open data-case="other" type="button">
+      <div class="scene" aria-hidden="true">
+        <span class="case-tag">CASE 06 &middot; OPEN</span>
+        <span class="num-tag">06</span>
+        <svg viewBox="0 0 480 210" preserveAspectRatio="xMidYMid slice">
+          <!-- Big question mark center -->
+          <text x="240" y="146" font-family="Fraunces, serif" font-size="142" font-weight="600" fill="#FFE86E" text-anchor="middle" stroke="#0E2A3A" stroke-width="2.5" font-style="italic">?</text>
+          <!-- Three diverging dashed routes -->
+          <g stroke="#0E2A3A" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M240 178 Q 130 188 56 162" class="anim-dash"/>
+            <path d="M240 178 Q 240 196 240 200" class="anim-dash"/>
+            <path d="M240 178 Q 350 188 424 162" class="anim-dash"/>
+            <!-- Endpoint dots -->
+            <circle cx="56" cy="162" r="5" fill="#FF6A5C"/>
+            <circle cx="240" cy="200" r="5" fill="#FF6A5C"/>
+            <circle cx="424" cy="162" r="5" fill="#FF6A5C"/>
+          </g>
+          <!-- Tiny labels under endpoints -->
+          <g font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#0E2A3A" opacity=".55" text-anchor="middle">
+            <text x="56" y="180">PATH A</text>
+            <text x="240" y="220">PATH B</text>
+            <text x="424" y="180">PATH C</text>
+          </g>
+          <!-- Sparkles around the ? -->
+          <g fill="#FF6A5C" class="anim-spark">
+            <path d="M312 64 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z"/>
+          </g>
+          <g fill="#0E2A3A" class="anim-spark" opacity=".55">
+            <path d="M150 76 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z"/>
+          </g>
+          <g fill="#FFE86E" stroke="#0E2A3A" stroke-width="1.5" class="anim-spark">
+            <path d="M386 70 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z"/>
+          </g>
         </svg>
       </div>
-      <div class="sb-case">CASE 06 · SOMETHING ELSE</div>
-      <h3>None of these fit.</h3>
-      <p>Start an open case. Nora asks 3 questions and routes you like the rest.</p>
-      <div class="sb-row">
-        <span class="sb-cta">Tell Nora what changed &rarr;</span>
+      <div class="body">
+        <h3>None of these fit. <em>That&rsquo;s fine.</em></h3>
+        <p>Start an open case. Nora asks 3 questions and routes you like the rest.</p>
+        <div class="foot">
+          <span class="chip">3 questions</span>
+          <span class="cta">Tell Nora <span class="anim-arrow">&rarr;</span></span>
+        </div>
       </div>
     </button>
 
