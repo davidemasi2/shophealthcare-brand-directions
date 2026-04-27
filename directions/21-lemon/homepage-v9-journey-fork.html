@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopHealthcare · V9 · Journey Fork · Process + Product Reveal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lemon.css">
+<script src="palette-switch.js" defer></script>
+<style>
+  /* =======================================================
+     V8 — Clone Optimized — Persona-switchboard quiz gate
+     Lemon vocabulary + hard-shadow cards + palette-aware BG
+     ======================================================= */
+
+  :root { --maxw: 1200px; }
+
+  /* ---------- Palette-aware background tokens ---------- */
+  /* Default = SHC-Match fallback; each theme overrides below */
+  :root {
+    --sky-top: #EAF6F8;
+    --sky-mid: #CFE8EE;
+    --sky-bot: #BFDCE5;
+    --sky-warm: rgba(255,200,87,.14);
+    --cloud-1: #FFFFFF;
+    --cloud-2: #E6F2F6;
+    --ncloud-stop-a: rgba(125,231,255,.5);
+    --ncloud-stop-b: rgba(0,31,46,.1);
+    --moon-a: #FFE9B8;
+    --moon-b: #FFC857;
+    --moon-c: #E8A93A;
+    --moon-glow: rgba(255,200,87,.38);
+    --final-bg-a: #0B2A3A;
+    --final-bg-b: #001F2E;
+    --final-glow-a: rgba(0,181,216,.18);
+    --final-glow-b: rgba(255,200,87,.12);
+    --star-color: #FFE9B8;
+  }
+  body.theme-original {
+    --sky-top: #FFF4EE; --sky-mid: #FFE4DB; --sky-bot: #FFD7CC;
+    --sky-warm: rgba(255,232,110,.22);
+    --cloud-1: #FFFAEA; --cloud-2: #FFE4DB;
+    --ncloud-stop-a: rgba(255,232,110,.45); --ncloud-stop-b: rgba(59,42,74,.12);
+    --moon-a: #FFE4DB; --moon-b: #FF6A5C; --moon-c: #C94052; --moon-glow: rgba(255,106,92,.42);
+    --final-bg-a: #3B2A4A; --final-bg-b: #1A1322;
+    --final-glow-a: rgba(255,106,92,.22); --final-glow-b: rgba(255,232,110,.18);
+    --star-color: #FFE4DB;
+  }
+  body.theme-heritage {
+    --sky-top: #F4F8FB; --sky-mid: #DDEAF1; --sky-bot: #CBDEE8;
+    --sky-warm: rgba(255,210,92,.16);
+    --cloud-1: #FFFFFF; --cloud-2: #E4EFF5;
+    --ncloud-stop-a: rgba(61,154,179,.42); --ncloud-stop-b: rgba(0,38,72,.1);
+    --moon-a: #FFE9B8; --moon-b: #FFD25C; --moon-c: #E0B93F; --moon-glow: rgba(255,210,92,.4);
+    --final-bg-a: #0B2545; --final-bg-b: #002648;
+    --final-glow-a: rgba(61,154,179,.22); --final-glow-b: rgba(255,210,92,.16);
+    --star-color: #FFE9B8;
+  }
+  body.theme-disruptor {
+    --sky-top: #FBF8E8; --sky-mid: #F1EEB8; --sky-bot: #E5E7A3;
+    --sky-warm: rgba(216,255,74,.22);
+    --cloud-1: #FFFFFF; --cloud-2: #F0F4C9;
+    --ncloud-stop-a: rgba(216,255,74,.46); --ncloud-stop-b: rgba(15,15,15,.15);
+    --moon-a: #F2F8B2; --moon-b: #D8FF4A; --moon-c: #A5CC00; --moon-glow: rgba(216,255,74,.5);
+    --final-bg-a: #0F0F0F; --final-bg-b: #050505;
+    --final-glow-a: rgba(255,46,99,.24); --final-glow-b: rgba(216,255,74,.22);
+    --star-color: #D8FF4A;
+  }
+  body.theme-sunset {
+    --sky-top: #FFF4E8; --sky-mid: #FFE3C4; --sky-bot: #FFD0A3;
+    --sky-warm: rgba(255,179,71,.26);
+    --cloud-1: #FFF7EC; --cloud-2: #FFE3C4;
+    --ncloud-stop-a: rgba(255,179,71,.48); --ncloud-stop-b: rgba(59,20,10,.12);
+    --moon-a: #FFE9D0; --moon-b: #FFB347; --moon-c: #C0392B; --moon-glow: rgba(255,179,71,.48);
+    --final-bg-a: #2B0F06; --final-bg-b: #100503;
+    --final-glow-a: rgba(255,179,71,.3); --final-glow-b: rgba(192,57,43,.3);
+    --star-color: #FFE9D0;
+  }
+  body.theme-clinic {
+    --sky-top: #F6FAF3; --sky-mid: #E6EFE0; --sky-bot: #D4E3CB;
+    --sky-warm: rgba(245,220,107,.2);
+    --cloud-1: #FFFFFF; --cloud-2: #E6EFE0;
+    --ncloud-stop-a: rgba(47,128,96,.42); --ncloud-stop-b: rgba(15,30,22,.12);
+    --moon-a: #FBF3C2; --moon-b: #F5DC6B; --moon-c: #C9B341; --moon-glow: rgba(245,220,107,.4);
+    --final-bg-a: #0F1E16; --final-bg-b: #060D09;
+    --final-glow-a: rgba(47,128,96,.22); --final-glow-b: rgba(245,220,107,.18);
+    --star-color: #FBF3C2;
+  }
+  body.theme-almanac {
+    --sky-top: #F7F1E1; --sky-mid: #EAE0C4; --sky-bot: #DBCFAC;
+    --sky-warm: rgba(232,197,71,.22);
+    --cloud-1: #FAF4E2; --cloud-2: #EAE0C4;
+    --ncloud-stop-a: rgba(232,197,71,.44); --ncloud-stop-b: rgba(34,20,10,.12);
+    --moon-a: #FAE7B0; --moon-b: #E8C547; --moon-c: #B99631; --moon-glow: rgba(232,197,71,.44);
+    --final-bg-a: #2A1A0B; --final-bg-b: #160A05;
+    --final-glow-a: rgba(200,39,58,.22); --final-glow-b: rgba(232,197,71,.2);
+    --star-color: #FAE7B0;
+  }
+  body.theme-y2k {
+    --sky-top: #FFF1F8; --sky-mid: #FFDDEE; --sky-bot: #C6F2FE;
+    --sky-warm: rgba(255,222,58,.24);
+    --cloud-1: #FFFFFF; --cloud-2: #DDF4FA;
+    --ncloud-stop-a: rgba(0,217,255,.5); --ncloud-stop-b: rgba(255,92,165,.14);
+    --moon-a: #FFF1F8; --moon-b: #FF55B7; --moon-c: #B01888; --moon-glow: rgba(255,92,165,.48);
+    --final-bg-a: #1A0A2A; --final-bg-b: #0A0518;
+    --final-glow-a: rgba(0,217,255,.28); --final-glow-b: rgba(255,92,165,.28);
+    --star-color: #FFDE3A;
+  }
+
+  /* ---------- Shared Lemon hard-shadow card vocabulary ---------- */
+  .v8-card {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 28px;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .v8-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .v8-card.lemon { background: var(--lemon-2); }
+  .v8-card.blush { background: var(--blush-2); }
+  .v8-card.pink  { background: var(--pink); color: var(--cream); border-color: var(--ink); }
+  .v8-card.pink  *:not(.eyebrow-mono) { color: inherit; }
+  .v8-card.ink   { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .v8-card.ink   * { color: inherit; }
+
+  /* Shared eyebrows / headings */
+  .eyebrow-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--pink-dark);
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--blush-2);
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .h2-big {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 56px; line-height: 1.04; letter-spacing: -.025em;
+    margin: 0 0 20px; color: var(--ink);
+  }
+  .h2-big em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .sub-lg {
+    font-size: 19px; line-height: 1.55;
+    color: var(--mute); max-width: 680px; margin: 0;
+  }
+  .sec-head-c {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 120px 40px 48px;
+    text-align: center;
+  }
+  .sec-head-c .sub-lg { margin: 0 auto; }
+
+  /* =======================================================
+     NAV — sticky, scroll background, hamburger at ≤900
+     ======================================================= */
+  .v7-nav {
+    position: sticky; top: 0; z-index: 90;
+    background: rgba(255,255,255,0);
+    transition: background .22s, box-shadow .22s, border-color .22s;
+    border-bottom: 1px solid transparent;
+  }
+  .v7-nav.scrolled {
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-bottom-color: var(--rule);
+  }
+  .v7-nav .row {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 18px 32px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .v7-nav .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 22px; letter-spacing: -.015em; color: var(--ink);
+  }
+  .v7-nav .brand .logo {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--pink); color: var(--cream);
+    display: grid; place-items: center;
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 16px;
+  }
+  .v7-nav .links {
+    display: flex; gap: 26px; margin-left: 28px; flex: 1;
+  }
+  .v7-nav .links a {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    font-size: 14px; color: var(--ink);
+    transition: color .15s;
+  }
+  .v7-nav .links a:hover { color: var(--pink); }
+  .v7-nav .btn-nav {
+    background: var(--ink); color: var(--cream);
+    padding: 11px 20px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    border: 0; cursor: pointer;
+    transition: transform .12s, background .15s;
+  }
+  .v7-nav .btn-nav:hover { background: var(--pink-dark); transform: translateY(-1px); }
+  .v7-nav .hamb { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .v7-nav .hamb span {
+    display: block; width: 22px; height: 2px; background: var(--ink); margin: 4px 0;
+    transition: transform .2s, opacity .2s;
+  }
+  .v7-drawer {
+    position: fixed; inset: 0 0 0 auto; width: 300px;
+    background: var(--cream); z-index: 100;
+    transform: translateX(100%); transition: transform .3s;
+    padding: 80px 28px 28px;
+    box-shadow: -6px 0 24px rgba(0,0,0,.08);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .v7-drawer.open { transform: translateX(0); }
+  .v7-drawer a {
+    padding: 14px 10px; border-bottom: 1px solid var(--rule);
+    font-family: 'Inter', sans-serif; font-weight: 500; font-size: 16px;
+    color: var(--ink);
+  }
+  .v7-drawer .btn-nav { margin-top: 16px; }
+  .v7-drawer-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 32px; height: 32px; border: 0; background: none;
+    font-size: 24px; cursor: pointer; color: var(--ink);
+  }
+  .v7-scrim {
+    position: fixed; inset: 0; background: rgba(0,0,0,.4);
+    z-index: 95; opacity: 0; pointer-events: none;
+    transition: opacity .22s;
+  }
+  .v7-scrim.open { opacity: 1; pointer-events: auto; }
+  @media (max-width: 900px) {
+    .v7-nav .links, .v7-nav .btn-nav.desktop { display: none; }
+    .v7-nav .hamb { display: block; margin-left: auto; }
+  }
+
+  /* =======================================================
+     HERO — clouds BG + Meet Nora + chat input + bubbles
+     ======================================================= */
+  .v7-hero {
+    position: relative;
+    min-height: 760px;
+    padding: 80px 40px 120px;
+    overflow: hidden;
+    text-align: center;
+  }
+  .v7-hero .sky-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 30%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(ellipse 80% 55% at 80% 40%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 50% 80%, var(--sky-warm), transparent 60%),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 40%, var(--sky-bot) 80%, var(--sky-mid) 100%);
+    transition: background .5s ease;
+  }
+  /* Fluffy SVG clouds — drift at 3 depths w/ different speeds */
+  .v7-hero .cloud {
+    position: absolute; pointer-events: none;
+    will-change: transform;
+  }
+  .v7-hero .cloud svg { display: block; width: 100%; height: 100%; }
+  .v7-hero .cloud.back  { opacity: .55; filter: blur(1.5px); animation: cloud-drift-slow 60s linear infinite; }
+  .v7-hero .cloud.mid   { opacity: .85; filter: drop-shadow(0 14px 28px rgba(14,42,58,.08)); animation: cloud-drift-mid 45s linear infinite; }
+  .v7-hero .cloud.front { opacity: 1;   filter: drop-shadow(0 20px 38px rgba(14,42,58,.12)); animation: cloud-drift-fast 34s linear infinite; }
+  .v7-hero .cloud.c1 { width: 340px; height: 140px; top: 6%;  left: -8%; }
+  .v7-hero .cloud.c2 { width: 260px; height: 110px; top: 18%; right: -6%; animation-delay: -12s; }
+  .v7-hero .cloud.c3 { width: 420px; height: 180px; top: 44%; left: -10%; animation-delay: -8s; }
+  .v7-hero .cloud.c4 { width: 300px; height: 130px; top: 54%; right: -8%; animation-delay: -20s; }
+  .v7-hero .cloud.c5 { width: 520px; height: 220px; bottom: -4%; left: 24%; animation-delay: -5s; }
+  .v7-hero .cloud.c6 { width: 220px; height: 92px;  top: 30%; left: 58%; animation-delay: -16s; opacity: .75; }
+  @keyframes cloud-drift-slow { from { transform: translateX(-6%); } to { transform: translateX(112%); } }
+  @keyframes cloud-drift-mid  { from { transform: translateX(-8%); } to { transform: translateX(115%); } }
+  @keyframes cloud-drift-fast { from { transform: translateX(-10%); } to { transform: translateX(118%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .v7-hero .cloud { animation: none !important; }
+  }
+
+  /* Sun rays / light beams */
+  .v7-hero .ray {
+    position: absolute; left: 50%; top: 0;
+    width: 140%; height: 120%;
+    background: conic-gradient(from 200deg at 50% 0%, transparent 0deg, rgba(255,255,255,.3) 18deg, transparent 36deg);
+    transform: translateX(-50%);
+    opacity: .7; pointer-events: none;
+  }
+
+  /* Twinkle sparkles around Nora — pink + lemon accent dots */
+  .v7-hero .sparkles {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  }
+  .v7-hero .sparkle {
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pink);
+    box-shadow: 0 0 0 4px rgba(0,181,216,.18), 0 0 14px 2px rgba(0,181,216,.35);
+    animation: twinkle 3.2s ease-in-out infinite;
+  }
+  .v7-hero .sparkle.lemon { background: var(--lemon); box-shadow: 0 0 0 4px rgba(255,200,87,.22), 0 0 14px 2px rgba(255,200,87,.5); }
+  .v7-hero .sparkle.sm { width: 5px; height: 5px; }
+  .v7-hero .sparkle.s1 { top: 18%; left: 30%; animation-delay: 0s; }
+  .v7-hero .sparkle.s2 { top: 14%; right: 28%; animation-delay: -.9s; }
+  .v7-hero .sparkle.s3 { top: 38%; left: 22%; animation-delay: -1.8s; }
+  .v7-hero .sparkle.s4 { top: 44%; right: 22%; animation-delay: -2.4s; }
+  .v7-hero .sparkle.s5 { top: 26%; left: 48%; animation-delay: -.4s; }
+  .v7-hero .sparkle.s6 { top: 58%; right: 36%; animation-delay: -1.2s; }
+  @keyframes twinkle {
+    0%, 100% { transform: scale(.4); opacity: .25; }
+    50%      { transform: scale(1);  opacity: 1; }
+  }
+  .v7-hero .content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 72px;
+    align-items: center;
+    text-align: left;
+  }
+  .v7-hero .hero-left { min-width: 0; }
+  .v7-hero .hero-right { min-width: 0; position: relative; }
+  @media (max-width: 1080px) {
+    .v7-hero .content { grid-template-columns: 1fr; gap: 40px; text-align: left; }
+    .v7-hero .hero-right { order: 2; }
+  }
+  .v7-hero .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(255,255,255,.7); backdrop-filter: blur(6px);
+    border: 1px solid rgba(14,42,58,.08);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink); font-weight: 700;
+    margin-bottom: 24px;
+  }
+  .v7-hero .hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 3px rgba(0,181,216,.25); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+  .v7-hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(48px, 4.6vw, 72px);
+    line-height: 1.02; letter-spacing: -.032em;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+  .v7-hero h1 .meet { font-style: italic; font-weight: 400; }
+  .v7-hero h1 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v7-hero h1 .nobr { white-space: nowrap; }
+  .v7-hero .lead {
+    font-size: 18.5px; line-height: 1.55; color: var(--mute);
+    max-width: 520px; margin: 0 0 32px;
+    text-wrap: pretty;
+  }
+  .v7-hero .lead b { color: var(--ink); font-weight: 700; }
+
+  /* Ask-anything chat input */
+  .ask-input {
+    max-width: 580px; margin: 0 auto 26px;
+    background: var(--cream);
+    border-radius: 18px;
+    padding: 12px 14px 12px 22px;
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 18px 42px rgba(14,42,58,.12), 0 2px 8px rgba(14,42,58,.06);
+  }
+  .ask-input .nora-mini {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--pink); color: var(--cream);
+    display: grid; place-items: center;
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 16px;
+    flex: none;
+  }
+  .ask-input input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    font-family: 'Inter', sans-serif; font-size: 16px;
+    color: var(--ink); padding: 10px 0;
+  }
+  .ask-input input::placeholder { color: var(--mute); }
+  .ask-input .send {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--ink); color: var(--cream);
+    border: 0; display: grid; place-items: center; cursor: pointer;
+    transition: transform .12s, background .15s;
+  }
+  .ask-input .send:hover { background: var(--pink-dark); transform: translateY(-1px); }
+  .ask-input .send svg { width: 18px; height: 18px; }
+
+  .v7-hero .ctas {
+    display: flex; gap: 12px; justify-content: flex-start; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .v7-hero .btn-pri {
+    box-shadow: 4px 4px 0 var(--ink);
+    border: 2px solid var(--ink) !important;
+  }
+  .v7-hero .btn-pri:hover { box-shadow: 6px 6px 0 var(--ink); transform: translate(-2px, -2px); }
+  .v7-hero .btn-sec {
+    box-shadow: 3px 3px 0 var(--ink);
+    border: 2px solid var(--ink) !important;
+  }
+  .v7-hero .btn-sec:hover { box-shadow: 5px 5px 0 var(--ink); transform: translate(-2px, -2px); }
+  .v7-hero .btn-pri {
+    background: var(--ink); color: var(--cream);
+    padding: 15px 26px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    border: 0; cursor: pointer;
+    transition: transform .12s, background .15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .v7-hero .btn-pri:hover { background: var(--pink-dark); transform: translateY(-1px); }
+  .v7-hero .btn-sec {
+    background: var(--cream); color: var(--ink);
+    padding: 15px 26px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    border: 1px solid var(--rule); cursor: pointer;
+    transition: transform .12s, border-color .15s;
+  }
+  .v7-hero .btn-sec:hover { border-color: var(--pink); transform: translateY(-1px); }
+  .v7-hero .discover {
+    font-size: 14px; color: var(--mute); margin-top: 8px;
+    max-width: 500px;
+  }
+
+  /* Chat bubble preview (V8 asymmetric, hard 3D ink shadow, right-rail on desktop) */
+  .chat-preview {
+    max-width: 460px; margin: 0;
+    padding: 6px 0 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    text-align: left;
+  }
+  .chat-preview .row-msg {
+    display: flex; gap: 14px; margin-bottom: 18px;
+    align-items: flex-start;
+  }
+  .chat-preview .row-msg:nth-child(1) { justify-content: flex-start; transform: translateX(-6px); }
+  .chat-preview .row-msg.mine         { justify-content: flex-end;   transform: translateX(16px); }
+  .chat-preview .row-msg:nth-child(3) { justify-content: flex-start; transform: translateX(8px); }
+  .chat-preview .avatar {
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--pink); color: var(--cream);
+    display: grid; place-items: center;
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 14px;
+    flex: none;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .chat-preview .avatar.you { background: var(--ink); color: var(--cream); }
+  .chat-preview .bub {
+    background: var(--cream); color: var(--ink);
+    padding: 12px 16px; border-radius: 16px;
+    font-size: 14.5px; line-height: 1.5;
+    max-width: 420px;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .chat-preview .bub.mine {
+    background: var(--lemon-2, #FFF4C7); color: var(--ink);
+  }
+  .chat-preview .row-msg:nth-child(1) .bub {
+    background: var(--pink); color: var(--cream);
+  }
+  .chat-preview .bub small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: .22em; font-weight: 600;
+    text-transform: uppercase; opacity: .78;
+    margin-bottom: 4px;
+  }
+  .chat-preview .chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+  }
+  .chat-preview .chip {
+    padding: 6px 11px; border-radius: 999px;
+    background: var(--cream);
+    border: 1.5px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink);
+    font-weight: 600;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  @media (max-width: 780px) {
+    .v7-hero h1 { font-size: 56px; }
+    .v7-hero { padding: 60px 24px 80px; min-height: 620px; }
+    .sec-head-c { padding: 80px 24px 32px; }
+    .h2-big { font-size: 38px; }
+  }
+
+  /* =======================================================
+     LIVE TICKER — mono infinite marquee (between hero & process)
+     ======================================================= */
+  .v7-ticker {
+    position: relative;
+    background: var(--ink); color: var(--cream);
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .v7-ticker .track {
+    display: flex; gap: 48px;
+    padding: 14px 0;
+    white-space: nowrap;
+    animation: ticker-scroll 42s linear infinite;
+    width: max-content;
+  }
+  .v7-ticker .item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 10px;
+    flex: none;
+  }
+  .v7-ticker .item b { color: var(--lemon); font-weight: 700; }
+  .v7-ticker .item .pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 0 3px rgba(97,201,168,.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .v7-ticker .item .sep { opacity: .35; margin: 0 6px; }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* =======================================================
+     FLOATING "NORA IS ONLINE" CHIP — bottom-right FAB
+     ======================================================= */
+  .nora-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 80;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--cream); color: var(--ink);
+    padding: 10px 16px 10px 12px; border-radius: 999px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 14px 32px rgba(14,42,58,.18), 0 2px 6px rgba(14,42,58,.08);
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    text-decoration: none;
+    transition: transform .18s, box-shadow .18s;
+    animation: fab-in .5s ease-out .8s both;
+  }
+  .nora-fab:hover { transform: translateY(-2px); box-shadow: 0 20px 44px rgba(14,42,58,.22); }
+  .nora-fab .av {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--pink); color: var(--cream);
+    display: grid; place-items: center;
+    font-family: 'Inter', sans-serif; font-weight: 900; font-size: 13px;
+    position: relative;
+  }
+  .nora-fab .av::after {
+    content: ""; position: absolute; right: -2px; bottom: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--mint); border: 2px solid var(--cream);
+    box-shadow: 0 0 0 0 rgba(97,201,168,.6);
+    animation: fab-pulse 2s ease-in-out infinite;
+  }
+  .nora-fab .meta { display: flex; flex-direction: column; line-height: 1.1; }
+  .nora-fab .meta span:first-child { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); font-weight: 700; }
+  @keyframes fab-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fab-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(97,201,168,.6); }
+    70%  { box-shadow: 0 0 0 10px rgba(97,201,168,0); }
+    100% { box-shadow: 0 0 0 0 rgba(97,201,168,0); }
+  }
+  @media (max-width: 520px) {
+    .nora-fab .meta { display: none; }
+    .nora-fab { padding: 8px; border-radius: 999px; }
+  }
+
+  /* =======================================================
+     SCROLL-REVEAL — fade-up entrance for sections
+     ======================================================= */
+  .reveal {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .7s ease-out, transform .7s ease-out;
+  }
+  .reveal.in {
+    opacity: 1; transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* =======================================================
+     NIGHT CLOUDS — drifting in final CTA dark sky
+     ======================================================= */
+  .v7-final .night-sky {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .v7-final .moon {
+    position: absolute; top: 42px; right: 10%;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FFE9B8 0%, #FFC857 45%, #E8A93A 100%);
+    box-shadow: 0 0 50px rgba(255,200,87,.38), 0 0 120px rgba(255,200,87,.18);
+  }
+  .v7-final .ncloud {
+    position: absolute;
+    opacity: .22;
+    animation: ncloud-drift 55s linear infinite;
+  }
+  .v7-final .ncloud svg { display: block; width: 100%; height: 100%; }
+  .v7-final .ncloud.n1 { width: 360px; height: 140px; top: 12%;  left: -8%; }
+  .v7-final .ncloud.n2 { width: 260px; height: 110px; top: 52%;  right: -6%; animation-delay: -18s; animation-duration: 48s; }
+  .v7-final .ncloud.n3 { width: 440px; height: 180px; bottom: 4%; left: 32%; animation-delay: -28s; animation-duration: 62s; opacity: .15; }
+  @keyframes ncloud-drift {
+    from { transform: translateX(-4%); }
+    to   { transform: translateX(110%); }
+  }
+  .v7-final .star {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: #FFE9B8; opacity: .65;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  .v7-final .star.st1 { top: 18%; left: 14%; }
+  .v7-final .star.st2 { top: 30%; left: 26%; animation-delay: -1s; }
+  .v7-final .star.st3 { top: 16%; left: 44%; animation-delay: -1.8s; }
+  .v7-final .star.st4 { top: 22%; right: 30%; animation-delay: -.6s; }
+  .v7-final .star.st5 { top: 64%; left: 8%;  animation-delay: -2.1s; }
+
+  /* =======================================================
+     THE PROCESS — 3 tabs
+     ======================================================= */
+  .v7-process {
+    background: var(--cream);
+    padding: 0 40px 80px;
+  }
+  .v7-process .inner { max-width: var(--maxw); margin: 0 auto; }
+  .tabs {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 36px;
+  }
+  .tab {
+    padding: 22px 24px;
+    border: 1.5px solid var(--rule);
+    border-radius: 18px;
+    background: var(--cream);
+    text-align: left; cursor: pointer;
+    font-family: 'Inter', sans-serif; color: var(--ink);
+    transition: border-color .15s, background .15s, transform .12s;
+  }
+  .tab .step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--pink-dark);
+    font-weight: 700; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab .step .ico {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--blush-2); display: grid; place-items: center;
+    font-size: 14px;
+  }
+  .tab h3 {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: 17px; letter-spacing: -.01em;
+    margin: 0 0 8px; color: var(--ink);
+  }
+  .tab p {
+    font-size: 14px; line-height: 1.5; color: var(--mute); margin: 0;
+  }
+  .tab.active {
+    border-color: var(--pink); background: var(--blush-2);
+    box-shadow: 0 8px 24px rgba(0,181,216,.18);
+  }
+  .tab.active .step .ico { background: var(--pink); color: var(--cream); }
+  .tab-panel {
+    background: var(--blush); border-radius: 24px;
+    padding: 48px 56px;
+    border: 1px solid var(--rule);
+    min-height: 280px;
+    display: none;
+  }
+  .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .tab-panel .copy h4 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 32px; line-height: 1.1; margin: 0 0 16px;
+    letter-spacing: -.02em;
+  }
+  .tab-panel .copy h4 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .tab-panel .copy p {
+    font-size: 16px; line-height: 1.55; color: var(--mute); margin: 0 0 20px;
+  }
+  .tab-panel .copy ul { list-style: none; padding: 0; margin: 0; }
+  .tab-panel .copy li {
+    padding: 8px 0 8px 28px; position: relative;
+    font-size: 15px; color: var(--ink);
+  }
+  .tab-panel .copy li::before {
+    content: "✓"; position: absolute; left: 0; top: 8px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--pink); color: var(--cream);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .tab-panel .media {
+    background: var(--cream); border-radius: 18px;
+    border: 1px solid var(--rule);
+    padding: 24px; aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .tab-panel .media-body { width: 100%; }
+  @media (max-width: 900px) {
+    .tabs { grid-template-columns: 1fr; }
+    .tab-panel.active { grid-template-columns: 1fr; padding: 32px 24px; }
+  }
+
+  /* =======================================================
+     BREAKDOWN — report card
+     ======================================================= */
+  .v7-breakdown {
+    padding: 0 40px 120px;
+    max-width: var(--maxw); margin: 0 auto;
+  }
+  .v7-breakdown .grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 72px; align-items: center;
+  }
+  .v7-breakdown ul { list-style: none; padding: 0; margin: 28px 0 0; }
+  .v7-breakdown li {
+    font-size: 16.5px; line-height: 1.55;
+    padding: 14px 0 14px 36px;
+    border-bottom: 1px dashed var(--rule);
+    position: relative;
+    color: var(--ink);
+  }
+  .v7-breakdown li::before {
+    content: ""; position: absolute; left: 0; top: 18px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--lemon); border: 2px solid var(--ink);
+    background-image: radial-gradient(circle, var(--ink) 18%, transparent 22%);
+  }
+  .v7-breakdown li:last-child { border-bottom: 0; }
+  .report-card-v7 {
+    background: var(--cream);
+    border: 1.5px solid var(--rule);
+    border-radius: 22px;
+    padding: 32px;
+    box-shadow: 0 32px 64px rgba(14,42,58,.10);
+  }
+  .report-card-v7 .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 16px; margin-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .report-card-v7 .head .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em;
+    color: var(--pink-dark); text-transform: uppercase; font-weight: 700;
+  }
+  .report-card-v7 .head .stamp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--mute);
+  }
+  .report-card-v7 h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; margin: 0 0 18px; color: var(--ink);
+  }
+  .report-card-v7 .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-bottom: 1px dashed var(--rule);
+  }
+  .report-card-v7 .row:last-of-type { border-bottom: 0; }
+  .report-card-v7 .row .key { color: var(--mute); font-size: 14px; }
+  .report-card-v7 .row .val {
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: 15px; color: var(--ink);
+  }
+  .report-card-v7 .row .val.alert { color: var(--pink); }
+  .report-card-v7 .row .val .pill {
+    background: var(--pink); color: var(--cream);
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; margin-left: 6px;
+  }
+
+  /* =======================================================
+     THE INNOVATION — bento grid
+     ======================================================= */
+  .v7-bento {
+    background: linear-gradient(180deg, #0B2A3A 0%, #063349 60%, #0B2A3A 100%);
+    padding: 0 40px 120px;
+    position: relative;
+    overflow: hidden;
+  }
+  .v7-bento::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(0,181,216,.18), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255,200,87,.10), transparent 40%);
+    pointer-events: none;
+  }
+  .v7-bento .sec-head-c { color: var(--cream); position: relative; z-index: 1; }
+  .v7-bento .sec-head-c .eyebrow-mono { background: rgba(0,181,216,.18); color: #7DE7FF; }
+  .v7-bento .sec-head-c .h2-big { color: var(--cream); }
+  .v7-bento .sec-head-c .h2-big em { color: #FFC857; }
+  .v7-bento .sec-head-c .sub-lg { color: rgba(255,255,255,.7); }
+  .bento-grid {
+    max-width: var(--maxw); margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px; position: relative; z-index: 1;
+  }
+  .bento-cell {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 24px;
+    padding: 36px;
+    color: var(--cream);
+    backdrop-filter: blur(10px);
+    display: flex; flex-direction: column;
+    min-height: 280px;
+    position: relative; overflow: hidden;
+  }
+  .bento-cell .bento-big {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 88px; line-height: .9;
+    letter-spacing: -.04em;
+    color: #7DE7FF;
+    margin: 0 0 18px;
+  }
+  .bento-cell .bento-big sup { font-size: 36px; vertical-align: top; margin-left: 4px; opacity: .8; }
+  .bento-cell h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 24px; line-height: 1.15; margin: 0 0 10px;
+    letter-spacing: -.02em; color: var(--cream);
+  }
+  .bento-cell h3 em { font-style: italic; color: #FFC857; font-weight: 500; }
+  .bento-cell p {
+    font-size: 14.5px; line-height: 1.55;
+    color: rgba(255,255,255,.72); margin: 0;
+  }
+  .bento-cell.wide { grid-column: span 2; grid-row: 1; min-height: 320px; }
+  .bento-cell.tall { grid-row: span 2; }
+  .bento-cell.wide .bento-illus {
+    position: absolute; right: -20px; bottom: -10px;
+    width: 280px; height: 200px; opacity: .9;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(125,231,255,.35), transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(255,200,87,.28), transparent 50%);
+    border-radius: 50%; filter: blur(18px);
+  }
+  .bento-cta {
+    grid-column: 1 / -1;
+    background: var(--cream); color: var(--ink);
+    border-radius: 24px; padding: 36px 44px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .bento-cta h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 28px; margin: 0;
+    letter-spacing: -.02em;
+  }
+  .bento-cta .btn {
+    background: var(--ink); color: var(--cream);
+    padding: 14px 24px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14.5px;
+    border: 0; cursor: pointer;
+    transition: transform .12s, background .15s;
+  }
+  .bento-cta .btn:hover { background: var(--pink-dark); transform: translateY(-1px); }
+  @media (max-width: 900px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-cell.wide, .bento-cell.tall { grid-column: 1; grid-row: auto; }
+  }
+
+  /* =======================================================
+     PRODUCT OVERVIEW — 3 feature blocks with bullet chips
+     ======================================================= */
+  .v7-product {
+    padding: 0 40px 120px;
+    max-width: var(--maxw); margin: 0 auto;
+  }
+  .v7-product .sec-head-c { text-align: left; padding-left: 0; padding-right: 0; max-width: 640px; margin-left: 0; }
+  .po-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .po-card {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 22px;
+    padding: 36px 32px;
+    display: flex; flex-direction: column;
+    box-shadow: 5px 5px 0 var(--ink);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .po-card:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--ink); }
+  .po-card:nth-child(2) { background: var(--lemon-2, #FFF4C7); }
+  .po-card:nth-child(3) { background: var(--blush-2); }
+  .po-card .po-ico {
+    width: 62px; height: 62px; border-radius: 14px;
+    background: var(--cream); color: var(--ink);
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    display: grid; place-items: center;
+    margin-bottom: 24px;
+  }
+  .po-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; line-height: 1.2; margin: 0 0 12px;
+    letter-spacing: -.015em;
+  }
+  .po-card > p {
+    font-size: 14.5px; line-height: 1.55; color: var(--mute);
+    margin: 0 0 22px;
+  }
+  .po-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .po-chip {
+    padding: 7px 12px; border-radius: 999px;
+    background: var(--blush-2); color: var(--pink-dark);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .06em; font-weight: 600;
+  }
+  @media (max-width: 900px) { .po-grid { grid-template-columns: 1fr; } }
+
+  /* =======================================================
+     ABOUT — kinetic horizontal-scroll type
+     ======================================================= */
+  .v7-about {
+    background: var(--blush-2);
+    padding: 100px 0 100px;
+    overflow: hidden;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .v7-about .eyebrow-outer {
+    text-align: center; margin-bottom: 40px;
+  }
+  .kinetic-track {
+    display: flex; gap: 32px;
+    white-space: nowrap;
+    animation: kinetic-scroll 38s linear infinite;
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 120px; line-height: .95; letter-spacing: -.04em;
+    color: var(--ink);
+  }
+  .kinetic-track .ki { flex: none; }
+  .kinetic-track .ki em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .kinetic-track .sep { color: var(--pink); font-size: 90px; align-self: center; }
+  @keyframes kinetic-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (max-width: 780px) {
+    .kinetic-track { font-size: 64px; }
+  }
+
+  /* =======================================================
+     KEY BENEFITS — 2 paths
+     ======================================================= */
+  .v7-benefits {
+    padding: 0 40px 120px;
+    max-width: var(--maxw); margin: 0 auto;
+  }
+  .paths-v7 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .path-v7 {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 48px;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; min-height: 340px;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .path-v7:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); }
+  .path-v7:nth-child(2) {
+    background: linear-gradient(140deg, #00B5D8 0%, #007A93 100%);
+    color: var(--cream); border-color: var(--ink);
+  }
+  .path-v7 .p-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    font-weight: 700; color: var(--pink-dark); margin-bottom: 14px;
+  }
+  .path-v7:nth-child(2) .p-eyebrow { color: var(--lemon); }
+  .path-v7 h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 38px; line-height: 1.05; letter-spacing: -.025em;
+    margin: 0 0 16px; max-width: 380px;
+  }
+  .path-v7 h3 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .path-v7:nth-child(2) h3 em { color: var(--lemon); }
+  .path-v7 > p {
+    font-size: 15.5px; line-height: 1.55;
+    margin: 0 0 22px; max-width: 380px;
+    color: var(--mute);
+  }
+  .path-v7:nth-child(2) > p { color: rgba(255,255,255,.8); }
+  .path-v7 ul { list-style: none; padding: 0; margin: 0 0 28px; }
+  .path-v7 li {
+    padding: 8px 0 8px 26px;
+    font-size: 14.5px; position: relative;
+  }
+  .path-v7 li::before {
+    content: "→"; position: absolute; left: 0; top: 8px;
+    color: var(--pink);
+  }
+  .path-v7:nth-child(2) li::before { color: var(--lemon); }
+  .path-v7 .go {
+    margin-top: auto; align-self: flex-start;
+    background: var(--ink); color: var(--cream);
+    padding: 14px 24px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14.5px;
+    transition: transform .12s, background .15s;
+  }
+  .path-v7:nth-child(2) .go { background: var(--cream); color: var(--pink-dark); }
+  .path-v7 .go:hover { transform: translateY(-1px); }
+  @media (max-width: 900px) { .paths-v7 { grid-template-columns: 1fr; } }
+
+  /* =======================================================
+     HOW IT WORKS — scan card w/ plain english decode
+     ======================================================= */
+  .v7-scan {
+    background: var(--blush-2);
+    padding: 100px 40px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .v7-scan .grid {
+    max-width: var(--maxw); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+    align-items: center;
+  }
+  .scan-mock-v7 {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 32px 72px rgba(14,42,58,.14);
+  }
+  .scan-mock-v7 .stamp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--pink-dark); font-weight: 700;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .scan-mock-v7 .stamp::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--mint); box-shadow: 0 0 0 3px rgba(97,201,168,.3);
+  }
+  .scan-mock-v7 .id-card-v7 {
+    background: linear-gradient(135deg, var(--plum) 0%, #002440 100%);
+    color: var(--cream);
+    border-radius: 16px; padding: 22px;
+    margin-bottom: 18px;
+    position: relative; overflow: hidden;
+  }
+  .scan-mock-v7 .id-card-v7::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255,200,87,.18), transparent 50%);
+    pointer-events: none;
+  }
+  .scan-mock-v7 .id-card-v7 .brand-r {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 18px; color: var(--lemon); margin-bottom: 4px;
+  }
+  .scan-mock-v7 .id-card-v7 .plan-r {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,255,255,.7); margin-bottom: 16px;
+  }
+  .scan-mock-v7 .id-card-v7 .row-r {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 4px 0;
+    color: rgba(255,255,255,.85);
+  }
+  .scan-mock-v7 .id-card-v7 .row-r .v {
+    font-family: 'JetBrains Mono', monospace; color: var(--cream); font-weight: 600;
+  }
+  .scan-mock-v7 .decode-arrow {
+    text-align: center; font-size: 22px; color: var(--pink);
+    margin: 6px 0;
+  }
+  .scan-mock-v7 .plain-r {
+    background: var(--blush-2);
+    border-radius: 14px; padding: 18px 20px;
+    position: relative;
+  }
+  .scan-mock-v7 .plain-r .lbl-r {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--pink-dark); font-weight: 700; margin-bottom: 8px;
+  }
+  .scan-mock-v7 .plain-r p {
+    margin: 0; font-size: 14px; line-height: 1.55;
+    color: var(--ink);
+  }
+  .scan-mock-v7 .pro-tip {
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-size: 13px; color: var(--mute);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .scan-mock-v7 .pro-tip .save {
+    background: var(--lemon); color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+  }
+  @media (max-width: 900px) {
+    .v7-scan .grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  /* =======================================================
+     PRICING — Monthly/Yearly toggle
+     ======================================================= */
+  .v7-pricing {
+    padding: 0 40px 120px;
+    max-width: var(--maxw); margin: 0 auto;
+  }
+  .period-toggle {
+    display: inline-flex;
+    background: var(--blush-2);
+    border-radius: 999px; padding: 6px;
+    margin: 0 auto 40px; gap: 4px;
+  }
+  .period-toggle button {
+    padding: 10px 24px; border: 0; cursor: pointer;
+    border-radius: 999px; background: transparent;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+    color: var(--mute);
+    transition: background .15s, color .15s;
+  }
+  .period-toggle button.active {
+    background: var(--cream); color: var(--ink);
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .period-wrap { text-align: center; }
+  .pricing-grid-v7 {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; align-items: start;
+  }
+  .tier-v7 {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 24px;
+    padding: 36px 32px;
+    display: flex; flex-direction: column;
+    position: relative;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .tier-v7.featured {
+    background: linear-gradient(180deg, var(--cream) 0%, var(--blush-2) 100%);
+    border-color: var(--pink);
+    box-shadow: 0 24px 56px rgba(0,181,216,.22);
+    transform: translateY(-12px);
+  }
+  .motif-quiet .tier-v7.featured { transform: translateY(-6px); }
+  .tier-v7 .ribbon {
+    position: absolute; top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--pink); color: var(--cream);
+    padding: 6px 14px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    font-weight: 700;
+  }
+  .tier-v7 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--pink-dark); font-weight: 700; margin-bottom: 12px;
+  }
+  .tier-v7 h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 26px; margin: 0 0 6px;
+    letter-spacing: -.015em;
+  }
+  .tier-v7 .price {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 64px; line-height: .9;
+    letter-spacing: -.035em; margin: 14px 0 4px;
+  }
+  .tier-v7 .price sup { font-size: 24px; vertical-align: top; opacity: .6; margin-right: 2px; }
+  .tier-v7 .per {
+    font-size: 14px; color: var(--mute); margin-bottom: 8px;
+  }
+  .tier-v7 .save-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .08em;
+    color: var(--mint); font-weight: 700;
+    margin-bottom: 18px;
+    min-height: 14px;
+  }
+  .tier-v7 .desc {
+    font-size: 14px; color: var(--mute);
+    margin: 0 0 22px; line-height: 1.5;
+  }
+  .tier-v7 ul { list-style: none; padding: 0; margin: 0 0 28px; }
+  .tier-v7 li {
+    font-size: 14px; padding: 8px 0 8px 26px;
+    position: relative; line-height: 1.5;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .tier-v7 li:last-child { border-bottom: 0; }
+  .tier-v7 li::before {
+    content: "✓"; position: absolute; left: 0; top: 8px;
+    color: var(--pink); font-weight: 700;
+  }
+  .tier-v7 .pick {
+    margin-top: auto;
+    background: var(--ink); color: var(--cream);
+    padding: 14px 20px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14.5px;
+    text-align: center;
+    transition: transform .12s, background .15s;
+  }
+  .tier-v7.featured .pick { background: var(--pink); }
+  .tier-v7 .pick:hover { transform: translateY(-1px); background: var(--pink-dark); }
+  @media (max-width: 900px) {
+    .pricing-grid-v7 { grid-template-columns: 1fr; }
+    .tier-v7.featured { transform: none; }
+  }
+
+  /* =======================================================
+     WALL OF LOVE — horizontal carousel
+     ======================================================= */
+  .v7-love {
+    background: var(--blush-2);
+    padding: 0 0 100px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .carousel-wrap {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 0 40px; position: relative;
+  }
+  .carousel {
+    display: flex; gap: 20px;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 20px 4px 28px;
+    scrollbar-width: none;
+  }
+  .carousel::-webkit-scrollbar { display: none; }
+  .quote-v7 {
+    flex: none; width: 380px;
+    scroll-snap-align: start;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 22px;
+    padding: 32px 28px;
+    display: flex; flex-direction: column;
+  }
+  .quote-v7:nth-child(3n+2) { background: linear-gradient(160deg, var(--cream) 0%, var(--blush-2) 100%); }
+  .quote-v7 .stars { color: var(--lemon); font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; }
+  .quote-v7 blockquote {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 20px; line-height: 1.35;
+    letter-spacing: -.015em; margin: 0 0 24px;
+    flex: 1;
+  }
+  .quote-v7 .who {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 14px; border-top: 1px solid var(--rule);
+    gap: 12px;
+  }
+  .quote-v7 .name-v7 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 14.5px;
+  }
+  .quote-v7 .name-v7 small {
+    display: block; font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: 12px; color: var(--mute); margin-top: 2px;
+  }
+  .quote-v7 .save-bg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase;
+    background: var(--pink); color: var(--cream);
+    padding: 5px 11px; border-radius: 999px;
+    font-weight: 700;
+  }
+  .carousel-ctrls {
+    display: flex; gap: 8px; justify-content: center; margin-top: 20px;
+  }
+  .carousel-ctrls button {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--rule); background: var(--cream);
+    cursor: pointer; color: var(--ink);
+    display: grid; place-items: center;
+    transition: border-color .15s, transform .12s;
+  }
+  .carousel-ctrls button:hover { border-color: var(--pink); transform: translateY(-1px); }
+  .carousel-ctrls button:disabled { opacity: .3; cursor: not-allowed; }
+  .love-stats-v7 {
+    max-width: var(--maxw); margin: 40px auto 0;
+    padding: 0 40px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .love-stat-v7 {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 22px;
+    padding: 32px 28px;
+    text-align: center;
+  }
+  .love-stat-v7 .n {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 52px; line-height: .9;
+    color: var(--pink-dark); margin: 0 0 10px;
+    letter-spacing: -.03em;
+  }
+  .love-stat-v7 .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase;
+  }
+  @media (max-width: 900px) {
+    .love-stats-v7 { grid-template-columns: 1fr; }
+  }
+
+  /* =======================================================
+     FAQ — accordion via <details>
+     ======================================================= */
+  .v7-faq { max-width: 880px; margin: 0 auto; padding: 0 40px 100px; }
+  .v7-faq details {
+    border-bottom: 1px solid var(--rule);
+    padding: 0;
+  }
+  .v7-faq details:first-child { border-top: 1px solid var(--rule); }
+  .v7-faq summary {
+    padding: 24px 44px 24px 0;
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; letter-spacing: -.015em;
+    color: var(--ink); cursor: pointer;
+    list-style: none; position: relative;
+    transition: color .15s;
+  }
+  .v7-faq summary::-webkit-details-marker { display: none; }
+  .v7-faq summary::after {
+    content: "+"; position: absolute; right: 6px; top: 50%;
+    transform: translateY(-50%); color: var(--pink);
+    font-family: 'Inter', sans-serif; font-weight: 300; font-size: 28px;
+    line-height: 1; transition: transform .22s;
+  }
+  .v7-faq details[open] summary { color: var(--pink-dark); }
+  .v7-faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .v7-faq summary:hover { color: var(--pink); }
+  .v7-faq .faq-a {
+    padding: 4px 0 24px;
+    font-size: 16px; line-height: 1.65; color: var(--mute);
+    max-width: 720px;
+  }
+
+  /* =======================================================
+     FINAL CTA — dark band
+     ======================================================= */
+  .v7-final {
+    background: linear-gradient(135deg, #0B2A3A 0%, #001F2E 100%);
+    color: var(--cream);
+    padding: 120px 40px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .v7-final::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 40%, rgba(0,181,216,.18), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(255,200,87,.12), transparent 40%);
+  }
+  .v7-final .inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .v7-final .eyebrow-mono {
+    background: rgba(125,231,255,.14); color: #7DE7FF;
+  }
+  .v7-final h2 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 72px; line-height: 1; letter-spacing: -.03em;
+    margin: 0 0 22px;
+  }
+  .v7-final h2 em { font-style: italic; color: var(--lemon); font-weight: 500; }
+  .v7-final .ctas {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  }
+  .v7-final .btn-pri-d {
+    background: var(--lemon); color: var(--ink);
+    padding: 15px 28px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    border: 0; cursor: pointer;
+    transition: transform .12s, background .15s;
+  }
+  .v7-final .btn-pri-d:hover { background: #FFE2A0; transform: translateY(-1px); }
+  .v7-final .btn-sec-d {
+    background: transparent; color: var(--cream);
+    padding: 15px 28px; border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
+    border: 1px solid rgba(255,255,255,.3); cursor: pointer;
+    transition: transform .12s, border-color .15s;
+  }
+  .v7-final .btn-sec-d:hover { border-color: var(--cream); transform: translateY(-1px); }
+
+  /* =======================================================
+     FOOTER — full mega-footer
+     ======================================================= */
+  .v7-footer {
+    background: #001F2E;
+    color: rgba(255,255,255,.75);
+    padding: 80px 40px 32px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+  .v7-foot-grid {
+    max-width: var(--maxw); margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    margin-bottom: 56px;
+  }
+  .v7-foot-grid .brand-col .word {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: 28px; color: var(--cream);
+    letter-spacing: -.015em; margin-bottom: 12px;
+  }
+  .v7-foot-grid .brand-col .tag {
+    font-size: 14px; line-height: 1.6; max-width: 300px;
+  }
+  .v7-foot-grid h6 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--lemon); margin: 0 0 18px; font-weight: 700;
+  }
+  .v7-foot-grid ul { list-style: none; padding: 0; margin: 0; }
+  .v7-foot-grid li {
+    padding: 6px 0; font-size: 14px;
+  }
+  .v7-foot-grid a { color: rgba(255,255,255,.75); transition: color .15s; }
+  .v7-foot-grid a:hover { color: var(--cream); }
+  .v7-legal {
+    max-width: var(--maxw); margin: 0 auto;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,.1);
+    font-size: 12px; line-height: 1.6;
+    color: rgba(255,255,255,.55);
+  }
+  .v7-legal p { margin: 0 0 12px; max-width: 1100px; }
+  .v7-legal b { color: rgba(255,255,255,.85); font-weight: 700; }
+  .v7-foot-bottom {
+    max-width: var(--maxw); margin: 20px auto 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+  @media (max-width: 900px) {
+    .v7-foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+
+  /* ================================================================
+     V8 — Persona Switchboard (hard-shadow Lemon cards, 6-grid)
+     ================================================================ */
+  .v8-switchboard {
+    max-width: 1200px;
+    margin: -40px auto 110px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 3;
+  }
+  .v8-switchboard .sb-head {
+    display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+    gap: 18px; margin-bottom: 26px;
+  }
+  .v8-switchboard .eyebrow-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--pink);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .v8-switchboard .eyebrow-mono::before { content: '★'; color: var(--lemon); }
+  .v8-switchboard h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(36px, 4.2vw, 56px); line-height: 1.03;
+    color: var(--ink); margin: 6px 0 0; letter-spacing: -.01em; max-width: 820px;
+  }
+  .v8-switchboard h2 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v8-switchboard .sb-sub {
+    font-family: 'Inter', sans-serif; font-size: 15px; color: rgba(14,42,58,.7);
+    max-width: 360px; text-align: right; line-height: 1.5;
+  }
+  .v8-switch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 960px) { .v8-switch-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .v8-switch-grid { grid-template-columns: 1fr; } }
+
+  .v8-switch-card {
+    position: relative;
+    background: var(--cream, #FFFAEA);
+    border: 2px solid var(--ink, #0E2A3A);
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink, #0E2A3A);
+    padding: 26px 24px 22px;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, background .25s ease;
+    text-align: left;
+    font-family: inherit; color: var(--ink);
+    display: flex; flex-direction: column; gap: 14px;
+    overflow: hidden;
+  }
+  .v8-switch-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--ink, #0E2A3A);
+  }
+  .v8-switch-card:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+  .v8-switch-card .sb-case {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: .22em;
+    color: rgba(14,42,58,.5);
+  }
+  .v8-switch-card h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 26px; line-height: 1.12; margin: 0;
+    letter-spacing: -.005em;
+  }
+  .v8-switch-card h3 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v8-switch-card p {
+    font-size: 14px; line-height: 1.5; color: rgba(14,42,58,.78); margin: 0;
+  }
+  .v8-switch-card .sb-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: 12px; border-top: 1px dashed rgba(14,42,58,.18);
+  }
+  .v8-switch-card .sb-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase;
+    padding: 6px 10px; border-radius: 999px;
+    background: var(--ink); color: var(--cream);
+  }
+  .v8-switch-card .sb-cta {
+    font-size: 13px; font-weight: 700; color: var(--ink);
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: gap .2s ease;
+  }
+  .v8-switch-card:hover .sb-cta { gap: 10px; }
+  .v8-switch-card .sb-ico {
+    width: 58px; height: 58px; border-radius: 14px;
+    background: var(--cream); border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    display: grid; place-items: center; margin-bottom: 4px;
+    flex: none;
+  }
+  .v8-switch-card .sb-ico svg { width: 28px; height: 28px; }
+  .v8-switch-card.lemon { background: var(--lemon-2, #FFF4C7); }
+  .v8-switch-card.blush { background: var(--blush-2, #FFE4DB); }
+  .v8-switch-card.mint  { background: #E9F6F0; }
+  .v8-switch-card.sky   { background: #DEF1F5; }
+  .v8-switch-card.pink  { background: var(--pink); color: var(--cream); }
+  .v8-switch-card.pink h3, .v8-switch-card.pink p, .v8-switch-card.pink .sb-case, .v8-switch-card.pink .sb-cta { color: var(--cream); }
+  .v8-switch-card.pink .sb-case { color: rgba(255,255,255,.78); }
+  .v8-switch-card.pink .sb-row { border-top-color: rgba(255,255,255,.3); }
+  .v8-switch-card.pink .sb-chip { background: var(--cream); color: var(--pink); }
+  .v8-switch-card.pink .sb-ico { background: rgba(255,255,255,.14); border-color: var(--cream); box-shadow: 3px 3px 0 var(--cream); color: var(--cream); }
+  .v8-switch-card.outline {
+    background: transparent;
+    border-style: dashed;
+    box-shadow: none;
+    text-align: center;
+    justify-content: center; align-items: center;
+  }
+  .v8-switch-card.outline:hover {
+    transform: translate(-2px, -2px);
+    background: var(--cream);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .v8-switch-card.outline h3 { font-size: 22px; }
+  .v8-switch-card.outline .sb-row { border: none; padding-top: 4px; }
+
+  /* Tiny corner number tag (vintage-index feel) */
+  .v8-switch-card .sb-num {
+    position: absolute; top: 14px; right: 18px;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    font-size: 44px; line-height: 1; color: rgba(14,42,58,.08);
+    pointer-events: none;
+  }
+  .v8-switch-card.pink .sb-num { color: rgba(255,255,255,.14); }
+
+  /* ================================================================
+     V8 — Lemon marquee band (replaces inherited dark ticker look)
+     ================================================================ */
+  .v8-marquee {
+    position: relative;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 22px 0;
+    margin: 0 0 80px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    overflow: hidden;
+    transform: rotate(-1.2deg);
+    box-shadow: 0 14px 36px rgba(14,42,58,.16);
+  }
+  .v8-marquee::before, .v8-marquee::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 120px;
+    pointer-events: none; z-index: 2;
+  }
+  .v8-marquee::before { left: 0;  background: linear-gradient(90deg, var(--ink), transparent); }
+  .v8-marquee::after  { right: 0; background: linear-gradient(-90deg, var(--ink), transparent); }
+  .v8-marquee .mq-track {
+    display: flex; gap: 48px; white-space: nowrap;
+    animation: v8-marq 48s linear infinite;
+    will-change: transform;
+  }
+  .v8-marquee .mq-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--cream);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .v8-marquee .mq-item b { color: var(--lemon); font-weight: 800; }
+  .v8-marquee .mq-star { color: var(--pink); font-size: 16px; }
+  .v8-marquee .mq-pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #6EE7B7; box-shadow: 0 0 0 3px rgba(110,231,183,.26);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes v8-marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .v8-marquee .mq-track { animation: none; }
+  }
+
+  /* ================================================================
+     V8 — Asymmetric chat bubbles (hard 3D ink shadow)
+     ================================================================ */
+  .v8-chat {
+    max-width: 720px;
+    margin: 0 auto 40px;
+    padding: 0 24px;
+    display: flex; flex-direction: column;
+    gap: 18px;
+  }
+  .v8-bub {
+    position: relative;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 16px 20px;
+    font-size: 15px; line-height: 1.55;
+    max-width: 72%;
+    color: var(--ink);
+  }
+  .v8-bub .av {
+    position: absolute;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+    display: grid; place-items: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px;
+  }
+  .v8-bub.nora {
+    align-self: flex-end;
+    background: var(--pink); color: var(--cream);
+    margin-right: 54px;
+    border-color: var(--ink);
+  }
+  .v8-bub.nora .av {
+    background: var(--cream); color: var(--pink);
+    right: -54px; top: 4px;
+  }
+  .v8-bub.you {
+    align-self: flex-start;
+    background: var(--lemon-2, #FFF4C7);
+    margin-left: 54px;
+    transform: translateX(-18px);
+  }
+  .v8-bub.you .av {
+    background: var(--ink); color: var(--cream);
+    left: -54px; top: 4px;
+  }
+  .v8-bub.nora.offset { transform: translateX(14px); }
+  .v8-bub small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: .2em;
+    text-transform: uppercase; opacity: .6;
+    margin-bottom: 4px;
+  }
+  .v8-bub .bub-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .v8-bub .bub-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .12em;
+    padding: 5px 9px; border-radius: 999px;
+    background: var(--cream); color: var(--ink);
+    border: 1.5px solid var(--ink);
+  }
+  .v8-bub.nora .bub-chip { background: rgba(255,255,255,.92); }
+
+  /* ================================================================
+     V8 — Quiz Modal Gate
+     ================================================================ */
+  .v8-quiz-veil {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(14,42,58,.58);
+    backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    padding: 24px;
+    animation: v8-veil-in .22s ease-out;
+  }
+  .v8-quiz-veil.open { display: flex; }
+  @keyframes v8-veil-in { from { opacity: 0; } to { opacity: 1; } }
+  .v8-quiz-modal {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 22px;
+    box-shadow: 8px 8px 0 var(--ink), 0 32px 80px rgba(14,42,58,.4);
+    max-width: 560px; width: 100%;
+    max-height: calc(100vh - 48px); overflow: auto;
+    padding: 32px 32px 28px;
+    position: relative;
+    animation: v8-modal-in .28s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes v8-modal-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+  .v8-quiz-modal .close {
+    position: absolute; top: 18px; right: 18px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--ink); color: var(--cream);
+    border: none; cursor: pointer;
+    font-size: 20px; line-height: 1; font-weight: 400;
+  }
+  .v8-quiz-modal .q-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .22em; font-weight: 600;
+    text-transform: uppercase; color: var(--pink);
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .v8-quiz-modal .q-eyebrow::before { content: '★'; color: var(--lemon); }
+  .v8-quiz-modal h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 28px; line-height: 1.15; margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .v8-quiz-modal .q-sub {
+    font-size: 14px; color: rgba(14,42,58,.7);
+    margin: 0 0 22px;
+  }
+  .v8-quiz-step { display: none; }
+  .v8-quiz-step.active { display: block; }
+  .v8-quiz-opts { display: grid; gap: 10px; }
+  .v8-quiz-opts button {
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    color: var(--ink); background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+    text-align: left;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .v8-quiz-opts button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
+    background: var(--lemon-2, #FFF4C7);
+  }
+  .v8-quiz-opts button .arw { color: var(--pink); font-weight: 700; }
+  .v8-progress {
+    display: flex; gap: 6px; margin-bottom: 18px;
+  }
+  .v8-progress span {
+    flex: 1; height: 4px; border-radius: 2px;
+    background: rgba(14,42,58,.12);
+  }
+  .v8-progress span.done { background: var(--pink); }
+  .v8-quiz-modal .q-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 18px; font-size: 12px; color: rgba(14,42,58,.55);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .1em;
+  }
+  .v8-quiz-modal .q-back {
+    background: none; border: none; color: rgba(14,42,58,.55);
+    font-family: inherit; cursor: pointer; font-size: 12px; letter-spacing: .1em;
+  }
+  .v8-quiz-modal .q-back:hover { color: var(--pink); }
+  .v8-quiz-modal .q-finish h3 em { font-style: italic; color: var(--pink); font-weight: 500; }
+
+  /* tiny utility */
+  .hidden { display: none !important; }
+
+  /* ============================================================
+     V9 JOURNEY FORK — process + product reveal
+     One question, two paths, scroll-revealed parallax
+     ============================================================ */
+  .v9-journey {
+    position: relative;
+    background: linear-gradient(180deg, var(--cream) 0%, var(--blush-2) 38%, var(--cream) 100%);
+    padding: 110px 0 130px;
+    overflow: hidden;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .v9-journey .inner {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .v9-journey .j-head { text-align: center; margin: 0 auto 64px; max-width: 760px; position: relative; z-index: 3; }
+  .v9-journey .j-head .eyebrow-mono { color: var(--pink-dark); margin-bottom: 14px; }
+  .v9-journey .j-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(38px, 4vw, 60px);
+    line-height: 1.06; letter-spacing: -.028em;
+    color: var(--ink); margin: 0 0 18px;
+  }
+  .v9-journey .j-head h2 em { font-style: italic; color: var(--pink); font-weight: 500; }
+  .v9-journey .j-head p { font-family: 'Fraunces', serif; font-size: 19px; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+
+  /* Stage = relative parent for SVG connectors + nodes */
+  .v9-journey .j-stage { position: relative; }
+
+  /* Connector SVG (desktop only) */
+  .v9-journey .j-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .v9-journey .j-path {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.6s cubic-bezier(.65,.05,.36,1);
+    vector-effect: non-scaling-stroke;
+  }
+  .v9-journey .j-stage.is-1 .j-path-1 { stroke-dashoffset: 0; }
+  .v9-journey .j-stage.is-2 .j-path-2a,
+  .v9-journey .j-stage.is-2 .j-path-2b { stroke-dashoffset: 0; }
+  .v9-journey .j-stage.is-3 .j-path-3a,
+  .v9-journey .j-stage.is-3 .j-path-3b { stroke-dashoffset: 0; }
+
+  /* Path-end markers (small dots that mark connector terminators) */
+  .v9-journey .j-marker {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .4s ease .6s;
+  }
+  .v9-journey .j-stage.is-1 .j-marker.m1,
+  .v9-journey .j-stage.is-2 .j-marker.m2a,
+  .v9-journey .j-stage.is-2 .j-marker.m2b,
+  .v9-journey .j-stage.is-3 .j-marker.m3 { opacity: 1; }
+
+  /* Node base reveal */
+  .v9-journey .j-node {
+    position: relative;
+    z-index: 3;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(34px);
+    transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .v9-journey .j-node.revealed { opacity: 1; transform: none; }
+
+  /* 1) YOU node — small chip */
+  .v9-journey .j-you {
+    width: 168px;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 16px 18px 18px;
+    margin-bottom: 110px;
+    text-align: center;
+  }
+  .v9-journey .j-you .lbl { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: .26em; text-transform: uppercase; color: var(--pink-dark); }
+  .v9-journey .j-you h3 { font-family: 'Fraunces', serif; font-style: italic; font-weight: 500; font-size: 26px; margin: 4px 0 0; color: var(--ink); line-height: 1; }
+
+  /* 2) GATE node — Nora's one question */
+  .v9-journey .j-gate {
+    max-width: 480px;
+    background: var(--ink);
+    color: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 28px 32px 30px;
+    margin-bottom: 130px;
+    text-align: center;
+  }
+  .v9-journey .j-gate .nora-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--lemon); margin-bottom: 14px;
+  }
+  .v9-journey .j-gate .nora-tag::before {
+    content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lemon);
+    box-shadow: 0 0 0 4px rgba(255, 232, 110, .22);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .v9-journey .j-gate h3 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-style: italic;
+    font-size: clamp(24px, 2.6vw, 32px); line-height: 1.18;
+    margin: 0; color: var(--cream);
+  }
+  .v9-journey .j-gate .gate-foot {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255, 232, 110, .82); margin: 14px 0 0;
+  }
+
+  /* 3) FORK row — two outcome cards */
+  .v9-journey .j-fork {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    margin-bottom: 130px;
+  }
+  .v9-journey .j-outcome {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 28px 28px 26px;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .v9-journey .j-outcome:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--ink); }
+  .v9-journey .j-outcome.golden { background: var(--lemon-2, #FFFAEA); }
+  .v9-journey .j-outcome .o-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    background: var(--ink); color: var(--cream);
+    padding: 5px 12px; border-radius: 6px;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .v9-journey .j-outcome.golden .o-tag { background: var(--pink); color: var(--cream); }
+  .v9-journey .j-outcome h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(24px, 2.4vw, 30px); line-height: 1.14; letter-spacing: -.022em;
+    color: var(--ink); margin: 0 0 12px;
+  }
+  .v9-journey .j-outcome h3 em { font-style: italic; color: var(--pink); }
+  .v9-journey .j-outcome > p {
+    font-family: 'Fraunces', serif; font-size: 16.5px; line-height: 1.5;
+    color: var(--ink-soft); margin: 0 0 18px;
+  }
+  .v9-journey .j-outcome > p b { color: var(--ink); font-weight: 700; }
+
+  /* Mini sample-plan card inside outcome */
+  .v9-journey .j-plan {
+    background: var(--cream);
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    padding: 4px 16px;
+    margin-top: 4px;
+  }
+  .v9-journey .j-outcome.golden .j-plan { background: rgba(255, 255, 255, .58); }
+  .v9-journey .j-plan .pl-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .06em;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(14,42,58,.16);
+  }
+  .v9-journey .j-plan .pl-row:last-child { border-bottom: 0; }
+  .v9-journey .j-plan .pl-row .pl-k { color: var(--ink-soft); text-transform: uppercase; font-weight: 600; }
+  .v9-journey .j-plan .pl-row .pl-v { color: var(--ink); font-weight: 700; }
+  .v9-journey .j-plan .pl-row.hi .pl-v { color: var(--pink); font-size: 15px; font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; }
+
+  /* 4) CONVERGE — Nora handles the rest */
+  .v9-journey .j-final {
+    max-width: 540px;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 28px 36px;
+    text-align: center;
+  }
+  .v9-journey .j-final .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--pink-dark); margin-bottom: 8px; }
+  .v9-journey .j-final h3 { font-family: 'Fraunces', serif; font-weight: 500; font-style: italic; font-size: clamp(26px, 2.8vw, 34px); margin: 0 0 8px; color: var(--ink); }
+  .v9-journey .j-final h3 em { color: var(--pink); }
+  .v9-journey .j-final p { font-family: 'Fraunces', serif; font-size: 16px; line-height: 1.5; color: var(--ink-soft); margin: 8px 0 0; }
+
+  /* Floating parallax accents */
+  .v9-journey .j-accent {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+  }
+  .v9-journey .j-accent.star1 { top: 5%;  left: 8%;  color: var(--pink); font-size: 30px; opacity: .55; }
+  .v9-journey .j-accent.star2 { top: 36%; right: 10%; color: var(--lemon); font-size: 22px; opacity: .7; }
+  .v9-journey .j-accent.star3 { top: 64%; left: 4%;  color: var(--pink); font-size: 18px; opacity: .55; }
+  .v9-journey .j-accent.dot1  { top: 22%; right: 22%; width: 10px; height: 10px; background: var(--ink); border-radius: 50%; opacity: .5; }
+  .v9-journey .j-accent.dot2  { top: 70%; right: 6%;  width: 14px; height: 14px; background: var(--pink); border-radius: 50%; opacity: .55; }
+  .v9-journey .j-accent.squig {
+    bottom: 8%; left: 6%;
+    color: var(--pink); font-family: 'Fraunces', serif; font-style: italic; font-size: 120px; opacity: .14; transform: rotate(-8deg);
+    line-height: 0.6;
+  }
+  .v9-journey .j-accent.squig2 {
+    top: 12%; right: 6%;
+    color: var(--ink); font-family: 'Fraunces', serif; font-style: italic; font-size: 90px; opacity: .08; transform: rotate(6deg);
+    line-height: 0.6;
+  }
+
+  /* Mobile */
+  @media (max-width: 760px) {
+    .v9-journey { padding: 80px 0 90px; }
+    .v9-journey .j-head { margin-bottom: 44px; }
+    .v9-journey .j-fork { grid-template-columns: 1fr; gap: 40px; margin-bottom: 70px; }
+    .v9-journey .j-you { margin-bottom: 56px; }
+    .v9-journey .j-gate { margin-bottom: 70px; padding: 22px 24px 24px; }
+    .v9-journey .j-svg { display: none; }
+    .v9-journey .j-marker { display: none; }
+    .v9-journey .j-accent.star2,
+    .v9-journey .j-accent.dot1,
+    .v9-journey .j-accent.dot2 { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .v9-journey .j-node { opacity: 1; transform: none; transition: none; }
+    .v9-journey .j-path { stroke-dashoffset: 0 !important; transition: none; }
+    .v9-journey .j-marker { opacity: 1 !important; transition: none; }
+    .v9-journey .j-accent { animation: none !important; }
+  }
+</style>
+</head>
+<body class="theme-shc-match motif-quiet">
+
+<!-- ============================== NAV ============================== -->
+<nav class="v7-nav" id="v7Nav">
+  <div class="row">
+    <a href="#hero" class="brand">
+      <span class="logo">S</span>Shop Healthcare
+    </a>
+    <div class="links">
+      <a href="#process">How it works</a>
+      <a href="#savings">Savings</a>
+      <a href="#scan">Scan &amp; Understand</a>
+      <a href="#pricing">Insurance Wallet</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <button class="btn-nav desktop" onclick="location.href='https://shophealthcare.io/'">Get Started</button>
+    <button class="hamb" id="v7Hamb" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="v7-scrim" id="v7Scrim"></div>
+<aside class="v7-drawer" id="v7Drawer" aria-hidden="true">
+  <button class="v7-drawer-close" id="v7DrawerClose" aria-label="Close menu">×</button>
+  <a href="#process">How it works</a>
+  <a href="#savings">Savings</a>
+  <a href="#scan">Scan &amp; Understand</a>
+  <a href="#pricing">Insurance Wallet</a>
+  <a href="#faq">FAQ</a>
+  <button class="btn-nav" onclick="location.href='https://shophealthcare.io/'">Get Started</button>
+</aside>
+
+<!-- ============================== SHARED SVG DEFS ============================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  style="stop-color: var(--cloud-1); stop-opacity: 1"/>
+      <stop offset="60%" style="stop-color: var(--cloud-1); stop-opacity: .92"/>
+      <stop offset="100%" style="stop-color: var(--cloud-2); stop-opacity: .85"/>
+    </linearGradient>
+    <linearGradient id="nCloudGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  style="stop-color: var(--ncloud-stop-a)"/>
+      <stop offset="100%" style="stop-color: var(--ncloud-stop-b)"/>
+    </linearGradient>
+    <symbol id="cloudShape" viewBox="0 0 260 100">
+      <g fill="url(#cloudGrad)">
+        <ellipse cx="55"  cy="62" rx="48" ry="32"/>
+        <ellipse cx="105" cy="44" rx="42" ry="34"/>
+        <ellipse cx="155" cy="54" rx="48" ry="34"/>
+        <ellipse cx="205" cy="66" rx="40" ry="28"/>
+        <ellipse cx="80"  cy="70" rx="36" ry="22"/>
+        <ellipse cx="180" cy="72" rx="32" ry="20"/>
+      </g>
+    </symbol>
+    <symbol id="nCloudShape" viewBox="0 0 260 100">
+      <g fill="url(#nCloudGrad)">
+        <ellipse cx="55"  cy="62" rx="48" ry="32"/>
+        <ellipse cx="105" cy="44" rx="42" ry="34"/>
+        <ellipse cx="155" cy="54" rx="48" ry="34"/>
+        <ellipse cx="205" cy="66" rx="40" ry="28"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================== HERO ============================== -->
+<header class="v7-hero" id="hero">
+  <div class="sky-bg"></div>
+  <div class="cloud c1 back"><svg><use href="#cloudShape"/></svg></div>
+  <div class="cloud c2 back"><svg><use href="#cloudShape"/></svg></div>
+  <div class="cloud c3 mid"><svg><use href="#cloudShape"/></svg></div>
+  <div class="cloud c4 mid"><svg><use href="#cloudShape"/></svg></div>
+  <div class="cloud c5 front"><svg><use href="#cloudShape"/></svg></div>
+  <div class="cloud c6 front"><svg><use href="#cloudShape"/></svg></div>
+  <div class="ray"></div>
+  <div class="sparkles" aria-hidden="true">
+    <span class="sparkle s1"></span>
+    <span class="sparkle lemon sm s2"></span>
+    <span class="sparkle sm s3"></span>
+    <span class="sparkle lemon s4"></span>
+    <span class="sparkle sm s5"></span>
+    <span class="sparkle lemon sm s6"></span>
+  </div>
+
+  <div class="content">
+    <div class="hero-left">
+      <div class="hero-eyebrow"><span class="dot"></span>NORA &middot; AI INSURANCE AGENT</div>
+      <h1>
+        Insurance doesn&rsquo;t work<br>
+        <em>the way you work.</em><br>
+        <span class="meet">So Nora rebuilds <span class="nobr">it around you.</span></span>
+      </h1>
+      <p class="lead">
+        <b>Plain English. ~90 seconds.</b> No jargon, no sales calls. Tell Nora what changed &mdash; coverage loss, a renewal spike, going 1099 &mdash; and she sizes a plan that fits the way your life actually runs.
+      </p>
+
+      <div class="ctas">
+        <button class="btn-pri" type="button" data-quiz-open data-case="any">
+          Start the 90-second plan check
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <a class="btn-sec" href="#switchboard">See the 6 cases &darr;</a>
+      </div>
+      <p class="discover"><b>Limit before benefit</b> &mdash; Nora qualifies the risk first, then sizes the plan.</p>
+    </div>
+
+    <div class="hero-right">
+      <div class="chat-preview" id="chatPreview">
+        <div class="row-msg"><div class="avatar">N</div><div class="bub"><small>NORA &middot; AI AGENT</small>Hey &mdash; drop your insurance card or tell me what changed and I&rsquo;ll pull your real options.</div></div>
+        <div class="row-msg mine"><div class="bub mine">My premium just doubled on renewal &mdash; what are my options?</div><div class="avatar you">U</div></div>
+        <div class="row-msg"><div class="avatar">N</div><div>
+          <div class="bub">Got it. Quick gate first &mdash; any ongoing conditions on the plan? Limit comes before benefit, so I want to size it right.</div>
+          <div class="chips">
+            <span class="chip">Scan card</span>
+            <span class="chip">No conditions</span>
+            <span class="chip">Ongoing Rx</span>
+            <span class="chip">Not sure</span>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================== PERSONA SWITCHBOARD ============================== -->
+<section class="v8-switchboard" id="switchboard">
+  <div class="sb-head">
+    <div>
+      <div class="eyebrow-mono">THE SWITCHBOARD</div>
+      <h2>Pick the case that looks <em>most like your life right now.</em></h2>
+    </div>
+    <p class="sb-sub">Nora works cases, not funnels. Tell her what changed and she&rsquo;ll route you in ~90 seconds &mdash; plain English, limit before benefit, no sales calls.</p>
+  </div>
+  <div class="v8-switch-grid" id="switchGrid">
+
+    <button class="v8-switch-card lemon" data-quiz-open data-case="coverage-loss" type="button">
+      <span class="sb-num">01</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="18" height="12" rx="2"/>
+          <path d="M3 10h18"/>
+          <path d="m5 14 2 2 4-4" stroke-dasharray="2 2"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 01 · COVERAGE GAP</div>
+      <h3>My employer plan just <em>ended.</em></h3>
+      <p>Layoff, role change, COBRA ticking. Nora finds a bridge before the gap starts &mdash; no lapse in meds or labs.</p>
+      <div class="sb-row">
+        <span class="sb-chip">~90s route</span>
+        <span class="sb-cta">Start case &rarr;</span>
+      </div>
+    </button>
+
+    <button class="v8-switch-card blush" data-quiz-open data-case="1099" type="button">
+      <span class="sb-num">02</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 21V9l8-5 8 5v12"/>
+          <path d="M9 21v-6h6v6"/>
+          <circle cx="12" cy="11" r="1.4" fill="#FF6A5C" stroke="none"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 02 · SELF-EMPLOYED</div>
+      <h3>I just went <em>1099.</em></h3>
+      <p>Freelance, consulting, LLC-of-one. Nora sizes deductible &harr; premium against actual income &mdash; not &ldquo;family of four&rdquo; assumptions.</p>
+      <div class="sb-row">
+        <span class="sb-chip">Income-sized</span>
+        <span class="sb-cta">Start case &rarr;</span>
+      </div>
+    </button>
+
+    <button class="v8-switch-card mint" data-quiz-open data-case="renewal" type="button">
+      <span class="sb-num">03</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v6"/>
+          <path d="m7 8 5-5 5 5"/>
+          <rect x="4" y="12" width="16" height="9" rx="2"/>
+          <path d="M8 16h8"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 03 · 2026 RENEWAL</div>
+      <h3>My premium <em>spiked</em> at renewal.</h3>
+      <p>Auto-renewed plan, same benefits, higher bill. Nora reads your EOB and shows where the cost moved &mdash; and what shifts back.</p>
+      <div class="sb-row">
+        <span class="sb-chip">Rx + network check</span>
+        <span class="sb-cta">Start case &rarr;</span>
+      </div>
+    </button>
+
+    <button class="v8-switch-card sky" data-quiz-open data-case="bridge" type="button">
+      <span class="sb-num">04</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3"/>
+          <path d="M5 21c0-4 3-7 7-7s7 3 7 7"/>
+          <path d="m16 4 2 2-2 2"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 04 · BRIDGE YEARS</div>
+      <h3>I&rsquo;m in the <em>gap before Medicare.</em></h3>
+      <p>60 to 65, early retirement, or a spouse carrying the plan. Nora routes around the donut and keeps your specialist in-network.</p>
+      <div class="sb-row">
+        <span class="sb-chip">Specialist-locked</span>
+        <span class="sb-cta">Start case &rarr;</span>
+      </div>
+    </button>
+
+    <button class="v8-switch-card pink" data-quiz-open data-case="gut-check" type="button">
+      <span class="sb-num">05</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          <circle cx="9" cy="11" r=".8" fill="currentColor"/>
+          <circle cx="13" cy="11" r=".8" fill="currentColor"/>
+          <circle cx="17" cy="11" r=".8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 05 · GUT CHECK</div>
+      <h3>I have a plan &mdash; I want a <em>second opinion.</em></h3>
+      <p>Nora scans your card, reads the fine print, and flags what actually pays (and what doesn&rsquo;t). No switch required.</p>
+      <div class="sb-row">
+        <span class="sb-chip">Scan &amp; decode</span>
+        <span class="sb-cta">Start case &rarr;</span>
+      </div>
+    </button>
+
+    <button class="v8-switch-card outline" data-quiz-open data-case="other" type="button">
+      <span class="sb-num">06</span>
+      <div class="sb-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/>
+          <circle cx="12" cy="16.5" r=".8" fill="#0E2A3A"/>
+        </svg>
+      </div>
+      <div class="sb-case">CASE 06 · SOMETHING ELSE</div>
+      <h3>None of these fit.</h3>
+      <p>Start an open case. Nora asks 3 questions and routes you like the rest.</p>
+      <div class="sb-row">
+        <span class="sb-cta">Tell Nora what changed &rarr;</span>
+      </div>
+    </button>
+
+  </div>
+</section>
+
+<!-- ============================== LEMON MARQUEE BAND ============================== -->
+<div class="v8-marquee" aria-label="Live member stats">
+  <div class="mq-track" id="mqTrack">
+    <div class="mq-item"><span class="mq-pulse"></span>NORA IS ONLINE</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item"><b>~90s</b> AVERAGE PLAN CHECK</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item"><b>$4.2M</b> ANNUAL PREMIUM SAVED BY MEMBERS</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item"><b>2,847</b> ACTIVE CASES THIS WEEK</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item"><b>13</b> STATES LIVE</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item">LIMIT BEFORE BENEFIT</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item">NPN <b>#19482230</b> · CORE VALUE INSURANCE ASSOCIATES LLC</div>
+    <span class="mq-star">&#9733;</span>
+    <div class="mq-item">NORA IS AN AI ASSISTANT &mdash; NOT A LICENSED AGENT</div>
+    <span class="mq-star">&#9733;</span>
+  </div>
+</div>
+
+<!-- ============================== QUIZ MODAL GATE ============================== -->
+<div class="v8-quiz-veil" id="quizVeil" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+  <div class="v8-quiz-modal">
+    <button class="close" type="button" id="quizClose" aria-label="Close">&times;</button>
+    <div class="q-eyebrow">PLAN CHECK &middot; <span id="quizCaseLabel">OPEN CASE</span></div>
+
+    <!-- Step 1: confirm persona -->
+    <div class="v8-quiz-step active" data-step="1">
+      <div class="v8-progress"><span class="done"></span><span></span><span></span></div>
+      <h3 id="quizTitle">First &mdash; is this the right case?</h3>
+      <p class="q-sub">Nora uses your case to route you. You can always correct her at any step.</p>
+      <div class="v8-quiz-opts" id="quizConfirm">
+        <!-- Filled by JS based on selected case -->
+      </div>
+      <div class="q-foot">
+        <span>STEP 1 / 3</span>
+        <span>&larr; ESC to close</span>
+      </div>
+    </div>
+
+    <!-- Step 2: ongoing conditions (limit before benefit) -->
+    <div class="v8-quiz-step" data-step="2">
+      <div class="v8-progress"><span class="done"></span><span class="done"></span><span></span></div>
+      <h3>Any ongoing conditions on the plan?</h3>
+      <p class="q-sub">Limit before benefit &mdash; this is how Nora sizes the plan right the first time.</p>
+      <div class="v8-quiz-opts">
+        <button type="button" data-conditions="none">No ongoing conditions <span class="arw">&rarr;</span></button>
+        <button type="button" data-conditions="rx">Ongoing Rx <span class="arw">&rarr;</span></button>
+        <button type="button" data-conditions="specialist">Specialist I need to keep <span class="arw">&rarr;</span></button>
+        <button type="button" data-conditions="multiple">Multiple (let Nora ask) <span class="arw">&rarr;</span></button>
+      </div>
+      <div class="q-foot">
+        <button class="q-back" type="button" data-back>&larr; BACK</button>
+        <span>STEP 2 / 3</span>
+      </div>
+    </div>
+
+    <!-- Step 3: state -->
+    <div class="v8-quiz-step" data-step="3">
+      <div class="v8-progress"><span class="done"></span><span class="done"></span><span class="done"></span></div>
+      <h3>Which state are you in?</h3>
+      <p class="q-sub">Network and carrier options differ by state. Nora is licensed in all 13 live states.</p>
+      <div class="v8-quiz-opts" style="grid-template-columns: 1fr 1fr; display: grid; gap: 8px;">
+        <button type="button" data-state="FL">Florida</button>
+        <button type="button" data-state="TX">Texas</button>
+        <button type="button" data-state="GA">Georgia</button>
+        <button type="button" data-state="NC">North Carolina</button>
+        <button type="button" data-state="SC">South Carolina</button>
+        <button type="button" data-state="TN">Tennessee</button>
+        <button type="button" data-state="AL">Alabama</button>
+        <button type="button" data-state="AZ">Arizona</button>
+        <button type="button" data-state="other" style="grid-column: 1/-1;">Another state &mdash; let Nora check</button>
+      </div>
+      <div class="q-foot">
+        <button class="q-back" type="button" data-back>&larr; BACK</button>
+        <span>STEP 3 / 3</span>
+      </div>
+    </div>
+
+    <!-- Finish: hand-off -->
+    <div class="v8-quiz-step q-finish" data-step="4">
+      <div class="v8-progress"><span class="done"></span><span class="done"></span><span class="done"></span></div>
+      <h3>Routing you to <em>Nora</em> &hellip;</h3>
+      <p class="q-sub">Your case is queued. Nora will pick up in plain English with the right options for <span id="quizSummary">your state</span>.</p>
+      <div class="v8-quiz-opts">
+        <a id="quizGo" href="https://shophealthcare.io/" class="" style="text-align:center; justify-content:center; background: var(--pink); color: var(--cream); border-color: var(--ink);">
+          Open my case in Nora &rarr;
+        </a>
+      </div>
+      <div class="q-foot">
+        <button class="q-back" type="button" data-back>&larr; BACK</button>
+        <span>READY</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== JOURNEY FORK (V9) ============================== -->
+<section class="v9-journey" id="process">
+  <div class="inner">
+    <div class="j-head">
+      <div class="eyebrow-mono">★ THE JOURNEY</div>
+      <h2>One question. <em>Two paths.</em><br>Nora picks the right one for you.</h2>
+      <p>No funnels, no sales pressure &mdash; just one honest question and a plan that actually fits the way your life runs.</p>
+    </div>
+
+    <div class="j-stage" id="jStage">
+      <!-- Floating parallax accents -->
+      <span class="j-accent star1" data-paraspeed="0.18" aria-hidden="true">★</span>
+      <span class="j-accent star2" data-paraspeed="-0.14" aria-hidden="true">✦</span>
+      <span class="j-accent star3" data-paraspeed="0.22" aria-hidden="true">★</span>
+      <span class="j-accent dot1"  data-paraspeed="0.30" aria-hidden="true"></span>
+      <span class="j-accent dot2"  data-paraspeed="-0.18" aria-hidden="true"></span>
+      <span class="j-accent squig" data-paraspeed="0.05" aria-hidden="true">"</span>
+      <span class="j-accent squig2" data-paraspeed="-0.08" aria-hidden="true">"</span>
+
+      <!-- Connector SVG (desktop only) -->
+      <svg class="j-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <!-- 1. YOU → GATE (vertical) -->
+        <path class="j-path j-path-1" pathLength="1" d="M 50 4.5 V 13" />
+        <!-- 2a. GATE bottom-left → LEFT outcome top -->
+        <path class="j-path j-path-2a" pathLength="1" d="M 44 25 Q 30 32 22 39" />
+        <!-- 2b. GATE bottom-right → RIGHT outcome top -->
+        <path class="j-path j-path-2b" pathLength="1" d="M 56 25 Q 70 32 78 39" />
+        <!-- 3a. LEFT outcome bottom → FINAL top-left -->
+        <path class="j-path j-path-3a" pathLength="1" d="M 22 80 Q 36 88 48 92" />
+        <!-- 3b. RIGHT outcome bottom → FINAL top-right -->
+        <path class="j-path j-path-3b" pathLength="1" d="M 78 80 Q 64 88 52 92" />
+      </svg>
+
+      <!-- 1. YOU -->
+      <div class="j-node j-you" data-step="1">
+        <div class="lbl">you · today</div>
+        <h3>Right now</h3>
+      </div>
+
+      <!-- 2. GATE — Nora asks one honest question -->
+      <div class="j-node j-gate" data-step="2">
+        <div class="nora-tag">Nora · 1 question</div>
+        <h3>"Are you in good health overall?"</h3>
+        <div class="gate-foot">Limit before benefit · ~5 seconds</div>
+      </div>
+
+      <!-- 3. FORK — two outcomes, side-by-side -->
+      <div class="j-node j-fork" data-step="3">
+        <!-- LEFT (yes) — Golden Ticket -->
+        <article class="j-outcome golden">
+          <span class="o-tag">If yes &middot; Golden Ticket</span>
+          <h3>An <em>alternative</em> built around you.</h3>
+          <p>Comparable health coverage that our customers see <b>50&ndash;60% less</b> on monthly premiums &mdash; without the broker spread.</p>
+          <div class="j-plan">
+            <div class="pl-row hi"><span class="pl-k">Premium</span><span class="pl-v">$248/mo</span></div>
+            <div class="pl-row"><span class="pl-k">Deductible</span><span class="pl-v">$0</span></div>
+            <div class="pl-row"><span class="pl-k">Network</span><span class="pl-v">Nationwide PPO</span></div>
+          </div>
+        </article>
+
+        <!-- RIGHT (no) — Everything else -->
+        <article class="j-outcome">
+          <span class="o-tag">If not &middot; Everything else</span>
+          <h3>A plan you actually <em>need.</em></h3>
+          <p>No commission-driven push. <b>Nora is your advisor</b> &mdash; sized to what your life actually requires, transparently.</p>
+          <div class="j-plan">
+            <div class="pl-row hi"><span class="pl-k">Premium</span><span class="pl-v">Right-sized</span></div>
+            <div class="pl-row"><span class="pl-k">Coverage</span><span class="pl-v">Matched to need</span></div>
+            <div class="pl-row"><span class="pl-k">Advisor</span><span class="pl-v">Nora &middot; transparent</span></div>
+          </div>
+        </article>
+      </div>
+
+      <!-- 4. CONVERGE — Nora handles the rest -->
+      <div class="j-node j-final" data-step="4">
+        <div class="lbl">either way</div>
+        <h3>Nora <em>handles the rest.</em></h3>
+        <p>Enrollment, paperwork, renewal alerts &mdash; you stay in your day, Nora stays on the case.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== BREAKDOWN ============================== -->
+<div class="sec-head-c" id="savings" style="text-align:left; max-width: var(--maxw);">
+  <div class="eyebrow-mono">★ BREAKDOWN</div>
+  <h2 class="h2-big">Your <em>personalized insurance report.</em></h2>
+  <p class="sub-lg">Automatically generated by Nora in seconds &mdash; a plain-English breakdown of what your plan actually covers and where the money goes.</p>
+</div>
+<section class="v7-breakdown">
+  <div class="grid">
+    <div>
+      <ul>
+        <li><b>Monthly savings estimate</b> &mdash; based on your actual usage, not brochure numbers</li>
+        <li><b>Full breakdown of your benefits</b> &mdash; every copay, every carve-out</li>
+        <li><b>Coverage gaps &amp; red flags</b> &mdash; what's missing before you find out at the hospital</li>
+        <li><b>Doctor &amp; prescription compatibility</b> &mdash; in-network checks against your care team</li>
+        <li><b>Recommended cheaper plans</b> &mdash; same network, lower deductible, off-exchange included</li>
+        <li><b>Yearly cost modeling</b> &mdash; premium plus expected use, over 12 months</li>
+      </ul>
+    </div>
+    <div class="report-card-v7">
+      <div class="head">
+        <div class="lbl">Nora Insurance Breakdown</div>
+        <div class="stamp">Generated just now</div>
+      </div>
+      <h3>BlueCross BlueShield · PPO Gold</h3>
+      <div class="row"><span class="key">Deductible</span><span class="val">$1,500</span></div>
+      <div class="row"><span class="key">Copays</span><span class="val">$25 – $50</span></div>
+      <div class="row"><span class="key">Out-of-pocket max</span><span class="val">$6,500</span></div>
+      <div class="row"><span class="key">Coverage gaps found</span><span class="val alert">2 issues</span></div>
+      <div class="row"><span class="key">Cheaper alternatives</span><span class="val">3 available<span class="pill">SAME NETWORK</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== INNOVATION BENTO ============================== -->
+<section class="v7-bento" id="bento">
+  <div class="sec-head-c">
+    <div class="eyebrow-mono">★ THE INNOVATION</div>
+    <h2 class="h2-big">Insurance is <em>decoded</em><br>for the first time.</h2>
+    <p class="sub-lg">Nora is trained on every private plan in your state and re-priced weekly &mdash; the number she shows is the number you'll pay. No brochure math, no hidden riders.</p>
+  </div>
+  <div class="bento-grid">
+    <div class="bento-cell wide">
+      <div class="bento-illus"></div>
+      <h3>Trained on every private plan in your state, <em>re-priced weekly.</em></h3>
+      <p>Most brokers show you the three plans that pay them commission. Nora walks through every carrier &mdash; on or off exchange &mdash; and ranks them against what you actually use.</p>
+      <div style="margin-top:auto; display:flex; gap:20px; padding-top:28px; border-top: 1px solid rgba(255,255,255,.1);">
+        <div>
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:42px;color:#FFC857;line-height:1;">2,400+</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.12em;margin-top:6px;">Plans in scope</div>
+        </div>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-weight:600;font-size:42px;color:#FFC857;line-height:1;">50 states</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.12em;margin-top:6px;">Licensed coverage</div>
+        </div>
+      </div>
+    </div>
+    <div class="bento-cell">
+      <div class="bento-big">50<sup>%</sup></div>
+      <h3>Savings on premiums</h3>
+      <p>Average vs. the plan members landed on with a Healthcare.gov navigator.</p>
+    </div>
+    <div class="bento-cell">
+      <div class="bento-big">94<sup>%</sup></div>
+      <h3>Finally understand</h3>
+      <p>Of members say they understand what their plan actually covers for the first time.</p>
+    </div>
+    <div class="bento-cell">
+      <div class="bento-big">12<sup>hr</sup></div>
+      <h3>Saved per year</h3>
+      <p>No more reading benefit booklets, arguing with carriers, or sitting on hold.</p>
+    </div>
+    <div class="bento-cell">
+      <div class="bento-big">$3.2k</div>
+      <h3>Average annual savings</h3>
+      <p>Typical member savings vs. their prior plan after switching through Nora.</p>
+    </div>
+    <div class="bento-cta">
+      <h3>Carry your insurance agent in your pocket.</h3>
+      <button class="btn" onclick="location.href='https://shophealthcare.io/'">Find Cheaper Insurance →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PRODUCT OVERVIEW ============================== -->
+<section class="v7-product" id="feature">
+  <div class="sec-head-c" style="text-align:left; padding: 120px 0 48px;">
+    <div class="eyebrow-mono">★ PRODUCT OVERVIEW</div>
+    <h2 class="h2-big">Insurance is confusing on purpose.<br><em>Nora changes that.</em></h2>
+    <p class="sub-lg">Built to protect you, not confuse you.</p>
+  </div>
+  <div class="po-grid">
+    <div class="po-card">
+      <div class="po-ico">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 21v-3M5 8h14M8 8l-3 6h6L8 8zM16 8l-3 6h6l-3-6z"/></svg>
+      </div>
+      <h3>Built with licensed-agent logic</h3>
+      <p>Nora recommends plans using the same disqualification gates real agents run &mdash; limit before benefit, always.</p>
+      <div class="po-chips">
+        <span class="po-chip">LICENSED LOGIC</span>
+        <span class="po-chip">NO PRESSURE</span>
+        <span class="po-chip">LIMIT FIRST</span>
+      </div>
+    </div>
+    <div class="po-card">
+      <div class="po-ico">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2.5" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <h3>Designed to eliminate confusion</h3>
+      <p>Every term, deductible, copay, and rule explained in human language. No jargon, no brochure-speak.</p>
+      <div class="po-chips">
+        <span class="po-chip">PLAIN LANGUAGE</span>
+        <span class="po-chip">CLEAR COSTS</span>
+        <span class="po-chip">RULE-BY-RULE</span>
+      </div>
+    </div>
+    <div class="po-card">
+      <div class="po-ico">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h3>Your information stays private</h3>
+      <p>End-to-end encrypted, never sold, protected with modern security. Carriers only see your data when you ask Nora to enroll.</p>
+      <div class="po-chips">
+        <span class="po-chip">E2E ENCRYPTED</span>
+        <span class="po-chip">NEVER SOLD</span>
+        <span class="po-chip">ALWAYS SECURE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ABOUT (KINETIC TYPE) ============================== -->
+<section class="v7-about" id="about">
+  <div class="eyebrow-outer">
+    <div class="eyebrow-mono">★ ABOUT</div>
+  </div>
+  <div class="kinetic-track" aria-label="Nora is crafted to simplify how people choose coverage">
+    <span class="ki">Nora is <em>crafted</em> to simplify</span>
+    <span class="sep">★</span>
+    <span class="ki">how people <em>choose coverage</em></span>
+    <span class="sep">★</span>
+    <span class="ki">turning complex <em>policies</em></span>
+    <span class="sep">★</span>
+    <span class="ki">into clear, <em>confident decisions</em>.</span>
+    <span class="sep">★</span>
+    <!-- Duplicate for infinite scroll -->
+    <span class="ki">Nora is <em>crafted</em> to simplify</span>
+    <span class="sep">★</span>
+    <span class="ki">how people <em>choose coverage</em></span>
+    <span class="sep">★</span>
+    <span class="ki">turning complex <em>policies</em></span>
+    <span class="sep">★</span>
+    <span class="ki">into clear, <em>confident decisions</em>.</span>
+    <span class="sep">★</span>
+  </div>
+</section>
+
+<!-- ============================== KEY BENEFITS ============================== -->
+<div class="sec-head-c">
+  <div class="eyebrow-mono">★ KEY BENEFITS</div>
+  <h2 class="h2-big">Choose your <em>path.</em></h2>
+  <p class="sub-lg">Two simple ways to get started with Nora.</p>
+</div>
+<section class="v7-benefits">
+  <div class="paths-v7">
+    <div class="path-v7">
+      <div class="p-eyebrow">PATH 01 · SAVE</div>
+      <h3>Find <em>cheaper</em> insurance.</h3>
+      <p>Fill out a few questions. Nora pulls the real off-exchange options and ranks them against your actual usage.</p>
+      <ul>
+        <li>Answer simple questions</li>
+        <li>We match plans to your needs</li>
+        <li>See your top 3 options</li>
+        <li>Enroll online in minutes</li>
+      </ul>
+      <a class="go" href="https://shophealthcare.io/">Find cheaper insurance →</a>
+    </div>
+    <div class="path-v7">
+      <div class="p-eyebrow">PATH 02 · UNDERSTAND</div>
+      <h3>Scan &amp; <em>understand</em> what you have.</h3>
+      <p>Already happy with your plan? Let Nora do the work &mdash; just scan your ID and get a full breakdown.</p>
+      <ul>
+        <li>Scan your card</li>
+        <li>Get a plain-English breakdown</li>
+        <li>Ask 24/7 follow-up questions</li>
+        <li>Store everything in your wallet</li>
+      </ul>
+      <a class="go" href="https://shophealthcare.io/?intent=scan">ID Scan →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SCAN / HOW IT WORKS ============================== -->
+<section class="v7-scan" id="scan">
+  <div class="grid">
+    <div>
+      <div class="eyebrow-mono">★ HOW IT WORKS</div>
+      <h2 class="h2-big">Already have insurance?<br><em>Let Nora decode it.</em></h2>
+      <p class="sub-lg">Snap your card and get instant clarity on what you actually have. Nora pulls the benefit summary and translates it into one paragraph.</p>
+      <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;">
+        <a class="btn-pri" href="https://shophealthcare.io/?intent=scan" style="background:var(--ink);color:var(--cream);padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;">
+          Scan My Insurance Card
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#faq" style="padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;border:1px solid var(--rule);background:var(--cream);color:var(--ink);">How does scanning work?</a>
+      </div>
+    </div>
+    <div class="scan-mock-v7">
+      <div class="stamp">Card Scanned</div>
+      <div class="id-card-v7">
+        <div class="brand-r">BlueCross BlueShield</div>
+        <div class="plan-r">PPO Gold Plan</div>
+        <div class="row-r"><span>Member ID</span><span class="v">XYZ123456789</span></div>
+        <div class="row-r"><span>Group #</span><span class="v">98765</span></div>
+      </div>
+      <div style="background:var(--blush-2);border-radius:12px;padding:16px;margin-bottom:14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink-dark);font-weight:700;margin-bottom:8px;">Coverage Summary</div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;"><span>Deductible</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;">$2,500<span style="color:var(--mute);font-weight:400;margin-left:4px;">· $1,875 remaining</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;"><span>PCP Visit</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;">$25</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;"><span>Specialist</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;">$50</span></div>
+      </div>
+      <div class="decode-arrow">↓</div>
+      <div class="plain-r">
+        <div class="lbl-r">Plain English</div>
+        <p>"Your plan covers most doctor visits after you pay the first $2,500 each year. After that, you pay 20% and insurance covers 80%."</p>
+      </div>
+      <div class="pro-tip">
+        <span class="save">PRO TIP</span>
+        You could save <b style="color:var(--ink);">$127/mo</b> with a similar plan.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PRICING ============================== -->
+<div class="sec-head-c" id="pricing">
+  <div class="eyebrow-mono">★ PRICING</div>
+  <h2 class="h2-big">Simple, <em>flexible</em> pricing.</h2>
+  <p class="sub-lg">Insurance Wallet plans for every life stage &mdash; from freelancers to families to the 55–64 bridge crowd.</p>
+</div>
+<section class="v7-pricing">
+  <div class="period-wrap">
+    <div class="period-toggle" role="tablist">
+      <button class="active" data-period="monthly" type="button">Monthly</button>
+      <button data-period="yearly" type="button">Yearly <span style="background:var(--mint);color:var(--cream);padding:2px 8px;border-radius:999px;font-size:10px;margin-left:6px;font-weight:700;">Save 17%</span></button>
+    </div>
+  </div>
+
+  <div class="pricing-grid-v7">
+    <div class="tier-v7">
+      <div class="tag">LOWEST COST</div>
+      <h3>Budget</h3>
+      <div class="price"><sup>$</sup><span class="price-num" data-monthly="89" data-yearly="74">89</span></div>
+      <div class="per">per month, per household</div>
+      <div class="save-tag"></div>
+      <p class="desc">Best for young, healthy individuals who rarely visit doctors.</p>
+      <ul>
+        <li>Deductible: $6,500</li>
+        <li>Higher copays</li>
+        <li>Scan &amp; decode your current card</li>
+        <li>Real off-exchange quote in your state</li>
+        <li>Self-serve enrollment, brokerage-backed</li>
+        <li>NPN-licensed in all 50 states</li>
+      </ul>
+      <a class="pick" href="https://shophealthcare.io/?tier=budget">Get Started</a>
+    </div>
+    <div class="tier-v7 featured">
+      <div class="ribbon">★ Popular · Best Value</div>
+      <div class="tag">BEST VALUE</div>
+      <h3>Recommended</h3>
+      <div class="price"><sup>$</sup><span class="price-num" data-monthly="175" data-yearly="145">175</span></div>
+      <div class="per">per month, per household</div>
+      <div class="save-tag"></div>
+      <p class="desc">Best for families or anyone needing regular care.</p>
+      <ul>
+        <li>Deductible: $2,500</li>
+        <li>Moderate copays</li>
+        <li>Everything in Budget</li>
+        <li>Side-by-side carrier comparison</li>
+        <li>Enrollment + renewal alerts</li>
+        <li>Licensed-agent escalation, 7 days/week</li>
+        <li>Bridge planning (55–64, pre-Medicare)</li>
+      </ul>
+      <a class="pick" href="https://shophealthcare.io/?tier=recommended">Get Started</a>
+    </div>
+    <div class="tier-v7">
+      <div class="tag">FULL COVERAGE</div>
+      <h3>Premium</h3>
+      <div class="price"><sup>$</sup><span class="price-num" data-monthly="320" data-yearly="265">320</span></div>
+      <div class="per">per month, per household</div>
+      <div class="save-tag"></div>
+      <p class="desc">Best for frequent healthcare users or those with ongoing conditions.</p>
+      <ul>
+        <li>Deductible: $500</li>
+        <li>Low copays</li>
+        <li>Everything in Recommended</li>
+        <li>Dedicated licensed agent, named on your account</li>
+        <li>Family + dependent plan stacking</li>
+        <li>Claims appeal &amp; surprise-bill negotiation</li>
+        <li>Annual plan-fit review, automatically</li>
+      </ul>
+      <a class="pick" href="https://shophealthcare.io/?tier=premium">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== WALL OF LOVE ============================== -->
+<div class="sec-head-c">
+  <div class="eyebrow-mono">★ WALL OF LOVE</div>
+  <h2 class="h2-big">Real people. Real savings. <em>Real clarity.</em></h2>
+</div>
+<section class="v7-love">
+  <div class="carousel-wrap">
+    <div class="carousel" id="loveCarousel">
+      <div class="quote-v7">
+        <div class="stars">★★★★★</div>
+        <blockquote>"For the first time in my life, I actually understand my insurance."</blockquote>
+        <div class="who">
+          <div class="name-v7">Michael R. <small>Small business owner, Austin TX</small></div>
+          <div class="save-bg">FINALLY CLARITY</div>
+        </div>
+      </div>
+      <div class="quote-v7">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Enrollment took 5 minutes. Unreal. I used to spend hours on the phone."</blockquote>
+        <div class="who">
+          <div class="name-v7">Jennifer L. <small>Freelancer, California</small></div>
+          <div class="save-bg">HOURS SAVED</div>
+        </div>
+      </div>
+      <div class="quote-v7">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Nora cut my premium by 42%. I had no idea I was overpaying so much."</blockquote>
+        <div class="who">
+          <div class="name-v7">Sarah M. <small>Teacher, Texas</small></div>
+          <div class="save-bg">$2,400/YR SAVED</div>
+        </div>
+      </div>
+      <div class="quote-v7">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I'm 58 and was bracing for the bridge years. Nora walked me through the off-exchange options I didn't know existed."</blockquote>
+        <div class="who">
+          <div class="name-v7">Daniel K. <small>Consultant, Denver CO</small></div>
+          <div class="save-bg">BRIDGE YEARS</div>
+        </div>
+      </div>
+      <div class="quote-v7">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I scanned my card on a whim. Nora told me my current plan was actually fine — and saved me from switching to something worse."</blockquote>
+        <div class="who">
+          <div class="name-v7">Priya D. <small>Photographer, Brooklyn NY</small></div>
+          <div class="save-bg">KEPT HER PLAN</div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-ctrls">
+      <button id="lovePrev" aria-label="Previous">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button id="loveNext" aria-label="Next">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="love-stats-v7">
+    <div class="love-stat-v7">
+      <div class="n">10,148+</div>
+      <div class="lbl">Members enrolled · 50 states</div>
+    </div>
+    <div class="love-stat-v7">
+      <div class="n">$3,204</div>
+      <div class="lbl">Avg annual savings vs. prior plan</div>
+    </div>
+    <div class="love-stat-v7">
+      <div class="n">4.8/5</div>
+      <div class="lbl">Post-enrollment member rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FAQ (ACCORDION) ============================== -->
+<div class="sec-head-c" id="faq">
+  <div class="eyebrow-mono">★ FAQ</div>
+  <h2 class="h2-big">Frequently asked <em>questions.</em></h2>
+  <p class="sub-lg">Still have a question? <a href="#" style="color:var(--pink);text-decoration:underline;text-underline-offset:3px;">Contact us</a> &mdash; we'll be happy to help.</p>
+</div>
+<section class="v7-faq">
+  <details open>
+    <summary>Is ShopHealthcare a real licensed brokerage?</summary>
+    <p class="faq-a">Yes. ShopHealthcare is operated by <b>Core Value Insurance Associates, LLC</b> &mdash; a licensed independent insurance brokerage. NPN #19482230. You can look us up at www.nipr.com before sharing a single piece of personal info.</p>
+  </details>
+  <details>
+    <summary>Is Nora a real person?</summary>
+    <p class="faq-a">No &mdash; Nora is our AI insurance agent, trained on a licensed-broker workflow and available 24/7. If you'd rather talk to a person, every Recommended and Premium account has a licensed agent on call. We'll always tell you when you're talking to a human vs. to Nora.</p>
+  </details>
+  <details>
+    <summary>Will you sell or share my data?</summary>
+    <p class="faq-a">No. We never sell or share your info with third-party data brokers. Carriers only see your data when you ask us to enroll you. No "your quote is ready" follow-up spam, no SDR cold-calls, no resold leads.</p>
+  </details>
+  <details>
+    <summary>What's the difference between this and a government exchange?</summary>
+    <p class="faq-a">Exchange navigators only show you plans that pay through the exchange. ShopHealthcare is a licensed brokerage &mdash; we walk you through every private plan in your state, on or off the exchange, without the upsell or the fee that used to ride on top.</p>
+  </details>
+  <details>
+    <summary>How accurate is the scan?</summary>
+    <p class="faq-a">Nora reads your insurance card, pulls the carrier's published benefit summary, and translates it into plain English. Numbers come straight from the carrier. We always show you the source so you can double-check.</p>
+  </details>
+  <details>
+    <summary>Do I have to enroll right away?</summary>
+    <p class="faq-a">No. You can scan your card, get the comparison, and close the tab. No email required to see the math &mdash; email is the last thing Nora asks, and only when you're ready to enroll. If you don't enroll within 48 hours, the quote expires and we don't follow up.</p>
+  </details>
+  <details>
+    <summary>Which states are you licensed in?</summary>
+    <p class="faq-a">Core Value Insurance Associates, LLC is licensed in all 50 states. State-specific license numbers (FL, CO, KY, NV, TN resident/non-resident) are listed in the footer.</p>
+  </details>
+</section>
+
+<!-- ============================== FINAL CTA ============================== -->
+<section class="v7-final">
+  <div class="night-sky" aria-hidden="true">
+    <div class="moon"></div>
+    <span class="star st1"></span>
+    <span class="star st2"></span>
+    <span class="star st3"></span>
+    <span class="star st4"></span>
+    <span class="star st5"></span>
+    <div class="ncloud n1"><svg><use href="#nCloudShape"/></svg></div>
+    <div class="ncloud n2"><svg><use href="#nCloudShape"/></svg></div>
+    <div class="ncloud n3"><svg><use href="#nCloudShape"/></svg></div>
+  </div>
+  <div class="inner">
+    <div class="eyebrow-mono">NORA &middot; AI AGENT</div>
+    <h2>Start the <em>90-second plan check.</em></h2>
+    <p style="font-size:19px;line-height:1.55;margin:0 auto 40px;max-width:560px;color:rgba(255,255,255,.82);">Pick the case that looks like your life. Nora sizes the plan around what actually changed &mdash; in plain English, before you ever pay a premium.</p>
+    <div class="ctas">
+      <button class="btn-pri-d" type="button" data-quiz-open data-case="any" style="border:none;cursor:pointer;font:inherit;">Open a plan check &rarr;</button>
+      <a class="btn-sec-d" href="#switchboard">See the 6 cases</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="v7-footer">
+  <div class="v7-foot-grid">
+    <div class="brand-col">
+      <div class="word">Shop Healthcare</div>
+      <p class="tag">NORA AI &mdash; your 24/7 AI insurance agent. A licensed, independent brokerage. Off-exchange plans for freelancers and the 55–64 bridge crowd. Flat-fee, no resale, signed by the entity.</p>
+    </div>
+    <div>
+      <h6>Menu</h6>
+      <ul>
+        <li><a href="#feature">Feature</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#testimonial">Testimonial</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Company</h6>
+      <ul>
+        <li>105 North 1st Street, #28</li>
+        <li>San Jose, CA 94748</li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Legal</h6>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Health Data Practices</a></li>
+        <li><a href="http://www.nipr.com/">NPN Lookup</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="v7-legal">
+    <p><b>Legal Disclaimer:</b> ShopHealthcare is a private, independent health insurance shopping and comparison platform. We are not the Health Insurance Marketplace®, HealthCare.gov, or any federal or state government agency. We do not offer every plan available in your area. Any information we provide is limited to plans we do offer from participating insurance carriers and partners.</p>
+    <p>ShopHealthcare is not an insurance carrier and does not provide insurance coverage directly. All insurance plans are subject to carrier underwriting, eligibility requirements, and approval. Quotes shown are estimates only and are not a guarantee of coverage or final pricing. Actual premiums, benefits, and availability are determined solely by the insurance provider.</p>
+    <p>ShopHealthcare is not a HIPAA Covered Entity. While we apply industry-standard security safeguards, the services provided through this website are not governed by the Health Insurance Portability and Accountability Act (HIPAA).</p>
+    <p><b>Licensing:</b> Core Value Insurance Associates, LLC | 1 Century Lane, Miami Beach, FL 33139. Licensed Insurance Agency in FL (L127397), CO (933526), KY (DOI-1446300), NV (4193103), TN (3004076567). License status may be verified at www.nipr.com.</p>
+    <p><b>Nora is an AI assistant.</b> She is not a licensed agent and does not bind coverage. All enrollments are executed by a licensed human agent at Core Value Insurance Associates, LLC.</p>
+  </div>
+  <div class="v7-foot-bottom">
+    <span>© 2026 Design &amp; Developed by ShopHealthCare.io</span>
+    <span>NOT A GOVERNMENT SITE</span>
+  </div>
+</footer>
+
+<!-- ============================== INTERACTIVITY ============================== -->
+<script>
+(function(){
+  'use strict';
+
+  // 1) Nav scroll-to-scrolled state
+  var nav = document.getElementById('v7Nav');
+  function onScroll(){
+    if (window.scrollY > 20) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // 2) Mobile drawer
+  var hamb = document.getElementById('v7Hamb');
+  var drawer = document.getElementById('v7Drawer');
+  var scrim = document.getElementById('v7Scrim');
+  var dclose = document.getElementById('v7DrawerClose');
+  function openDrawer(){ drawer.classList.add('open'); scrim.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
+  function closeDrawer(){ drawer.classList.remove('open'); scrim.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+  hamb.addEventListener('click', openDrawer);
+  dclose.addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  drawer.addEventListener('click', function(e){
+    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') closeDrawer();
+  });
+
+  // 3) V9 JOURNEY FORK — scroll reveal + connector draw + parallax accents
+  (function(){
+    var stage = document.getElementById('jStage');
+    if (!stage) return;
+    var nodes = stage.querySelectorAll('.j-node');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            var step = e.target.getAttribute('data-step');
+            e.target.classList.add('revealed');
+            if (step === '1') stage.classList.add('is-1');
+            if (step === '2') { stage.classList.add('is-1','is-2'); }
+            if (step === '3') { stage.classList.add('is-1','is-2'); }
+            if (step === '4') { stage.classList.add('is-1','is-2','is-3'); }
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.32 });
+      nodes.forEach(function(n){ io.observe(n); });
+    } else {
+      // No IO or reduced motion — show everything
+      nodes.forEach(function(n){ n.classList.add('revealed'); });
+      stage.classList.add('is-1','is-2','is-3');
+    }
+
+    // Parallax accents — translate based on scroll progress through the section
+    if (!reduce) {
+      var accents = stage.querySelectorAll('[data-paraspeed]');
+      var ticking = false;
+      function tick(){
+        var rect = stage.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+          var progress = (window.innerHeight - rect.top) * 0.5;
+          accents.forEach(function(a){
+            var sp = parseFloat(a.getAttribute('data-paraspeed')) || 0;
+            a.style.transform = 'translate3d(0,' + (progress * sp).toFixed(1) + 'px,0)';
+          });
+        }
+        ticking = false;
+      }
+      window.addEventListener('scroll', function(){
+        if (!ticking) { window.requestAnimationFrame(tick); ticking = true; }
+      }, { passive: true });
+      tick();
+    }
+  })();
+
+  // 4) Pricing period toggle
+  var pBtns = document.querySelectorAll('.period-toggle button');
+  var priceNums = document.querySelectorAll('.price-num');
+  var saveTags = document.querySelectorAll('.tier-v7 .save-tag');
+  function setPeriod(period){
+    pBtns.forEach(function(b){ b.classList.toggle('active', b.dataset.period === period); });
+    priceNums.forEach(function(n){
+      var val = n.dataset[period];
+      n.textContent = val;
+    });
+    saveTags.forEach(function(s, i){
+      var n = priceNums[i];
+      if (period === 'yearly' && n) {
+        var mo = parseInt(n.dataset.monthly, 10);
+        var yr = parseInt(n.dataset.yearly, 10);
+        s.textContent = '▼ Save $' + ((mo - yr) * 12) + '/yr';
+      } else {
+        s.textContent = '';
+      }
+    });
+    // Update "per" text
+    document.querySelectorAll('.tier-v7 .per').forEach(function(p){
+      p.textContent = 'per ' + (period === 'yearly' ? 'month, billed yearly' : 'month, per household');
+    });
+  }
+  pBtns.forEach(function(b){
+    b.addEventListener('click', function(){ setPeriod(b.dataset.period); });
+  });
+
+  // 5) Testimonial carousel
+  var carousel = document.getElementById('loveCarousel');
+  var prev = document.getElementById('lovePrev');
+  var next = document.getElementById('loveNext');
+  function scrollBy(amt){ carousel.scrollBy({ left: amt, behavior: 'smooth' }); }
+  prev.addEventListener('click', function(){ scrollBy(-400); });
+  next.addEventListener('click', function(){ scrollBy(400); });
+
+  // 6) Chat preview fade-in on load (micro-animation)
+  var chat = document.getElementById('chatPreview');
+  if (chat) {
+    chat.style.opacity = '0';
+    chat.style.transform = 'translateY(20px)';
+    chat.style.transition = 'opacity .8s ease, transform .8s ease';
+    setTimeout(function(){
+      chat.style.opacity = '1';
+      chat.style.transform = 'translateY(0)';
+    }, 400);
+  }
+
+  // 7) Smooth-scroll for nav anchors (preserve sticky-nav offset)
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href');
+      if (id.length < 2) return;
+      var t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      var y = t.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+
+  // 8) Scroll-reveal fade-ups — tag major sections + animate in on view
+  try {
+    var revealTargets = document.querySelectorAll(
+      '.v9-journey, .v7-breakdown, .v7-bento, .v7-product, .v7-about, .v7-benefits, .v7-scan, .v7-pricing, .v7-love, .v7-faq, .v7-final'
+    );
+    revealTargets.forEach(function(el){ el.classList.add('reveal'); });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealTargets.forEach(function(el){ io.observe(el); });
+    } else {
+      revealTargets.forEach(function(el){ el.classList.add('in'); });
+    }
+  } catch (e) { /* fail-safe: don't break page */ }
+
+  // 9) Seamless Lemon marquee — duplicate track contents so the -50% translate loops cleanly
+  try {
+    var track = document.getElementById('mqTrack');
+    if (track) track.innerHTML = track.innerHTML + track.innerHTML;
+  } catch (e) { /* no-op */ }
+
+  // 10) Scroll parallax on hero clouds + sparkles (respects reduced-motion)
+  try {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      var parallax = [
+        { el: document.querySelector('.v7-hero .cloud.back'),  mult: 0.18 },
+        { el: document.querySelector('.v7-hero .cloud.mid'),   mult: 0.28 },
+        { el: document.querySelector('.v7-hero .cloud.front'), mult: 0.4  },
+        { el: document.querySelector('.v7-hero .sparkles'),    mult: 0.15 }
+      ].filter(function(p){ return !!p.el; });
+
+      // All-layer cloud parallax (each layer moves as a group)
+      var backClouds  = document.querySelectorAll('.v7-hero .cloud.back');
+      var midClouds   = document.querySelectorAll('.v7-hero .cloud.mid');
+      var frontClouds = document.querySelectorAll('.v7-hero .cloud.front');
+
+      var ticking = false, lastY = 0;
+      function onScroll(){
+        lastY = window.scrollY || window.pageYOffset || 0;
+        if (!ticking) {
+          window.requestAnimationFrame(function(){
+            var y = lastY;
+            if (y < 800) {
+              backClouds.forEach(function(c){ c.style.transform = 'translate3d(0,' + (y * 0.10) + 'px,0)'; });
+              midClouds.forEach(function(c){ c.style.transform = 'translate3d(0,' + (y * 0.22) + 'px,0)'; });
+              frontClouds.forEach(function(c){ c.style.transform = 'translate3d(0,' + (y * 0.36) + 'px,0)'; });
+              var sp = document.querySelector('.v7-hero .sparkles');
+              if (sp) sp.style.transform = 'translate3d(0,' + (y * 0.18) + 'px,0)';
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  } catch(e) { /* no-op */ }
+
+  // 11) Quiz modal gate — wire persona cards + hero CTA to 3-step intake
+  try {
+    var veil       = document.getElementById('quizVeil');
+    var closeBtn   = document.getElementById('quizClose');
+    var caseLabel  = document.getElementById('quizCaseLabel');
+    var confirmEl  = document.getElementById('quizConfirm');
+    var quizGo     = document.getElementById('quizGo');
+    var quizSum    = document.getElementById('quizSummary');
+    var steps      = veil ? veil.querySelectorAll('.v8-quiz-step') : [];
+    var state      = { caseId: 'any', conditions: null, state: null, step: 1 };
+
+    var CASE_COPY = {
+      'coverage-loss': { label: 'COVERAGE LOSS', confirm: 'Your employer plan just ended', stateCopy: 'a bridge plan before your gap starts' },
+      '1099':          { label: 'SELF-EMPLOYED',  confirm: 'You just went 1099',            stateCopy: 'an income-sized plan for freelance work' },
+      'renewal':       { label: '2026 RENEWAL',   confirm: 'Your premium spiked at renewal',stateCopy: 'cheaper options on the same network' },
+      'bridge':        { label: 'BRIDGE YEARS',   confirm: 'You&rsquo;re in the gap before Medicare', stateCopy: 'a specialist-locked plan for the bridge years' },
+      'gut-check':     { label: 'GUT CHECK',      confirm: 'You want a second opinion on your current plan', stateCopy: 'a plain-English read on what you have' },
+      'other':         { label: 'OPEN CASE',      confirm: 'Something else changed',        stateCopy: 'your case' },
+      'any':           { label: 'OPEN CASE',      confirm: 'Start a plan check',            stateCopy: 'your case' }
+    };
+
+    function openQuiz(caseId) {
+      state.caseId = caseId || 'any';
+      state.conditions = null; state.state = null; state.step = 1;
+      if (caseLabel) caseLabel.innerHTML = (CASE_COPY[state.caseId] || CASE_COPY['any']).label;
+      // Build confirm step options
+      if (confirmEl) {
+        var c = CASE_COPY[state.caseId] || CASE_COPY['any'];
+        confirmEl.innerHTML =
+          '<button type="button" data-confirm="yes">Yes &mdash; ' + c.confirm + ' <span class="arw">&rarr;</span></button>' +
+          '<button type="button" data-confirm="other">Not quite &mdash; let me pick another case <span class="arw">&rarr;</span></button>';
+      }
+      showStep(1);
+      if (veil) {
+        veil.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    function closeQuiz() {
+      if (veil) veil.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function showStep(n) {
+      state.step = n;
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.toggle('active', parseInt(steps[i].getAttribute('data-step'), 10) === n);
+      }
+    }
+
+    // Bind all data-quiz-open triggers
+    document.querySelectorAll('[data-quiz-open]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        openQuiz(btn.getAttribute('data-case'));
+      });
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeQuiz);
+    if (veil) veil.addEventListener('click', function(e){ if (e.target === veil) closeQuiz(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && veil && veil.classList.contains('open')) closeQuiz(); });
+
+    // Step 1 -> 2
+    if (confirmEl) confirmEl.addEventListener('click', function(e){
+      var b = e.target.closest('[data-confirm]');
+      if (!b) return;
+      if (b.getAttribute('data-confirm') === 'other') { state.caseId = 'other'; if (caseLabel) caseLabel.textContent = 'OPEN CASE'; }
+      showStep(2);
+    });
+
+    // Step 2 -> 3
+    document.querySelectorAll('[data-conditions]').forEach(function(b){
+      b.addEventListener('click', function(){
+        state.conditions = b.getAttribute('data-conditions');
+        showStep(3);
+      });
+    });
+
+    // Step 3 -> 4
+    document.querySelectorAll('[data-state]').forEach(function(b){
+      b.addEventListener('click', function(){
+        state.state = b.getAttribute('data-state');
+        if (quizSum) {
+          var copy = (CASE_COPY[state.caseId] || CASE_COPY['any']).stateCopy;
+          quizSum.textContent = (state.state === 'other' ? copy : state.state + ' — ' + copy);
+        }
+        if (quizGo) {
+          var params = new URLSearchParams();
+          params.set('case', state.caseId);
+          if (state.state) params.set('state', state.state);
+          if (state.conditions) params.set('conditions', state.conditions);
+          quizGo.setAttribute('href', 'https://shophealthcare.io/?' + params.toString());
+        }
+        showStep(4);
+      });
+    });
+
+    // Back buttons
+    document.querySelectorAll('[data-back]').forEach(function(b){
+      b.addEventListener('click', function(){
+        if (state.step > 1) showStep(state.step - 1);
+      });
+    });
+  } catch (e) { /* no-op */ }
+})();
+</script>
+
+<!-- Floating "Nora is online" chip -->
+<a class="nora-fab" href="https://shophealthcare.io/" aria-label="Chat with Nora">
+  <span class="av">N</span>
+  <span class="meta">
+    <span>ONLINE NOW</span>
+    <span>Chat with Nora →</span>
+  </span>
+</a>
+
+</body>
+</html>
