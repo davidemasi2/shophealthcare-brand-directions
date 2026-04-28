@@ -4372,8 +4372,90 @@
   .v9-switchboard .v9-sw .case-tag,
   .v9-switchboard .v9-sw .num-tag { display: none !important; }
 
-  /* V15 — kill V14 ticket/folder cards entirely (replaced by routing diagram) */
-  .v14-fork, .v14-ticket, .v14-folder { display: none !important; }
+  /* V15 (post-feedback) — restore V14 ticket/folder. Add entrance choreography + savings pop. */
+  .v14-fork-grid { perspective: 1400px; }
+  .v14-ticket, .v14-folder {
+    opacity: 0;
+    transition:
+      opacity .85s cubic-bezier(.22,.61,.36,1),
+      transform .85s cubic-bezier(.34,1.56,.64,1),
+      box-shadow .25s ease;
+  }
+  .v14-ticket { transform: rotate(-1deg) translateY(40px) scale(.94); }
+  .v14-folder { transform: rotate(0.8deg) translateY(40px) scale(.94); }
+  .v14-fork-grid.in-view .v14-ticket { opacity: 1; transform: rotate(-1deg) translateY(0) scale(1); transition-delay: .05s; }
+  .v14-fork-grid.in-view .v14-folder { opacity: 1; transform: rotate(0.8deg) translateY(0) scale(1); transition-delay: .35s; }
+
+  /* OR pip animates in last */
+  .v14-fork-grid::before {
+    opacity: 0; transform: translate(-50%, -50%) scale(.4) rotate(-20deg);
+    transition: opacity .55s ease, transform .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .v14-fork-grid.in-view::before { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); transition-delay: .65s; }
+
+  /* Stamps pop after card lands */
+  .v14-ticket .tk-stamp, .v14-folder .fl-stamp {
+    opacity: 0; transition: opacity .45s ease, transform .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .v14-fork-grid.in-view .v14-ticket .tk-stamp { opacity: 1; transition-delay: .75s; }
+  .v14-fork-grid.in-view .v14-folder .fl-stamp { opacity: 1; transition-delay: .85s; }
+
+  /* Sharper savings pop on the Golden Ticket */
+  .v14-ticket .tk-stamp .num {
+    font-size: 28px;
+    text-shadow: 1px 1px 0 rgba(14,42,58,.35);
+  }
+  .v14-ticket .tk-receipt .row .num.after {
+    background: linear-gradient(180deg, transparent 60%, rgba(255,232,110,.55) 60%);
+    padding: 0 4px;
+  }
+  /* Stamp lands with a slap */
+  .v14-ticket .tk-stamp { transform: rotate(-7deg) scale(.4); }
+  .v14-fork-grid.in-view .v14-ticket .tk-stamp {
+    transform: rotate(-7deg) scale(1);
+    transition: opacity .35s ease, transform .55s cubic-bezier(.34,1.8,.64,1);
+    transition-delay: .85s;
+  }
+
+  /* Receipt arrow has a downward pulse to draw the eye */
+  @keyframes v15-receipt-arrow {
+    0%, 60%, 100% { transform: translateY(0); opacity: .7; }
+    30% { transform: translateY(2px); opacity: 1; }
+  }
+  .v14-ticket .tk-receipt .arrow { animation: v15-receipt-arrow 2.4s ease-in-out infinite; animation-delay: 1.2s; }
+
+  /* Sequential checkmark reveal in Refit folder */
+  .v14-folder .fl-doc li {
+    opacity: 0; transform: translateX(-8px);
+    transition: opacity .45s ease, transform .55s cubic-bezier(.22,.61,.36,1);
+  }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(1) { opacity: 1; transform: translateX(0); transition-delay: .65s; }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(2) { opacity: 1; transform: translateX(0); transition-delay: .80s; }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(3) { opacity: 1; transform: translateX(0); transition-delay: .95s; }
+  /* Checkmark scale-in pop */
+  .v14-folder .fl-doc li .check { transform: scale(0); transition: transform .4s cubic-bezier(.34,1.8,.64,1); }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(1) .check { transform: scale(1); transition-delay: .80s; }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(2) .check { transform: scale(1); transition-delay: .95s; }
+  .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(3) .check { transform: scale(1); transition-delay: 1.10s; }
+
+  /* Folder stamp slap */
+  .v14-folder .fl-stamp { transform: rotate(-4deg) scale(.4); }
+  .v14-fork-grid.in-view .v14-folder .fl-stamp {
+    transform: rotate(-4deg) scale(1);
+    transition: opacity .35s ease, transform .55s cubic-bezier(.34,1.8,.64,1);
+    transition-delay: 1.30s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .v14-ticket, .v14-folder, .v14-fork-grid::before,
+    .v14-ticket .tk-stamp, .v14-folder .fl-stamp {
+      opacity: 1 !important; transform: none !important; transition: none !important;
+    }
+    .v14-ticket { transform: rotate(-1deg) !important; }
+    .v14-folder { transform: rotate(0.8deg) !important; }
+  }
+
+  /* V15 routing diagram CSS no longer used — section was reverted to V14. Keeping rules dormant. */
 
   /* V15 — kill old Decode overlays (replaced by single morphing card) */
   .v10-decode .dec-card,
@@ -4392,212 +4474,334 @@
     .v10-decode .dec-stage { min-height: auto; }
   }
 
-  /* ===== V15 unlock-card · single morphing card with 4 states ===== */
+  /* ===== V15.2 unlock · 4 distinct scenes (scan → analyze → report → savings) ===== */
   .v10-decode .v15-unlock-mock {
     position: relative;
-    aspect-ratio: 1.05 / 1;
+    aspect-ratio: 1 / 1.05;
     width: 100%;
-    max-width: 520px;
+    max-width: 460px;
     margin: 0 auto;
-    perspective: 1200px;
   }
-  .v15-uc {
+  .v15-scenes { position: absolute; inset: 0; }
+  .v15-scenes .scene {
     position: absolute; inset: 0;
-    display: grid; place-items: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .65s cubic-bezier(.22,.61,.36,1);
   }
-  .v15-uc-frame {
-    width: 100%; min-height: 100%;
+  .v10-decode .dec-stage.is-1 .scene-scan      { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-2 .scene-analyze   { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-3 .scene-report    { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-4 .scene-savings   { opacity: 1; pointer-events: auto; }
+
+  /* shared chip styling — bottom-center scene label */
+  .v15-scene-chip {
+    position: absolute; bottom: 18px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink); color: var(--cream);
+    padding: 8px 16px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: .18em; font-weight: 700;
+    text-transform: uppercase;
+    border: 2px solid var(--cream);
+    outline: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    z-index: 4;
+  }
+
+  /* Generic blank insurance card — used in scenes 1+2 */
+  .v15-card {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) rotate(-1deg);
+    width: 88%; aspect-ratio: 1.6 / 1;
+    background: linear-gradient(135deg, #F4F1E8 0%, #FFFAEA 100%);
+    border: 2.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .v15-card-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: .22em;
+    color: var(--ink); text-transform: uppercase; font-weight: 700;
+    display: flex; justify-content: space-between;
+    border-bottom: 1.5px dashed rgba(14,42,58,.25);
+    padding-bottom: 8px;
+  }
+  .v15-card-rows {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px 14px; padding: 12px 0; align-content: center;
+  }
+  .v15-card-row { display: flex; flex-direction: column; gap: 2px; }
+  .v15-card-row .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase; font-weight: 700;
+  }
+  .v15-card-row .v {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 14px; color: var(--ink); line-height: 1.1;
+  }
+  .v15-card-foot {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase;
+    display: flex; justify-content: space-between;
+    border-top: 1.5px dashed rgba(14,42,58,.25);
+    padding-top: 6px;
+  }
+
+  /* ===== SCENE 1 · SCANNING ===== */
+  .scene-scan { background: radial-gradient(circle at 50% 50%, rgba(14,42,58,.08), rgba(14,42,58,.02) 70%); }
+  /* corner brackets */
+  .scn-corner {
+    position: absolute; width: 38px; height: 38px;
+    border: 3px solid var(--pink);
+    z-index: 3;
+  }
+  .scn-corner.tl { top: 6%; left: 6%; border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+  .scn-corner.tr { top: 6%; right: 6%; border-left: none; border-bottom: none; border-radius: 0 4px 0 0; }
+  .scn-corner.bl { bottom: 16%; left: 6%; border-right: none; border-top: none; border-radius: 0 0 0 4px; }
+  .scn-corner.br { bottom: 16%; right: 6%; border-left: none; border-top: none; border-radius: 0 0 4px 0; }
+  @keyframes v15-scn-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(.94); opacity: .55; }
+  }
+  .v10-decode .dec-stage.is-1 .scn-corner { animation: v15-scn-pulse 1.4s ease-in-out infinite; }
+  .v10-decode .dec-stage.is-1 .scn-corner.tr { animation-delay: .15s; }
+  .v10-decode .dec-stage.is-1 .scn-corner.bl { animation-delay: .30s; }
+  .v10-decode .dec-stage.is-1 .scn-corner.br { animation-delay: .45s; }
+
+  /* horizontal scan beam */
+  .scn-beam {
+    position: absolute; left: 6%; right: 6%; top: 6%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--lemon) 30%, var(--lemon) 70%, transparent);
+    box-shadow: 0 0 18px 2px rgba(255,232,110,.7);
+    z-index: 4; opacity: 0;
+  }
+  @keyframes v15-scn-beam {
+    0%   { top: 6%; opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { top: 84%; opacity: 0; }
+  }
+  .v10-decode .dec-stage.is-1 .scn-beam { animation: v15-scn-beam 2.2s cubic-bezier(.4,0,.6,1) infinite; animation-delay: .3s; }
+
+  /* ===== SCENE 2 · ANALYZING ===== */
+  .scene-analyze .v15-card { transform: translate(-50%, -50%) rotate(-1deg) scale(.85); }
+  /* annotation dots — positioned over the card */
+  .ana-dots, .ana-lines, .ana-labels { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+  .ana-dot {
+    position: absolute; width: 12px; height: 12px;
+    background: var(--pink); border: 2.5px solid var(--cream);
+    border-radius: 50%; box-shadow: 0 0 0 2px var(--ink);
+    opacity: 0; transform: scale(0);
+    transition: opacity .25s ease, transform .35s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ana-dot.d1 { top: 32%; left: 22%; }
+  .ana-dot.d2 { top: 32%; right: 22%; }
+  .ana-dot.d3 { bottom: 38%; left: 22%; }
+  .ana-dot.d4 { bottom: 38%; right: 22%; }
+  .v10-decode .dec-stage.is-2 .ana-dot { opacity: 1; transform: scale(1); }
+  .v10-decode .dec-stage.is-2 .ana-dot.d1 { transition-delay: .15s; }
+  .v10-decode .dec-stage.is-2 .ana-dot.d2 { transition-delay: .35s; }
+  .v10-decode .dec-stage.is-2 .ana-dot.d3 { transition-delay: .55s; }
+  .v10-decode .dec-stage.is-2 .ana-dot.d4 { transition-delay: .75s; }
+
+  /* SVG connector lines from dots → labels */
+  .ana-svg { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  .ana-svg path {
+    fill: none; stroke: var(--ink); stroke-width: 1.5;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset .55s cubic-bezier(.22,.61,.36,1);
+  }
+  .v10-decode .dec-stage.is-2 .ana-svg path { stroke-dashoffset: 0; }
+  .v10-decode .dec-stage.is-2 .ana-svg path.l-1 { transition-delay: .25s; }
+  .v10-decode .dec-stage.is-2 .ana-svg path.l-2 { transition-delay: .45s; }
+  .v10-decode .dec-stage.is-2 .ana-svg path.l-3 { transition-delay: .65s; }
+  .v10-decode .dec-stage.is-2 .ana-svg path.l-4 { transition-delay: .85s; }
+
+  /* annotation labels */
+  .ana-label {
+    position: absolute; z-index: 5;
+    background: var(--cream); border: 1.5px solid var(--ink);
+    border-radius: 6px; padding: 5px 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: .12em; font-weight: 700;
+    text-transform: uppercase; color: var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+    opacity: 0; transform: scale(.85);
+    transition: opacity .35s ease, transform .4s cubic-bezier(.34,1.8,.64,1);
+  }
+  .ana-label.tl { top: 14%; left: 4%; }
+  .ana-label.tr { top: 14%; right: 4%; }
+  .ana-label.bl { bottom: 22%; left: 4%; }
+  .ana-label.br { bottom: 22%; right: 4%; }
+  .v10-decode .dec-stage.is-2 .ana-label { opacity: 1; transform: scale(1); }
+  .v10-decode .dec-stage.is-2 .ana-label.tl { transition-delay: .35s; }
+  .v10-decode .dec-stage.is-2 .ana-label.tr { transition-delay: .55s; }
+  .v10-decode .dec-stage.is-2 .ana-label.bl { transition-delay: .75s; }
+  .v10-decode .dec-stage.is-2 .ana-label.br { transition-delay: .95s; }
+
+  /* ===== SCENE 3 · REPORT ===== */
+  .scene-report .rep-panel {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 88%; min-height: 70%;
     background: var(--cream);
     border: 2.5px solid var(--ink);
-    border-radius: 22px;
+    border-radius: 18px;
     box-shadow: 6px 6px 0 var(--ink);
-    padding: 28px 30px;
-    display: grid;
-    grid-template-areas:
-      "head    chip"
-      "fields  fields"
-      "verdict verdict"
-      "cta     cta";
-    grid-template-rows: auto 1fr auto auto;
-    grid-template-columns: 1fr auto;
-    gap: 18px;
-    transition:
-      background .9s cubic-bezier(.22,.61,.36,1),
-      box-shadow .9s cubic-bezier(.22,.61,.36,1),
-      transform .9s cubic-bezier(.22,.61,.36,1),
-      border-color .9s ease;
-    position: relative;
-    overflow: hidden;
+    padding: 22px 24px 20px;
+    display: flex; flex-direction: column; gap: 12px;
   }
-  /* "Sweep" highlight — used in state 2 to suggest scanning */
-  .v15-uc-frame::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 30%, rgba(255,232,110,.55) 50%, transparent 70%);
-    background-size: 200% 200%;
-    background-position: 200% 200%;
-    pointer-events: none; opacity: 0;
-    transition: opacity .4s ease;
-  }
-  .v10-decode .dec-stage.is-2 .v15-uc-frame::after {
-    opacity: 1;
-    animation: v15-uc-sweep 1.4s cubic-bezier(.4,.0,.2,1) forwards;
-  }
-  @keyframes v15-uc-sweep {
-    0%   { background-position: 200% 200%; }
-    100% { background-position: -100% -100%; }
-  }
-
-  /* Head */
-  .v15-uc-head { grid-area: head; }
-  .v15-uc-carrier {
-    font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px;
-    line-height: 1.1; color: var(--ink); letter-spacing: -.018em;
-  }
-  .v15-uc-plan {
+  .rep-panel .rep-head {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px; letter-spacing: .14em; color: var(--mute);
-    text-transform: uppercase; margin-top: 4px;
+    font-size: 10px; letter-spacing: .18em; font-weight: 700;
+    color: var(--pink-dark); text-transform: uppercase;
+    padding-bottom: 8px; border-bottom: 1.5px dashed rgba(14,42,58,.25);
   }
-
-  /* Annotation chip */
-  .v15-uc-chip {
-    grid-area: chip; place-self: start end;
-    background: var(--ink); color: var(--cream);
-    border-radius: 999px;
-    padding: 6px 14px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px; letter-spacing: .14em;
-    text-transform: uppercase; font-weight: 700;
-    transition: background .6s ease, color .6s ease;
-    position: relative; min-width: 100px; text-align: center;
+  .rep-panel .rep-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px dotted rgba(14,42,58,.15);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .35s ease, transform .35s cubic-bezier(.22,.61,.36,1);
   }
-  .v15-uc-chip > span {
-    position: absolute; inset: 0;
-    display: grid; place-items: center;
-    opacity: 0; transition: opacity .5s ease;
-    padding: 6px 14px;
-  }
-  .v10-decode .dec-stage.is-1 .v15-uc-chip-1 { opacity: 1; }
-  .v10-decode .dec-stage.is-2 .v15-uc-chip-2 { opacity: 1; }
-  .v10-decode .dec-stage.is-3 .v15-uc-chip-3 { opacity: 1; }
-  .v10-decode .dec-stage.is-4 .v15-uc-chip-4 { opacity: 1; }
-  .v10-decode .dec-stage.is-3 .v15-uc-chip { background: var(--pink); }
-  .v10-decode .dec-stage.is-4 .v15-uc-chip { background: var(--lemon); color: var(--ink); }
-
-  /* Fields */
-  .v15-uc-fields {
-    grid-area: fields;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    align-content: center;
-  }
-  .v15-uc-f {
-    background: rgba(14,42,58,.04);
-    border: 1.5px solid rgba(14,42,58,.18);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: background .6s ease, border-color .6s ease, transform .55s cubic-bezier(.22,.61,.36,1);
-    position: relative;
-  }
-  .v15-uc-f .v15-uc-f-l {
-    display: block;
+  .rep-panel .rep-row:last-of-type { border-bottom: none; }
+  .v10-decode .dec-stage.is-3 .rep-row { opacity: 1; transform: translateY(0); }
+  .v10-decode .dec-stage.is-3 .rep-row:nth-of-type(1) { transition-delay: .15s; }
+  .v10-decode .dec-stage.is-3 .rep-row:nth-of-type(2) { transition-delay: .30s; }
+  .v10-decode .dec-stage.is-3 .rep-row:nth-of-type(3) { transition-delay: .45s; }
+  .v10-decode .dec-stage.is-3 .rep-row:nth-of-type(4) { transition-delay: .60s; }
+  .rep-row .rep-k {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; letter-spacing: .14em; color: var(--mute);
     text-transform: uppercase; font-weight: 700;
-    transition: opacity .5s ease;
   }
-  .v15-uc-f .v15-uc-f-l-en {
-    display: block; position: absolute;
-    top: 14px; left: 16px; right: 16px;
-    font-family: 'Fraunces', serif; font-style: italic;
-    font-size: 13px; color: var(--ink); opacity: 0;
-    transition: opacity .5s ease;
+  .rep-row .rep-v {
+    font-family: 'Fraunces', serif; font-weight: 600; font-style: italic;
+    font-size: 16px; color: var(--ink);
   }
-  .v15-uc-f .v15-uc-f-v {
-    display: block; margin-top: 6px;
-    font-family: 'Fraunces', serif; font-weight: 600;
-    font-size: 22px; line-height: 1; color: var(--ink);
-    transition: font-size .55s ease;
-  }
-  /* State 2 — fields highlight in sequence */
-  .v10-decode .dec-stage.is-2 .v15-uc-f { animation: v15-uc-fhi 1.6s cubic-bezier(.4,0,.2,1); }
-  .v10-decode .dec-stage.is-2 .v15-uc-f.f-1 { animation-delay: 0.05s; }
-  .v10-decode .dec-stage.is-2 .v15-uc-f.f-2 { animation-delay: 0.30s; }
-  .v10-decode .dec-stage.is-2 .v15-uc-f.f-3 { animation-delay: 0.55s; }
-  .v10-decode .dec-stage.is-2 .v15-uc-f.f-4 { animation-delay: 0.80s; }
-  @keyframes v15-uc-fhi {
-    0%   { background: rgba(14,42,58,.04); }
-    30%  { background: rgba(255,232,110,.45); border-color: var(--ink); transform: translateY(-2px); }
-    100% { background: rgba(14,42,58,.04); border-color: rgba(14,42,58,.18); transform: translateY(0); }
-  }
-  /* State 3 — labels morph from mono to plain English */
-  .v10-decode .dec-stage.is-3 .v15-uc-f .v15-uc-f-l { opacity: 0; }
-  .v10-decode .dec-stage.is-3 .v15-uc-f .v15-uc-f-l-en { opacity: 1; }
-  .v10-decode .dec-stage.is-3 .v15-uc-f { border-color: rgba(255,106,92,.5); }
-  /* State 4 — fields condense slightly to make room for verdict + cta */
-  .v10-decode .dec-stage.is-4 .v15-uc-f .v15-uc-f-l { opacity: 0; }
-  .v10-decode .dec-stage.is-4 .v15-uc-f .v15-uc-f-l-en { opacity: 1; }
-  .v10-decode .dec-stage.is-4 .v15-uc-f { padding: 10px 14px; background: rgba(14,42,58,.04); border-color: rgba(14,42,58,.18); }
-  .v10-decode .dec-stage.is-4 .v15-uc-f .v15-uc-f-v { font-size: 18px; }
+  .rep-row .rep-v.flag { color: var(--pink-dark); }
+  .rep-row .rep-v.flag::before { content: '\25B2 '; font-style: normal; font-weight: 800; margin-right: 2px; }
+  .rep-row .rep-v.good { color: #2F8060; }
+  .rep-row .rep-v.good::before { content: '\2713 '; font-style: normal; font-weight: 800; margin-right: 4px; }
 
-  /* Verdict block */
-  .v15-uc-verdict {
-    grid-area: verdict;
-    display: flex; gap: 10px; flex-wrap: wrap;
-    opacity: 0; max-height: 0; overflow: hidden;
-    transition: opacity .55s ease, max-height .55s ease;
+  /* ===== SCENE 4 · SAVINGS (the pop) ===== */
+  .scene-savings { background: linear-gradient(160deg, var(--lemon) 0%, #FFE9C7 100%); border-radius: 22px; }
+  .scene-savings::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.45), transparent 35%),
+      radial-gradient(circle at 80% 80%, rgba(255,106,92,.18), transparent 40%);
+    pointer-events: none;
   }
-  .v15-uc-v-row {
-    display: inline-flex; align-items: center; gap: 6px;
+  .sav-eyebrow {
+    position: absolute; top: 10%; left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .22em; font-weight: 700;
+    color: var(--pink-dark); text-transform: uppercase;
+    z-index: 3;
+    opacity: 0; transition: opacity .45s ease;
+  }
+  .v10-decode .dec-stage.is-4 .sav-eyebrow { opacity: 1; transition-delay: .15s; }
+  .sav-num {
+    position: absolute; top: 32%; left: 50%;
+    transform: translate(-50%, 0) scale(.6);
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 700;
+    font-size: clamp(72px, 14vw, 124px); line-height: 1;
+    color: var(--ink); letter-spacing: -.04em;
+    text-shadow: 3px 3px 0 rgba(255,106,92,.35);
+    opacity: 0; z-index: 3;
+    transition: opacity .55s ease, transform .7s cubic-bezier(.34,1.8,.64,1);
+  }
+  .v10-decode .dec-stage.is-4 .sav-num { opacity: 1; transform: translate(-50%, 0) scale(1); transition-delay: .25s; }
+  .sav-meta {
+    position: absolute; top: 58%; left: 50%; transform: translateX(-50%);
+    text-align: center;
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 18px; line-height: 1.3; color: var(--ink);
+    z-index: 3;
+    opacity: 0; transition: opacity .45s ease;
+  }
+  .v10-decode .dec-stage.is-4 .sav-meta { opacity: 1; transition-delay: .55s; }
+  .sav-pills {
+    position: absolute; top: 72%; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    z-index: 3;
+  }
+  .sav-pill {
+    background: var(--ink); color: var(--lemon);
     padding: 8px 14px; border-radius: 999px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px; letter-spacing: .14em; font-weight: 700;
     text-transform: uppercase;
-    border: 1.5px solid var(--ink);
+    border: 2px solid var(--cream);
+    outline: 1.5px solid var(--ink);
+    box-shadow: 3px 3px 0 rgba(14,42,58,.3);
+    opacity: 0; transform: scale(.7);
+    transition: opacity .35s ease, transform .45s cubic-bezier(.34,1.8,.64,1);
   }
-  .v15-uc-v-row.gap { background: #FFE4DB; color: var(--pink-dark); border-color: var(--pink-dark); }
-  .v15-uc-v-row.save { background: rgba(47,128,96,.12); color: #2F8060; border-color: #2F8060; }
-  .v10-decode .dec-stage.is-3 .v15-uc-verdict { opacity: 1; max-height: 80px; }
-  .v10-decode .dec-stage.is-4 .v15-uc-verdict { opacity: 1; max-height: 80px; }
+  .sav-pill.warn { background: var(--pink); color: var(--cream); }
+  .v10-decode .dec-stage.is-4 .sav-pill { opacity: 1; transform: scale(1); }
+  .v10-decode .dec-stage.is-4 .sav-pill:nth-of-type(1) { transition-delay: .75s; }
+  .v10-decode .dec-stage.is-4 .sav-pill:nth-of-type(2) { transition-delay: .90s; }
 
-  /* CTA block (state 4) */
-  .v15-uc-cta {
-    grid-area: cta;
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 14px; border-top: 1.5px dashed rgba(14,42,58,.3);
-    opacity: 0; max-height: 0; overflow: hidden;
-    transition: opacity .55s ease, max-height .55s ease;
+  /* confetti accents */
+  .sav-confetti span {
+    position: absolute; width: 8px; height: 8px;
+    border: 1.5px solid var(--ink);
+    opacity: 0;
+    transition: opacity .35s ease, transform .8s cubic-bezier(.22,.61,.36,1);
   }
-  .v15-uc-cta-link {
+  .sav-confetti span.c1 { top: 20%; left: 10%; background: var(--pink); transform: rotate(0deg) scale(0); }
+  .sav-confetti span.c2 { top: 24%; right: 12%; background: var(--cream); border-color: var(--pink-dark); border-radius: 50%; transform: rotate(0deg) scale(0); }
+  .sav-confetti span.c3 { bottom: 28%; left: 14%; background: var(--ink); transform: rotate(0deg) scale(0); }
+  .sav-confetti span.c4 { bottom: 16%; right: 10%; background: var(--lemon); border-color: var(--pink-dark); transform: rotate(0deg) scale(0); }
+  .sav-confetti span.c5 { top: 14%; left: 50%; background: var(--pink); border-radius: 50%; transform: rotate(0deg) scale(0); }
+  .v10-decode .dec-stage.is-4 .sav-confetti span { opacity: 1; }
+  .v10-decode .dec-stage.is-4 .sav-confetti .c1 { transform: rotate(35deg) scale(1.1); transition-delay: .35s; }
+  .v10-decode .dec-stage.is-4 .sav-confetti .c2 { transform: rotate(-22deg) scale(1); transition-delay: .45s; }
+  .v10-decode .dec-stage.is-4 .sav-confetti .c3 { transform: rotate(15deg) scale(1.1); transition-delay: .55s; }
+  .v10-decode .dec-stage.is-4 .sav-confetti .c4 { transform: rotate(-30deg) scale(1.1); transition-delay: .65s; }
+  .v10-decode .dec-stage.is-4 .sav-confetti .c5 { transform: rotate(0deg) scale(1); transition-delay: .25s; }
+
+  .sav-cta {
+    position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--cream);
+    padding: 12px 22px; border-radius: 999px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; letter-spacing: .14em; font-weight: 700;
-    color: var(--pink-dark); text-transform: uppercase;
-  }
-  .v15-uc-cta-meta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: .14em; color: var(--mute);
     text-transform: uppercase;
+    border: 2px solid var(--lemon);
+    box-shadow: 4px 4px 0 var(--cream);
+    opacity: 0; z-index: 3;
+    transition: opacity .35s ease;
   }
-  .v10-decode .dec-stage.is-4 .v15-uc-cta { opacity: 1; max-height: 60px; }
-
-  /* Frame state styling — subtle bg + border shifts per state */
-  .v10-decode .dec-stage.is-1 .v15-uc-frame { background: var(--cream); }
-  .v10-decode .dec-stage.is-2 .v15-uc-frame { background: var(--cream); border-color: var(--ink); }
-  .v10-decode .dec-stage.is-3 .v15-uc-frame { background: var(--cream); border-color: var(--pink-dark); }
-  .v10-decode .dec-stage.is-4 .v15-uc-frame { background: var(--lemon); border-color: var(--ink); box-shadow: 8px 8px 0 var(--ink); transform: translateY(-4px); }
+  .v10-decode .dec-stage.is-4 .sav-cta { opacity: 1; transition-delay: 1.0s; }
 
   /* Mobile + reduced-motion */
   @media (max-width: 1024px) {
-    .v10-decode .v15-unlock-mock { aspect-ratio: 1 / 1; max-width: 400px; }
-    .v15-uc-frame { padding: 22px 22px; }
+    .v10-decode .v15-unlock-mock { aspect-ratio: 1 / 1.05; max-width: 380px; }
+    /* on mobile, all 4 scenes are .is-1..is-4 simultaneously per JS narrow path → only show scene-savings */
+    .v10-decode .v15-unlock-mock .scene-scan,
+    .v10-decode .v15-unlock-mock .scene-analyze,
+    .v10-decode .v15-unlock-mock .scene-report { opacity: 0 !important; }
+    .v10-decode .v15-unlock-mock .scene-savings { opacity: 1 !important; pointer-events: auto !important; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .v15-uc-frame, .v15-uc-frame::after,
-    .v15-uc-chip, .v15-uc-chip > span,
-    .v15-uc-f, .v15-uc-f .v15-uc-f-l, .v15-uc-f .v15-uc-f-l-en,
-    .v15-uc-verdict, .v15-uc-cta { transition: none !important; animation: none !important; }
-    .v10-decode .dec-stage.is-4 .v15-uc-cta { opacity: 1; max-height: 60px; }
+    .v15-scenes .scene, .scn-corner, .scn-beam,
+    .ana-dot, .ana-svg path, .ana-label,
+    .rep-row, .sav-num, .sav-meta, .sav-pill, .sav-confetti span, .sav-cta, .sav-eyebrow {
+      transition: none !important; animation: none !important;
+    }
+    .v10-decode .dec-stage.is-1 .scene-scan,
+    .v10-decode .dec-stage.is-2 .scene-analyze,
+    .v10-decode .dec-stage.is-3 .scene-report,
+    .v10-decode .dec-stage.is-4 .scene-savings { opacity: 1; }
+    .sav-num, .sav-meta, .sav-eyebrow, .sav-pill, .sav-cta { opacity: 1 !important; transform: translate(-50%, 0) !important; }
   }
 
   /* legacy V13 — still hidden but used as identifier */
@@ -4831,60 +5035,78 @@
     .v15-rd-canvas.settled .v15-rd-n5 { animation: none !important; }
   }
 </style>
-<section class="v15-routing v9-journey" id="process">
-  <div class="v15-routing-inner">
-    <div class="v15-routing-head">
+<section class="v14-fork v9-journey" id="process">
+  <div class="v14-fork-bg" aria-hidden="true"></div>
+  <div class="v14-fork-inner">
+    <div class="v14-fork-head">
       <div class="eyebrow-mono">&#9733; 04 &middot; TWO PATHS OUT</div>
-      <h2>One question. Two paths. <em>Same shop.</em></h2>
-      <p>Nora routes by fit &mdash; not by what pays us most.</p>
+      <h2>Either way, <em>you save.</em></h2>
+      <p>We don&rsquo;t sell the plan that pays us most. Nora routes to the one that fits &mdash; and skips the commission spread either way.</p>
     </div>
 
-    <div class="v15-rd-canvas" id="v15RdCanvas" aria-label="Routing diagram showing how Nora routes between Plan 01 and Catalog">
-      <!-- Connector SVG (drawn lines between nodes) -->
-      <svg class="v15-rd-svg" viewBox="0 0 880 620" preserveAspectRatio="none" aria-hidden="true">
-        <!-- 1 → 2 vertical -->
-        <path class="c-1" pathLength="1" d="M 440 86 L 440 138" />
-        <!-- 2 → 3 (left fork) -->
-        <path class="c-2 dashed" pathLength="1" d="M 380 224 C 280 244, 200 264, 142 314" />
-        <!-- 2 → 4 (right fork) -->
-        <path class="c-3 dashed" pathLength="1" d="M 500 224 C 600 244, 680 264, 738 314" />
-        <!-- 3 → 5 (left merge) -->
-        <path class="c-4" pathLength="1" d="M 142 408 C 200 460, 280 480, 380 510" />
-        <!-- 4 → 5 (right merge) -->
-        <path class="c-5" pathLength="1" d="M 738 408 C 680 460, 600 480, 500 510" />
-      </svg>
+    <div class="v14-fork-grid" id="v15ForkGrid">
+      <!-- LEFT — Paper Ticket (Golden Ticket) -->
+      <article class="v14-ticket" aria-labelledby="tk-h">
+        <div class="tk-stub">
+          <span class="tk-stub-l">&#9733; ADMIT ONE</span>
+          <span>GOLDEN TICKET &middot; PLAN 01</span>
+          <span class="tk-stub-r">No.&nbsp;01</span>
+        </div>
+        <div class="tk-punches" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="tk-body">
+          <div class="tk-num" aria-hidden="true">01</div>
+          <h3 id="tk-h">Switch to <em>Plan 01.</em></h3>
+          <p class="tk-blurb">UnitedHealth Choice Plus PPO + supplemental. Same doctors, <b>typically 50&ndash;60% lower</b>. Two products carry the load so the math actually works.</p>
 
-      <!-- Nodes -->
-      <div class="v15-rd-node v15-rd-n1">
-        <div class="n-label">01 &middot; You</div>
-        <h3 class="n-title">Your <em>situation.</em></h3>
-        <p class="n-sub">Age &middot; State &middot; What changed</p>
-      </div>
+          <div class="tk-tear" aria-hidden="true"></div>
 
-      <div class="v15-rd-node v15-rd-n2">
-        <div class="n-label">02 &middot; Nora&rsquo;s gate</div>
-        <h3 class="n-title">Does <em>Plan 01</em> fit?</h3>
-        <p class="n-sub">One honest question</p>
-      </div>
+          <div class="tk-receipt">
+            <div class="row">
+              <span class="label">Current PPO</span>
+              <span class="num before">$890/mo</span>
+            </div>
+            <div class="arrow">&darr;</div>
+            <div class="row">
+              <span class="label">Your Plan 01</span>
+              <span class="num after">$400/mo</span>
+            </div>
+          </div>
 
-      <div class="v15-rd-node v15-rd-n3">
-        <div class="n-label">03a &middot; If yes</div>
-        <h3 class="n-title">Plan 01 <em>quote.</em></h3>
-        <p class="n-sub">$290/mo &middot; UHC PPO &middot; ~$5k/yr saved</p>
-      </div>
+          <div class="tk-stamp" aria-hidden="true">
+            <span class="num">$5,400</span>
+            saved/yr
+          </div>
+        </div>
+      </article>
 
-      <div class="v15-rd-node v15-rd-n4">
-        <div class="n-label">03b &middot; If not</div>
-        <h3 class="n-title">Catalog <em>refit.</em></h3>
-        <p class="n-sub">Broader plan &middot; network-matched</p>
-      </div>
+      <!-- RIGHT — Manila Folder (Refit Catalog) -->
+      <article class="v14-folder" aria-labelledby="fl-h">
+        <span class="fl-tape" aria-hidden="true"></span>
+        <div class="fl-body">
+          <div class="fl-num" aria-hidden="true">02</div>
+          <h3 id="fl-h">Restructure into <em>Catalog.</em></h3>
+          <p class="fl-blurb">When Plan 01 isn&rsquo;t a fit, Nora routes you to the <b>broader private plan</b> that actually covers your situation. No commission incentive bolted on top.</p>
 
-      <div class="v15-rd-node v15-rd-n5">
-        <div class="n-label">04 &middot; Either way</div>
-        <h3 class="n-title">No commission <em>spread.</em></h3>
-        <p class="n-sub">Same shop &middot; same NPN &middot; #19482230</p>
-      </div>
+          <div class="fl-doc">
+            <div class="doc-head">YOUR SITUATION &rarr; CATALOG MATCH</div>
+            <ul>
+              <li><span class="check">&#10003;</span><span>Pre-existing condition &middot; covered</span></li>
+              <li><span class="check">&#10003;</span><span>Pregnancy &middot; covered</span></li>
+              <li><span class="check">&#10003;</span><span>Specialist visits &middot; in-network</span></li>
+            </ul>
+          </div>
+
+          <div class="fl-stamp" aria-hidden="true">
+            <span class="big">Right-sized</span>
+            no upsell &middot; no spread
+          </div>
+        </div>
+      </article>
     </div>
+
+    <p class="v14-fork-foot">Both paths <em>skip the commission spread.</em> The same shop handles either.</p>
   </div>
 </section>
 
@@ -4939,60 +5161,112 @@
           </div>
         </div>
 
-        <!-- V15 — single morphing card, 4 states, no overlays -->
+        <!-- V15.2 — 4 distinct scenes: scan → analyze → report → savings -->
         <div class="dec-mock v15-unlock-mock" aria-hidden="true">
-          <div class="v15-uc">
-            <div class="v15-uc-frame">
-              <!-- Header (carrier name + state-aware label) -->
-              <div class="v15-uc-head">
-                <div class="v15-uc-carrier">BlueCross BlueShield</div>
-                <div class="v15-uc-plan">PPO Gold &middot; 2500-NS</div>
-              </div>
+          <div class="v15-scenes">
 
-              <!-- Annotation chip (single element, content swaps per state) -->
-              <div class="v15-uc-chip">
-                <span class="v15-uc-chip-1">&#9633; Tap to scan</span>
-                <span class="v15-uc-chip-2">Reading every line</span>
-                <span class="v15-uc-chip-3">Plain English</span>
-                <span class="v15-uc-chip-4">Live in your chat</span>
-              </div>
-
-              <!-- The 4 fields — same DOM, content + visual state shifts via class -->
-              <div class="v15-uc-fields">
-                <div class="v15-uc-f f-1" data-field="ded">
-                  <span class="v15-uc-f-l">Deductible</span>
-                  <span class="v15-uc-f-l-en">What you pay first</span>
-                  <span class="v15-uc-f-v">$1,500/yr</span>
+            <!-- ========== SCENE 1 · SCANNING (literal capture mechanic) ========== -->
+            <div class="scene scene-scan">
+              <span class="scn-corner tl"></span>
+              <span class="scn-corner tr"></span>
+              <span class="scn-corner bl"></span>
+              <span class="scn-corner br"></span>
+              <span class="scn-beam"></span>
+              <div class="v15-card">
+                <div class="v15-card-head">
+                  <span>Insurance Card</span>
+                  <span>2026</span>
                 </div>
-                <div class="v15-uc-f f-2" data-field="pcp">
-                  <span class="v15-uc-f-l">PCP visit</span>
-                  <span class="v15-uc-f-l-en">Doctor visit</span>
-                  <span class="v15-uc-f-v">$25</span>
+                <div class="v15-card-rows">
+                  <div class="v15-card-row"><span class="k">Member ID</span><span class="v">&bull; &bull; &bull; &bull;</span></div>
+                  <div class="v15-card-row"><span class="k">Group</span><span class="v">&bull; &bull; &bull; &bull;</span></div>
+                  <div class="v15-card-row"><span class="k">Network</span><span class="v">&bull; &bull; &bull;</span></div>
+                  <div class="v15-card-row"><span class="k">Plan tier</span><span class="v">&bull; &bull; &bull;</span></div>
                 </div>
-                <div class="v15-uc-f f-3" data-field="spec">
-                  <span class="v15-uc-f-l">Specialist</span>
-                  <span class="v15-uc-f-l-en">Specialist visit</span>
-                  <span class="v15-uc-f-v">$50</span>
-                </div>
-                <div class="v15-uc-f f-4" data-field="oop">
-                  <span class="v15-uc-f-l">OOP max</span>
-                  <span class="v15-uc-f-l-en">Worst-case yearly cap</span>
-                  <span class="v15-uc-f-v">$6,500</span>
-                </div>
+                <div class="v15-card-foot"><span>Eff. 2026</span><span>RX BIN</span></div>
               </div>
-
-              <!-- Verdict block — only visible in states 3+4 (gap detection, lower-premium hit) -->
-              <div class="v15-uc-verdict">
-                <div class="v15-uc-v-row gap"><span class="v15-uc-v-dot">&#9650;</span>2 coverage gaps</div>
-                <div class="v15-uc-v-row save"><span class="v15-uc-v-star">&#9733;</span>$127/mo lower &middot; same network</div>
-              </div>
-
-              <!-- Final CTA — only visible in state 4 -->
-              <div class="v15-uc-cta">
-                <span class="v15-uc-cta-link">Continue with Nora &rarr;</span>
-                <span class="v15-uc-cta-meta">Plan summary &middot; live in chat</span>
-              </div>
+              <div class="v15-scene-chip">&#9633; Tap to scan</div>
             </div>
+
+            <!-- ========== SCENE 2 · ANALYZING (CV-style annotation) ========== -->
+            <div class="scene scene-analyze">
+              <div class="v15-card">
+                <div class="v15-card-head">
+                  <span>Insurance Card</span>
+                  <span>Reading&hellip;</span>
+                </div>
+                <div class="v15-card-rows">
+                  <div class="v15-card-row"><span class="k">Deductible</span><span class="v">$1,500/yr</span></div>
+                  <div class="v15-card-row"><span class="k">Copays</span><span class="v">$25 / $50</span></div>
+                  <div class="v15-card-row"><span class="k">Network</span><span class="v">In-network</span></div>
+                  <div class="v15-card-row"><span class="k">OOP max</span><span class="v">$6,500</span></div>
+                </div>
+                <div class="v15-card-foot"><span>Eff. 2026</span><span>Plain English</span></div>
+              </div>
+              <svg class="ana-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path class="l-1" pathLength="1" d="M 22 38 L 8 22"/>
+                <path class="l-2" pathLength="1" d="M 78 38 L 92 22"/>
+                <path class="l-3" pathLength="1" d="M 22 62 L 8 78"/>
+                <path class="l-4" pathLength="1" d="M 78 62 L 92 78"/>
+              </svg>
+              <div class="ana-dots" aria-hidden="true">
+                <span class="ana-dot d1"></span>
+                <span class="ana-dot d2"></span>
+                <span class="ana-dot d3"></span>
+                <span class="ana-dot d4"></span>
+              </div>
+              <div class="ana-labels" aria-hidden="true">
+                <span class="ana-label tl">Deductible</span>
+                <span class="ana-label tr">Copays</span>
+                <span class="ana-label bl">Network</span>
+                <span class="ana-label br">OOP max</span>
+              </div>
+              <div class="v15-scene-chip">Analyzing &middot; reading every line</div>
+            </div>
+
+            <!-- ========== SCENE 3 · REPORT (categorized summary) ========== -->
+            <div class="scene scene-report">
+              <div class="rep-panel">
+                <div class="rep-head">Plan summary &middot; what we found</div>
+                <div class="rep-row">
+                  <span class="rep-k">Premium</span>
+                  <span class="rep-v flag">Higher than median</span>
+                </div>
+                <div class="rep-row">
+                  <span class="rep-k">Network</span>
+                  <span class="rep-v good">In-network</span>
+                </div>
+                <div class="rep-row">
+                  <span class="rep-k">Coverage gaps</span>
+                  <span class="rep-v flag">2 found</span>
+                </div>
+                <div class="rep-row">
+                  <span class="rep-k">Better-fit options</span>
+                  <span class="rep-v good">2 available</span>
+                </div>
+              </div>
+              <div class="v15-scene-chip">Report ready</div>
+            </div>
+
+            <!-- ========== SCENE 4 · SAVINGS (the pop) ========== -->
+            <div class="scene scene-savings">
+              <div class="sav-confetti" aria-hidden="true">
+                <span class="c1"></span>
+                <span class="c2"></span>
+                <span class="c3"></span>
+                <span class="c4"></span>
+                <span class="c5"></span>
+              </div>
+              <div class="sav-eyebrow">&#9733; You&rsquo;re saving</div>
+              <div class="sav-num">$5,400</div>
+              <div class="sav-meta">per year &middot; <em>same network</em></div>
+              <div class="sav-pills">
+                <span class="sav-pill">&#9733; 2 better-fit alternatives</span>
+                <span class="sav-pill warn">&#9650; 2 gaps flagged</span>
+              </div>
+              <a class="sav-cta" href="https://shophealthcare.io/" data-quiz-open data-case="any">Continue with Nora &rarr;</a>
+            </div>
+
           </div>
         </div>
       </div>
@@ -5359,26 +5633,24 @@
     }
   })();
 
-  // V15 — Routing diagram IO trigger (Two Paths)
+  // V15 (post-feedback) — Two Paths fork-grid entrance trigger
   (function(){
-    var canvas = document.getElementById('v15RdCanvas');
-    if (!canvas) return;
+    var grid = document.getElementById('v15ForkGrid');
+    if (!grid) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || !('IntersectionObserver' in window)) {
-      canvas.classList.add('in-view','settled');
+      grid.classList.add('in-view');
       return;
     }
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if (e.isIntersecting) {
-          canvas.classList.add('in-view');
-          // After full reveal sequence (~2.6s), mark settled to start the lemon glow loop
-          setTimeout(function(){ canvas.classList.add('settled'); }, 2600);
+          grid.classList.add('in-view');
           io.disconnect();
         }
       });
     }, { threshold: 0.25 });
-    io.observe(canvas);
+    io.observe(grid);
   })();
 
   // 4) V10 DECODE — three-beat scroll-pinned card transformation
