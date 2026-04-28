@@ -3611,7 +3611,7 @@
         <h3>I lost my plan <em>recently.</em></h3>
         <p>Job change, layoff, COBRA ending. Coverage starts on the 1st.</p>
         <div class="foot">
-          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -3666,7 +3666,7 @@
         <h3>Self-employed and <em>paying too much.</em></h3>
         <p>Real UnitedHealth PPO number, sized to your income.</p>
         <div class="foot">
-          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -3718,7 +3718,7 @@
         <h3>My 2026 renewal <em>jumped.</em></h3>
         <p>Scan your card. Comparable network, typically 50&ndash;60% lower.</p>
         <div class="foot">
-          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -3787,7 +3787,7 @@
         <h3>55&ndash;64, <em>not on Medicare.</em></h3>
         <p>Bridge plan through age 64. 60 in Delaware.</p>
         <div class="foot">
-          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -3843,7 +3843,7 @@
         <h3>Just want to <em>sanity-check my plan.</em></h3>
         <p>30-second score. <i>&ldquo;You&rsquo;re fine&rdquo;</i> is a real outcome.</p>
         <div class="foot">
-          <span class="cta">Start case <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -3888,7 +3888,7 @@
         <h3>Pre-existing or <em>pregnant.</em></h3>
         <p>Catalog plan, not a fake Plan 01 quote.</p>
         <div class="foot">
-          <span class="cta">Tell Nora <span class="anim-arrow">&rarr;</span></span>
+          <span class="cta">Start now <span class="anim-arrow">&rarr;</span></span>
         </div>
       </div>
     </button>
@@ -4786,12 +4786,30 @@
 
   /* Mobile + reduced-motion */
   @media (max-width: 1024px) {
-    .v10-decode .v15-unlock-mock { aspect-ratio: 1 / 1.05; max-width: 380px; }
+    .v10-decode .v15-unlock-mock { aspect-ratio: 1 / 1.15; max-width: 380px; }
     /* on mobile, all 4 scenes are .is-1..is-4 simultaneously per JS narrow path → only show scene-savings */
     .v10-decode .v15-unlock-mock .scene-scan,
     .v10-decode .v15-unlock-mock .scene-analyze,
     .v10-decode .v15-unlock-mock .scene-report { opacity: 0 !important; }
     .v10-decode .v15-unlock-mock .scene-savings { opacity: 1 !important; pointer-events: auto !important; }
+    /* V15p · mobile — restructure savings as flex column to prevent absolute-positioning overlap */
+    .v10-decode .scene-savings {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; padding: 36px 22px;
+      border-radius: 22px;
+    }
+    .v10-decode .scene-savings .sav-eyebrow,
+    .v10-decode .scene-savings .sav-num,
+    .v10-decode .scene-savings .sav-meta,
+    .v10-decode .scene-savings .sav-pills,
+    .v10-decode .scene-savings .sav-cta {
+      position: static !important;
+      transform: none !important;
+      margin: 0 !important;
+      opacity: 1 !important;
+    }
+    .v10-decode .scene-savings .sav-num { font-size: clamp(56px, 16vw, 84px); line-height: 1; }
+    .v10-decode .scene-savings .sav-confetti { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .v15-scenes .scene, .scn-corner, .scn-beam,
@@ -5042,6 +5060,63 @@
   /* Hide V14 ticket+folder CSS noise so it doesn't render */
   .v14-fork, .v14-ticket, .v14-folder { display: none !important; }
 
+  /* V15p · post-feedback — kill ALL section-header eyebrow chips. They add no value. */
+  .eyebrow-mono,
+  .hero-eyebrow,
+  .dec-eyebrow,
+  .eyebrow-outer { display: none !important; }
+  /* Quiz q-eyebrow stays (functional inside modal) */
+  .v8-quiz-modal .q-eyebrow { display: block !important; }
+  /* Tighten section-head spacing now that eyebrows are gone */
+  .v15p-paths-head { margin-bottom: 64px; }
+  .v15p-paths-head h2 { margin-top: 0; }
+  .v9-switchboard .sb-head { padding-top: 8px; }
+  .v9-journey .j-head h2,
+  .v10-decode .dec-h,
+  .v7-bento .sec-head-c h2,
+  .v12-legit-band h2,
+  .v15p-paths-head h2 { margin-top: 0; }
+
+  /* V15p · upgrade switchboard CTA to a proper button */
+  .v9-sw .foot {
+    border-top: 1.5px dashed rgba(14,42,58,.25) !important;
+    padding-top: 16px !important;
+    justify-content: flex-start !important;
+  }
+  .v9-sw .foot .cta {
+    background: var(--ink); color: var(--cream) !important;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 10.5px !important;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--lemon);
+    transition: transform .14s ease, box-shadow .14s ease, gap .2s ease !important;
+  }
+  .v9-sw .foot .cta .anim-arrow { color: var(--lemon); transition: transform .2s ease; }
+  .v9-sw:hover .foot .cta {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--lemon);
+    gap: 8px !important;
+  }
+  .v9-sw:hover .foot .cta .anim-arrow { transform: translateX(3px); }
+  /* Pink card variant — invert so the button pops against the pink bg */
+  .v9-sw.pink .foot .cta { background: var(--cream); color: var(--ink) !important; box-shadow: 3px 3px 0 var(--ink); }
+  .v9-sw.pink .foot .cta .anim-arrow { color: var(--pink); }
+  .v9-sw.pink:hover .foot .cta { box-shadow: 5px 5px 0 var(--ink); }
+
+  /* V15p · SVG text fix — switchboard scenes had blurry illegible tiny text */
+  .v9-sw .scene svg text {
+    text-rendering: geometricPrecision;
+    paint-order: stroke;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Hide unreadable tiny text (font-size <= 11) — illegible when SVG scales up */
+  .v9-sw .scene svg text[font-size="7"],
+  .v9-sw .scene svg text[font-size="8"],
+  .v9-sw .scene svg text[font-size="9"],
+  .v9-sw .scene svg text[font-size="10"],
+  .v9-sw .scene svg text[font-size="11"] { display: none !important; }
+
   .v15p-paths {
     padding: 112px 24px 120px;
     background: var(--cream);
@@ -5179,7 +5254,11 @@
     .v15p-paths { padding: 80px 20px; }
     .v15p-grid { grid-template-columns: 1fr; gap: 36px; max-width: 460px; }
     .v15p-grid::before { display: none; }
-    .v15p-card { padding: 32px 28px; }
+    .v15p-card { padding: 32px 26px; }
+    .v15p-card-h { font-size: 30px; }
+    .v15p-card-stat { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .v15p-stat-num { font-size: 28px; }
+    .v15p-stat-meta { font-size: 10px; }
     .v15p-paths-foot { font-size: 16px; margin-top: 40px; }
   }
   @media (prefers-reduced-motion: reduce) {
