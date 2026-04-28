@@ -787,9 +787,16 @@ footer .tag { font-size: 14px; line-height: 1.55; max-width: 340px; }
 .palette-switch .ps-pages {
   display: flex; flex-direction: column; gap: 2px;
   max-height: 0; overflow: hidden;
-  transition: max-height .22s ease;
+  transition: max-height .28s ease;
 }
-.palette-switch.open .ps-pages { max-height: 360px; }
+.palette-switch.open .ps-pages {
+  max-height: min(620px, calc(100vh - 220px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.palette-switch.open .ps-pages::-webkit-scrollbar { width: 4px; }
+.palette-switch.open .ps-pages::-webkit-scrollbar-thumb { background: rgba(26,19,34,.4); border-radius: 2px; }
 .palette-switch .ps-toggle {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px; letter-spacing: .14em;
