@@ -41,6 +41,7 @@
     { href: 'homepage-v15-precise.html',        label: 'V15 · Precise', klass: 'ps-reskin' },
     { href: 'homepage-v16-skill-aligned.html',  label: 'V16 · Skill-Aligned', klass: 'ps-reskin' },
     { href: 'homepage-v17-tile-rewrite.html',   label: 'V17 · Tile Rewrite', klass: 'ps-reskin' },
+    { href: 'homepage-v18-howmath-checklist.html', label: 'V18 · How the Math', klass: 'ps-reskin' },
     { href: 'reskin-shophealthcare-com.html',   label: 'Reskin · .com',  klass: 'ps-reskin' }
   ];
 
