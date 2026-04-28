@@ -5037,78 +5037,194 @@
     .v15-rd-canvas.settled .v15-rd-n5 { animation: none !important; }
   }
 </style>
-<section class="v14-fork v9-journey" id="process">
-  <div class="v14-fork-bg" aria-hidden="true"></div>
-  <div class="v14-fork-inner">
-    <div class="v14-fork-head">
+<!-- ============================== V15p · TWO PATHS — premium minimal 2-card (replaces V14 ticket+folder) ============================== -->
+<style>
+  /* Hide V14 ticket+folder CSS noise so it doesn't render */
+  .v14-fork, .v14-ticket, .v14-folder { display: none !important; }
+
+  .v15p-paths {
+    padding: 112px 24px 120px;
+    background: var(--cream);
+    position: relative;
+  }
+  .v15p-paths-inner { max-width: 1200px; margin: 0 auto; }
+  .v15p-paths-head {
+    text-align: center; max-width: 720px; margin: 0 auto 64px;
+  }
+  .v15p-paths-head .eyebrow-mono {
+    color: var(--pink-dark); margin-bottom: 14px;
+  }
+  .v15p-paths-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(40px, 5.4vw, 60px); line-height: 1.04;
+    letter-spacing: -.028em; margin: 0 0 16px;
+  }
+  .v15p-paths-head h2 em { font-style: italic; color: var(--pink); font-weight: 400; }
+  .v15p-paths-head p {
+    font-size: 17px; line-height: 1.55; color: var(--mute);
+    max-width: 540px; margin: 0 auto;
+  }
+
+  .v15p-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 28px; max-width: 1080px; margin: 0 auto;
+    position: relative;
+  }
+  /* OR pip — refined */
+  .v15p-grid::before {
+    content: 'OR'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; letter-spacing: .26em; font-weight: 700;
+    color: var(--ink); background: var(--cream);
+    width: 52px; height: 52px;
+    display: grid; place-items: center;
+    border: 2px solid var(--ink); border-radius: 50%;
+    box-shadow: 4px 4px 0 var(--ink);
+    z-index: 5;
+    opacity: 0; transform: translate(-50%, -50%) scale(.5);
+    transition: opacity .45s ease, transform .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .v15p-grid.in-view::before { opacity: 1; transform: translate(-50%, -50%) scale(1); transition-delay: .5s; }
+
+  /* The card */
+  .v15p-card {
+    background: var(--cream);
+    border: 2.5px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 38px 36px 36px;
+    display: flex; flex-direction: column;
+    position: relative;
+    transition:
+      opacity .7s cubic-bezier(.22,.61,.36,1),
+      transform .7s cubic-bezier(.22,.61,.36,1),
+      box-shadow .25s ease;
+    opacity: 0; transform: translateY(28px);
+  }
+  .v15p-grid.in-view .v15p-card-1 { opacity: 1; transform: translateY(0); transition-delay: .05s; }
+  .v15p-grid.in-view .v15p-card-2 { opacity: 1; transform: translateY(0); transition-delay: .25s; }
+  .v15p-card:hover { transform: translateY(-3px) !important; box-shadow: 9px 9px 0 var(--ink); }
+  .v15p-card-1 { background: linear-gradient(170deg, #FFFAEA 0%, #FFF4C7 100%); }
+  .v15p-card-2 { background: linear-gradient(170deg, #FFFAEA 0%, #FFE4DB 100%); }
+
+  /* Card header row */
+  .v15p-card-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .v15p-card-num {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 700;
+    font-size: 40px; line-height: 1; color: var(--ink);
+    letter-spacing: -.04em;
+  }
+  .v15p-card-1 .v15p-card-num { color: var(--pink-dark); }
+  .v15p-card-2 .v15p-card-num { color: var(--pink); }
+  .v15p-card-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; font-weight: 700;
+    text-transform: uppercase; color: var(--ink);
+    padding: 6px 12px; border: 1.5px solid var(--ink);
+    border-radius: 999px; background: rgba(255,250,234,.7);
+  }
+
+  /* Headline */
+  .v15p-card-h {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(28px, 3.5vw, 38px); line-height: 1.05;
+    letter-spacing: -.022em; color: var(--ink);
+    margin: 0 0 16px;
+  }
+  .v15p-card-h em { font-style: italic; color: var(--pink-dark); font-weight: 600; }
+
+  /* Body */
+  .v15p-card-body {
+    font-size: 16px; line-height: 1.55;
+    color: var(--ink); opacity: .85;
+    margin: 0 0 32px;
+    max-width: 380px;
+  }
+  .v15p-card-body b { font-weight: 700; opacity: 1; }
+
+  /* Stat block at bottom */
+  .v15p-card-stat {
+    margin-top: auto;
+    padding-top: 22px;
+    border-top: 1.5px dashed rgba(14,42,58,.25);
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  .v15p-stat-num {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 700;
+    font-size: 32px; line-height: 1; color: var(--ink);
+    letter-spacing: -.025em;
+  }
+  .v15p-stat-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: .14em;
+    color: var(--mute); text-transform: uppercase;
+    line-height: 1.4; font-weight: 600;
+  }
+
+  /* Footer */
+  .v15p-paths-foot {
+    text-align: center; max-width: 680px; margin: 64px auto 0;
+    padding-top: 28px;
+    border-top: 1.5px dashed rgba(14,42,58,.18);
+    font-family: 'Fraunces', serif; font-size: 17px;
+    line-height: 1.5; color: var(--ink);
+  }
+  .v15p-paths-foot em { font-style: italic; color: var(--pink); font-weight: 500; }
+
+  @media (max-width: 900px) {
+    .v15p-paths { padding: 80px 20px; }
+    .v15p-grid { grid-template-columns: 1fr; gap: 36px; max-width: 460px; }
+    .v15p-grid::before { display: none; }
+    .v15p-card { padding: 32px 28px; }
+    .v15p-paths-foot { font-size: 16px; margin-top: 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .v15p-card { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .v15p-grid::before { opacity: 1 !important; transform: translate(-50%, -50%) !important; transition: none !important; }
+  }
+</style>
+
+<section class="v15p-paths v9-journey" id="process">
+  <div class="v15p-paths-inner">
+    <div class="v15p-paths-head">
       <div class="eyebrow-mono">&#9733; 04 &middot; TWO PATHS OUT</div>
-      <h2>Either way, <em>you save.</em></h2>
-      <p>We don&rsquo;t sell the plan that pays us most. Nora routes to the one that fits &mdash; and skips the commission spread either way.</p>
+      <h2>Two paths. <em>One honest answer.</em></h2>
+      <p>Clean profile or complex situation &mdash; Nora routes to the plan that fits, not the one that pays us most.</p>
     </div>
 
-    <div class="v14-fork-grid" id="v15ForkGrid">
-      <!-- LEFT — Paper Ticket (Golden Ticket) -->
-      <article class="v14-ticket" aria-labelledby="tk-h">
-        <div class="tk-stub">
-          <span class="tk-stub-l">&#9733; ADMIT ONE</span>
-          <span>GOLDEN TICKET &middot; PLAN 01</span>
-          <span class="tk-stub-r">No.&nbsp;01</span>
+    <div class="v15p-grid" id="v15pGrid">
+      <article class="v15p-card v15p-card-1" aria-labelledby="v15p-h1">
+        <div class="v15p-card-top">
+          <span class="v15p-card-num">01</span>
+          <span class="v15p-card-tag">Clean profile</span>
         </div>
-        <div class="tk-punches" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="tk-body">
-          <div class="tk-num" aria-hidden="true">01</div>
-          <h3 id="tk-h">Switch to <em>Plan 01.</em></h3>
-          <p class="tk-blurb">UnitedHealth Choice Plus PPO + supplemental. Same doctors, <b>typically 50&ndash;60% lower</b>. Two products carry the load so the math actually works.</p>
-
-          <div class="tk-tear" aria-hidden="true"></div>
-
-          <div class="tk-receipt">
-            <div class="row">
-              <span class="label">Current PPO</span>
-              <span class="num before">$890/mo</span>
-            </div>
-            <div class="arrow">&darr;</div>
-            <div class="row">
-              <span class="label">Your Plan 01</span>
-              <span class="num after">$400/mo</span>
-            </div>
-          </div>
-
-          <div class="tk-stamp" aria-hidden="true">
-            <span class="num">$5,400</span>
-            saved/yr
-          </div>
+        <h3 id="v15p-h1" class="v15p-card-h">A <em>lower-premium</em> plan.</h3>
+        <p class="v15p-card-body">UnitedHealth Choice Plus PPO with a fixed-indemnity supplemental. <b>Same network, same doctors</b> — typically 50&ndash;60% below a comparable PPO.</p>
+        <div class="v15p-card-stat">
+          <span class="v15p-stat-num">50&ndash;60%</span>
+          <span class="v15p-stat-meta">lower than a<br>comparable PPO</span>
         </div>
       </article>
 
-      <!-- RIGHT — Manila Folder (Refit Catalog) -->
-      <article class="v14-folder" aria-labelledby="fl-h">
-        <span class="fl-tape" aria-hidden="true"></span>
-        <div class="fl-body">
-          <div class="fl-num" aria-hidden="true">02</div>
-          <h3 id="fl-h">Restructure into <em>Catalog.</em></h3>
-          <p class="fl-blurb">When Plan 01 isn&rsquo;t a fit, Nora routes you to the <b>broader private plan</b> that actually covers your situation. No commission incentive bolted on top.</p>
-
-          <div class="fl-doc">
-            <div class="doc-head">YOUR SITUATION &rarr; CATALOG MATCH</div>
-            <ul>
-              <li><span class="check">&#10003;</span><span>Pre-existing condition &middot; covered</span></li>
-              <li><span class="check">&#10003;</span><span>Pregnancy &middot; covered</span></li>
-              <li><span class="check">&#10003;</span><span>Specialist visits &middot; in-network</span></li>
-            </ul>
-          </div>
-
-          <div class="fl-stamp" aria-hidden="true">
-            <span class="big">Right-sized</span>
-            no upsell &middot; no spread
-          </div>
+      <article class="v15p-card v15p-card-2" aria-labelledby="v15p-h2">
+        <div class="v15p-card-top">
+          <span class="v15p-card-num">02</span>
+          <span class="v15p-card-tag">Complex situation</span>
+        </div>
+        <h3 id="v15p-h2" class="v15p-card-h">The plan that <em>actually fits.</em></h3>
+        <p class="v15p-card-body">Pre-existing condition, pregnancy, or regular utilization &mdash; <b>Nora routes you</b> to the broader plan in our Catalog that covers what you need.</p>
+        <div class="v15p-card-stat">
+          <span class="v15p-stat-num">Right-fit</span>
+          <span class="v15p-stat-meta">honest pricing<br>no upsell on top</span>
         </div>
       </article>
     </div>
 
-    <p class="v14-fork-foot">Both paths <em>skip the commission spread.</em> The same shop handles either.</p>
+    <p class="v15p-paths-foot">No dead ends. Both paths <em>priced and quoted the same way</em> &mdash; no broker spread, no commission tilt.</p>
   </div>
 </section>
 
@@ -5635,9 +5751,9 @@
     }
   })();
 
-  // V15 (post-feedback) — Two Paths fork-grid entrance trigger
+  // V15p — Two Paths premium grid entrance trigger
   (function(){
-    var grid = document.getElementById('v15ForkGrid');
+    var grid = document.getElementById('v15pGrid');
     if (!grid) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || !('IntersectionObserver' in window)) {
@@ -5651,7 +5767,7 @@
           io.disconnect();
         }
       });
-    }, { threshold: 0.25 });
+    }, { threshold: 0.2 });
     io.observe(grid);
   })();
 
