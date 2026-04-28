@@ -5332,23 +5332,32 @@
   .v18-hm-h2 {
     font-family: 'Fraunces', serif;
     font-weight: 600;
-    font-size: clamp(28px, 4vw, 46px);
-    line-height: 1.08;
+    font-size: clamp(28px, 4.2vw, 46px);
+    line-height: 1.1;
     letter-spacing: -.025em;
-    margin: 0 auto 18px;
+    margin: 0 auto 14px;
     color: var(--ink, #1A1322);
-    max-width: 880px;
+    max-width: 760px;
   }
   .v18-hm-h2 em {
     font-style: italic;
     color: var(--pink, #FF6A5C);
-    font-weight: 400;
+    font-weight: 600;
+  }
+  .v18-hm-pivot {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.4vw, 28px);
+    color: var(--pink, #FF6A5C);
+    font-weight: 500;
+    margin: 0 auto 22px;
+    line-height: 1.2;
   }
   .v18-hm-sub {
     font-size: 16px;
     color: var(--mute, #6B6373);
     line-height: 1.55;
-    max-width: 620px;
+    max-width: 600px;
     margin: 0 auto;
   }
   .v18-hm-list {
@@ -5359,13 +5368,28 @@
     display: grid;
     grid-template-columns: 80px 120px 1fr;
     gap: 32px;
-    padding: 36px 8px;
+    padding: 36px 16px;
     border-bottom: 1px solid rgba(26, 19, 34, 0.12);
     align-items: start;
-    transition: background-color .18s;
+    border-radius: 10px;
+    margin: 0 -16px;
+    animation: hm-spotlight 18s infinite ease-in-out;
   }
-  .v18-hm-row.v18-hm-emph {
-    background: linear-gradient(to right, transparent 0%, rgba(255, 228, 219, 0.65) 12%, rgba(255, 228, 219, 0.65) 88%, transparent 100%);
+  .v18-hm-row:nth-child(1) { animation-delay: 0s; }
+  .v18-hm-row:nth-child(2) { animation-delay: 3s; }
+  .v18-hm-row:nth-child(3) { animation-delay: 6s; }
+  .v18-hm-row:nth-child(4) { animation-delay: 9s; }
+  .v18-hm-row:nth-child(5) { animation-delay: 12s; }
+  .v18-hm-row:nth-child(6) { animation-delay: 15s; }
+  @keyframes hm-spotlight {
+    0%   { background-color: transparent; }
+    2%   { background-color: rgba(255, 228, 219, 0.55); }
+    13%  { background-color: rgba(255, 228, 219, 0.55); }
+    17%  { background-color: transparent; }
+    100% { background-color: transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .v18-hm-row { animation: none; }
   }
   .v18-hm-num {
     font-family: 'Fraunces', serif;
@@ -5430,8 +5454,9 @@
     .v18-hm-row {
       grid-template-columns: 64px 64px 1fr;
       gap: 16px;
-      padding: 28px 4px;
+      padding: 28px 12px;
       align-items: center;
+      margin: 0 -12px;
     }
     .v18-hm-row .v18-hm-text {
       grid-column: 1 / -1;
@@ -5450,8 +5475,9 @@
   <div class="v18-hm-inner">
     <div class="v18-hm-head">
       <div class="v18-hm-eyebrow">&#9733; THE MATH</div>
-      <h2 class="v18-hm-h2">Nora members typically save 50&ndash;60% on their annual premium. <em>Here&rsquo;s how that&rsquo;s actually possible.</em></h2>
-      <p class="v18-hm-sub">Six structural reasons the math actually works &mdash; no tricks, no fake networks, no fine print.</p>
+      <h2 class="v18-hm-h2">Members typically save <em>50&ndash;60%</em><br>on their annual premium.</h2>
+      <p class="v18-hm-pivot">Here&rsquo;s how that&rsquo;s actually possible.</p>
+      <p class="v18-hm-sub">Six honest reasons the math works &mdash; no tricks, no fake networks, no fine print.</p>
     </div>
 
     <div class="v18-hm-list">
@@ -5473,8 +5499,8 @@
         </div>
       </div>
 
-      <!-- 02 · Broker incentive (load-bearing) -->
-      <div class="v18-hm-row v18-hm-emph">
+      <!-- 02 · Broker incentive -->
+      <div class="v18-hm-row">
         <div class="v18-hm-num">02</div>
         <div class="v18-hm-icon" aria-hidden="true">
           <svg viewBox="0 0 100 100" fill="none" stroke="#1A1322" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
