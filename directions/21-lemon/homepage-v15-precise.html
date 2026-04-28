@@ -4183,16 +4183,16 @@
     margin: 4px 0;
   }
 
-  /* Savings stamp */
+  /* Savings stamp — top-right corner, in the empty area where translucent "01" sits */
   .v14-ticket .tk-stamp {
-    position: absolute; bottom: 80px; right: 18px;
+    position: absolute; top: 110px; right: 14px;
     transform: rotate(-7deg);
     background: var(--pink); color: var(--cream);
     border: 2.5px solid var(--cream);
     outline: 2px solid var(--ink);
-    padding: 12px 18px;
+    padding: 10px 14px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; letter-spacing: .14em; font-weight: 700;
+    font-size: 11px; letter-spacing: .12em; font-weight: 700;
     text-transform: uppercase; line-height: 1.1;
     text-align: center;
     box-shadow: 4px 4px 0 rgba(14,42,58,.2);
@@ -4308,16 +4308,16 @@
     color: var(--ink); font-size: 13px;
   }
 
-  /* Right-sized stamp */
+  /* Right-sized stamp — top-right corner of folder body, in translucent "02" area */
   .v14-folder .fl-stamp {
-    position: absolute; bottom: 88px; left: 22px;
-    transform: rotate(-4deg);
+    position: absolute; top: 90px; right: 14px;
+    transform: rotate(5deg);
     background: var(--ink); color: var(--lemon);
     border: 2.5px dashed var(--lemon);
     outline: 2px solid var(--ink);
-    padding: 10px 16px;
+    padding: 9px 14px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: .18em; font-weight: 700;
+    font-size: 10px; letter-spacing: .14em; font-weight: 700;
     text-transform: uppercase; line-height: 1.1;
     text-align: center;
     box-shadow: 4px 4px 0 rgba(14,42,58,.2);
@@ -4439,9 +4439,9 @@
   .v14-fork-grid.in-view .v14-folder .fl-doc li:nth-child(3) .check { transform: scale(1); transition-delay: 1.10s; }
 
   /* Folder stamp slap */
-  .v14-folder .fl-stamp { transform: rotate(-4deg) scale(.4); }
+  .v14-folder .fl-stamp { transform: rotate(5deg) scale(.4); }
   .v14-fork-grid.in-view .v14-folder .fl-stamp {
-    transform: rotate(-4deg) scale(1);
+    transform: rotate(5deg) scale(1);
     transition: opacity .35s ease, transform .55s cubic-bezier(.34,1.8,.64,1);
     transition-delay: 1.30s;
   }
@@ -4488,10 +4488,12 @@
     opacity: 0; pointer-events: none;
     transition: opacity .65s cubic-bezier(.22,.61,.36,1);
   }
-  .v10-decode .dec-stage.is-1 .scene-scan      { opacity: 1; pointer-events: auto; }
-  .v10-decode .dec-stage.is-2 .scene-analyze   { opacity: 1; pointer-events: auto; }
-  .v10-decode .dec-stage.is-3 .scene-report    { opacity: 1; pointer-events: auto; }
-  .v10-decode .dec-stage.is-4 .scene-savings   { opacity: 1; pointer-events: auto; }
+  /* Exact-class visibility — only the deepest beat's scene shows.
+     Trip-wire JS layers is-1..is-4 cumulatively, so we use :not() to scope. */
+  .v10-decode .dec-stage.is-1:not(.is-2):not(.is-3):not(.is-4) .scene-scan { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-2:not(.is-3):not(.is-4) .scene-analyze        { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-3:not(.is-4) .scene-report                     { opacity: 1; pointer-events: auto; }
+  .v10-decode .dec-stage.is-4 .scene-savings                               { opacity: 1; pointer-events: auto; }
 
   /* shared chip styling — bottom-center scene label */
   .v15-scene-chip {
@@ -4600,10 +4602,10 @@
     opacity: 0; transform: scale(0);
     transition: opacity .25s ease, transform .35s cubic-bezier(.34,1.8,.64,1);
   }
-  .ana-dot.d1 { top: 32%; left: 22%; }
-  .ana-dot.d2 { top: 32%; right: 22%; }
-  .ana-dot.d3 { bottom: 38%; left: 22%; }
-  .ana-dot.d4 { bottom: 38%; right: 22%; }
+  .ana-dot.d1 { top: 42%; left: 25%; }
+  .ana-dot.d2 { top: 42%; right: 25%; }
+  .ana-dot.d3 { bottom: 40%; left: 25%; }
+  .ana-dot.d4 { bottom: 40%; right: 25%; }
   .v10-decode .dec-stage.is-2 .ana-dot { opacity: 1; transform: scale(1); }
   .v10-decode .dec-stage.is-2 .ana-dot.d1 { transition-delay: .15s; }
   .v10-decode .dec-stage.is-2 .ana-dot.d2 { transition-delay: .35s; }
@@ -4728,9 +4730,9 @@
   }
   .v10-decode .dec-stage.is-4 .sav-meta { opacity: 1; transition-delay: .55s; }
   .sav-pills {
-    position: absolute; top: 72%; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-    z-index: 3;
+    position: absolute; top: 70%; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; flex-wrap: nowrap; justify-content: center;
+    z-index: 3; white-space: nowrap;
   }
   .sav-pill {
     background: var(--ink); color: var(--lemon);
@@ -5193,7 +5195,7 @@
               <div class="v15-card">
                 <div class="v15-card-head">
                   <span>Insurance Card</span>
-                  <span>Reading&hellip;</span>
+                  <span>2026</span>
                 </div>
                 <div class="v15-card-rows">
                   <div class="v15-card-row"><span class="k">Deductible</span><span class="v">$1,500/yr</span></div>
@@ -5204,10 +5206,10 @@
                 <div class="v15-card-foot"><span>Eff. 2026</span><span>Plain English</span></div>
               </div>
               <svg class="ana-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="l-1" pathLength="1" d="M 22 38 L 8 22"/>
-                <path class="l-2" pathLength="1" d="M 78 38 L 92 22"/>
-                <path class="l-3" pathLength="1" d="M 22 62 L 8 78"/>
-                <path class="l-4" pathLength="1" d="M 78 62 L 92 78"/>
+                <path class="l-1" pathLength="1" d="M 25 42 L 10 22"/>
+                <path class="l-2" pathLength="1" d="M 75 42 L 90 22"/>
+                <path class="l-3" pathLength="1" d="M 25 60 L 10 80"/>
+                <path class="l-4" pathLength="1" d="M 75 60 L 90 80"/>
               </svg>
               <div class="ana-dots" aria-hidden="true">
                 <span class="ana-dot d1"></span>
@@ -5261,8 +5263,8 @@
               <div class="sav-num">$5,400</div>
               <div class="sav-meta">per year &middot; <em>same network</em></div>
               <div class="sav-pills">
-                <span class="sav-pill">&#9733; 2 better-fit alternatives</span>
-                <span class="sav-pill warn">&#9650; 2 gaps flagged</span>
+                <span class="sav-pill">&#9733; 2 better fits</span>
+                <span class="sav-pill warn">&#9650; 2 gaps</span>
               </div>
               <a class="sav-cta" href="https://shophealthcare.io/" data-quiz-open data-case="any">Continue with Nora &rarr;</a>
             </div>
