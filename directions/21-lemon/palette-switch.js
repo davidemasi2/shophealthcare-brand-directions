@@ -38,6 +38,7 @@
     { href: 'homepage-v12-clean.html',          label: 'V12 · Clean', klass: 'ps-reskin' },
     { href: 'homepage-v13-refined.html',        label: 'V13 · Refined', klass: 'ps-reskin' },
     { href: 'homepage-v14-immaculate.html',     label: 'V14 · Immaculate', klass: 'ps-reskin' },
+    { href: 'homepage-v15-precise.html',        label: 'V15 · Precise', klass: 'ps-reskin' },
     { href: 'reskin-shophealthcare-com.html',   label: 'Reskin · .com',  klass: 'ps-reskin' }
   ];
 
