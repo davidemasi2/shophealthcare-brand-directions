@@ -440,6 +440,8 @@
   .chat-preview .row-msg:nth-child(1) { justify-content: flex-start; transform: translateX(-6px); }
   .chat-preview .row-msg.mine         { justify-content: flex-end;   transform: translateX(16px); }
   .chat-preview .row-msg:nth-child(3) { justify-content: flex-start; transform: translateX(8px); }
+  .chat-preview .row-msg:nth-child(5) { justify-content: flex-start; transform: translateX(-2px); }
+  .chat-preview .row-msg:nth-child(5) .bub { background: var(--lemon); color: var(--ink); border-color: var(--ink); }
   .chat-preview .bub b.aha-num { font-family: 'Fraunces', serif; font-style: italic; font-weight: 700; font-size: 17px; color: var(--pink-dark); padding: 0 1px; }
 
   /* V12 — animated chat: progressive reveal w/ typing indicator */
@@ -448,6 +450,7 @@
   .chat-preview .row-msg.shown:nth-child(1) { transform: translateX(-6px); }
   .chat-preview .row-msg.shown.mine         { transform: translateX(16px); }
   .chat-preview .row-msg.shown:nth-child(3) { transform: translateX(8px); }
+  .chat-preview .row-msg.shown:nth-child(5) { transform: translateX(-2px); }
   .chat-preview .typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
   .chat-preview .typing span {
     width: 6px; height: 6px; border-radius: 50%;
@@ -3254,15 +3257,23 @@
       <div class="chat-preview" id="chatPreview">
         <div class="row-msg" data-msg="1"><div class="avatar">N</div><div class="bub">
           <div class="typing"><span></span><span></span><span></span></div>
-          <div class="bub-payload">Hey &mdash; what changed for you in 2026?<span class="ts">just now</span></div>
+          <div class="bub-payload"><small>NORA &middot; LICENSED ENROLLMENT ASSISTANT</small>Hi &mdash; I&rsquo;m Nora. Tell me what changed in 2026 and I&rsquo;ll pull a real number.<span class="ts">just now</span></div>
         </div></div>
         <div class="row-msg mine" data-msg="2"><div class="bub mine">
           <div class="typing"><span></span><span></span><span></span></div>
-          <div class="bub-payload">Premium up 28%. Self-employed, no conditions.<span class="ts">now</span></div>
+          <div class="bub-payload">Premium up 28% on renewal. I&rsquo;m self-employed.<span class="ts">now</span></div>
         </div><div class="avatar you">U</div></div>
         <div class="row-msg" data-msg="3"><div class="avatar">N</div><div class="bub">
           <div class="typing"><span></span><span></span><span></span></div>
-          <div class="bub-payload"><b class="aha-num">$290/mo</b> on UnitedHealth Choice Plus PPO. That&rsquo;s <b class="aha-num">$5,064 less</b> per year than your renewal &mdash; same network.<span class="ts">now</span></div>
+          <div class="bub-payload">Got it. One gate before I quote &mdash; anyone on the plan have an ongoing condition?<span class="ts">now</span></div>
+        </div></div>
+        <div class="row-msg mine" data-msg="4"><div class="bub mine">
+          <div class="typing"><span></span><span></span><span></span></div>
+          <div class="bub-payload">No.<span class="ts">now</span></div>
+        </div><div class="avatar you">U</div></div>
+        <div class="row-msg" data-msg="5"><div class="avatar">N</div><div class="bub">
+          <div class="typing"><span></span><span></span><span></span></div>
+          <div class="bub-payload"><b class="aha-num">$290/mo</b> on UnitedHealth Choice Plus PPO &mdash; vs. the <b class="aha-num">$712/mo</b> your renewal letter shows. <b class="aha-num">$5,064 less</b> per year, same network. Pulling the carrier breakdown now.<span class="ts">now</span></div>
         </div></div>
       </div>
     </div>
@@ -4355,6 +4366,12 @@
   /* hide the V13 fork CSS so we don't double-paint */
   .v13-fork { display: none !important; }
 
+  /* V14b — kill decorative chips per user feedback */
+  .v14-ticket .tk-foot,
+  .v14-folder .fl-foot { display: none !important; }
+  .v9-switchboard .v9-sw .case-tag,
+  .v9-switchboard .v9-sw .num-tag { display: none !important; }
+
   /* legacy V13 — still hidden but used as identifier */
   .v13-fork { padding: 96px 24px; background: var(--cream); position: relative; }
   .v13-fork-inner { max-width: 1200px; margin: 0 auto; }
@@ -4580,9 +4597,9 @@
               <p>Gaps flagged in plain English. A lower-premium alternative if Nora finds one.</p>
             </div>
             <div class="dec-beat-copy bc-4">
-              <div class="bc-label">04 &middot; The receipt</div>
-              <h3>Walk away with <em>12 pages.</em></h3>
-              <p>The report you&rsquo;ll wish your HR rep had handed you. No email required.</p>
+              <div class="bc-label">04 &middot; The breakdown</div>
+              <h3>See your full <em>plan summary.</em></h3>
+              <p>Right inside the chat. Premium, network, gaps, alternatives &mdash; in plain English.</p>
             </div>
           </div>
 
@@ -4675,8 +4692,8 @@
               <div class="rc-row-save"><span class="rc-star">★</span>3 lower-premium options · same network</div>
             </div>
             <div class="rc-foot">
-              <span class="rc-link">Open full report →</span>
-              <span class="rc-pages">12 pages · 47 data points</span>
+              <span class="rc-link">Continue with Nora →</span>
+              <span class="rc-pages">Plan summary &middot; live in chat</span>
             </div>
           </div>
 
@@ -4736,7 +4753,7 @@
       <p>PA 5-yr lookback &middot; NV/WY 6-mo &middot; DE 60-cap &middot; CA no-deductible &middot; TX waivers. Nora tells you yours before you fill anything in.</p>
     </div>
     <div class="bento-cta">
-      <h3>A 12-page report &mdash; <em>not a follow-up email.</em></h3>
+      <h3>Your full plan summary &mdash; <em>right inside the chat.</em></h3>
       <button class="btn" type="button" data-quiz-open data-case="any">Run the 90-second check →</button>
     </div>
   </div>
@@ -5116,18 +5133,19 @@
       rows.forEach(function(r){ r.classList.add('shown','delivered'); });
       return;
     }
-    // Sequence: each message gets 700ms typing + bubble drop, then 800ms pause before next
+    // V14 — 5-message sequence: alternate Nora typing (longer) / user typing (shorter) / aha (longest)
+    var TYPING_TIMES = [900, 500, 800, 350, 1100]; // by msg index
+    var PAUSE_BETWEEN = [600, 500, 600, 400, 0];
     function playMsg(i) {
       if (i >= rows.length) return;
       var r = rows[i];
       r.classList.add('shown','is-typing');
-      // Typing visible for 800ms (msg 1) / 600ms (user msg 2) / 1000ms (aha msg 3)
-      var typingMs = i === 0 ? 800 : (i === 1 ? 600 : 1000);
+      var typingMs = TYPING_TIMES[i] || 800;
+      var pauseMs = PAUSE_BETWEEN[i] || 600;
       setTimeout(function(){
         r.classList.remove('is-typing');
         r.classList.add('delivered');
-        // Pause before next
-        setTimeout(function(){ playMsg(i + 1); }, 700);
+        setTimeout(function(){ playMsg(i + 1); }, pauseMs);
       }, typingMs);
     }
     // Kick off after hero settles
