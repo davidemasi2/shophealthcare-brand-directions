@@ -5607,6 +5607,61 @@
     transform: translateX(-50%);
     background: linear-gradient(to right, transparent, rgba(26, 19, 34, 0.10), transparent);
   }
+
+  /* ====================================================================
+     V19 · ACT-BREAK ORNAMENT
+     Smooths transitions between major content blocks. Subtle hairline +
+     lemon dot. Used at scene-change moments where adjacent section bg
+     contrasts most.
+     ==================================================================== */
+  .v19-act-break {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 56px 24px 8px;
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+  }
+  .v19-ab-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(26, 19, 34, 0.16), transparent);
+  }
+  .v19-ab-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #FFE86E;
+    border: 1.5px solid #1A1322;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 4px rgba(255, 232, 110, 0.18);
+  }
+  /* Sit-on-dark variant — used after receipts/before testimonials in some flows */
+  .v19-act-break.on-dark .v19-ab-line {
+    background: linear-gradient(to right, transparent, rgba(255, 250, 234, 0.22), transparent);
+  }
+  .v19-act-break.on-dark .v19-ab-dot {
+    background: #FFE86E;
+    border-color: rgba(255, 250, 234, 0.85);
+    box-shadow: 0 0 0 4px rgba(255, 232, 110, 0.10);
+  }
+  @media (max-width: 520px) {
+    .v19-act-break { padding: 36px 24px 4px; gap: 10px; max-width: 320px; }
+    .v19-ab-dot { width: 7px; height: 7px; box-shadow: 0 0 0 3px rgba(255, 232, 110, 0.18); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .v19-act-break .v19-ab-dot {
+      animation: v19-ab-pulse 4.5s infinite ease-in-out;
+    }
+    @keyframes v19-ab-pulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(255, 232, 110, 0.18); }
+      50%      { box-shadow: 0 0 0 7px rgba(255, 232, 110, 0.06); }
+    }
+  }
 </style>
 
 <section class="v18-howmath" id="howmath">
@@ -5797,6 +5852,13 @@
     }
   })();
 </script>
+
+<!-- V19 · act-break ornament between How the Math and Decode -->
+<div class="v19-act-break" aria-hidden="true">
+  <span class="v19-ab-line"></span>
+  <span class="v19-ab-dot"></span>
+  <span class="v19-ab-line"></span>
+</div>
 
 <!-- ============================== V10 DECODE ============================== -->
 <section class="v10-decode" id="decode">
@@ -6039,6 +6101,13 @@
   </div>
 </section>
 
+<!-- V19 · act-break ornament between Receipts and Backstory -->
+<div class="v19-act-break" aria-hidden="true">
+  <span class="v19-ab-line"></span>
+  <span class="v19-ab-dot"></span>
+  <span class="v19-ab-line"></span>
+</div>
+
 <!-- ============================== ABOUT (KINETIC TYPE) ============================== -->
 <section class="v7-about" id="about">
   <div class="eyebrow-outer">
@@ -6166,6 +6235,13 @@
     <p class="faq-a">Core Value Insurance Associates, LLC is licensed in all 50 states. State-specific license numbers (FL, CO, KY, NV, TN resident/non-resident) are listed in the footer.</p>
   </details>
 </section>
+
+<!-- V19 · act-break ornament between Testimonials and Final CTA -->
+<div class="v19-act-break" aria-hidden="true">
+  <span class="v19-ab-line"></span>
+  <span class="v19-ab-dot"></span>
+  <span class="v19-ab-line"></span>
+</div>
 
 <!-- ============================== FINAL CTA ============================== -->
 <section class="v7-final">

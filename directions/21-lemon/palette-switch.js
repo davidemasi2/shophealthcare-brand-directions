@@ -23,7 +23,7 @@
   ];
 
   var pages = [
-    { href: 'index.html',                       label: 'Index',          klass: 'ps-home'   },
+    { href: 'toc.html',                         label: 'TOC',            klass: 'ps-home'   },
     { href: 'homepage-v1-original-quiet.html',  label: 'V1 · Orig Quiet'                    },
     { href: 'homepage-v2-original-loud.html',   label: 'V2 · Orig Loud'                     },
     { href: 'homepage-v3-heritage-quiet.html',  label: 'V3 · Hrtg Quiet'                    },
