@@ -5318,12 +5318,12 @@
     align-items: center;
     gap: 18px;
     max-width: 720px;
-    margin: 56px auto 0;
+    margin: 64px auto 0;
     padding: 16px 4px;
     text-decoration: none;
     color: var(--mute, #6B6373);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 12.5px;
     letter-spacing: .14em;
     text-transform: uppercase;
     font-weight: 600;
@@ -5368,11 +5368,11 @@
 <!-- ============================== V18 · HOW THE MATH WORKS (6-item checklist explainer) ============================== -->
 <style>
   .v18-howmath {
-    padding: 96px 24px 88px;
+    padding: 104px 24px 96px;
     background: #FFFAEA;
     background-image:
-      radial-gradient(circle at 12% 0%, rgba(255, 232, 110, 0.10) 0%, transparent 32%),
-      radial-gradient(circle at 88% 100%, rgba(255, 106, 92, 0.06) 0%, transparent 35%);
+      radial-gradient(circle at 12% 0%, rgba(255, 232, 110, 0.12) 0%, transparent 36%),
+      radial-gradient(circle at 88% 100%, rgba(255, 106, 92, 0.07) 0%, transparent 38%);
     position: relative;
     overflow: hidden;
   }
@@ -5391,7 +5391,17 @@
   }
   .v18-hm-head {
     text-align: center;
-    margin-bottom: 56px;
+    margin-bottom: 64px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1);
+  }
+  .v18-hm-head.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .v18-hm-head { opacity: 1 !important; transform: none !important; transition: none; }
   }
   .v18-hm-eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -5744,6 +5754,47 @@
       });
     }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.v18-hm-row').forEach(function(r) { io.observe(r); });
+
+    // Also reveal the header
+    var headIo = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          headIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    var head = document.querySelector('.v18-hm-head');
+    if (head) headIo.observe(head);
+
+    // Reveal the foot too
+    var footIo = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          footIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    var foot = document.querySelector('.v18-hm-foot');
+    if (foot) {
+      foot.style.opacity = '0';
+      foot.style.transform = 'translateY(12px)';
+      foot.style.transition = 'opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)';
+      footIo.observe(foot);
+      foot.addEventListener('transitionend', function once() {
+        foot.removeEventListener('transitionend', once);
+      });
+      // When is-in lands, fade in
+      var watchIo = new MutationObserver(function() {
+        if (foot.classList.contains('is-in')) {
+          foot.style.opacity = '1';
+          foot.style.transform = 'translateY(0)';
+          watchIo.disconnect();
+        }
+      });
+      watchIo.observe(foot, { attributes: true, attributeFilter: ['class'] });
+    }
   })();
 </script>
 
