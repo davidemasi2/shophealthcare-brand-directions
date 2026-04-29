@@ -3990,7 +3990,7 @@
       <div class="v8-progress"><span class="done"></span><span class="done"></span></div>
       <h3>At 65 you&rsquo;re in a different product category.</h3>
       <p>What we sell is private, off-exchange coverage built for under-65 households. After 65 you&rsquo;re in the Medicare ecosystem, and that&rsquo;s a different set of products with a different set of brokers and rules. We&rsquo;d rather hand you the right pointer than pretend our plans fit yours.</p>
-      <p style="font-size:13px;color:var(--mute);"><em>Where to look:</em> The federal site at medicare.gov is the canonical starting point, and your state&rsquo;s SHIP (State Health Insurance Assistance Program) offers free counseling.</p>
+      <p style="font-size:13px;color:var(--mute);"><em>Where to look:</em> The federal site at medicare.gov is the canonical starting point, and your state&rsquo;s SHIP (State Health Insurance Assistance Program) offers no-cost counseling.</p>
       <a class="exit-cta" href="#" id="exitSeniorBack">Go back to the home page &rarr;</a>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
@@ -4015,7 +4015,7 @@
     <div class="v8-quiz-step" data-step="4">
       <div class="v8-progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
       <h3>Anyone on the plan have an ongoing condition?</h3>
-      <p class="q-sub">This is the routing question. The honest answer gets you the right plan &mdash; Plan 01 or the broader Catalog.</p>
+      <p class="q-sub">This is the routing question. The honest answer gets you the right plan &mdash; the lower-premium one, or a broader-coverage option.</p>
       <div class="v8-quiz-opts">
         <button type="button" data-conditions="none">No ongoing conditions for anyone <span class="arw">&rarr;</span></button>
         <button type="button" data-conditions="managed">Managed pre-existing condition <span class="arw">&rarr;</span></button>
@@ -5294,7 +5294,7 @@
           <span class="v15p-card-tag">Complex situation</span>
         </div>
         <h3 id="v15p-h2" class="v15p-card-h">The plan that <em>actually fits.</em></h3>
-        <p class="v15p-card-body">Pre-existing condition, pregnancy, or regular utilization &mdash; <b>Nora routes you</b> to the broader plan in our Catalog that covers what you need.</p>
+        <p class="v15p-card-body">Pre-existing condition, pregnancy, or regular care &mdash; <b>Nora routes you</b> to a different private plan that covers what you need. Same shop, same honest pricing.</p>
         <div class="v15p-card-stat">
           <span class="v15p-stat-num">Right-fit</span>
           <span class="v15p-stat-meta">pricing.<br>No upsell.</span>
@@ -5368,9 +5368,22 @@
 <!-- ============================== V18 · HOW THE MATH WORKS (6-item checklist explainer) ============================== -->
 <style>
   .v18-howmath {
-    padding: 96px 24px;
-    background: var(--cream, #FFFAEA);
+    padding: 96px 24px 88px;
+    background: #FFFAEA;
+    background-image:
+      radial-gradient(circle at 12% 0%, rgba(255, 232, 110, 0.10) 0%, transparent 32%),
+      radial-gradient(circle at 88% 100%, rgba(255, 106, 92, 0.06) 0%, transparent 35%);
     position: relative;
+    overflow: hidden;
+  }
+  .v18-howmath::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 60%;
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, transparent, rgba(26, 19, 34, 0.10), transparent);
   }
   .v18-hm-inner {
     max-width: 1080px;
@@ -5435,11 +5448,22 @@
     margin: 0 -20px;
     position: relative;
     background-color: transparent;
-    transition: background-color .35s ease, transform .4s cubic-bezier(.22,.61,.36,1), box-shadow .4s ease;
+    /* Initial state for scroll reveal */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1), background-color .35s ease, box-shadow .35s ease;
     animation: hm-spotlight 12s infinite ease-in-out;
+    animation-play-state: paused;
   }
-  .v18-hm-row:hover {
-    background-color: rgba(255, 232, 110, 0.18) !important;
+  .v18-hm-row.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .v18-hm-row.is-in {
+    animation-play-state: running;
+  }
+  .v18-hm-row.is-in:hover {
+    background-color: rgba(255, 232, 110, 0.20) !important;
     transform: translateX(4px);
     animation-play-state: paused;
   }
@@ -5520,15 +5544,20 @@
   }
   .v18-hm-foot {
     margin-top: 56px;
-    padding: 28px 32px;
-    background: var(--blush, #FFE4DB);
-    border-radius: 16px;
+    padding: 32px 36px;
+    background: #FFE4DB;
+    background-image: linear-gradient(135deg, #FFE4DB 0%, #FFEEDC 100%);
+    border-radius: 18px;
     font-family: 'Fraunces', serif;
     font-size: 19px;
-    line-height: 1.5;
-    color: var(--ink, #1A1322);
+    line-height: 1.55;
+    color: #1A1322;
     text-align: center;
     border: 1.5px solid rgba(26, 19, 34, 0.08);
+    box-shadow: 0 6px 0 rgba(26, 19, 34, 0.06);
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .v18-hm-foot em {
     font-style: italic;
@@ -5556,7 +5585,17 @@
     .v18-hm-h2 { font-size: 28px; }
     .v18-hm-text h3 { font-size: 19px; }
     .v18-hm-text p { font-size: 15px; }
-    .v18-hm-foot { font-size: 16px; padding: 22px 18px; margin-top: 36px; }
+    .v18-hm-foot { font-size: 15.5px; padding: 22px 20px; margin-top: 32px; line-height: 1.55; }
+  }
+  /* Bottom-edge hairline mirroring the top edge */
+  .v18-howmath::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 60%;
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, transparent, rgba(26, 19, 34, 0.10), transparent);
   }
 </style>
 
@@ -5684,9 +5723,29 @@
 
     </div>
 
-    <p class="v18-hm-foot">And both paths &mdash; the lower-premium plan and the Catalog &mdash; are <em>priced and quoted the same way.</em> No broker spread. No commission tilt. No dead ends.</p>
+    <p class="v18-hm-foot">And both paths &mdash; the lower-premium plan and the broader-coverage option &mdash; are <em>priced and quoted the same way.</em> No broker spread. No commission tilt. No dead ends.</p>
   </div>
 </section>
+
+<script>
+  /* V19 · IntersectionObserver row reveal for How the Math */
+  (function() {
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: just show all rows
+      document.querySelectorAll('.v18-hm-row').forEach(r => r.classList.add('is-in'));
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.v18-hm-row').forEach(function(r) { io.observe(r); });
+  })();
+</script>
 
 <!-- ============================== V10 DECODE ============================== -->
 <section class="v10-decode" id="decode">
@@ -6418,7 +6477,7 @@
       'renewal':       { label: '2026 RENEWAL',   confirm: 'Your 2026 renewal just went up',stateCopy: 'lower-premium options on a comparable network' },
       'bridge':        { label: 'BRIDGE YEARS',   confirm: 'You&rsquo;re 55&ndash;64, not yet on Medicare', stateCopy: 'a bridge plan to age 64' },
       'gut-check':     { label: 'GUT CHECK',      confirm: 'You want to sanity-check your current plan', stateCopy: 'a plain-English read on what you have today' },
-      'other':         { label: 'OPEN CASE',      confirm: 'Something else changed',        stateCopy: 'the Catalog plan that fits' },
+      'other':         { label: 'OPEN CASE',      confirm: 'Something else changed',        stateCopy: 'a private plan that fits your situation' },
       'any':           { label: 'OPEN CASE',      confirm: 'Start a plan check',            stateCopy: 'your case' }
     };
 
