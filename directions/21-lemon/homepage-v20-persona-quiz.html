@@ -7027,7 +7027,7 @@
         var el = document.getElementById(id);
         if (el) el.innerHTML = elMap[id];
       });
-      // V20 — full persona payload to Nora app
+      // V20 — full persona payload to V20 Nora app (sibling folder in this build)
       if (quizGo) {
         var params = new URLSearchParams();
         params.set('p', p.code);
@@ -7036,7 +7036,7 @@
         if (state.sex) params.set('x', state.sex);
         params.set('pg', (state.pregnancy === 'yes' || state.pregnancy === 'maybe') ? '1' : '0');
         if (state.conditions) params.set('c', state.conditions);
-        quizGo.setAttribute('href', 'https://shophealthcare.io/?' + params.toString());
+        quizGo.setAttribute('href', 'nora-app-v20/?' + params.toString());
       }
     }
 

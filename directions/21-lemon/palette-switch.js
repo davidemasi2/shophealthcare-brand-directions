@@ -44,7 +44,7 @@
     { href: 'homepage-v18-howmath-checklist.html', label: 'V18 · How the Math', klass: 'ps-reskin' },
     { href: 'homepage-v19-deploy-polish.html',  label: 'V19 · Deploy Polish', klass: 'ps-reskin' },
     { href: 'homepage-v20-persona-quiz.html',   label: 'V20 · Persona Quiz', klass: 'ps-reskin' },
-    { href: 'nora-app/?p=SP1&s=TX&a=35&x=M&pg=0&c=none', label: 'V21 · Nora App (M1)', klass: 'ps-reskin' },
+    { href: 'nora-app-v20/?p=SP1&s=TX&a=35&x=M&pg=0&c=none', label: 'V20 · Nora App', klass: 'ps-reskin' },
     { href: 'reskin-shophealthcare-com.html',   label: 'Reskin · .com',  klass: 'ps-reskin' }
   ];
 
