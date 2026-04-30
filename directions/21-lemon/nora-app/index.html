@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nora — ShopHealthcare</title>
+  <meta name="description" content="Your real plan with Nora. Licensed enrollment assistant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="nora-app.css">
+</head>
+<body class="theme-shc-match motif-quiet">
+
+  <!-- Top chrome -->
+  <header class="nx-top">
+    <a class="nx-logo" href="/" aria-label="ShopHealthcare home">
+      <span class="nx-mark"></span>
+      <span class="nx-word">ShopHealthcare</span>
+    </a>
+    <div class="nx-status">
+      <span class="nx-status-dot" aria-hidden="true"></span>
+      <span class="nx-status-label">Nora · Live</span>
+    </div>
+    <button class="nx-account" aria-label="Account" hidden>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+    </button>
+  </header>
+
+  <!-- Mobile tab nav (visible <768px) -->
+  <nav class="nx-tabs" role="tablist" aria-label="App sections">
+    <button class="nx-tab is-active" data-tab="chat" role="tab" aria-selected="true">Chat</button>
+    <button class="nx-tab" data-tab="dash" role="tab" aria-selected="false">Dashboard</button>
+    <button class="nx-tab" data-tab="drawer" role="tab" aria-selected="false">Report</button>
+  </nav>
+
+  <!-- The single ink-bordered workspace container -->
+  <main class="nx-shell" id="nx-shell">
+
+    <!-- ZONE 1 — Nora chat -->
+    <section class="nx-zone nx-chat is-active" id="zone-chat" role="tabpanel" aria-label="Nora chat">
+      <header class="nx-chat-head">
+        <div class="nx-avatar" aria-hidden="true">N</div>
+        <div class="nx-chat-id">
+          <div class="nx-chat-name">Nora</div>
+          <div class="nx-chat-credential">Licensed enrollment assistant <span class="nx-chat-sep">·</span> <span class="nx-online" aria-hidden="true"></span> Live</div>
+        </div>
+      </header>
+
+      <div class="nx-chat-scroll" id="chat-scroll" aria-live="polite" aria-atomic="false">
+        <!-- Messages render here -->
+      </div>
+
+      <div class="nx-chat-input-wrap">
+        <div class="nx-quick-replies" id="quick-replies" aria-label="Quick replies"></div>
+        <form class="nx-input-row" id="chat-form" autocomplete="off">
+          <input
+            type="text"
+            id="chat-input"
+            class="nx-input"
+            placeholder="Type or pick an option above…"
+            aria-label="Message Nora"
+            autocomplete="off"
+            spellcheck="false">
+          <button type="submit" class="nx-send" aria-label="Send message">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ZONE 2 — Live dashboard (M2 placeholder) -->
+    <section class="nx-zone nx-dash" id="zone-dash" role="tabpanel" aria-label="Live dashboard">
+      <div class="nx-dash-eyebrow" id="dash-eyebrow">★ YOUR ESTIMATE</div>
+      <h1 class="nx-dash-headline" id="dash-headline">Routing your numbers.</h1>
+
+      <div class="nx-dash-divider" aria-hidden="true"></div>
+
+      <div class="nx-bignum-wrap">
+        <div class="nx-bignum" id="dash-bignum">~$290<span class="nx-bignum-unit">/mo</span></div>
+        <div class="nx-bignum-label" id="dash-bignum-label">Plan 01 estimate</div>
+      </div>
+
+      <div class="nx-dash-compare">
+        <div class="nx-compare-row">
+          <span class="nx-compare-label">Compared to:</span>
+          <span class="nx-compare-val" id="dash-compare">~$890/mo open-market PPO</span>
+        </div>
+        <div class="nx-compare-row nx-savings">
+          <span class="nx-compare-label">You'd save:</span>
+          <span class="nx-compare-val" id="dash-savings">~$600/mo</span>
+        </div>
+      </div>
+
+      <div class="nx-dash-divider" aria-hidden="true"></div>
+
+      <div class="nx-known">
+        <div class="nx-known-label">What we know so far</div>
+        <ul class="nx-known-list" id="known-list" aria-live="polite">
+          <li class="known-item is-confirmed" data-key="state"><span class="nx-known-mark">✓</span><span class="nx-known-text">State: <b id="fact-state">—</b></span></li>
+          <li class="known-item is-confirmed" data-key="age"><span class="nx-known-mark">✓</span><span class="nx-known-text">Age: <b id="fact-age">—</b></span></li>
+          <li class="known-item is-confirmed" data-key="sex"><span class="nx-known-mark">✓</span><span class="nx-known-text">Sex: <b id="fact-sex">—</b></span></li>
+          <li class="known-item is-confirmed" data-key="conditions"><span class="nx-known-mark">✓</span><span class="nx-known-text">Conditions: <b id="fact-conditions">—</b></span></li>
+          <li class="known-item is-pending" data-key="name"><span class="nx-known-mark">⊙</span><span class="nx-known-text">Name: <span class="nx-mute">pending…</span></span></li>
+          <li class="known-item is-pending" data-key="zip"><span class="nx-known-mark">⊙</span><span class="nx-known-text">ZIP: <span class="nx-mute">pending…</span></span></li>
+          <li class="known-item is-pending" data-key="dob"><span class="nx-known-mark">⊙</span><span class="nx-known-text">DOB: <span class="nx-mute">pending…</span></span></li>
+        </ul>
+      </div>
+
+      <div class="nx-dash-stub">
+        <div class="nx-stub-eyebrow">★ Milestone 2</div>
+        <p>Live big-number tween, card-scan widget, and dashboard refinement land in M2. The estimate above and "what we know" list refresh as Nora collects each answer in M1.</p>
+      </div>
+
+      <div class="nx-dash-trust">
+        <div>Operated by Core Value Insurance Associates, LLC · NPN #19482230</div>
+        <div>Licensed in <span id="trust-state">all 50 states</span> · Verifiable at <a href="https://nipr.com" target="_blank" rel="noopener">NIPR.com</a></div>
+      </div>
+    </section>
+
+    <!-- ZONE 3 — Report drawer (M5 placeholder) -->
+    <aside class="nx-zone nx-drawer" id="zone-drawer" role="tabpanel" aria-label="Report drawer">
+      <div class="nx-drawer-empty">
+        <svg class="nx-drawer-illo" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <rect x="9" y="14" width="46" height="36" rx="3"/>
+          <path d="M9 18l23 16 23-16"/>
+        </svg>
+        <div class="nx-drawer-eyebrow">★ MILESTONE 5</div>
+        <div class="nx-drawer-title">Your report will appear here.</div>
+        <p class="nx-drawer-copy">Once Nora has finalized your plan, this drawer fills with your full plan summary, fine-print, and a side-by-side comparison.</p>
+        <p class="nx-drawer-meta">Report drawer ships in Milestone 5. Save · Email · Forward unlock after the email gate (Milestone 3).</p>
+      </div>
+    </aside>
+
+  </main>
+
+  <script src="nora-app.js"></script>
+</body>
+</html>
