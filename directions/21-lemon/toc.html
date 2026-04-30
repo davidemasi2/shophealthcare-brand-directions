@@ -319,23 +319,23 @@
 
 <hr class="div">
 
-<!-- V20 · PERSONA QUIZ + NORA APP (one cohesive version) -->
+<!-- V23 · PERSONA QUIZ + NORA APP (current canonical, post-optimization) -->
 <div class="toc-section">
-  <h2>V20 — Persona <em>quiz</em> + Nora <em>app</em></h2>
+  <h2>V23 — Persona <em>quiz</em> + Nora <em>app</em> (current)</h2>
   <div class="file-grid two">
-    <a class="file-card lemon" href="homepage-v20-persona-quiz.html" style="grid-column: 1 / -1;">
-      <div class="num">★ V20a · HOMEPAGE · PERSONA QUIZ + DASHBOARD REVEAL</div>
-      <div class="meta">Hero chat-frame gradient · carrier band relocated under hero · sex-conditional pregnancy · 6-persona dashboard reveal · "Upgrade anytime" callout · URL payload schema for Nora app handoff</div>
-      <h3>The quiz becomes mindset framing + payload generator. <em>Reveal anchors before the email gate.</em></h3>
-      <p>Response to 2026-04-29 weekly sync feedback. <b>Hero Nora chat box</b> wrapped in a v20-chat-frame: lemon/blush gradient bg, ink border, 3D shadow, "Nora · Live" header with green pulse — no longer disappears against cream. <b>Carrier-logo legitimacy band</b> moved from below Bento to directly under the hero (Matt's V20 feedback overrides V11 trust-ammo placement). <b>Quiz expanded to 4 screens with sex-conditional pregnancy</b>: state → age → sex → [pregnancy if F only — men never asked] → conditions → persona-tagged mini dashboard reveal. <b>6-persona dashboard variants</b> tagged from URL `?p=` param: RU1 (just lost) · SP1 (1099) · BR1 (pre-Medicare) · CL1 (renewal spike) · PC1 (check-up) · GEN. Pregnancy yes/maybe routes to Catalog (Plan 02) variant. <b>"Upgrade anytime if life changes"</b> callout block between carrier band and switchboard — addresses pregnancy/edge-case anxiety without scaring users from Plan 01. <b>URL payload schema</b> handed off to Nora app: `?p=&s=&a=&x=&pg=&c=` (5 chars, Boolean-flag style per Eugenio request). <b>Verified in Chromium</b> at 1280 desktop + 375/390 mobile widths, all 5 personas tested, sex routing correct, Catalog routing correct. Plus `--license-states-text` CSS variable as single-source-of-truth for "all 50 states" copy (placeholder until license is fully live).</p>
-      <span class="go">Open V20 homepage — the persona quiz</span>
+    <a class="file-card lemon" href="homepage-v23-persona-quiz.html" style="grid-column: 1 / -1;">
+      <div class="num">★ V23a · HOMEPAGE · PERSONA QUIZ + DASHBOARD REVEAL (post-optimization)</div>
+      <div class="meta">V23 = V20 base + 4-component layer (Value Stack, Unlock Trail) + 16 user-journey audit fixes. Numbers align across journey · trail offset corrected · GEN reveal copy · final-step copy.</div>
+      <h3>Persona quiz with the universal value-unlock system. <em>Trail carries through to the app.</em></h3>
+      <p>The V23 homepage. <b>V23 changes from V20</b>: Component A (Value Stack 3-tier dial+odometer) replaces static reveal numbers · Component B (Unlock Trail 7-stage) replaces 4-dot progress bar · trail step semantics fixed (active = step in progress) · GEN persona gets its own revealReinforce copy · final-step copy "Last step · Pick your plan." <b>Inherited from V20</b>: hero chat-frame gradient · carrier band under hero · sex-conditional pregnancy · 6-persona dashboard reveal · "Upgrade anytime" callout. <b>URL payload schema</b> hands off to Nora app: `?p=&s=&a=&x=&pg=&c=` (Boolean flags). <b>Live commit `f711849`</b> · V21 baseline rollback `a43a2fa`.</p>
+      <span class="go">Open V23 homepage — the persona quiz</span>
     </a>
-    <a class="file-card ink" href="nora-app-v20/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
-      <div class="num">★ V20b · NORA APP · POST-QUIZ THREE-ZONE WEB APP</div>
-      <div class="meta">Three-zone shell (chat / dashboard / drawer) · persona-tagged Nora opener echoing URL params · scripted 4-step mock conversation · mobile tab nav · M2/M5 placeholders</div>
-      <h3>The post-quiz experience. <em>Same V20 brand system, different surface.</em></h3>
-      <p>The V20 homepage's "See my real plan with Nora →" CTA hands off to this app via URL params. <b>Three-zone web-app shell</b> — chat zone fully built, dashboard zone scaffolded with persona-correct content, drawer placeholder. <b>Persona-tagged opener</b> echoes URL params back to user (state · age · sex · pregnancy planned), pulls strings from <code>persona-strings.json</code> for all 6 personas. Pregnancy flag overrides to Catalog (Plan 02) routing. <b>4-step mock conversation</b> — name → ZIP → DOB → conditions → finalize, with 800–1500ms randomized typing delays. <b>Mobile</b> collapses to single-zone tab nav (Chat / Dashboard / Drawer). <b>Milestone 1 of 6</b> in the V20 Nora app build sequence — out of M1: card scan, email gate, real backend (mocked), PDF generation.</p>
-      <span class="go">Open V20 Nora app (with SP1 sample params)</span>
+    <a class="file-card ink" href="nora-app-v23/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">★ V23b · NORA APP · POST-QUIZ THREE-ZONE WEB APP (post-optimization)</div>
+      <div class="meta">Full V21 spec realized + V23 polish: persona reinforce paragraph · AuthGate dashboard skeleton · re-anchored plan numbers · sticky drawer header · Recommended badge · carrier logos · mobile labels.</div>
+      <h3>The post-quiz experience. <em>Numbers align. AuthGate keeps you anchored. Plans land with carrier logos.</em></h3>
+      <p>The V23 Nora app. <b>3-zone layout</b>: chat (Component C AuthGate triggers after discovery) · dashboard (Component A locked Stack + reinforce paragraph + AuthGate skeleton during gate) · drawer (Component D Plan Report w/ sticky header). <b>V23 changes from V21 baseline</b>: persona reinforce paragraph below dashboard headline · Plan mocks re-anchored ($290/$420/$580) so quiz reveal matches plan card · Nora bridge message explains the spread · ValueStack.lock() recomputes Tier 2/3 · plan card equal heights + name wrap + Recommended ⭐ pill + carrier logos · sticky drawer header · mobile trail labels visible at <480px · AuthGate dashboard skeleton ("Pulling carrier rates · Comparing networks · Locking your number") · Continue button validates email · SMS opt-in checkbox before phone field. <b>Live commit `f711849`</b>.</p>
+      <span class="go">Open V23 Nora app (with SP1 sample params)</span>
     </a>
   </div>
 </div>
