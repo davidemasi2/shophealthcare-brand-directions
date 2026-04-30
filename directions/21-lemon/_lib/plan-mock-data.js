@@ -29,8 +29,8 @@
     name: 'Bronze Essential 9000 Deductible With 4 Copay No Deductible Office Visits',
     carrier: 'Regence BlueCross BlueShield of Utah',
     network_type: 'EPO',
-    monthly_premium: 510.86,
-    description: 'Basic coverage with lower premiums and higher out-of-pocket costs. Network provided by Regence BlueCross BlueShield of Utah.',
+    monthly_premium: 290,
+    description: 'Lower premium, higher out-of-pocket. Best if you rarely visit a doctor.',
     highlights: [
       { label: 'Deductible', value: '$9,000 individual / $18,000 family' },
       { label: 'Primary care', value: '$60 first 4 visits, then 10%' },
@@ -105,11 +105,11 @@
     ],
     compared_to_user: {
       current_plan_premium: 890,
-      savings_monthly: 379.14,
-      savings_annual: 4549.68,
+      savings_monthly: 600,
+      savings_annual: 7200,
       deductible_delta_individual: -2000,
       key_differences: [
-        { category: 'premium', delta: '−$379/mo', favor: 'this_plan' },
+        { category: 'premium', delta: '−$600/mo', favor: 'this_plan' },
         { category: 'deductible', delta: '+$2,000', favor: 'current_plan' },
         { category: 'rx_generic', delta: '$15 vs current $20', favor: 'this_plan' }
       ]
@@ -139,8 +139,8 @@
     name: 'Silver 6500',
     carrier: 'Regence BlueCross BlueShield of Utah',
     network_type: 'EPO',
-    monthly_premium: 698.66,
-    description: 'Mid-tier coverage with reasonable premiums and predictable copays for routine care. Most chosen for our cohort.',
+    monthly_premium: 420,
+    description: 'Balanced premium with predictable copays. Most chosen by freelancers in your bracket.',
     highlights: [
       { label: 'Deductible', value: '$6,500 individual / $13,000 family' },
       { label: 'Primary care', value: '$20 copay' },
@@ -214,11 +214,11 @@
     ],
     compared_to_user: {
       current_plan_premium: 890,
-      savings_monthly: 191.34,
-      savings_annual: 2296.08,
+      savings_monthly: 470,
+      savings_annual: 5640,
       deductible_delta_individual: 500,
       key_differences: [
-        { category: 'premium', delta: '−$191/mo', favor: 'this_plan' },
+        { category: 'premium', delta: '−$470/mo', favor: 'this_plan' },
         { category: 'deductible', delta: '−$500', favor: 'this_plan' },
         { category: 'specialist', delta: '$60 copay vs current $80', favor: 'this_plan' }
       ]
@@ -248,8 +248,8 @@
     name: 'Healthy Premier Gold Standard',
     carrier: 'University of Utah Health Plans',
     network_type: 'EPO',
-    monthly_premium: 859.27,
-    description: 'Top-tier coverage with the lowest deductible and predictable copays for everything. Best for heavy utilizers.',
+    monthly_premium: 580,
+    description: 'Highest premium, lowest deductible. Best if you use care often or have ongoing prescriptions.',
     highlights: [
       { label: 'Deductible', value: '$2,000 individual / $4,000 family' },
       { label: 'Primary care', value: '$30 copay' },
@@ -323,11 +323,11 @@
     ],
     compared_to_user: {
       current_plan_premium: 890,
-      savings_monthly: 30.73,
-      savings_annual: 368.76,
+      savings_monthly: 310,
+      savings_annual: 3720,
       deductible_delta_individual: -5000,
       key_differences: [
-        { category: 'premium', delta: '−$31/mo', favor: 'this_plan' },
+        { category: 'premium', delta: '−$310/mo', favor: 'this_plan' },
         { category: 'deductible', delta: '−$5,000', favor: 'this_plan' },
         { category: 'specialty_drugs', delta: '$250 vs % coinsurance', favor: 'this_plan' }
       ]

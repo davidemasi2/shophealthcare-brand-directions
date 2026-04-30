@@ -53,7 +53,18 @@
   margin: 0 0 10px;
 }
 
-/* SECTION 1 — Heading */
+/* SECTION 1 — Heading
+   V23 H7 — heading sticks to top of drawer scroll. Background matches drawer
+   so contents flow underneath cleanly. */
+.plan-report__section[data-pr-section="heading"] {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--pr-cream);
+  margin: -4px -4px 0;
+  padding: 12px 4px 14px;
+  border-bottom: 1.5px solid var(--pr-rule);
+}
 .plan-report__heading-eyebrow {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 11px;
@@ -71,6 +82,9 @@
   letter-spacing: -.015em;
   color: var(--pr-ink);
   margin: 0 0 6px;
+  /* V23 H7 — wrap full plan name; never truncate */
+  word-break: break-word;
+  hyphens: auto;
 }
 .plan-report__subtitle {
   font-size: 12px;

@@ -144,6 +144,11 @@
   box-shadow: 0 0 0 3px rgba(255, 106, 92, .18);
 }
 
+/* V23 M5 — phone field hidden until SMS opt-in */
+.auth-gate__field--phone-hidden {
+  display: none;
+}
+
 /* -----------------------------------------------------------
    Phone optional row
    ----------------------------------------------------------- */
@@ -242,6 +247,18 @@
 }
 .auth-gate__btn--primary:hover:not(:disabled) {
   background: var(--ag-pink-dark);
+}
+/* V23 M6 — visual disabled state for the Continue button until email validates */
+.auth-gate__btn--primary.is-disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.auth-gate__btn--primary.is-disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--ag-pink);
 }
 
 .auth-gate__btn--google {

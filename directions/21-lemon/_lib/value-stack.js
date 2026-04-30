@@ -377,8 +377,37 @@
     return {
       el: target,
       play: function () { play(target, options); },
-      lock: function (newValue) {
+      // lock(newValue, opts?) — locks the primary value, and optionally
+      // recomputes Tier 2 (annual) + Tier 3 (savings) so the stack stays consistent.
+      // opts: { secondary: { value, suffix?, label? },
+      //         tertiary:  { value, suffix?, label?, direction? } }
+      // If only a secondary/tertiary value (number) is provided, structure is preserved.
+      lock: function (newValue, lockOpts) {
         if (typeof newValue === 'number') options.primary.value = newValue;
+        if (lockOpts) {
+          if (lockOpts.secondary != null) {
+            if (!options.secondary) options.secondary = {};
+            if (typeof lockOpts.secondary === 'number') {
+              options.secondary.value = lockOpts.secondary;
+            } else {
+              if (typeof lockOpts.secondary.value === 'number') options.secondary.value = lockOpts.secondary.value;
+              if (lockOpts.secondary.suffix != null) options.secondary.suffix = lockOpts.secondary.suffix;
+              if (lockOpts.secondary.label != null)  options.secondary.label  = lockOpts.secondary.label;
+            }
+          }
+          if (lockOpts.tertiary != null) {
+            if (!options.tertiary) options.tertiary = { direction: 'down' };
+            if (typeof lockOpts.tertiary === 'number') {
+              options.tertiary.value = lockOpts.tertiary;
+            } else {
+              if (typeof lockOpts.tertiary.value === 'number') options.tertiary.value = lockOpts.tertiary.value;
+              if (lockOpts.tertiary.suffix != null)    options.tertiary.suffix    = lockOpts.tertiary.suffix;
+              if (lockOpts.tertiary.label != null)     options.tertiary.label     = lockOpts.tertiary.label;
+              if (lockOpts.tertiary.direction != null) options.tertiary.direction = lockOpts.tertiary.direction;
+            }
+          }
+          if (typeof lockOpts.compareValue === 'number') options.compareValue = lockOpts.compareValue;
+        }
         options.locked = true;
         teardown(target);
         options.locked = true;

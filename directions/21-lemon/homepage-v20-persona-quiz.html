@@ -6910,6 +6910,7 @@
       'coverage-loss': {
         code: 'RU1', label: 'COVERAGE LOSS',
         reinforce: "You just got hit. The system failed you. We can have you covered by your start date &mdash; most people don&rsquo;t realize that&rsquo;s possible.",
+        revealReinforce: "You just got hit. Here&rsquo;s what coverage looks like by your start date &mdash; no gap.",
         dashHeadline: "Coverage in <em>24 hours.</em>",
         compareLabel: "Typical private off-exchange premium", planLabel: "Plan 01 estimate",
         compareNum: "~$890/mo", planNum: "~$290/mo", saveNum: "~$600/mo &middot; ~$7,200/yr"
@@ -6917,6 +6918,7 @@
       '1099': {
         code: 'SP1', label: 'SELF-EMPLOYED',
         reinforce: "You&rsquo;re 1099 &mdash; and most freelancers don&rsquo;t realize Plan 01 exists. It was built for self-employed people with irregular income. ACA wasn&rsquo;t.",
+        revealReinforce: "You&rsquo;re 1099 &mdash; and most freelancers don&rsquo;t realize Plan 01 was built for them. Here&rsquo;s your real number.",
         dashHeadline: "Built for <em>irregular income.</em>",
         compareLabel: "What most freelancers pay on the open market", planLabel: "Plan 01 estimate",
         compareNum: "~$890/mo", planNum: "~$290/mo", saveNum: "~$600/mo &middot; ~$7,200/yr"
@@ -6924,6 +6926,7 @@
       'bridge': {
         code: 'BR1', label: 'BRIDGE YEARS',
         reinforce: "You&rsquo;re in the longest, most expensive insurance gap of your life. Plan 01 was designed for exactly this window.",
+        revealReinforce: "Plan 01 was designed for exactly this window. Here&rsquo;s what bridging the gap to Medicare really costs.",
         dashHeadline: "Bridge to <em>Medicare.</em>",
         compareLabel: "ACA bridge plan in your bracket", planLabel: "Plan 01 estimate",
         compareNum: "~$1,180/mo", planNum: "~$520/mo", saveNum: "~$660/mo &middot; ~$7,920/yr"
@@ -6931,6 +6934,7 @@
       'renewal': {
         code: 'CL1', label: '2026 RENEWAL',
         reinforce: "Your renewal letter is real. Most renewals jumped 26&ndash;114%. Plan 01 sits 50&ndash;60% under what you&rsquo;re being asked to pay now.",
+        revealReinforce: "Your renewal letter is real. Here&rsquo;s what Plan 01 looks like next to it &mdash; same network, lower premium.",
         dashHeadline: "Your renewal vs. <em>Plan 01.</em>",
         compareLabel: "Your 2026 renewal premium", planLabel: "Plan 01 estimate",
         compareNum: "~$890/mo", planNum: "~$290/mo", saveNum: "~$600/mo &middot; ~$7,200/yr"
@@ -6938,6 +6942,7 @@
       'gut-check': {
         code: 'PC1', label: 'GUT CHECK',
         reinforce: "Most people are. About 6 in 10 we check are paying for things they&rsquo;ll never use.",
+        revealReinforce: "About 6 in 10 we check are paying for things they&rsquo;ll never use. Here&rsquo;s where you actually land.",
         dashHeadline: "Plan <em>diagnostic.</em>",
         compareLabel: "What most people in your bracket pay", planLabel: "Plan 01 estimate",
         compareNum: "~$680/mo", planNum: "~$290/mo", saveNum: "~$390/mo &middot; ~$4,680/yr"
@@ -6945,6 +6950,7 @@
       'other': {
         code: 'GEN', label: 'OPEN CASE',
         reinforce: "Most common answer we get. Most people have no idea what they&rsquo;re actually paying for.",
+        revealReinforce: "Most people don&rsquo;t know what they&rsquo;re actually paying for. Here&rsquo;s your real number &mdash; and what&rsquo;s hiding behind it.",
         dashHeadline: "Routing your <em>numbers.</em>",
         compareLabel: "Typical premium for your situation", planLabel: "Plan 01 estimate",
         compareNum: "~$760/mo", planNum: "~$290/mo", saveNum: "~$470/mo &middot; ~$5,640/yr"
@@ -6952,6 +6958,7 @@
       'any': {
         code: 'GEN', label: 'OPEN CASE',
         reinforce: "Most common answer we get. Most people have no idea what they&rsquo;re actually paying for.",
+        revealReinforce: "Most people don&rsquo;t know what they&rsquo;re actually paying for. Here&rsquo;s your real number &mdash; and what&rsquo;s hiding behind it.",
         dashHeadline: "Routing your <em>numbers.</em>",
         compareLabel: "Typical premium for your situation", planLabel: "Plan 01 estimate",
         compareNum: "~$760/mo", planNum: "~$290/mo", saveNum: "~$470/mo &middot; ~$5,640/yr"
@@ -6990,11 +6997,11 @@
       var dd = document.getElementById('quizStateDropdown'); if (dd) dd.value = '';
       if (caseLabel) caseLabel.innerHTML = (PERSONA_STRINGS[state.caseId] || PERSONA_STRINGS['any']).label;
       showStep(1);
-      // V21 · Mount Unlock Trail at top of modal — Tile stage (step 1)
+      // V21 · Mount Unlock Trail at top of modal — STATE active (user is answering State now)
       try {
         var trailHost = document.getElementById('quizUnlockTrail');
         if (trailHost && window.UnlockTrail) {
-          window.UnlockTrail.mount(trailHost, { currentStep: 1, completedPct: 14 });
+          window.UnlockTrail.mount(trailHost, { currentStep: 2, completedPct: 14 });
         }
       } catch (e) { /* trail is non-critical, continue */ }
       if (veil) { veil.classList.add('open'); document.body.style.overflow = 'hidden'; }
@@ -7016,10 +7023,12 @@
       var p = PERSONA_STRINGS[state.caseId] || PERSONA_STRINGS['any'];
       var dashEl = document.getElementById('quizDash');
       if (!dashEl) return;
+      // V23 H1 — prefer revealReinforce for the dashboard moment (post-quiz reveal),
+      // fall back to standard reinforce for personas missing the field.
       var src = catalogMode ? CATALOG_DASH : {
         eyebrow: '&#9733; YOUR ESTIMATE',
         headline: p.dashHeadline,
-        reinforce: p.reinforce,
+        reinforce: p.revealReinforce || p.reinforce,
         compareLabel: p.compareLabel,
         planLabel: p.planLabel,
         compareNum: p.compareNum,
@@ -7087,12 +7096,12 @@
     if (veil) veil.addEventListener('click', function(e){ if (e.target === veil) closeQuiz(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && veil && veil.classList.contains('open')) closeQuiz(); });
 
-    // Step 1 → Step 2-age (state-grid buttons)
+    // Step 1 → Step 2-age (state-grid buttons) — AGE now active
     document.querySelectorAll('[data-state]').forEach(function(b){
       b.addEventListener('click', function(){
         state.state = b.getAttribute('data-state');
         showStep('2-age');
-        if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 2, completedPct: 28 });
+        if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 3, completedPct: 28 });
       });
     });
     // Step 1 → Step 2-age (mobile dropdown)
@@ -7101,7 +7110,7 @@
       if (!stateDropdown.value) return;
       state.state = stateDropdown.value;
       showStep('2-age');
-      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 2, completedPct: 28 });
+      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 3, completedPct: 28 });
     });
 
     // Step 2-age → eligibility check + V20 sex routing
@@ -7119,7 +7128,7 @@
       if (n >= 65) { showStep('exit-senior'); return; }
       if (state.state === 'DE' && n >= 60) { showStep('exit-de-cap'); return; }
       showStep('2-sex');
-      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 3, completedPct: 42 });
+      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 4, completedPct: 42 });
     }
     if (ageSubmit) ageSubmit.addEventListener('click', submitAge);
     if (ageInput) ageInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') submitAge(); });
@@ -7136,22 +7145,24 @@
     });
 
     // V20 — Step 2-sex → if F: pregnancy gate, if M: skip pregnancy, go to conditions
+    // CONDITIONS active now (pregnancy / conditions are one trail stage)
     document.querySelectorAll('[data-sex]').forEach(function(b){
       b.addEventListener('click', function(){
         state.sex = b.getAttribute('data-sex');
         if (state.sex === 'F') {
           showStep('2-preg');
-          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 4, completedPct: 57 });
+          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 5, completedPct: 57 });
         } else {
           // Male — skip pregnancy entirely
           state.pregnancy = 'no';
           showStep(4);
-          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 4, completedPct: 57 });
+          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 5, completedPct: 57 });
         }
       });
     });
 
     // V20 — Step 2-preg (F-only) → yes/maybe = Catalog routing, no = conditions
+    // After preg/conditions answer → DISCOVERY active (next stage in app)
     document.querySelectorAll('[data-preg]').forEach(function(b){
       b.addEventListener('click', function(){
         state.pregnancy = b.getAttribute('data-preg');
@@ -7161,21 +7172,22 @@
           showStep('4-dash');
           if (window.UnlockTrail) {
             window.UnlockTrail.update({
-              currentStep: 5,
+              currentStep: 6,
               completedPct: 71,
               valueEstimate: getCurrentDashEstimate(true).primary,
-              valueDelta: 50
+              valueDelta: 50,
+              isUnlockEvent: true
             });
           }
         } else {
           showStep(4);
-          // Pregnancy 'no' is itself an answer — stay on Sex stage indicator (Conditions step is next)
-          // No update needed; stage 4 already set on sex pick.
+          // Pregnancy 'no' is itself an answer — stay on Conditions (5) since that's still in progress
+          // No update needed; stage 5 already set on sex pick.
         }
       });
     });
 
-    // Step 4 (conditions) → Step 4-dash (mini dashboard reveal)
+    // Step 4 (conditions) → Step 4-dash (mini dashboard reveal) — DISCOVERY active
     document.querySelectorAll('[data-conditions]').forEach(function(b){
       b.addEventListener('click', function(){
         state.conditions = b.getAttribute('data-conditions');
@@ -7184,10 +7196,11 @@
         showStep('4-dash');
         if (window.UnlockTrail) {
           window.UnlockTrail.update({
-            currentStep: 5,
+            currentStep: 6,
             completedPct: 71,
             valueEstimate: getCurrentDashEstimate(catalogMode).primary,
-            valueDelta: 50
+            valueDelta: 50,
+            isUnlockEvent: true
           });
         }
       });

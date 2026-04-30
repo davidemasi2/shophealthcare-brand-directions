@@ -373,6 +373,55 @@ input, button { font-family: inherit; }
 }
 .nx-dash-headline em { font-style: italic; color: var(--pink); font-weight: 400; }
 
+/* V23 · Persona reinforce paragraph beneath the dashboard headline.
+   Mirrors V20 quiz reveal layout. */
+.nx-dash-reinforce {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(14px, 1.05vw, 16px);
+  line-height: 1.55;
+  letter-spacing: -.005em;
+  color: var(--ink);
+  opacity: .82;
+  margin: -10px 0 22px;
+  max-width: 64ch;
+}
+.nx-dash-reinforce:empty { display: none; }
+
+/* V23 · AuthGate dashboard skeleton — keeps the middle column alive
+   while the gate is mid-flight. */
+.nx-dash-authskel {
+  margin-top: 14px;
+  background: rgba(14,42,58,0.04);
+  border: 1.5px dashed var(--rule);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nx-dash-authskel[hidden] { display: none; }
+.nx-dash-authskel-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+}
+.nx-dash-authskel-status {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+  opacity: .8;
+  transition: opacity .25s ease;
+}
+.nx-dash-authskel.is-cycling .nx-dash-authskel-status::after {
+  content: ' …';
+  opacity: .55;
+}
+
 .nx-dash-divider {
   height: 0; border: 0;
   border-top: 1px dashed var(--rule);

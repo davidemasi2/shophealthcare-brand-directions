@@ -118,12 +118,19 @@
       <div class="nx-dash-estimate-block" id="dash-estimate-block">
         <div class="nx-dash-eyebrow" id="dash-eyebrow">★ YOUR ESTIMATE</div>
         <h1 class="nx-dash-headline" id="dash-headline">Routing your numbers.</h1>
+        <p class="nx-dash-reinforce" id="dash-reinforce"></p>
 
         <div class="nx-dash-divider" aria-hidden="true"></div>
 
         <!-- V21 · Value Stack (3-tier dial+odometer) replaces the static big-number markup -->
         <div class="nx-bignum-wrap has-value-stack" id="dash-vs-wrap">
           <div data-value-stack id="dashValueStack"></div>
+        </div>
+
+        <!-- V23 · AuthGate skeleton — populated when AuthGate is active -->
+        <div class="nx-dash-authskel" id="dash-authskel" hidden>
+          <div class="nx-dash-authskel-eyebrow">⚙ NORA IS FINALIZING</div>
+          <p class="nx-dash-authskel-status" id="dash-authskel-status">Pulling carrier rates</p>
         </div>
 
         <div class="nx-dash-divider" aria-hidden="true"></div>

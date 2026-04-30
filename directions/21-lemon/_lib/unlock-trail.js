@@ -73,6 +73,8 @@
 
   // update() applies to ALL mounted instances (most pages have one).
   // If you need per-host targeting, pass { host } in `next`.
+  // Pop badge fires ONLY when an explicit `isUnlockEvent: true` flag is passed
+  // alongside a positive valueDelta — preventing mystery deltas on routine updates.
   function update(next) {
     next = next || {};
     var targets = next.host ? instances.filter(function (i) { return i.host === next.host; })
@@ -82,8 +84,9 @@
       inst.state = mergeState(prev, next);
       render(inst);
       persist(inst);
-      // Trigger pop-badge animation if a positive valueDelta was passed
-      if (typeof next.valueDelta === 'number' && next.valueDelta > 0) {
+      // Trigger pop-badge ONLY when an explicit unlock event is signalled
+      if (next.isUnlockEvent === true &&
+          typeof next.valueDelta === 'number' && next.valueDelta > 0) {
         triggerPop(inst, next.valueDelta);
       }
     });
@@ -279,8 +282,9 @@
 
     // Step counter copy chooser — tail rotates by progress band
     var tail;
-    if (remaining === 0) {
-      tail = '<span class="ut-tail">Almost there · One more thing</span>';
+    if (stepNum === TOTAL_STEPS) {
+      // Final step — pick a plan
+      tail = '<span class="ut-tail">Last step · Pick your plan</span>';
     } else if (remaining === 1) {
       tail = '<span class="ut-tail">Almost there · One more thing</span>';
     } else if (pct >= 70) {

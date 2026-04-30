@@ -329,8 +329,23 @@
   .unlock-trail .ut-stages {
     gap: 2px;
   }
+  /* H8 — mobile labels stay visible in compact mode (2-letter abbreviation via CSS).
+     Keep full label for screen readers; clip visually to first 2 chars. */
   .unlock-trail .ut-label {
-    display: none;
+    display: block;
+    font-size: 9px;
+    letter-spacing: .08em;
+    margin-top: 6px;
+    overflow: hidden;
+    max-width: 100%;
+    /* Show only first 2 chars for STATE/AGE/SEX-style labels */
+    max-height: 12px;
+    line-height: 12px;
+  }
+  /* Active stage label gets a slight bump for emphasis */
+  .unlock-trail .ut-stage.is-active .ut-label {
+    font-size: 10px;
+    font-weight: 700;
   }
   .unlock-trail .ut-stage::after {
     top: 6px;

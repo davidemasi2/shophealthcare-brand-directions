@@ -90,6 +90,7 @@
       label: "Just lost insurance",
       noraOpener: "Let's get you back on coverage fast. Plan 01 can be active in 24 hours.",
       reinforce: "You just got hit. The system failed you. We can have you covered by your start date.",
+      revealReinforce: "You just got hit. Here's what coverage looks like by your start date — no gap.",
       dashboardHeadline: "Coverage in 24 hours.",
       comparisonAnchor: "what your monthly premium will be once you're back on coverage",
       hasCurrentCoverage: false,
@@ -99,6 +100,7 @@
       label: "Self-employed / 1099",
       noraOpener: "37% of self-employed people in your bracket save the most on Plan 01. Let me show you what that looks like for you.",
       reinforce: "You're 1099 — and most freelancers don't realize Plan 01 exists. It was built for self-employed people with irregular income. ACA wasn't.",
+      revealReinforce: "You're 1099 — and most freelancers don't realize Plan 01 was built for them. Here's your real number.",
       dashboardHeadline: "Built for irregular income.",
       comparisonAnchor: "what most freelancers pay on the open market",
       hasCurrentCoverage: "maybe",
@@ -108,6 +110,7 @@
       label: "Pre-Medicare 55–64",
       noraOpener: "5+ years from Medicare is the costliest stretch. Let's bridge it without the ACA cliff.",
       reinforce: "You're in the longest, most expensive insurance gap of your life. Plan 01 was designed for exactly this window.",
+      revealReinforce: "Plan 01 was designed for exactly this window. Here's what bridging the gap to Medicare really costs.",
       dashboardHeadline: "Bridge to Medicare.",
       comparisonAnchor: "what you'd pay for ACA bridge coverage until Medicare",
       hasCurrentCoverage: "usually",
@@ -117,6 +120,7 @@
       label: "My premium just spiked",
       noraOpener: "Let me see your current premium and show you the actual delta.",
       reinforce: "Your renewal letter is real. Most renewals jumped 26–114%. Plan 01 sits 50–60% under what you're being asked to pay now.",
+      revealReinforce: "Your renewal letter is real. Here's what Plan 01 looks like next to it — same network, lower premium.",
       dashboardHeadline: "Your renewal vs. Plan 01.",
       comparisonAnchor: "your renewal premium — the one that just spiked",
       hasCurrentCoverage: true,
@@ -126,6 +130,7 @@
       label: "Check if I'm overpaying",
       noraOpener: "Worst case: your plan's fine and you saved 60 seconds. Let me run the check.",
       reinforce: "Most people are. About 6 in 10 we check are paying for things they'll never use.",
+      revealReinforce: "About 6 in 10 we check are paying for things they'll never use. Here's where you actually land.",
       dashboardHeadline: "Plan diagnostic.",
       comparisonAnchor: "whether your current plan is the best deal in your state",
       hasCurrentCoverage: true,
@@ -135,6 +140,7 @@
       label: "Not sure",
       noraOpener: "Let me ask 3 things and tell you which path makes sense.",
       reinforce: "Most common answer we get. Most people have no idea what they're actually paying for.",
+      revealReinforce: "Most people don't know what they're actually paying for. Here's your real number — and what's hiding behind it.",
       dashboardHeadline: "Routing your numbers.",
       comparisonAnchor: "the typical premium for someone in your situation",
       hasCurrentCoverage: "unknown",
@@ -398,6 +404,9 @@
     if (inputEl) inputEl.disabled = true;
     clearQuickReplies();
 
+    // V23 · Keep the dashboard zone alive — show finalizing skeleton while gate is open
+    startDashAuthSkeleton();
+
     noraSay(
       "Got everything I need, " + escapeHtml(firstName) + ". " +
       "Quick thing while I finish — give me your email and I'll lock this rate in writing.",
@@ -409,6 +418,42 @@
         }
       }
     );
+  }
+
+  // V23 · Dashboard "Nora finalizing" skeleton — cycles 3 status lines while
+  // AuthGate is mid-flight. Locked Value Stack stays visible (anchor).
+  var dashAuthSkelTimer = null;
+  function startDashAuthSkeleton() {
+    var skelEl = $('#dash-authskel');
+    var statusEl = $('#dash-authskel-status');
+    if (!skelEl || !statusEl) return;
+    var lines = [
+      'Pulling carrier rates',
+      'Comparing networks',
+      'Locking your number'
+    ];
+    var idx = 0;
+    skelEl.hidden = false;
+    skelEl.classList.add('is-cycling');
+    statusEl.textContent = lines[0];
+    if (dashAuthSkelTimer) clearInterval(dashAuthSkelTimer);
+    if (REDUCED_MOTION) return; // hold on first line
+    dashAuthSkelTimer = setInterval(function () {
+      idx = (idx + 1) % lines.length;
+      statusEl.style.opacity = '0';
+      setTimeout(function () {
+        statusEl.textContent = lines[idx];
+        statusEl.style.opacity = '';
+      }, 200);
+    }, 1800);
+  }
+  function stopDashAuthSkeleton() {
+    var skelEl = $('#dash-authskel');
+    if (dashAuthSkelTimer) { clearInterval(dashAuthSkelTimer); dashAuthSkelTimer = null; }
+    if (skelEl) {
+      skelEl.classList.remove('is-cycling');
+      skelEl.hidden = true;
+    }
   }
 
   function mountAuthGateInChat() {
@@ -455,6 +500,9 @@
     // Re-enable chat input
     if (formEl) formEl.style.opacity = '';
     if (inputEl) inputEl.disabled = false;
+
+    // V23 · Stop the dashboard finalizing skeleton — gate moment is over
+    stopDashAuthSkeleton();
 
     // Update NoraSession state
     if (window.NoraSession) {
@@ -509,12 +557,50 @@
       if (headline) headline.textContent = 'Pick the shape that fits you.';
       var eyebrow = $('#dash-eyebrow');
       if (eyebrow) eyebrow.textContent = '★ YOUR PLAN OPTIONS';
+      // V23 · Reinforce paragraph reframed for the plan-pick moment
+      var reinforceEl = $('#dash-reinforce');
+      if (reinforceEl) {
+        reinforceEl.textContent =
+          'Three plans on the same network. Pick by how much premium you want vs how often you use care.';
+      }
     }
 
-    // Lock Value Stack to the recommended plan's actual quote
+    // V23 · Lock Value Stack to the RECOMMENDED plan's premium AND
+    // recompute Tier 2 (annual) + Tier 3 (savings vs current $890 anchor).
     var rec = (planSet.plans || []).filter(function (p) { return p.tier === 'recommended'; })[0];
+    var nums = currentNumbers();
     if (rec && valueStackApi && typeof valueStackApi.lock === 'function') {
-      try { valueStackApi.lock(Math.round(rec.monthly_premium)); } catch (e) {}
+      try {
+        var lockedMonthly = Math.round(rec.monthly_premium);
+        var compareValue = (rec.compared_to_user && rec.compared_to_user.current_plan_premium) ||
+                           nums.compare;
+        var annualSavings = (compareValue - lockedMonthly) * 12;
+        valueStackApi.lock(lockedMonthly, {
+          secondary: { value: lockedMonthly * 12, suffix: '/yr', label: "That's annual" },
+          tertiary: {
+            value: annualSavings,
+            suffix: ' saved/yr',
+            label: nums.label,
+            direction: 'down'
+          },
+          compareValue: compareValue
+        });
+      } catch (e) { /* lock recompute failed; carry on */ }
+    }
+
+    // V23 · Bridge Nora chat — explain the spread before plan cards land
+    if (rec) {
+      var budget = (planSet.plans || []).filter(function (p) { return p.tier === 'budget'; })[0];
+      var premium = (planSet.plans || []).filter(function (p) { return p.tier === 'premium'; })[0];
+      var bronze = budget ? Math.round(budget.monthly_premium) : null;
+      var silver = Math.round(rec.monthly_premium);
+      var gold = premium ? Math.round(premium.monthly_premium) : null;
+      var bridgeMsg =
+        "Plan 01 baseline is <b>$" + bronze + "/mo</b> — that's Bronze, max deductible. " +
+        "Silver lands at <b>$" + silver + "/mo</b> with predictable copays. " +
+        (gold ? "Gold runs <b>$" + gold + "/mo</b> with the lowest deductible. " : "") +
+        "Most freelancers in your bracket pick Silver.";
+      noraSay(bridgeMsg, { delay: REDUCED_MOTION ? 50 : 700 });
     }
 
     // Reveal the plan cards slot
@@ -537,14 +623,15 @@
       });
     } catch (e) { /* PlanCards mount failed; continue */ }
 
-    // Update Unlock Trail to step 7 (Plan)
+    // V23 · Update Unlock Trail to step 7 (Plan).
+    // No isUnlockEvent flag → no mystery delta pop.
     if (window.UnlockTrail && rec) {
       try {
         window.UnlockTrail.update({
           currentStep: 7,
           completedPct: 100,
-          valueEstimate: Math.round(rec.monthly_premium),
-          valueDelta: 30
+          valueEstimate: Math.round(rec.monthly_premium)
+          // intentionally no valueDelta + no isUnlockEvent
         });
       } catch (e) {}
     }
@@ -608,6 +695,7 @@
   function renderDashboardScaffold() {
     var headline = $('#dash-headline');
     var eyebrow  = $('#dash-eyebrow');
+    var reinforceEl = $('#dash-reinforce');
     var trustState = $('#trust-state');
 
     var nums = currentNumbers();
@@ -615,9 +703,19 @@
     if (ctx.pregnancy) {
       eyebrow.textContent = '★ CATALOG ROUTE';
       headline.textContent = 'A plan that covers it.';
+      // V23 · Persona reinforce paragraph (Catalog variant)
+      if (reinforceEl) {
+        reinforceEl.textContent =
+          "Honest answer = right plan. Plan 02 covers what Plan 01 doesn't — same shop, different product.";
+      }
     } else {
       eyebrow.textContent = '★ YOUR ESTIMATE';
       headline.textContent = personaCfg.dashboardHeadline || 'Routing your numbers.';
+      // V23 · Persona reinforce paragraph — prefer revealReinforce, fall back to reinforce
+      if (reinforceEl) {
+        var rein = personaCfg.revealReinforce || personaCfg.reinforce || '';
+        reinforceEl.textContent = rein;
+      }
     }
 
     // V21 · Mount Value Stack into the dashboard's bignum slot

@@ -172,10 +172,8 @@
     googleBtn.setAttribute('data-ag-google', '');
     googleBtn.innerHTML = GOOGLE_G_SVG + '<span>Continue with Google</span>';
 
-    // Phone wrap
+    // V23 M5 — Phone wrap with SMS opt-in FIRST, phone field reveals only after opt-in.
     var phoneWrap = el('div', 'auth-gate__phone-wrap');
-    var phoneField = buildField('phone', 'tel', 'tel', 'phone (optional)', '📱');
-    phoneWrap.appendChild(phoneField.field);
 
     var smsLabel = el('label', 'auth-gate__sms-toggle');
     var smsCheckbox = document.createElement('input');
@@ -188,6 +186,22 @@
       '<span class="ag-toggle-sub">You' + "'" + 'll need to reply YES once. SMS is off by default.</span>';
     smsLabel.appendChild(smsTextWrap);
     phoneWrap.appendChild(smsLabel);
+
+    var phoneField = buildField('phone', 'tel', 'tel', 'phone (optional)', '📱');
+    // Phone field starts hidden; reveals on SMS opt-in
+    phoneField.field.classList.add('auth-gate__field--phone-hidden');
+    phoneWrap.appendChild(phoneField.field);
+
+    // Toggle phone-field visibility based on SMS checkbox
+    smsCheckbox.addEventListener('change', function () {
+      if (smsCheckbox.checked) {
+        phoneField.field.classList.remove('auth-gate__field--phone-hidden');
+        try { phoneField.input.focus(); } catch (e) {}
+      } else {
+        phoneField.field.classList.add('auth-gate__field--phone-hidden');
+        phoneField.input.value = '';
+      }
+    });
 
     // Continue btn
     var continueBtn = el('button', 'auth-gate__btn auth-gate__btn--primary');
@@ -274,7 +288,30 @@
         inst.state.error = null;
         host.classList.remove('is-error');
       }
+      // V23 M6 — sync Continue button validity
+      syncContinueValidity(inst);
     });
+
+    // V23 M6 — kick off initial Continue button state (disabled while empty)
+    syncContinueValidity(inst);
+  }
+
+  // V23 M6 — toggle Continue button + visual disabled state based on email validity.
+  function syncContinueValidity(inst) {
+    if (!inst || !inst.els || !inst.els.continueBtn) return;
+    var btn = inst.els.continueBtn;
+    var email = (inst.els.emailInput.value || '').trim();
+    var ok = isValidEmail(email);
+    if (ok) {
+      btn.removeAttribute('aria-disabled');
+      btn.classList.remove('is-disabled');
+      btn.disabled = false;
+    } else {
+      btn.setAttribute('aria-disabled', 'true');
+      btn.classList.add('is-disabled');
+      // Don't set `.disabled` so users can still click and see field-level error;
+      // the button styling clearly signals it's not yet active.
+    }
   }
 
   function buildField(name, type, autocomplete, placeholder, iconChar) {

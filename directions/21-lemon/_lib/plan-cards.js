@@ -58,11 +58,20 @@
     })[plan.tier] || 'Plan';
     var tierBadgeHTML;
     if (plan.tier === 'recommended') {
-      tierBadgeHTML = '<span class="plan-card__tier"><span aria-hidden="true">★</span>' +
-                      escapeHtml(tierLabel) + '</span>';
+      // V23 H6 — RECOMMENDED ⭐ pill badge sits at the top of the card
+      tierBadgeHTML = '<span class="plan-card__rec-badge">' +
+                        '<span aria-hidden="true">⭐</span>' +
+                        '<span>RECOMMENDED</span>' +
+                      '</span>';
     } else {
       tierBadgeHTML = '<span class="plan-card__tier">' + escapeHtml(tierLabel) + '</span>';
     }
+    // V23 H5 — short tier name as primary; technical name as secondary
+    var shortTierName = ({
+      budget: 'Bronze',
+      recommended: 'Silver',
+      premium: 'Gold'
+    })[plan.tier] || tierLabel;
 
     // Carrier logo: SVG asset OR text fallback
     var logoKey = carrierLogoKey(plan.carrier);
@@ -129,13 +138,23 @@
     var classes = ['plan-card', 'plan-card--' + (plan.tier || 'budget')];
     if (isSelected) classes.push('is-selected');
 
+    // V23 H5 — name block: short tier (Bronze/Silver/Gold) headline + full
+    // technical name as a 3-line max-clamp subhead. No more truncated ellipsis.
+    var nameBlock =
+      '<div class="plan-card__nameblock">' +
+        '<h4 class="plan-card__short">' + escapeHtml(shortTierName) + '</h4>' +
+        '<div class="plan-card__name-full" title="' + escapeHtml(plan.name) + '">' +
+          escapeHtml(plan.name) +
+        '</div>' +
+      '</div>';
+
     return (
       '<button type="button" class="' + classes.join(' ') + '" ' +
         'data-plan-id="' + escapeHtml(plan.plan_id) + '" ' +
         'aria-pressed="' + (isSelected ? 'true' : 'false') + '">' +
         tierBadgeHTML +
         topline +
-        '<h4 class="plan-card__name">' + escapeHtml(plan.name) + '</h4>' +
+        nameBlock +
         priceBlock +
         highlightsHTML +
         '<p class="plan-card__desc">' + escapeHtml(plan.description) + '</p>' +
