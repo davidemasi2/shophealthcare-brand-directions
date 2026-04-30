@@ -1,0 +1,539 @@
+/* =============================================================
+   AUTH-GATE — V21 Component C
+   In-chat email gate that triggers during Nora's "while I finish"
+   moment. Plus banner UI for skip-for-now state.
+
+   Spec: front-end design/quiz-app-capture-flow.md §6
+         front-end design/nora-app-design-brief.md §7
+
+   Pairs with: auth-gate.js, session.js
+   ============================================================= */
+
+/* -----------------------------------------------------------
+   Local design tokens — fall back to lemon.css if available.
+   Defaults match SHC-Match palette.
+   ----------------------------------------------------------- */
+.auth-gate {
+  --ag-ink:        var(--ink, #0E2A3A);
+  --ag-cream:      var(--cream, #FFFAEA);
+  --ag-lemon:      var(--lemon, #FFE86E);
+  --ag-blush:      var(--blush, #FFE4DB);
+  --ag-pink:       var(--pink, #FF6A5C);
+  --ag-pink-dark:  var(--pink-dark, #C84B3F);
+  --ag-mute:       var(--mute, rgba(14, 42, 58, 0.62));
+  --ag-rule:       var(--rule, rgba(14, 42, 58, 0.18));
+
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ag-ink);
+  display: block;
+  width: 100%;
+}
+
+/* -----------------------------------------------------------
+   Chat bubble shell — looks like a Nora message extension
+   ----------------------------------------------------------- */
+.auth-gate__bubble {
+  position: relative;
+  background: var(--ag-cream);
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 18px;
+  padding: 22px 24px 20px;
+  max-width: 520px;
+  box-shadow: 4px 4px 0 var(--ag-ink);
+  margin: 8px 0;
+}
+
+/* Avatar pip for "this is from Nora" continuity */
+.auth-gate__avatar {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 36px;
+  height: 36px;
+  background: var(--ag-lemon);
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ag-ink);
+  z-index: 2;
+}
+
+/* -----------------------------------------------------------
+   Copy block
+   ----------------------------------------------------------- */
+.auth-gate__copy {
+  margin: 0 0 16px;
+}
+.auth-gate__copy p {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ag-ink);
+}
+.auth-gate__copy p.is-lead {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -.005em;
+}
+.auth-gate__copy strong { font-weight: 600; }
+
+.auth-gate__no-followup {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 600;
+  margin: 14px 0 18px;
+}
+
+/* -----------------------------------------------------------
+   Form fields
+   ----------------------------------------------------------- */
+.auth-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-gate__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--ag-ink);
+  border-radius: 10px;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.auth-gate__field:focus-within {
+  border-color: var(--ag-ink);
+  box-shadow: 0 0 0 3px var(--ag-lemon);
+}
+.auth-gate__field-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 44px;
+  flex-shrink: 0;
+  color: var(--ag-mute);
+  font-size: 16px;
+}
+.auth-gate__field input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ag-ink);
+  padding: 12px 14px 12px 0;
+  min-width: 0;
+}
+.auth-gate__field input::placeholder {
+  color: var(--ag-mute);
+}
+.auth-gate__field--error {
+  border-color: var(--ag-pink);
+  box-shadow: 0 0 0 3px rgba(255, 106, 92, .18);
+}
+
+/* -----------------------------------------------------------
+   Phone optional row
+   ----------------------------------------------------------- */
+.auth-gate__phone-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.auth-gate__sms-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ag-ink);
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 2px;
+}
+.auth-gate__sms-toggle input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ag-pink);
+  cursor: pointer;
+}
+.auth-gate__sms-toggle .ag-toggle-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--ag-mute);
+  margin-top: 2px;
+}
+
+/* -----------------------------------------------------------
+   "or" divider
+   ----------------------------------------------------------- */
+.auth-gate__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  color: var(--ag-mute);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.auth-gate__divider::before,
+.auth-gate__divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--ag-rule);
+}
+
+/* -----------------------------------------------------------
+   Buttons
+   ----------------------------------------------------------- */
+.auth-gate__btn {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 4px 4px 0 var(--ag-ink);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  width: 100%;
+}
+.auth-gate__btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ag-ink);
+}
+.auth-gate__btn:active:not(:disabled) {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 var(--ag-ink);
+}
+.auth-gate__btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ag-ink);
+}
+
+.auth-gate__btn--primary {
+  background: var(--ag-pink);
+  color: #fff;
+}
+.auth-gate__btn--primary:hover:not(:disabled) {
+  background: var(--ag-pink-dark);
+}
+
+.auth-gate__btn--google {
+  background: #fff;
+  color: var(--ag-ink);
+}
+.auth-gate__btn--google .ag-google-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Spinner for loading state */
+.auth-gate__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ag-spin .7s linear infinite;
+}
+@keyframes ag-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* -----------------------------------------------------------
+   Microcopy stack (compliance)
+   ----------------------------------------------------------- */
+.auth-gate__microcopy {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--ag-rule);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  line-height: 1.5;
+}
+.auth-gate__microcopy span { display: block; }
+
+/* -----------------------------------------------------------
+   Skip link
+   ----------------------------------------------------------- */
+.auth-gate__skip {
+  margin-top: 14px;
+  text-align: center;
+}
+.auth-gate__skip a {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-mute);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.auth-gate__skip a:hover {
+  color: var(--ag-ink);
+  border-bottom-color: var(--ag-ink);
+}
+
+/* -----------------------------------------------------------
+   Inline error
+   ----------------------------------------------------------- */
+.auth-gate__error {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--ag-blush);
+  border: 1px solid var(--ag-pink);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ag-pink-dark);
+  line-height: 1.4;
+}
+.auth-gate.is-error .auth-gate__error {
+  display: block;
+}
+
+/* -----------------------------------------------------------
+   Success state — replaces form with confirmation bubble
+   ----------------------------------------------------------- */
+.auth-gate__success {
+  display: none;
+}
+.auth-gate.is-success .auth-gate__form,
+.auth-gate.is-success .auth-gate__divider,
+.auth-gate.is-success .auth-gate__copy,
+.auth-gate.is-success .auth-gate__no-followup,
+.auth-gate.is-success .auth-gate__microcopy,
+.auth-gate.is-success .auth-gate__skip {
+  display: none;
+}
+.auth-gate.is-success .auth-gate__success {
+  display: block;
+}
+
+.auth-gate__success-msg {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  color: var(--ag-ink);
+}
+.auth-gate__success-sub {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ag-mute);
+  margin: 0;
+}
+.auth-gate__success-email {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  color: var(--ag-pink-dark);
+  font-size: .94em;
+}
+
+/* -----------------------------------------------------------
+   Hidden state
+   ----------------------------------------------------------- */
+.auth-gate.is-hidden {
+  display: none;
+}
+
+/* -----------------------------------------------------------
+   Loading state on Continue button — disable interactive
+   ----------------------------------------------------------- */
+.auth-gate.is-loading .auth-gate__btn {
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   Skip-banner — appears at top of dashboard when user skipped
+   ----------------------------------------------------------- */
+.auth-skip-banner {
+  background: var(--cream, #FFFAEA);
+  border: 1px solid var(--ink, #0E2A3A);
+  border-left: 6px solid var(--lemon, #FFE86E);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink, #0E2A3A);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
+}
+.auth-skip-banner__icon {
+  font-size: 16px;
+  color: var(--pink-dark, #C84B3F);
+  flex-shrink: 0;
+}
+.auth-skip-banner__text {
+  flex: 1;
+  min-width: 200px;
+}
+.auth-skip-banner__btn {
+  appearance: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  background: var(--lemon, #FFE86E);
+  color: var(--ink, #0E2A3A);
+  border: 1.5px solid var(--ink, #0E2A3A);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink, #0E2A3A);
+  transition: transform .12s, box-shadow .12s;
+  flex-shrink: 0;
+}
+.auth-skip-banner__btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
+}
+
+/* -----------------------------------------------------------
+   Locked actions — graying out save/forward when skipped
+   ----------------------------------------------------------- */
+[data-auth-locked] {
+  position: relative;
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  filter: grayscale(0.4);
+}
+[data-auth-locked] * {
+  pointer-events: none !important;
+}
+[data-auth-locked]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+[data-auth-locked][data-auth-tooltip]::before {
+  content: attr(data-auth-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink, #0E2A3A);
+  color: var(--cream, #FFFAEA);
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 10;
+}
+[data-auth-locked][data-auth-tooltip]:hover::before {
+  opacity: 1;
+}
+
+/* Lock icon overlay */
+.auth-locked-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: var(--ink, #0E2A3A);
+  color: var(--cream, #FFFAEA);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   Mobile responsive
+   ----------------------------------------------------------- */
+@media (max-width: 480px) {
+  .auth-gate__bubble {
+    padding: 18px 16px 16px;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0 var(--ag-ink);
+  }
+  .auth-gate__avatar {
+    top: -8px;
+    left: -8px;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+  .auth-gate__copy p { font-size: 14px; }
+  .auth-gate__copy p.is-lead { font-size: 15.5px; }
+  .auth-gate__btn {
+    font-size: 14px;
+    padding: 11px 16px;
+  }
+  .auth-gate__field input { font-size: 14.5px; }
+  .auth-skip-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* -----------------------------------------------------------
+   Reduced motion
+   ----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .auth-gate__btn,
+  .auth-gate__field,
+  .auth-gate__skip a,
+  .auth-skip-banner__btn {
+    transition: none !important;
+  }
+  .auth-gate__spinner {
+    animation: none !important;
+  }
+}

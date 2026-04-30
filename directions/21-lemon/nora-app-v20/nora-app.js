@@ -332,7 +332,8 @@
     if (convoState.step === 'awaiting-conditions-text') {
       userSay(escapeHtml(text));
       updateFact('conditions', text);
-      finalize();
+      // V21 · Same auth-gate moment as the quick-reply path
+      presentAuthGate();
       return;
     }
 
@@ -377,34 +378,215 @@
           }
           userSay(escapeHtml(pick.label));
           updateFact('conditions', pick.label);
-          finalize();
+          // V21 · After 4-step discovery, run auth-gate moment BEFORE finalize
+          presentAuthGate();
         });
       }
     });
   }
 
-  function finalize() {
+  // V21 — replaced finalize() with two-step flow:
+  //   1) presentAuthGate() — drops Auth Gate as the next "message" in the chat
+  //   2) finalize() — fires after AuthGate success or skip; surfaces plan cards
+
+  function presentAuthGate() {
+    convoState.step = 'awaiting-auth';
+    var firstName = (convoState.name || '').split(' ')[0] || 'thanks';
+
+    // Hide chat input + quick replies temporarily — auth gate is the moment
+    if (formEl) formEl.style.opacity = '0.4';
+    if (inputEl) inputEl.disabled = true;
+    clearQuickReplies();
+
+    noraSay(
+      "Got everything I need, " + escapeHtml(firstName) + ". " +
+      "Quick thing while I finish — give me your email and I'll lock this rate in writing.",
+      {
+        delay: REDUCED_MOTION ? 60 : 1100,
+        then: function () {
+          // Inject auth-gate as the next chat element
+          mountAuthGateInChat();
+        }
+      }
+    );
+  }
+
+  function mountAuthGateInChat() {
+    if (!scrollEl || !window.AuthGate) {
+      // No auth gate available — fall through to legacy finalize
+      finalize();
+      return;
+    }
+    var host = el('div', { cls: 'nx-msg from-nora' });
+    var avatar = el('div', { cls: 'nx-msg-avatar', text: 'N' });
+    var bubWrap = el('div');
+    var gateSlot = el('div', { attrs: { 'data-auth-gate': '' } });
+    bubWrap.appendChild(gateSlot);
+    host.appendChild(avatar);
+    host.appendChild(bubWrap);
+    scrollEl.appendChild(host);
+    scrollToBottom();
+
+    try {
+      window.AuthGate.mount(gateSlot, {
+        persona: ctx.persona || 'GEN',
+        comparisonAnchor: noraComparisonAnchor,
+        onSubmit: function (payload) {
+          // session.js will handle the mocked Klaviyo + JWT round-trip
+          // Default success path runs after the magic-link mock resolves
+          // Bridge to the rest of our flow once gate hides
+          setTimeout(function () {
+            try { window.AuthGate.hide(host.querySelector('[data-auth-gate]')); } catch (e) {}
+            continueAfterAuth(false);
+          }, 1600);
+        },
+        onSkip: function () {
+          try { window.AuthGate.setSkipped(true); } catch (e) {}
+          continueAfterAuth(true);
+        }
+      });
+    } catch (e) {
+      // Mount failed — still continue gracefully
+      finalize();
+    }
+  }
+
+  function continueAfterAuth(skipped) {
+    // Re-enable chat input
+    if (formEl) formEl.style.opacity = '';
+    if (inputEl) inputEl.disabled = false;
+
+    // Update NoraSession state
+    if (window.NoraSession) {
+      window.NoraSession.update({
+        is_skipped: !!skipped,
+        is_authed: !skipped
+      });
+    }
+
+    finalize(skipped);
+  }
+
+  function finalize(skipped) {
     convoState.step = 'finalized';
     setInputPlaceholder("Type or pick an option above…");
     noraSay(
-      "Got everything I need, " + escapeHtml((convoState.name || '').split(' ')[0] || 'thanks') + ". " +
-      "I'm finalizing your quote now — pulling carrier rates and matching what you told me. " +
-      "<span class='nx-mute'>(Mock stop. The real quote, email gate, and report drawer wire up in Milestones 2-5.)</span>",
+      "Pulling carrier rates now and matching exactly what you told me. " +
+      (skipped
+        ? "<span class='nx-mute'>(You're in skip mode — save and forward will lock until you give me an email.)</span>"
+        : "<span class='nx-mute'>(Magic link is in your inbox — same gate, same offer, anytime.)</span>"),
       {
-        delay: REDUCED_MOTION ? 60 : 1200,
+        delay: REDUCED_MOTION ? 60 : 1100,
         then: function () {
           setTimeout(function () {
             noraSay(
               "Estimate so far: <b class='aha-num'>~$" + currentNumbers().plan + "/mo</b> for Plan 01, vs. " +
               "<b>~$" + currentNumbers().compare + "/mo</b> on " + currentNumbers().label + ". " +
-              "You'd save around <b>$" + (currentNumbers().compare - currentNumbers().plan) + "/mo</b> — " +
-              "we'll firm this number up the moment the carrier rate comes back.",
-              { isAha: true, delay: REDUCED_MOTION ? 60 : 1100 }
+              "You'd save around <b>$" + (currentNumbers().compare - currentNumbers().plan) + "/mo</b>.",
+              { isAha: true, delay: REDUCED_MOTION ? 60 : 1100, then: function () {
+                // V21 · Surface plan options now
+                surfacePlanOptions();
+              }}
             );
           }, REDUCED_MOTION ? 60 : 800);
         }
       }
     );
+  }
+
+  // V21 — Reveal plan cards in dashboard zone, transform Value Stack into "locked" mode
+  function surfacePlanOptions() {
+    var planSet = window.MOCK_NORA_RESPONSE;
+    if (!planSet || !window.PlanCards) return;
+
+    // Compress the estimate block — keep eyebrow/headline visible but de-emphasize
+    var estimateBlock = $('#dash-estimate-block');
+    if (estimateBlock) {
+      var known = $('#dash-known');
+      if (known) known.style.display = 'none';
+      // Replace headline copy
+      var headline = $('#dash-headline');
+      if (headline) headline.textContent = 'Pick the shape that fits you.';
+      var eyebrow = $('#dash-eyebrow');
+      if (eyebrow) eyebrow.textContent = '★ YOUR PLAN OPTIONS';
+    }
+
+    // Lock Value Stack to the recommended plan's actual quote
+    var rec = (planSet.plans || []).filter(function (p) { return p.tier === 'recommended'; })[0];
+    if (rec && valueStackApi && typeof valueStackApi.lock === 'function') {
+      try { valueStackApi.lock(Math.round(rec.monthly_premium)); } catch (e) {}
+    }
+
+    // Reveal the plan cards slot
+    var pcWrap = $('#dash-plan-cards-host');
+    if (pcWrap) pcWrap.classList.add('is-active');
+
+    var pcEl = document.querySelector('[data-plan-cards]');
+    if (!pcEl) return;
+    try {
+      planCardsApi = window.PlanCards.mount(pcEl, {
+        planSet: planSet,
+        onSelect: function (planId) {
+          surfacePlanReport(planId);
+        },
+        onCompareClick: function () {
+          if (window.PlanCompareModal) {
+            window.PlanCompareModal.show({ planSet: planSet, diffsOnly: true });
+          }
+        }
+      });
+    } catch (e) { /* PlanCards mount failed; continue */ }
+
+    // Update Unlock Trail to step 7 (Plan)
+    if (window.UnlockTrail && rec) {
+      try {
+        window.UnlockTrail.update({
+          currentStep: 7,
+          completedPct: 100,
+          valueEstimate: Math.round(rec.monthly_premium),
+          valueDelta: 30
+        });
+      } catch (e) {}
+    }
+
+    // Auto-pivot on mobile to dashboard tab so user sees the cards
+    if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
+      var dashTab = document.querySelector('.nx-tab[data-tab="dash"]');
+      if (dashTab) dashTab.click();
+    }
+  }
+
+  function surfacePlanReport(planId) {
+    var planSet = window.MOCK_NORA_RESPONSE;
+    var content = $('#drawer-content');
+    var empty   = $('#drawer-empty');
+    if (!content || !planSet || !window.PlanReport) return;
+
+    if (empty) empty.classList.add('is-hidden');
+    content.style.display = 'block';
+
+    try {
+      planReportApi = window.PlanReport.mount(content, {
+        planSet: planSet,
+        selectedPlanId: planId,
+        skipped: window.NoraSession && window.NoraSession.isSkipped ? window.NoraSession.isSkipped() : false,
+        onSave:           function () { console.log('[V21] Save clicked — wires to backend in V22'); },
+        onEmailPdf:       function () { console.log('[V21] Email PDF clicked — wires in V22'); },
+        onForward:        function () { console.log('[V21] Forward clicked — wires in V22'); },
+        onContinueEnroll: function () { console.log('[V21] Continue to enrollment'); },
+        onOpenEmailGate:  function () {
+          if (window.AuthGate) {
+            try { window.AuthGate.show(); } catch (e) {}
+          }
+        }
+      });
+    } catch (e) { /* PlanReport mount failed; continue */ }
+
+    // Auto-pivot drawer tab on mobile
+    if (window.matchMedia && window.matchMedia('(max-width: 1023px)').matches) {
+      var drawerTab = document.querySelector('.nx-tab[data-tab="drawer"]');
+      if (drawerTab) drawerTab.click();
+    }
   }
 
   function setInputPlaceholder(txt) {
@@ -416,15 +598,16 @@
   }
 
   // -----------------------------------------------------------
-  // 6. Dashboard scaffolding (M2 wires up live updates)
+  // 6. Dashboard scaffolding — V21 mounts ValueStack + UnlockTrail
   // -----------------------------------------------------------
+  var valueStackApi = null;       // returned by ValueStack.mount, used to lock() later
+  var planCardsApi  = null;
+  var planReportApi = null;
+  var noraComparisonAnchor = null;
+
   function renderDashboardScaffold() {
     var headline = $('#dash-headline');
     var eyebrow  = $('#dash-eyebrow');
-    var bignum   = $('#dash-bignum');
-    var bigLabel = $('#dash-bignum-label');
-    var compare  = $('#dash-compare');
-    var savings  = $('#dash-savings');
     var trustState = $('#trust-state');
 
     var nums = currentNumbers();
@@ -432,16 +615,28 @@
     if (ctx.pregnancy) {
       eyebrow.textContent = '★ CATALOG ROUTE';
       headline.textContent = 'A plan that covers it.';
-      bigLabel.textContent = 'Catalog estimate';
     } else {
       eyebrow.textContent = '★ YOUR ESTIMATE';
-      headline.textContent = personaCfg.dashboardHeadline;
-      bigLabel.textContent = 'Plan 01 estimate';
+      headline.textContent = personaCfg.dashboardHeadline || 'Routing your numbers.';
     }
 
-    bignum.innerHTML = '~$' + nums.plan + '<span class="nx-bignum-unit">/mo</span>';
-    compare.textContent = '~$' + nums.compare + '/mo · ' + nums.label;
-    savings.textContent = '~$' + (nums.compare - nums.plan) + '/mo';
+    // V21 · Mount Value Stack into the dashboard's bignum slot
+    var vsHost = $('#dashValueStack');
+    if (vsHost && window.ValueStack) {
+      try {
+        valueStackApi = window.ValueStack.mount(vsHost, {
+          persona: ctx.pregnancy ? 'GEN' : (ctx.persona || 'GEN'),
+          primary:   { value: nums.plan,                suffix: '/mo',  label: ctx.pregnancy ? 'Catalog estimate' : 'Plan 01 estimate' },
+          secondary: { value: nums.plan * 12,           suffix: '/yr',  label: "That's annual" },
+          tertiary:  { value: (nums.compare - nums.plan) * 12, suffix: ' saved/yr', label: nums.label, direction: 'down' },
+          compareValue: nums.compare,
+          autoplayOnVisible: true,
+          isEstimate: true,
+          locked: false
+        });
+      } catch (e) { /* Value Stack non-critical; continue */ }
+    }
+    noraComparisonAnchor = personaCfg.comparisonAnchor || 'the typical premium for someone in your situation';
 
     // "What we know so far" — confirmed facts from URL
     setFact('state', ctx.state ? STATE_NAMES[ctx.state] : null);
@@ -450,6 +645,23 @@
     setFact('conditions', ctx.conditions ? humanizeConditions(ctx.conditions, ctx.pregnancy) : null);
 
     if (trustState) trustState.textContent = ctx.state ? STATE_NAMES[ctx.state] : 'all 50 states';
+
+    // V21 · Mount Unlock Trail at top of app — Discovery stage (step 6/7)
+    var trailHost = document.querySelector('[data-unlock-trail]');
+    if (trailHost && window.UnlockTrail) {
+      var savedTrail = null;
+      try { savedTrail = window.UnlockTrail.hydrate(); } catch (e) {}
+      var trailState = savedTrail || {
+        currentStep: 6,
+        completedPct: 71,
+        valueEstimate: nums.plan,
+        valueDelta: 0
+      };
+      // If hydrate produced a state but we have a fresh URL persona,
+      // ensure currentStep ≥ 6 (we just arrived in the app).
+      if (trailState.currentStep < 6) trailState.currentStep = 6;
+      try { window.UnlockTrail.mount(trailHost, trailState); } catch (e) {}
+    }
   }
 
   function humanizeConditions(c, pregnant) {
@@ -496,20 +708,29 @@
   // updateFact is what the chat flow calls when Nora collects a new datum
   function updateFact(key, value) {
     var item = document.querySelector('.known-item[data-key="' + key + '"]');
-    if (!item) return;
-    item.classList.remove('is-pending');
-    item.classList.add('is-confirmed');
-    var mark = item.querySelector('.nx-known-mark');
-    if (mark) mark.textContent = '✓';
-    var slot = $('#fact-' + key);
-    if (slot) slot.textContent = value;
-    else {
-      // Replace the pending span with confirmed text using the canonical label
-      var textEl = item.querySelector('.nx-known-text');
-      if (textEl) {
-        var label = FACT_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1));
-        textEl.innerHTML = label + ': <b id="fact-' + key + '">' + escapeHtml(value) + '</b>';
+    if (item) {
+      item.classList.remove('is-pending');
+      item.classList.add('is-confirmed');
+      var mark = item.querySelector('.nx-known-mark');
+      if (mark) mark.textContent = '✓';
+      var slot = $('#fact-' + key);
+      if (slot) slot.textContent = value;
+      else {
+        // Replace the pending span with confirmed text using the canonical label
+        var textEl = item.querySelector('.nx-known-text');
+        if (textEl) {
+          var label = FACT_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1));
+          textEl.innerHTML = label + ': <b id="fact-' + key + '">' + escapeHtml(value) + '</b>';
+        }
       }
+    }
+    // V21 · Push to NoraSession so the idle-timer + cross-device resume stays accurate
+    if (window.NoraSession && typeof window.NoraSession.update === 'function') {
+      try {
+        var partial = { discovery_progress: {} };
+        partial.discovery_progress[key] = value;
+        window.NoraSession.update(partial);
+      } catch (e) {}
     }
   }
 
@@ -548,6 +769,30 @@
     inputEl  = $('#chat-input');
     formEl   = $('#chat-form');
 
+    // V21 · Initialize NoraSession with URL params + start idle timer
+    if (window.NoraSession) {
+      try {
+        var initialState = {
+          persona: ctx.persona,
+          quiz_answers: {
+            state: ctx.state,
+            age: ctx.age,
+            sex: ctx.sex,
+            pregnancy: !!ctx.pregnancy,
+            conditions: ctx.conditions
+          }
+        };
+        // First try resuming via ?token= param
+        var hydrated = window.NoraSession.hydrateFromUrl();
+        window.NoraSession.init(initialState);
+        if (window.NoraSession.startIdleTimer) window.NoraSession.startIdleTimer();
+        if (hydrated && hydrated.email) {
+          // User came back from a magic link — chat could resume here in V22
+          console.log('[V21] Resumed via magic link', hydrated);
+        }
+      } catch (e) { /* NoraSession is non-critical; continue */ }
+    }
+
     // M1: chat zone is the primary "active" zone on mobile by default
     $('#zone-chat').classList.add('is-active');
 
@@ -571,7 +816,10 @@
       ctx: ctx,
       personaCfg: personaCfg,
       strings: strings,
-      reset: function () { window.location.reload(); }
+      reset: function () { window.location.reload(); },
+      // Test helpers — exposed for browser-console interactive testing
+      _testFinalize: function () { presentAuthGate(); },
+      _testPlans:    function () { surfacePlanOptions(); }
     };
   }
 

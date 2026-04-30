@@ -8,7 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lemon.css">
+<link rel="stylesheet" href="_lib/value-stack.css">
+<link rel="stylesheet" href="_lib/unlock-trail.css">
 <script src="palette-switch.js" defer></script>
+<script src="_lib/value-stack.js" defer></script>
+<script src="_lib/unlock-trail.js" defer></script>
 <style>
   /* =======================================================
      V8 — Clone Optimized — Persona-switchboard quiz gate
@@ -2030,6 +2034,12 @@
     background: rgba(14,42,58,.12);
   }
   .v8-progress span.done { background: var(--pink); }
+  /* V21 — Unlock Trail replaces per-step .v8-progress inside the quiz modal */
+  .v8-quiz-modal .v8-progress { display: none; }
+  .quiz-unlock-trail-host {
+    margin: -4px 0 18px;
+    padding: 12px 4px 4px;
+  }
   .v8-quiz-modal .q-foot {
     display: flex; justify-content: space-between; align-items: center;
     margin-top: 18px; font-size: 12px; color: rgba(14,42,58,.55);
@@ -3347,6 +3357,14 @@
   border-radius: 10px;
   padding: 16px 16px 14px; margin-bottom: 18px;
 }
+/* V21 — Value Stack host inside dashboard reveal */
+.quiz-value-stack-host {
+  background: rgba(255,250,234,0.7);
+  border: 1px dashed rgba(14,42,58,0.25);
+  border-radius: 10px;
+  padding: 18px 16px 16px;
+  margin-bottom: 18px;
+}
 .v20-dash-num-row {
   display: flex; justify-content: space-between; align-items: baseline;
   padding: 4px 0;
@@ -4183,6 +4201,9 @@
     <button class="close" type="button" id="quizClose" aria-label="Close">&times;</button>
     <div class="q-eyebrow">PLAN CHECK &middot; <span id="quizCaseLabel">OPEN CASE</span></div>
 
+    <!-- V21 · Unlock Trail (replaces per-step .v8-progress dot bars) -->
+    <div data-unlock-trail id="quizUnlockTrail" class="quiz-unlock-trail-host"></div>
+
     <!-- Step 1: state -->
     <div class="v8-quiz-step active" data-step="1">
       <div class="v8-progress"><span class="done"></span><span></span><span></span><span></span></div>
@@ -4318,20 +4339,8 @@
         <div class="v20-dash-eyebrow" id="quizDashEyebrow">&#9733; YOUR ESTIMATE</div>
         <h3 class="v20-dash-headline" id="quizDashHeadline">Built for irregular income.</h3>
         <p class="v20-dash-reinforce" id="quizDashReinforce">You&rsquo;re 1099 &mdash; and most freelancers don&rsquo;t realize Plan 01 exists. It was built for self-employed people with irregular income.</p>
-        <div class="v20-dash-numbers" id="quizDashNumbers">
-          <div class="v20-dash-num-row">
-            <span class="v20-dash-label" id="quizDashCompareLabel">A typical PPO in your state</span>
-            <span class="v20-dash-value" id="quizDashCompareValue">~$890/mo</span>
-          </div>
-          <div class="v20-dash-num-row compare">
-            <span class="v20-dash-label" id="quizDashPlanLabel">Plan 01 estimate</span>
-            <span class="v20-dash-value" id="quizDashPlanValue">~$290/mo</span>
-          </div>
-          <div class="v20-dash-num-row">
-            <span class="v20-dash-label">You could save</span>
-            <span class="v20-dash-value" id="quizDashSaveValue">~$600/mo &middot; ~$7,200/yr</span>
-          </div>
-        </div>
+        <!-- V21 · Value Stack replaces the static numbers block -->
+        <div data-value-stack id="quizValueStack" class="quiz-value-stack-host"></div>
         <p class="v20-dash-est-note">Estimate &middot; Nora refines to a real number in 60 seconds</p>
         <div class="v20-dash-cta">
           <a id="quizGo" href="https://shophealthcare.io/">
@@ -6981,6 +6990,13 @@
       var dd = document.getElementById('quizStateDropdown'); if (dd) dd.value = '';
       if (caseLabel) caseLabel.innerHTML = (PERSONA_STRINGS[state.caseId] || PERSONA_STRINGS['any']).label;
       showStep(1);
+      // V21 · Mount Unlock Trail at top of modal — Tile stage (step 1)
+      try {
+        var trailHost = document.getElementById('quizUnlockTrail');
+        if (trailHost && window.UnlockTrail) {
+          window.UnlockTrail.mount(trailHost, { currentStep: 1, completedPct: 14 });
+        }
+      } catch (e) { /* trail is non-critical, continue */ }
       if (veil) { veil.classList.add('open'); document.body.style.overflow = 'hidden'; }
     }
     function closeQuiz() {
@@ -7012,21 +7028,41 @@
         footLabel: 'SAVINGS REVEAL'
       };
       dashEl.classList.toggle('v20-dash-catalog', !!catalogMode);
+      // The id-mapped strings still drive eyebrow/headline/reinforce/footLabel ABOVE the Value Stack
       var elMap = {
         quizDashEyebrow: src.eyebrow,
         quizDashHeadline: src.headline,
         quizDashReinforce: src.reinforce,
-        quizDashCompareLabel: src.compareLabel,
-        quizDashCompareValue: src.compareNum,
-        quizDashPlanLabel: src.planLabel,
-        quizDashPlanValue: src.planNum,
-        quizDashSaveValue: src.saveNum,
         quizDashFootLabel: src.footLabel
       };
       Object.keys(elMap).forEach(function(id){
         var el = document.getElementById(id);
         if (el) el.innerHTML = elMap[id];
       });
+
+      // V21 · Mount Value Stack (3-tier dial+odometer) — replaces the old static numbers
+      try {
+        var vsHost = document.getElementById('quizValueStack');
+        if (vsHost && window.ValueStack) {
+          var est = getCurrentDashEstimate(catalogMode);
+          var personaCode = catalogMode ? 'GEN' : (p.code || 'GEN');
+          window.ValueStack.mount(vsHost, {
+            persona: personaCode,
+            primary: { value: est.primary, suffix: '/mo', label: catalogMode ? 'Catalog estimate' : 'Plan 01 estimate' },
+            secondary: { value: est.primary * 12, suffix: '/yr', label: "That's annual" },
+            tertiary: {
+              value: est.saveAnnual || (est.saveMonthly * 12),
+              suffix: ' saved/yr',
+              label: est.compareLabel,
+              direction: 'down'
+            },
+            compareValue: est.compare,
+            autoplayOnVisible: true,
+            isEstimate: true
+          });
+        }
+      } catch (e) { /* value stack is non-critical, fall through */ }
+
       // V20 — full persona payload to V20 Nora app (sibling folder in this build)
       if (quizGo) {
         var params = new URLSearchParams();
@@ -7056,6 +7092,7 @@
       b.addEventListener('click', function(){
         state.state = b.getAttribute('data-state');
         showStep('2-age');
+        if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 2, completedPct: 28 });
       });
     });
     // Step 1 → Step 2-age (mobile dropdown)
@@ -7064,6 +7101,7 @@
       if (!stateDropdown.value) return;
       state.state = stateDropdown.value;
       showStep('2-age');
+      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 2, completedPct: 28 });
     });
 
     // Step 2-age → eligibility check + V20 sex routing
@@ -7081,6 +7119,7 @@
       if (n >= 65) { showStep('exit-senior'); return; }
       if (state.state === 'DE' && n >= 60) { showStep('exit-de-cap'); return; }
       showStep('2-sex');
+      if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 3, completedPct: 42 });
     }
     if (ageSubmit) ageSubmit.addEventListener('click', submitAge);
     if (ageInput) ageInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') submitAge(); });
@@ -7102,10 +7141,12 @@
         state.sex = b.getAttribute('data-sex');
         if (state.sex === 'F') {
           showStep('2-preg');
+          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 4, completedPct: 57 });
         } else {
           // Male — skip pregnancy entirely
           state.pregnancy = 'no';
           showStep(4);
+          if (window.UnlockTrail) window.UnlockTrail.update({ currentStep: 4, completedPct: 57 });
         }
       });
     });
@@ -7118,8 +7159,18 @@
           state.conditions = 'pregnancy';
           populateDash(true);  // Catalog dashboard
           showStep('4-dash');
+          if (window.UnlockTrail) {
+            window.UnlockTrail.update({
+              currentStep: 5,
+              completedPct: 71,
+              valueEstimate: getCurrentDashEstimate(true).primary,
+              valueDelta: 50
+            });
+          }
         } else {
           showStep(4);
+          // Pregnancy 'no' is itself an answer — stay on Sex stage indicator (Conditions step is next)
+          // No update needed; stage 4 already set on sex pick.
         }
       });
     });
@@ -7131,8 +7182,41 @@
         var catalogMode = (state.conditions === 'managed' || state.conditions === 'utilization');
         populateDash(catalogMode);
         showStep('4-dash');
+        if (window.UnlockTrail) {
+          window.UnlockTrail.update({
+            currentStep: 5,
+            completedPct: 71,
+            valueEstimate: getCurrentDashEstimate(catalogMode).primary,
+            valueDelta: 50
+          });
+        }
       });
     });
+
+    // V21 — Helper: parse the persona-tagged numbers into integers for ValueStack
+    function getCurrentDashEstimate(catalogMode) {
+      var p = PERSONA_STRINGS[state.caseId] || PERSONA_STRINGS['any'];
+      var src = catalogMode ? CATALOG_DASH : p;
+      // Parse "~$890/mo" / "~$890/mo &middot; ~$7,200/yr" into numbers
+      function n(str) {
+        if (!str) return 0;
+        var m = String(str).replace(/&[a-z]+;/g, '').match(/\$([\d,]+)/);
+        return m ? parseInt(m[1].replace(/,/g, ''), 10) : 0;
+      }
+      // Parse the "save" value (first $ in saveNum is monthly, second $ is yearly)
+      var saveStr = String(src.saveNum || '').replace(/&[a-z]+;/g, '');
+      var saveMonthly = 0, saveAnnual = 0;
+      var matches = saveStr.match(/\$[\d,]+/g) || [];
+      if (matches[0]) saveMonthly = parseInt(matches[0].replace(/[\$,]/g, ''), 10);
+      if (matches[1]) saveAnnual = parseInt(matches[1].replace(/[\$,]/g, ''), 10);
+      return {
+        primary: n(src.planNum),
+        compare: n(src.compareNum),
+        saveMonthly: saveMonthly,
+        saveAnnual: saveAnnual,
+        compareLabel: src.compareLabel || 'A typical PPO in your state'
+      };
+    }
 
     // V20 — Back button reverse-flow logic
     document.querySelectorAll('[data-back]').forEach(function(b){

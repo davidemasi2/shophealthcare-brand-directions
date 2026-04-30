@@ -1,0 +1,384 @@
+/* =============================================================
+   UNLOCK TRAIL — V21 Component B
+   7-stage gamified progress trail spanning quiz (V20) → Nora app (V21).
+   Hydrates from localStorage.shc_session.unlock_trail.
+   ============================================================= */
+
+/* Animation timing constants surfaced for tuning */
+:root {
+  --ut-pulse-dur:        2s;
+  --ut-pop-in-dur:       600ms;
+  --ut-pop-hold-dur:     2000ms;
+  --ut-pop-out-dur:      400ms;
+  --ut-fill-dur:         200ms;
+  --ut-tooltip-dur:      150ms;
+}
+
+.unlock-trail {
+  width: 100%;
+  background: var(--cream, #FFFAF2);
+  border: 2px solid var(--ink, #1A1322);
+  border-radius: 18px;
+  padding: 18px 22px 16px;
+  box-shadow: 3px 3px 0 var(--ink, #1A1322);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ink, #1A1322);
+  position: relative;
+}
+
+/* ── Top row: dots+labels (left) · value pill (right) ───────── */
+.unlock-trail .ut-top {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: nowrap;
+}
+
+.unlock-trail .ut-stages {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  position: relative;
+}
+
+/* Each stage = dot stacked over label */
+.unlock-trail .ut-stage {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: default;
+  outline: none;
+}
+
+/* Connector line — sits behind dots, between this stage and the next */
+.unlock-trail .ut-stage::after {
+  content: "";
+  position: absolute;
+  top: 8px; /* aligns to mid-height of future-state 10px dot */
+  left: calc(50% + 10px);
+  right: calc(-50% + 10px);
+  height: 2px;
+  background: var(--ink, #1A1322);
+  opacity: .25;
+  z-index: 0;
+  transition: background var(--ut-fill-dur) ease-out, opacity var(--ut-fill-dur) ease-out;
+}
+.unlock-trail .ut-stage:last-child::after { display: none; }
+
+/* When THIS stage is completed → its outgoing connector turns lemon */
+.unlock-trail .ut-stage.is-completed::after {
+  background: var(--lemon, #FFE86E);
+  opacity: 1;
+}
+
+/* ── Dot states ─────────────────────────────────────────────── */
+.unlock-trail .ut-dot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: width var(--ut-fill-dur) ease-out,
+              height var(--ut-fill-dur) ease-out,
+              background var(--ut-fill-dur) ease-out,
+              box-shadow var(--ut-fill-dur) ease-out;
+}
+
+/* Future (default): ink ring only, smallest */
+.unlock-trail .ut-dot {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  border: 2px solid var(--ink, #1A1322);
+  opacity: .4;
+}
+
+/* Completed: filled lemon, medium, with check */
+.unlock-trail .ut-stage.is-completed .ut-dot {
+  width: 14px;
+  height: 14px;
+  background: var(--lemon, #FFE86E);
+  border: 2px solid var(--ink, #1A1322);
+  opacity: 1;
+}
+.unlock-trail .ut-dot .ut-check {
+  width: 8px;
+  height: 8px;
+  display: none;
+  pointer-events: none;
+}
+.unlock-trail .ut-stage.is-completed .ut-dot .ut-check {
+  display: block;
+}
+.unlock-trail .ut-dot .ut-check path {
+  fill: none;
+  stroke: var(--ink, #1A1322);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Active: filled lemon, largest, pulsing ring */
+.unlock-trail .ut-stage.is-active .ut-dot {
+  width: 18px;
+  height: 18px;
+  background: var(--lemon, #FFE86E);
+  border: 2px solid var(--ink, #1A1322);
+  opacity: 1;
+}
+.unlock-trail .ut-stage.is-active .ut-dot::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--lemon, #FFE86E);
+  animation: ut-pulse var(--ut-pulse-dur) ease-in-out infinite;
+}
+
+@keyframes ut-pulse {
+  0%, 100% { opacity: .4; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.25); }
+}
+
+/* Active stage's outgoing line should be partial — keep grey but slightly stronger */
+.unlock-trail .ut-stage.is-active::after {
+  opacity: .35;
+}
+
+/* ── Stage label ────────────────────────────────────────────── */
+.unlock-trail .ut-label {
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--mute, #6A5E70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: color var(--ut-fill-dur) ease-out;
+}
+.unlock-trail .ut-stage.is-active .ut-label,
+.unlock-trail .ut-stage.is-completed .ut-label {
+  color: var(--ink, #1A1322);
+}
+
+/* ── Tooltip ────────────────────────────────────────────────── */
+.unlock-trail .ut-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cream, #FFFAF2);
+  border: 1.5px solid var(--ink, #1A1322);
+  border-radius: 8px;
+  padding: 7px 11px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--mute, #6A5E70);
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 var(--ink, #1A1322);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ut-tooltip-dur) ease-out;
+  z-index: 10;
+}
+.unlock-trail .ut-tooltip strong {
+  color: var(--ink, #1A1322);
+  font-weight: 700;
+}
+.unlock-trail .ut-stage:hover .ut-tooltip,
+.unlock-trail .ut-stage:focus-visible .ut-tooltip,
+.unlock-trail .ut-stage.is-tap-open .ut-tooltip {
+  opacity: 1;
+}
+
+/* Tooltip edge clamping at row ends */
+.unlock-trail .ut-stage:first-child .ut-tooltip {
+  left: 0;
+  transform: none;
+}
+.unlock-trail .ut-stage:last-child .ut-tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* ── Value pill (right side) ────────────────────────────────── */
+.unlock-trail .ut-value-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.unlock-trail .ut-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink, #1A1322);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.unlock-trail .ut-value.is-pending {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--mute, #6A5E70);
+}
+.unlock-trail .ut-value .ut-tilde {
+  color: var(--mute, #6A5E70);
+  font-weight: 400;
+  margin-right: 2px;
+}
+.unlock-trail .ut-value .ut-suffix {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mute, #6A5E70);
+  margin-left: 2px;
+}
+
+/* Pop-badge — "+$50 just unlocked" */
+.unlock-trail .ut-pop {
+  background: var(--lemon, #FFE86E);
+  color: var(--ink, #1A1322);
+  border: 1.5px solid var(--ink, #1A1322);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--ink, #1A1322);
+  opacity: 0;
+  transform: scale(.8);
+  pointer-events: none;
+}
+.unlock-trail .ut-pop.is-popping {
+  animation: ut-pop var(--ut-pop-dur, 3000ms) ease-out forwards;
+}
+@keyframes ut-pop {
+  0%   { opacity: 0; transform: scale(.8); }
+  20%  { opacity: 1; transform: scale(1.08); }
+  30%  { transform: scale(1); }
+  87%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* ── Step counter (bottom row) ──────────────────────────────── */
+.unlock-trail .ut-counter {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule, #EED9D0);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mute, #6A5E70);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.unlock-trail .ut-counter strong {
+  color: var(--ink, #1A1322);
+  font-weight: 700;
+}
+.unlock-trail .ut-counter .ut-sep {
+  opacity: .5;
+}
+.unlock-trail .ut-counter .ut-tail {
+  color: var(--pink-dark, #D94A3E);
+  font-weight: 600;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .unlock-trail .ut-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .unlock-trail .ut-value-wrap {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .unlock-trail {
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+  }
+  .unlock-trail .ut-stages {
+    gap: 2px;
+  }
+  .unlock-trail .ut-label {
+    display: none;
+  }
+  .unlock-trail .ut-stage::after {
+    top: 6px;
+  }
+  .unlock-trail .ut-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .unlock-trail .ut-stage.is-completed .ut-dot {
+    width: 11px;
+    height: 11px;
+  }
+  .unlock-trail .ut-stage.is-completed .ut-dot .ut-check {
+    width: 6px;
+    height: 6px;
+  }
+  .unlock-trail .ut-stage.is-active .ut-dot {
+    width: 14px;
+    height: 14px;
+  }
+  .unlock-trail .ut-stage.is-active .ut-dot::before {
+    inset: -4px;
+  }
+  .unlock-trail .ut-counter {
+    font-size: 11px;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  .unlock-trail .ut-value {
+    font-size: 16px;
+  }
+}
+
+/* ── prefers-reduced-motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .unlock-trail .ut-stage.is-active .ut-dot::before {
+    animation: none;
+    opacity: .6;
+  }
+  .unlock-trail .ut-pop.is-popping {
+    animation: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+  .unlock-trail .ut-dot,
+  .unlock-trail .ut-stage::after,
+  .unlock-trail .ut-label,
+  .unlock-trail .ut-tooltip {
+    transition: none;
+  }
+}
