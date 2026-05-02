@@ -65,61 +65,41 @@
     additional_benefits:           'Additional Benefits'
   };
 
-  // The fixed row order pulled from LARGE PLAN VIEW.pdf — keeps the
-  // comparison table visually faithful to the existing UI.
-  var ROW_ORDER = [
-    'monthly_premium',
-    'network_type',
-    'medical_deductible_individual',
-    'drug_deductible',
-    'combined_med_drug_deductible',
-    'out_of_pocket_max_individual',
-    'primary_care',
-    'other_practitioner',
-    'specialist',
-    'urgent_care',
-    'emergency_room',
-    'emergency_transportation',
-    'preventive',
-    'well_baby',
-    'generic_drugs',
-    'preferred_brand_drugs',
-    'non_preferred_brand_drugs',
-    'specialty_drugs',
-    'imaging',
-    'xrays',
-    'laboratory',
-    'chiropractic',
-    'outpatient_surgery',
-    'outpatient_rehabilitation',
-    'inpatient_physician',
-    'inpatient_hospital',
-    'skilled_nursing',
-    'habilitation',
-    'home_health',
-    'durable_medical',
-    'hospice',
-    'mental_health_outpatient',
-    'mental_health_inpatient',
-    'substance_abuse_outpatient',
-    'substance_abuse_inpatient',
-    'prenatal_postnatal',
-    'delivery_inpatient_maternity',
-    'rehab_speech',
-    'rehab_occupational_physical',
-    'allergy_testing',
-    'chemotherapy',
-    'radiation',
-    'dialysis',
-    'infusion_therapy',
-    'transplant',
-    'reconstructive_surgery',
-    'accidental_dental',
-    'diabetes_education',
-    'routine_eye_exam_children',
-    'eye_glasses_children',
-    'dental_check_children',
-    'additional_benefits'
+  // V25 · 12-category mapping replaces the flat 50-row table.
+  // Each category collapses-by-default with a per-category diff-count
+  // summary line. Inside each category, original benefit rows render
+  // when the user expands.
+  var CATEGORIES = [
+    { key: 'premium_oop',   label: 'Premium & Out-of-Pocket',
+      rows: ['monthly_premium', 'medical_deductible_individual', 'drug_deductible',
+             'combined_med_drug_deductible', 'out_of_pocket_max_individual'] },
+    { key: 'doctor_visits', label: 'Doctor visits',
+      rows: ['primary_care', 'specialist', 'other_practitioner', 'urgent_care'] },
+    { key: 'prescriptions', label: 'Prescriptions',
+      rows: ['generic_drugs', 'preferred_brand_drugs',
+             'non_preferred_brand_drugs', 'specialty_drugs'] },
+    { key: 'hospital',      label: 'Hospital',
+      rows: ['inpatient_physician', 'inpatient_hospital', 'outpatient_surgery'] },
+    { key: 'imaging_labs',  label: 'Imaging & Labs',
+      rows: ['imaging', 'xrays', 'laboratory'] },
+    { key: 'mental_health', label: 'Mental health',
+      rows: ['mental_health_outpatient', 'mental_health_inpatient',
+             'substance_abuse_outpatient', 'substance_abuse_inpatient'] },
+    { key: 'maternity',     label: 'Maternity',
+      rows: ['prenatal_postnatal', 'delivery_inpatient_maternity', 'well_baby'] },
+    { key: 'specialty',     label: 'Specialty care',
+      rows: ['chemotherapy', 'radiation', 'dialysis', 'infusion_therapy', 'transplant'] },
+    { key: 'rehab_home',    label: 'Rehab & home health',
+      rows: ['outpatient_rehabilitation', 'rehab_speech', 'rehab_occupational_physical',
+             'home_health', 'skilled_nursing', 'hospice', 'habilitation', 'durable_medical'] },
+    { key: 'emergency',     label: 'Emergency',
+      rows: ['emergency_room', 'emergency_transportation'] },
+    { key: 'pediatric',     label: 'Pediatric',
+      rows: ['routine_eye_exam_children', 'eye_glasses_children', 'dental_check_children'] },
+    { key: 'other',         label: 'Other',
+      rows: ['network_type', 'preventive', 'allergy_testing', 'chiropractic',
+             'accidental_dental', 'diabetes_education', 'reconstructive_surgery',
+             'additional_benefits'] }
   ];
 
   function escapeHtml(str) {
@@ -175,7 +155,20 @@
   }
 
   /* -----------------------------------------------------------
-     RENDER — full overlay markup
+     V25 · OCR baseline → "Your current" column helpers
+     ----------------------------------------------------------- */
+  function ocrCellValue(baseline, key) {
+    if (!baseline) return '—';
+    if (key === 'monthly_premium') return '$' + formatMoney(baseline.monthly_premium) + '/mo';
+    if (key === 'network_type')    return baseline.network_type || '—';
+    if (key === 'medical_deductible_individual') {
+      return typeof baseline.deductible === 'number' ? '$' + formatMoney(baseline.deductible) : '—';
+    }
+    return '—';   // OCR doesn't capture the rest
+  }
+
+  /* -----------------------------------------------------------
+     RENDER — overlay shell
      ----------------------------------------------------------- */
   function buildOverlay() {
     var overlay = document.createElement('div');
@@ -202,66 +195,155 @@
     return overlay;
   }
 
+  /* -----------------------------------------------------------
+     V25 · renderTable — categorized, collapse-by-default.
+     When window.NORA_OCR_BASELINE is set, prepend "Your current"
+     column and compute diffs against that baseline rather than
+     majority-of-3.
+     ----------------------------------------------------------- */
   function renderTable(planSet, diffsOnly) {
     var plans = planSet.plans || [];
+    var baseline = window.NORA_OCR_BASELINE;
+    var hasBaseline = !!baseline;
 
-    // Header row
-    var headCols = plans.map(function (p) {
-      var tierLabel = p.tier === 'recommended' ? 'Recommended ★' :
-                      (p.tier === 'budget' ? 'Budget' : 'Premium');
-      var tierClass = p.tier === 'recommended' ? ' pcm-col-tier--recommended' : '';
-      var carrierShort = (function () {
-        var c = p.carrier || '';
-        if (/regence/i.test(c)) return 'Regence BCBS';
-        if (/university of utah/i.test(c)) return 'U of U Health';
-        if (c.length > 26) return c.slice(0, 24) + '…';
-        return c;
-      })();
-      return (
-        '<th>' +
-          '<div class="pcm-col-head">' +
-            '<span class="pcm-col-tier' + tierClass + '">' + escapeHtml(tierLabel) + '</span>' +
-            '<span class="pcm-col-carrier">' + escapeHtml(carrierShort) + '</span>' +
-            '<span class="pcm-col-name">' + escapeHtml(p.name) + '</span>' +
-            '<span class="pcm-col-network">' + escapeHtml(p.network_type || '') + '</span>' +
-            '<span class="pcm-col-price">$' + formatMoney(p.monthly_premium) + '<small>/mo</small></span>' +
-          '</div>' +
-        '</th>'
-      );
-    }).join('');
+    // Number of plan columns + optional baseline column
+    var totalCols = 1 + (hasBaseline ? 1 : 0) + plans.length; // benefit-label + baseline? + plans
 
-    // Body rows
-    var bodyRows = ROW_ORDER.map(function (key) {
-      var values = plans.map(function (p) { return getCellValue(p, key); });
-      var same = rowAllSame(values);
-      if (diffsOnly && same) return ''; // hide identical rows
-      var diffs = diffMask(values);
-      var label = BENEFIT_LABELS[key] || key.replace(/_/g, ' ');
-      var cells = values.map(function (v, i) {
-        var classes = [];
-        if (diffs[i]) classes.push('is-diff');
-        if (v === '—') classes.push('is-empty');
-        var clsAttr = classes.length ? ' class="' + classes.join(' ') + '"' : '';
-        return '<td' + clsAttr + '>' + v + '</td>';
+    // ─── Header row ──────────────────────────────────────────
+    var baselineHeader = hasBaseline ? renderBaselineHeader(baseline) : '';
+    var planHeaders = plans.map(renderPlanHeader).join('');
+
+    // ─── Category groups ─────────────────────────────────────
+    var categoryGroups = CATEGORIES.map(function (cat) {
+      // Compute per-row data + diff stats for this category
+      var rowsData = cat.rows.map(function (key) {
+        var planValues = plans.map(function (p) { return getCellValue(p, key); });
+        var bValue = hasBaseline ? ocrCellValue(baseline, key) : null;
+        var diffMaskArr;
+        if (hasBaseline) {
+          // Diff = each plan column differs from baseline
+          // (only flag if baseline has a non-'—' value to compare)
+          if (bValue && bValue !== '—') {
+            diffMaskArr = planValues.map(function (v) { return v !== bValue; });
+          } else {
+            // No baseline value → fall back to majority-of-N logic
+            diffMaskArr = diffMask(planValues);
+          }
+        } else {
+          diffMaskArr = diffMask(planValues);
+        }
+        var allSame = !diffMaskArr.some(Boolean) &&
+                      (!hasBaseline || planValues.every(function (v) { return v === bValue; }));
+        return {
+          key: key,
+          label: BENEFIT_LABELS[key] || key.replace(/_/g, ' '),
+          values: planValues,
+          baselineValue: bValue,
+          diffs: diffMaskArr,
+          allSame: allSame
+        };
+      });
+
+      var visibleRows = diffsOnly ? rowsData.filter(function (r) { return !r.allSame; }) : rowsData;
+      var diffCount = rowsData.filter(function (r) { return !r.allSame; }).length;
+      var totalCount = rowsData.length;
+
+      // Skip category entirely if diff-only mode and zero diffs
+      if (diffsOnly && diffCount === 0) return '';
+
+      var diffSummary = diffCount === 0
+        ? totalCount + ' identical'
+        : diffCount + ' of ' + totalCount + ' differ';
+
+      // Category header row (always visible) + body rows (collapsible)
+      var headerRow =
+        '<tr class="pcm-cat-header">' +
+          '<th colspan="' + totalCols + '" class="pcm-cat-cell">' +
+            '<button type="button" class="pcm-cat-toggle" data-pcm-cat-toggle aria-expanded="false">' +
+              '<span class="pcm-cat-label">' + escapeHtml(cat.label) + '</span>' +
+              '<span class="pcm-cat-diffs">· ' + diffSummary + '</span>' +
+              '<span class="pcm-cat-chev" aria-hidden="true">›</span>' +
+            '</button>' +
+          '</th>' +
+        '</tr>';
+
+      var bodyRows = visibleRows.map(function (r) {
+        var baselineCell = hasBaseline
+          ? '<td class="pcm-baseline-cell">' + r.baselineValue + '</td>'
+          : '';
+        var planCells = r.values.map(function (v, i) {
+          var classes = [];
+          if (r.diffs[i]) classes.push('is-diff');
+          if (v === '—') classes.push('is-empty');
+          var clsAttr = classes.length ? ' class="' + classes.join(' ') + '"' : '';
+          return '<td' + clsAttr + '>' + v + '</td>';
+        }).join('');
+        return '<tr class="pcm-row pcm-row--collapsed">' +
+          '<th class="pcm-row-label">' + escapeHtml(r.label) + '</th>' +
+          baselineCell +
+          planCells +
+        '</tr>';
       }).join('');
+
       return (
-        '<tr>' +
-          '<th class="pcm-row-label">' + escapeHtml(label) + '</th>' +
-          cells +
-        '</tr>'
+        '<tbody class="pcm-cat" data-pcm-cat="' + cat.key + '">' +
+          headerRow +
+          bodyRows +
+        '</tbody>'
       );
     }).join('');
 
     return (
-      '<table class="pcm-table">' +
+      '<table class="pcm-table' + (hasBaseline ? ' pcm-table--has-baseline' : '') + '">' +
         '<thead>' +
           '<tr>' +
             '<th class="pcm-row-label">Benefit</th>' +
-            headCols +
+            baselineHeader +
+            planHeaders +
           '</tr>' +
         '</thead>' +
-        '<tbody>' + bodyRows + '</tbody>' +
+        categoryGroups +
       '</table>'
+    );
+  }
+
+  function renderBaselineHeader(baseline) {
+    var carrierShort = (baseline.carrier || '').slice(0, 22);
+    var planShort = (baseline.plan_name || '').slice(0, 24);
+    return (
+      '<th class="pcm-col-baseline">' +
+        '<div class="pcm-col-head">' +
+          '<span class="pcm-col-tier pcm-col-tier--baseline">YOUR CURRENT</span>' +
+          '<span class="pcm-col-carrier">' + escapeHtml(carrierShort) + '</span>' +
+          '<span class="pcm-col-name">' + escapeHtml(planShort) + '</span>' +
+          '<span class="pcm-col-network">' + escapeHtml(baseline.network_type || '') + '</span>' +
+          '<span class="pcm-col-price">$' + formatMoney(baseline.monthly_premium) + '<small>/mo</small></span>' +
+        '</div>' +
+      '</th>'
+    );
+  }
+
+  function renderPlanHeader(p) {
+    var tierLabel = p.tier === 'recommended' ? 'Recommended ★' :
+                    (p.tier === 'budget' ? 'Budget' : 'Premium');
+    var tierClass = p.tier === 'recommended' ? ' pcm-col-tier--recommended' : '';
+    var carrierShort = (function () {
+      var c = p.carrier || '';
+      if (/regence/i.test(c)) return 'Regence BCBS';
+      if (/university of utah/i.test(c)) return 'U of U Health';
+      if (c.length > 26) return c.slice(0, 24) + '…';
+      return c;
+    })();
+    return (
+      '<th>' +
+        '<div class="pcm-col-head">' +
+          '<span class="pcm-col-tier' + tierClass + '">' + escapeHtml(tierLabel) + '</span>' +
+          '<span class="pcm-col-carrier">' + escapeHtml(carrierShort) + '</span>' +
+          '<span class="pcm-col-name">' + escapeHtml(p.name) + '</span>' +
+          '<span class="pcm-col-network">' + escapeHtml(p.network_type || '') + '</span>' +
+          '<span class="pcm-col-price">$' + formatMoney(p.monthly_premium) + '<small>/mo</small></span>' +
+        '</div>' +
+      '</th>'
     );
   }
 
@@ -278,7 +360,17 @@
                escapeHtml(p.disclaimer) + '</li>';
       }).join('') + '</ul>';
     }
-    return ul +
+    // V25 · Down-funnel CTA — never close-without-action.
+    var rec = (plans || []).filter(function (p) { return p.tier === 'recommended'; })[0];
+    var ctaHTML = '';
+    if (rec) {
+      ctaHTML =
+        '<button type="button" class="pcm-foot-cta" data-pcm-lock-rec data-plan-id="' +
+          escapeHtml(rec.plan_id) + '">' +
+          'Lock the recommended plan →' +
+        '</button>';
+    }
+    return ctaHTML + ul +
       '<span class="pcm-license" data-license-text>' + escapeHtml(licenseText) + '</span>';
   }
 
@@ -316,6 +408,28 @@
     if (diffsToggle) diffsToggle.checked = diffsOnly;
     body.innerHTML = renderTable(options.planSet, diffsOnly);
     foot.innerHTML = renderFoot(options.planSet, licenseText);
+
+    // V25 · Bind category-toggle expand/collapse
+    Array.prototype.forEach.call(body.querySelectorAll('[data-pcm-cat-toggle]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var tbody = btn.closest('.pcm-cat');
+        if (!tbody) return;
+        var expanded = tbody.classList.toggle('is-expanded');
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+    });
+
+    // V25 · Bind "Lock the recommended plan" foot CTA
+    var lockBtn = foot.querySelector('[data-pcm-lock-rec]');
+    if (lockBtn) {
+      lockBtn.addEventListener('click', function () {
+        var planId = lockBtn.getAttribute('data-plan-id');
+        if (typeof options.onLockRecommended === 'function') {
+          try { options.onLockRecommended(planId); } catch (e) {}
+        }
+        hide();
+      });
+    }
   }
 
   // V24 Tier 7 · A11y · Get all keyboard-focusable elements inside an
