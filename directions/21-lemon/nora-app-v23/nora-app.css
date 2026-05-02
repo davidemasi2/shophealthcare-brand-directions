@@ -61,7 +61,24 @@ body {
 b, strong { font-weight: 600; }
 button { font: inherit; cursor: pointer; }
 input, button { font-family: inherit; }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+/* V24 Tier 6 · Brand-aligned keyboard focus.
+   Gold ring (--lemon) at 3px is highly visible and on-brand. Uses
+   :focus-visible (NOT :focus) so mouse users don't get the ring on click,
+   but keyboard users always do. 2px outer ink for contrast on light bg. */
+:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+/* High-contrast surfaces (e.g. ink-bg buttons) want the ring inverted —
+   ink ring inside, gold halo outside */
+.nx-send:focus-visible,
+.nx-tab:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px var(--ink), 0 0 0 5px rgba(255, 200, 87, 0.25);
+}
 
 .nx-mute { color: var(--mute); }
 
@@ -760,6 +777,292 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 .nx-percentile .nx-pct-emph {
   color: var(--ink, #0E2A3A);
   font-weight: 600;
+}
+
+/* =============================================================
+   V24 TIER 6 · STATE DESIGN — empty / loading / error / confirmation
+   Every non-happy-path state designed as deliberately as the happy path.
+   ============================================================= */
+
+/* ─── 1a · Drawer route preview (3-dot journey)─────────────── */
+.nx-drawer-route {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 14px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 220px;
+  border-top: 1px dashed var(--rule);
+}
+.nx-route-step {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  opacity: 0;
+  animation: nx-route-fade 460ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+.nx-route-step:nth-child(1) { animation-delay: 0ms; }
+.nx-route-step:nth-child(2) { animation-delay: 60ms; }
+.nx-route-step:nth-child(3) { animation-delay: 120ms; }
+@keyframes nx-route-fade {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nx-route-dot {
+  flex: none;
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  background: transparent;
+  transition: background-color 280ms cubic-bezier(.22,.61,.36,1),
+              border-color 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-route-step.is-active {
+  color: var(--ink);
+}
+.nx-route-step.is-active .nx-route-dot {
+  background: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.30);
+}
+/* The middle (next) dot pulses subtly — anticipation */
+.nx-route-step:nth-child(2) .nx-route-dot {
+  animation: nx-route-pulse 2.4s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+@keyframes nx-route-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.15); }
+}
+.nx-route-step.is-faded { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-route-step,
+  .nx-route-step:nth-child(2) .nx-route-dot { animation: none; opacity: 1; }
+}
+
+/* ─── 1b · Pre-opener "Nora is gathering your context" loader ── */
+.nx-pre-opener {
+  align-self: flex-start;
+  display: flex; align-items: center; gap: 8px;
+  margin: 4px 0 0 44px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+  opacity: 0;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-pre-opener.is-visible { opacity: 0.78; }
+.nx-pre-opener.is-fading  { opacity: 0; }
+.nx-pre-opener::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--pink);
+  animation: nx-pre-opener-pulse 1.4s ease-in-out infinite;
+}
+@keyframes nx-pre-opener-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-pre-opener::before { animation: none; }
+}
+
+/* ─── 1c · "What we know" pending → confirmed animated stroke ── */
+.known-item.is-pending .nx-known-text {
+  position: relative;
+  background-image: linear-gradient(to right, var(--rule) 0%, var(--rule) 100%);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 720ms cubic-bezier(.22,.61,.36,1);
+  padding-bottom: 1px;
+}
+.known-item.is-confirming .nx-known-text {
+  background-size: 100% 1px;
+  background-image: linear-gradient(to right, var(--pink) 0%, var(--pink) 100%);
+}
+.known-item.is-confirming .nx-known-mark {
+  background: var(--ink);
+  color: var(--lemon);
+  border-color: var(--ink);
+  transform: scale(1);
+  animation: nx-known-confirm 460ms cubic-bezier(.22,.61,.36,1);
+}
+@keyframes nx-known-confirm {
+  0%   { transform: scale(0.7); opacity: 0.5; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .known-item.is-confirming .nx-known-text { transition: none; }
+  .known-item.is-confirming .nx-known-mark  { animation: none; }
+}
+
+/* ─── 1d · Plan-cards locked-preview peek ─────────────────────── */
+.nx-plan-cards-host:not(.is-active) {
+  display: block; /* override default `display:none` so the peek shows */
+}
+.nx-plan-cards-host.is-active .nx-plan-peek { display: none; }
+.nx-plan-peek {
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: rgba(0, 181, 216, 0.04);
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  line-height: 1.5;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-plan-peek-icon {
+  flex: none;
+  display: inline-grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ink); color: var(--lemon);
+  font-size: 11px;
+}
+/* Hide the peek when the plan-cards host has been already activated */
+.nx-plan-cards-host.is-active + .nx-plan-peek,
+.nx-plan-cards-host.is-active .nx-plan-peek { display: none; }
+
+/* ─── 2a · Inline status text on long Nora typing pauses ──────── */
+.nx-typing-status {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+  margin: -2px 0 6px;
+  opacity: 0;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-typing-status.is-visible { opacity: 0.75; }
+
+/* ─── 2b · Plan-options fetching loader ───────────────────────── */
+.nx-plan-fetching {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: rgba(0, 181, 216, 0.04);
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.nx-plan-fetching-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+}
+.nx-plan-fetching-status {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px; color: var(--ink);
+  margin: 0;
+}
+.nx-plan-fetching-bars {
+  display: flex; gap: 4px; align-items: flex-end; height: 12px;
+}
+.nx-plan-fetching-bars span {
+  flex: 1; max-width: 40px;
+  background: var(--pink);
+  border-radius: 2px;
+  height: 100%;
+  opacity: 0.4;
+  animation: nx-fetch-bar 1.2s ease-in-out infinite;
+}
+.nx-plan-fetching-bars span:nth-child(1) { animation-delay: 0ms; }
+.nx-plan-fetching-bars span:nth-child(2) { animation-delay: 150ms; }
+.nx-plan-fetching-bars span:nth-child(3) { animation-delay: 300ms; }
+@keyframes nx-fetch-bar {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+  50%      { opacity: 1;   transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-plan-fetching-bars span { animation: none; opacity: 0.6; }
+}
+
+/* ─── 2c · Pre-celebration "Locking your plan…" overlay ───────── */
+.nx-locking-overlay {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(1.05);
+  border-radius: 14px;
+  z-index: 12;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-locking-overlay.is-visible { opacity: 1; pointer-events: auto; }
+.nx-locking-overlay::before {
+  content: '';
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pink); margin-right: 9px;
+  animation: nx-pre-opener-pulse 1.0s ease-in-out infinite;
+}
+.nx-bignum-wrap { position: relative; }
+
+/* ─── 3b · Network drop banner ────────────────────────────────── */
+.nx-net-banner {
+  display: none;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: rgba(0, 181, 216, 0.08);
+  border: 1px solid rgba(0, 181, 216, 0.32);
+  border-radius: 10px;
+  font-size: 13px; line-height: 1.45;
+  color: var(--ink);
+}
+.nx-net-banner.is-visible { display: block; }
+.nx-net-banner-eyebrow {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 2px;
+}
+
+/* ─── 5b · Plan-locked "Continue when ready" CTA ──────────────── */
+.nx-locked-cta {
+  display: block;
+  margin: 14px auto 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    color 180ms cubic-bezier(.22,.61,.36,1);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.nx-locked-cta.is-visible {
+  opacity: 0.82;
+  transform: translateY(0);
+}
+.nx-locked-cta:hover {
+  opacity: 1;
+  color: var(--ink);
+}
+.nx-locked-cta::after {
+  content: ' →';
+  font-family: 'Inter', sans-serif;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1);
+  display: inline-block;
+}
+.nx-locked-cta:hover::after { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .nx-locked-cta { transition: opacity 0ms; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

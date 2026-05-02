@@ -213,11 +213,23 @@
     return msg;
   }
 
-  function appendTypingIndicator() {
+  function appendTypingIndicator(statusText) {
     var msg = el('div', { cls: 'nx-msg from-nora' });
     var avatar = el('div', { cls: 'nx-msg-avatar', text: 'N' });
     var bub = el('div', { cls: 'nx-bub' });
-    bub.innerHTML = '<span class="nx-typing"><span></span><span></span><span></span></span>';
+    // V24 Tier 6 · Optional inline status text — appears on long Nora
+    // pauses (>1.2s). "Pulling carrier rates…" / "Cross-referencing your
+    // state's rules…" — makes the wait feel like work being done.
+    if (statusText) {
+      var status = el('span', { cls: 'nx-typing-status', text: statusText });
+      bub.appendChild(status);
+      // Fade in immediately on next paint
+      requestAnimationFrame(function () { status.classList.add('is-visible'); });
+    }
+    var dots = document.createElement('span');
+    dots.className = 'nx-typing';
+    dots.innerHTML = '<span></span><span></span><span></span>';
+    bub.appendChild(dots);
     msg.appendChild(avatar);
     msg.appendChild(bub);
     scrollEl.appendChild(msg);
@@ -249,14 +261,16 @@
   // Estimates: 800–1500ms typing latency, plus a 250–400ms read pause
   function noraSay(html, opts) {
     opts = opts || {};
-    var typing = appendTypingIndicator();
-    // V24 — clamp the delay so the opener never feels stuck. If the host
-    // is throttling timers (background tab, slow CPU), the typing dots
-    // were occasionally surfacing without ever revealing the message.
-    // Cap at 1500ms (was unbounded via Math.random()*700 + 800) and
-    // floor at 50ms when reduced motion.
     var rawDelay = opts.delay != null ? opts.delay : (800 + Math.random() * 700);
     var delay = REDUCED_MOTION ? 50 : Math.min(1500, rawDelay);
+    // V24 Tier 6 · Use inline status text on long pauses (>=1200ms).
+    // Pulled from opts.statusText OR auto-rotated from a generic pool.
+    var statusText = null;
+    if (!REDUCED_MOTION && delay >= 1200) {
+      statusText = opts.statusText ||
+        NORA_TYPING_STATUS[Math.floor(Math.random() * NORA_TYPING_STATUS.length)];
+    }
+    var typing = appendTypingIndicator(statusText);
     setTimeout(function () {
       // Defensive: if the typing node was already removed (race / re-init),
       // skip removal but still append the message so the opener lands.
@@ -265,6 +279,14 @@
       if (opts.then) opts.then();
     }, delay);
   }
+  // V24 Tier 6 · Inline status text pool — sparingly auto-injected on
+  // long Nora typing pauses to make the wait feel deliberate.
+  var NORA_TYPING_STATUS = [
+    'Pulling carrier rates…',
+    'Cross-referencing your state’s rules…',
+    'Checking eligibility…',
+    'Matching your network…'
+  ];
 
   function userSay(html) {
     appendMessage({ from: 'user', html: html });
@@ -303,6 +325,24 @@
   }
 
   function startConversation() {
+    // V24 Tier 6 · Pre-opener context-gathering line. During the 1.2s
+    // pre-opener delay, surface a subtle "Nora is gathering your
+    // context…" mono-caps row above where the message will land. Fades
+    // out as Nora's actual message appears.
+    if (!REDUCED_MOTION && scrollEl) {
+      var preOpener = el('div', { cls: 'nx-pre-opener', text: 'Nora is gathering your context' });
+      scrollEl.appendChild(preOpener);
+      requestAnimationFrame(function () {
+        preOpener.classList.add('is-visible');
+      });
+      setTimeout(function () {
+        preOpener.classList.remove('is-visible');
+        preOpener.classList.add('is-fading');
+        setTimeout(function () {
+          if (preOpener.parentNode) preOpener.parentNode.removeChild(preOpener);
+        }, 320);
+      }, 1100);
+    }
     // Step 0 — persona-tagged opener (first question is name)
     // V24 Tier 5 — opener delay aligned with stage-curtain timing.
     // Stage finishes at T+1180ms; typing-dots appear T+1180ms, message
@@ -616,6 +656,9 @@
     var planSet = window.MOCK_NORA_RESPONSE;
     if (!planSet || !window.PlanCards) return;
 
+    // V24 Tier 6 · Hide plan-peek now that real cards are arriving.
+    removePlanPeek();
+
     // Compress the estimate block — keep eyebrow/headline visible but de-emphasize
     var estimateBlock = $('#dash-estimate-block');
     if (estimateBlock) {
@@ -685,46 +728,57 @@
       planCardsApi = window.PlanCards.mount(pcEl, {
         planSet: planSet,
         onSelect: function (planId) {
-          // V24 Tier 3 · Robinhood milestone — re-fire the lock with the
-          // user's chosen plan's number so the dial radial pulse + caption
-          // play. Then glow the chosen card border for 1s.
-          try {
-            var chosen = (planSet.plans || []).filter(function (p) {
-              return p.plan_id === planId;
-            })[0];
-            if (chosen && valueStackApi && typeof valueStackApi.lock === 'function') {
-              var lockedMonthly = Math.round(chosen.monthly_premium);
-              var compareValue = (chosen.compared_to_user &&
-                                  chosen.compared_to_user.current_plan_premium) ||
-                                 currentNumbers().compare;
-              var annualSavings = (compareValue - lockedMonthly) * 12;
-              valueStackApi.lock(lockedMonthly, {
-                secondary: { value: lockedMonthly * 12, suffix: '/yr', label: "That's annual" },
-                tertiary: {
-                  value: annualSavings,
-                  suffix: ' saved/yr',
-                  label: currentNumbers().label,
-                  direction: 'down'
-                },
-                compareValue: compareValue
-              });
-              // V24 Tier 4 · Re-surface percentile on user-chosen plan too.
-              surfacePercentile();
-            }
-            // Lemon-glow the chosen card.
-            var chosenCard = pcEl.querySelector(
-              '.plan-card[data-plan-id="' + planId + '"]'
-            );
-            if (chosenCard) {
-              chosenCard.classList.remove('is-locking');
-              void chosenCard.offsetWidth;
-              chosenCard.classList.add('is-locking');
-              setTimeout(function () {
-                try { chosenCard.classList.remove('is-locking'); } catch (e) {}
-              }, 1100);
-            }
-          } catch (e) { /* celebration failed; continue */ }
-          surfacePlanReport(planId);
+          // V24 Tier 6 · Pre-celebration "Locking your plan with [Carrier]…"
+          // overlay — gives the celebration weight. 600ms anticipation.
+          var chosen = (planSet.plans || []).filter(function (p) {
+            return p.plan_id === planId;
+          })[0];
+          var carrier = (chosen && (chosen.carrier_name || chosen.carrier)) || 'your carrier';
+          showLockingOverlay(carrier);
+
+          var fireLock = function () {
+            try {
+              if (chosen && valueStackApi && typeof valueStackApi.lock === 'function') {
+                var lockedMonthly = Math.round(chosen.monthly_premium);
+                var compareValue = (chosen.compared_to_user &&
+                                    chosen.compared_to_user.current_plan_premium) ||
+                                   currentNumbers().compare;
+                var annualSavings = (compareValue - lockedMonthly) * 12;
+                valueStackApi.lock(lockedMonthly, {
+                  secondary: { value: lockedMonthly * 12, suffix: '/yr', label: "That's annual" },
+                  tertiary: {
+                    value: annualSavings,
+                    suffix: ' saved/yr',
+                    label: currentNumbers().label,
+                    direction: 'down'
+                  },
+                  compareValue: compareValue
+                });
+                // V24 Tier 4 · Re-surface percentile on user-chosen plan too.
+                surfacePercentile();
+              }
+              // Lemon-glow the chosen card.
+              var chosenCard = pcEl.querySelector(
+                '.plan-card[data-plan-id="' + planId + '"]'
+              );
+              if (chosenCard) {
+                chosenCard.classList.remove('is-locking');
+                void chosenCard.offsetWidth;
+                chosenCard.classList.add('is-locking');
+                setTimeout(function () {
+                  try { chosenCard.classList.remove('is-locking'); } catch (e) {}
+                }, 1100);
+              }
+            } catch (e) { /* celebration failed; continue */ }
+            surfacePlanReport(planId);
+            // V24 Tier 6 · "Continue to enrollment when ready" soft CTA —
+            // appears 2s after celebration. Gives the user an out without
+            // rushing them.
+            surfaceLockedCTA();
+          };
+
+          if (REDUCED_MOTION) { fireLock(); }
+          else { setTimeout(fireLock, 600); }
         },
         onCompareClick: function () {
           if (window.PlanCompareModal) {
@@ -812,12 +866,14 @@
     var nums = currentNumbers();
 
     if (ctx.pregnancy) {
-      eyebrow.textContent = '★ CATALOG ROUTE';
-      headline.textContent = 'A plan that covers it.';
+      // V24 Tier 6 · Make Catalog routing immediately legible — the user
+      // shouldn't be confused why they're seeing different numbers.
+      eyebrow.textContent = '★ CATALOG ROUTE · MATERNITY-COVERED';
+      headline.textContent = 'A plan that covers pregnancy.';
       // V23 · Persona reinforce paragraph (Catalog variant)
       if (reinforceEl) {
         reinforceEl.textContent =
-          "Honest answer = right plan. The Catalog line covers what your usual plan wouldn't — same shop, different product.";
+          "Standard plans don't cover maternity — the Catalog line does. Same shop, different product.";
       }
     } else {
       eyebrow.textContent = '★ YOUR ESTIMATE';
@@ -871,6 +927,79 @@
       if (trailState.currentStep < 6) trailState.currentStep = 6;
       try { window.UnlockTrail.mount(trailHost, trailState); } catch (e) {}
     }
+
+    // V24 Tier 6 · Plan-cards locked-preview peek. Renders BEFORE the
+    // plan-cards host (which is hidden until surfacePlanOptions). Tells
+    // the user real plan options are coming — anticipation hook. Hidden
+    // by removePlanPeek() when surfacePlanOptions activates.
+    var pcHost = $('#dash-plan-cards-host');
+    if (pcHost && !pcHost.classList.contains('is-active')) {
+      var peekExisting = document.querySelector('.nx-plan-peek');
+      if (!peekExisting) {
+        var peek = document.createElement('div');
+        peek.className = 'nx-plan-peek';
+        peek.id = 'dash-plan-peek';
+        peek.innerHTML =
+          '<span class="nx-plan-peek-icon" aria-hidden="true">🔒</span>' +
+          '<span>Your plan options unlock when Nora finishes.</span>';
+        pcHost.parentNode.insertBefore(peek, pcHost);
+      }
+    }
+  }
+  function removePlanPeek() {
+    var peek = document.getElementById('dash-plan-peek');
+    if (peek && peek.parentNode) {
+      peek.style.opacity = '0';
+      setTimeout(function () {
+        try { peek.parentNode.removeChild(peek); } catch (e) {}
+      }, 280);
+    }
+  }
+
+  // V24 Tier 6 · "Locking your plan with [Carrier]…" pre-celebration
+  // overlay. Renders on top of the dial wrap for ~600ms before the lock
+  // pulse. Makes the celebration feel earned, not instant.
+  function showLockingOverlay(carrier) {
+    var wrap = document.getElementById('dash-vs-wrap');
+    if (!wrap) return;
+    var overlay = wrap.querySelector('.nx-locking-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'nx-locking-overlay';
+      overlay.setAttribute('aria-live', 'polite');
+      wrap.appendChild(overlay);
+    }
+    overlay.textContent = 'Locking your plan with ' + carrier + '…';
+    requestAnimationFrame(function () {
+      overlay.classList.add('is-visible');
+    });
+    setTimeout(function () {
+      overlay.classList.remove('is-visible');
+      setTimeout(function () {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 320);
+    }, REDUCED_MOTION ? 50 : 580);
+  }
+
+  // V24 Tier 6 · "Continue to enrollment when ready" soft CTA. Appears
+  // 2s after the lock celebration — gives the user an out without
+  // rushing them. Mono-caps, teal, on-brand restraint.
+  function surfaceLockedCTA() {
+    var wrap = document.getElementById('dash-vs-wrap');
+    if (!wrap) return;
+    if (wrap.querySelector('.nx-locked-cta')) return; // idempotent
+    var cta = document.createElement('a');
+    cta.className = 'nx-locked-cta';
+    cta.href = '#continue';
+    cta.textContent = '✓ Continue to enrollment when you’re ready';
+    cta.addEventListener('click', function (e) {
+      e.preventDefault();
+      console.log('[V24 Tier 6] Continue to enrollment — wires to backend in V25');
+    });
+    wrap.appendChild(cta);
+    setTimeout(function () {
+      cta.classList.add('is-visible');
+    }, REDUCED_MOTION ? 50 : 2000);
   }
 
   function humanizeConditions(c, pregnant) {
@@ -918,8 +1047,11 @@
   function updateFact(key, value) {
     var item = document.querySelector('.known-item[data-key="' + key + '"]');
     if (item) {
+      // V24 Tier 6 · Animated "writing into the record" stroke. While
+      // .is-confirming is set, the underline fills (720ms) and the mark
+      // does a 460ms scale-pop. Then we settle into .is-confirmed.
+      var wasPending = item.classList.contains('is-pending');
       item.classList.remove('is-pending');
-      item.classList.add('is-confirmed');
       var mark = item.querySelector('.nx-known-mark');
       if (mark) mark.textContent = '✓';
       var slot = $('#fact-' + key);
@@ -931,6 +1063,16 @@
           var label = FACT_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1));
           textEl.innerHTML = label + ': <b id="fact-' + key + '">' + escapeHtml(value) + '</b>';
         }
+      }
+      if (wasPending && !REDUCED_MOTION) {
+        item.classList.add('is-confirming');
+        // Settle to plain confirmed after the fill animation
+        setTimeout(function () {
+          item.classList.remove('is-confirming');
+          item.classList.add('is-confirmed');
+        }, 740);
+      } else {
+        item.classList.add('is-confirmed');
       }
     }
     // V21 · Push to NoraSession so the idle-timer + cross-device resume stays accurate

@@ -301,14 +301,23 @@
     skipWrap.appendChild(skipA);
     bubble.appendChild(skipWrap);
 
-    // Success state (replaces the form)
+    // Success state (replaces the form) — V24 Tier 6 · Eyebrow + clear
+    // panel with resend affordance.
     var successWrap = el('div', 'auth-gate__success');
+    var successEyebrow = el('div', 'auth-gate__success-eyebrow');
+    successEyebrow.textContent = '✓ MAGIC LINK SENT';
     var successMsg = el('p', 'auth-gate__success-msg');
     successMsg.setAttribute('data-ag-success-msg', '');
     var successSub = el('p', 'auth-gate__success-sub');
-    successSub.textContent = '(You can keep going here in the meantime.)';
+    successSub.textContent = "It might take 30 seconds. Tap the link from your email — that's all I need.";
+    var successResend = el('a', 'auth-gate__success-resend');
+    successResend.href = '#resend';
+    successResend.textContent = 'Resend';
+    successResend.setAttribute('data-ag-resend', '');
+    successWrap.appendChild(successEyebrow);
     successWrap.appendChild(successMsg);
     successWrap.appendChild(successSub);
+    successWrap.appendChild(successResend);
     bubble.appendChild(successWrap);
 
     host.appendChild(bubble);
@@ -459,7 +468,8 @@
     var smsOptIn = inst.els.smsCheckbox.checked;
 
     if (!isValidEmail(email)) {
-      showError(inst, 'That email looks off — want to double-check?');
+      // V24 Tier 6 · Soft Nora-helper framing, not red-shoutiness.
+      showError(inst, "That doesn't look like an email — want to try again?");
       inst.els.emailField.classList.add('auth-gate__field--error');
       inst.els.emailInput.focus();
       return;
@@ -594,14 +604,37 @@
       var email = emailOverride || inst.els.emailInput.value.trim() ||
                   (global.NoraSession && global.NoraSession.get && global.NoraSession.get().email) ||
                   'your email';
+      // V24 Tier 6 · Confirmation panel — clearer eyebrow/body separation.
       inst.els.successMsg.innerHTML =
-        'Sent you a magic link at <span class="auth-gate__success-email">' +
-        escapeHtml(email) +
-        '</span>. Tap it from your email — that' + "'" + 's all I need.';
+        'Check your inbox at <span class="auth-gate__success-email">' +
+        escapeHtml(email) + '</span>.';
       inst.state.success = true;
       inst.state.error = null;
       inst.host.classList.remove('is-error', 'is-loading');
       inst.host.classList.add('is-success');
+      // V24 Tier 6 · Wire the Resend link inside the success panel.
+      try {
+        var resendEl = inst.host.querySelector('[data-ag-resend]');
+        if (resendEl && !resendEl.hasAttribute('data-ag-resend-wired')) {
+          resendEl.setAttribute('data-ag-resend-wired', '1');
+          resendEl.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            // Soft re-trigger of the magic-link mock; UX hint via brief opacity
+            resendEl.textContent = 'Resending…';
+            resendEl.style.pointerEvents = 'none';
+            callMockMagicLink({ email: email, phone: null, smsOptIn: false }).then(function () {
+              resendEl.textContent = '✓ Resent';
+              setTimeout(function () {
+                resendEl.textContent = 'Resend';
+                resendEl.style.pointerEvents = '';
+              }, 2200);
+            }).catch(function () {
+              resendEl.textContent = 'Resend';
+              resendEl.style.pointerEvents = '';
+            });
+          });
+        }
+      } catch (e) { /* non-critical */ }
       // Mark authed so other surfaces unlock.
       if (global.NoraSession) global.NoraSession.setAuthed(true);
       setSkipped(false);
@@ -770,8 +803,9 @@
       inst.host.classList.add('is-loading');
       btn.disabled = true;
       google.disabled = true;
+      // V24 Tier 6 · "Sending your magic link…" — more deliberate than "Sending…"
       label.innerHTML = '<span class="auth-gate__spinner" aria-hidden="true"></span> ' +
-                        escapeHtml(customLabel || 'Sending…');
+                        escapeHtml(customLabel || 'Sending your magic link…');
     } else {
       inst.host.classList.remove('is-loading');
       btn.disabled = false;

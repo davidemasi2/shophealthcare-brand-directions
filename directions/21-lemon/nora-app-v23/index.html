@@ -172,7 +172,22 @@
         </svg>
         <div class="nx-drawer-eyebrow">★ YOUR REPORT</div>
         <div class="nx-drawer-title">Your report will appear here.</div>
-        <p class="nx-drawer-copy">Once Nora has finalized your plan, this drawer fills with your full plan summary, fine-print, and a side-by-side comparison.</p>
+        <!-- V24 Tier 6 · Journey route preview — 3 dots showing where the
+             user is in the report-unlock arc. Subtle, mono-caps, on-brand. -->
+        <ol class="nx-drawer-route" aria-label="Steps to unlock your report">
+          <li class="nx-route-step is-active">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Chat with Nora</span>
+          </li>
+          <li class="nx-route-step">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Lock your plan</span>
+          </li>
+          <li class="nx-route-step">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Report appears here</span>
+          </li>
+        </ol>
         <p class="nx-drawer-meta">Pick a plan from the dashboard to fill this drawer.</p>
       </div>
       <!-- V21 · Plan report slot — populated when user picks a plan card -->

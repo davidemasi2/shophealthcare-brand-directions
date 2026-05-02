@@ -167,9 +167,13 @@
 .auth-gate__field input::placeholder {
   color: var(--ag-mute);
 }
+/* V24 Tier 6 · Teal correction halo, not red. Frames the error as
+   "Nora gently helping" not "you screwed up". */
 .auth-gate__field--error {
   border-color: var(--ag-pink);
-  box-shadow: 0 0 0 3px rgba(255, 106, 92, .18);
+  box-shadow: 0 0 0 3px rgba(0, 181, 216, .18);
+  transition: border-color 280ms cubic-bezier(.22,.61,.36,1),
+              box-shadow 280ms cubic-bezier(.22,.61,.36,1);
 }
 
 /* V23 M5 — phone field hidden until SMS opt-in */
@@ -504,21 +508,40 @@
 }
 
 /* -----------------------------------------------------------
-   Inline error
+   Inline error — V24 Tier 6 · teal-tinted Nora-helping framing,
+   not red-shoutiness. Soft fade-in + a small leading icon.
    ----------------------------------------------------------- */
 .auth-gate__error {
   display: none;
   margin-top: 10px;
   padding: 10px 12px;
-  background: var(--ag-blush);
-  border: 1px solid var(--ag-pink);
+  background: rgba(0, 181, 216, 0.06);
+  border: 1px solid rgba(0, 181, 216, 0.32);
   border-radius: 8px;
   font-size: 13px;
   color: var(--ag-pink-dark);
   line-height: 1.4;
+  align-items: flex-start;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1),
+              transform 280ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__error::before {
+  content: '⊙';
+  flex: none;
+  font-size: 14px;
+  color: var(--ag-pink);
+  line-height: 1.2;
 }
 .auth-gate.is-error .auth-gate__error {
-  display: block;
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-gate__error { transition: none; }
 }
 
 /* -----------------------------------------------------------
@@ -539,25 +562,55 @@
   display: block;
 }
 
+/* V24 Tier 6 · Eyebrow above the success message — frames it as a
+   completed step, not a casual confirmation. */
+.auth-gate__success-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-pink-dark);
+  margin: 0 0 10px;
+}
 .auth-gate__success-msg {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 500;
-  font-size: 17px;
-  line-height: 1.5;
-  margin: 0 0 12px;
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 0 0 8px;
   color: var(--ag-ink);
 }
 .auth-gate__success-sub {
   font-size: 14px;
   line-height: 1.5;
   color: var(--ag-mute);
-  margin: 0;
+  margin: 0 0 14px;
 }
 .auth-gate__success-email {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-weight: 700;
   color: var(--ag-pink-dark);
-  font-size: .94em;
+  font-size: .92em;
+}
+/* V24 Tier 6 · Soft Resend link — mute at rest, teal on hover. */
+.auth-gate__success-resend {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--ag-rule);
+  transition: color 180ms cubic-bezier(.22,.61,.36,1),
+              border-color 180ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__success-resend:hover {
+  color: var(--ag-pink-dark);
+  border-bottom-color: var(--ag-pink);
 }
 
 /* -----------------------------------------------------------
