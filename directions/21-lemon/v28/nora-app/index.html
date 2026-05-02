@@ -182,6 +182,11 @@
         <div data-plan-cards id="dashPlanCards"></div>
       </div>
 
+      <!-- V28 · LOCK inline gate slot — AuthGate.mountInline() lands here
+           when LayoutDirector enters lock phase. Hidden at every other phase
+           via CSS (data-layout-phase != 'lock'). -->
+      <div class="nx-lock-gate" id="dash-lock-gate" data-lock-gate hidden></div>
+
       <div class="nx-dash-trust">
         <div>Operated by Core Value Insurance Associates, LLC · NPN #19482230</div>
         <div>Licensed in <span id="trust-state">all 50 states</span> · Verifiable at <a href="https://nipr.com" target="_blank" rel="noopener">NIPR.com</a></div>

@@ -994,11 +994,14 @@
                 }, 1100);
               }
             } catch (e) { /* celebration failed; continue */ }
+            // V28 · LOCK is now its own dedicated screen. Plan-report mounts
+            // in (now-hidden) drawer at LOCK so it's ready to render at ENROLL
+            // when drawer becomes the screen.
             surfacePlanReport(planId);
-            // V24 Tier 6 · "Continue to enrollment when ready" soft CTA —
-            // appears 2s after celebration. Gives the user an out without
-            // rushing them.
-            surfaceLockedCTA();
+            // V28 · Inline LOCK gate: chosen card + email gate (if not yet
+            // authed) + Continue → ENROLL CTA. Replaces the old soft "Continue
+            // to enrollment when you're ready" link buried in dash-vs-wrap.
+            mountLockGate(planId, planSet);
             // V25 · Trail: LOCK done → ENROLL active (parked phase un-parks)
             if (window.UnlockTrail && typeof window.UnlockTrail.completePhase === 'function') {
               try { window.UnlockTrail.completePhase('lock'); } catch (e) {}
@@ -1258,6 +1261,8 @@
   // V24 Tier 6 · "Continue to enrollment when ready" soft CTA. Appears
   // 2s after the lock celebration — gives the user an out without
   // rushing them. Mono-caps, teal, on-brand restraint.
+  // V28 · Retained for V19/V23/V24/V25 backwards compat; V28 LOCK uses
+  // mountLockGate() below as the single primary CTA at LOCK.
   function surfaceLockedCTA() {
     var wrap = document.getElementById('dash-vs-wrap');
     if (!wrap) return;
@@ -1274,6 +1279,126 @@
     setTimeout(function () {
       cta.classList.add('is-visible');
     }, REDUCED_MOTION ? 50 : 2000);
+  }
+
+  // V28 · Inline LOCK gate. Renders inside #dash-lock-gate (which is the
+  // LOCK phase's only visible content alongside the chosen card).
+  // Two states:
+  //   1. User already authed (gated mid-PRICE) → render confirmation +
+  //      single Continue button that fires onContinueToEnroll.
+  //   2. User NOT authed (skipped earlier) → render email field + Continue
+  //      button. Continue submits gate then fires onContinueToEnroll.
+  // Continuation always sets layout phase to 'enroll'.
+  function mountLockGate(planId, planSet) {
+    var host = document.getElementById('dash-lock-gate');
+    if (!host) return;
+    // Idempotent — if already mounted for this plan, re-show.
+    if (host.dataset.mountedPlan === planId) {
+      host.removeAttribute('hidden');
+      return;
+    }
+    host.dataset.mountedPlan = planId;
+    host.removeAttribute('hidden');
+
+    var chosen = (planSet && planSet.plans || []).filter(function (p) {
+      return p.plan_id === planId;
+    })[0] || {};
+    var carrier = chosen.carrier_name || chosen.carrier || 'your carrier';
+    var monthly = chosen.monthly_premium ? Math.round(chosen.monthly_premium) : null;
+
+    var alreadyAuthed = !!(window.NoraSession &&
+                           typeof window.NoraSession.isAuthed === 'function' &&
+                           window.NoraSession.isAuthed());
+
+    while (host.firstChild) host.removeChild(host.firstChild);
+
+    var header = document.createElement('div');
+    header.className = 'nx-lock-gate__header';
+    header.textContent = '✓ PLAN SELECTED';
+
+    var lead = document.createElement('div');
+    lead.className = 'nx-lock-gate__lead';
+    lead.textContent = alreadyAuthed
+      ? 'Hold this rate for 30 days.'
+      : 'Lock this rate for 30 days.';
+
+    var sub = document.createElement('div');
+    sub.className = 'nx-lock-gate__sub';
+    sub.textContent = alreadyAuthed
+      ? 'Same gate, same offer. Continue when you’re ready.'
+      : 'Email me anytime — same gate, same offer. No follow-up unless you ask.';
+
+    var form = document.createElement('form');
+    form.className = 'nx-lock-gate__form';
+    form.setAttribute('novalidate', '');
+
+    var emailInput = null;
+    if (!alreadyAuthed) {
+      var lbl = document.createElement('label');
+      lbl.setAttribute('for', 'lock-gate-email');
+      lbl.textContent = 'Your email';
+      emailInput = document.createElement('input');
+      emailInput.type = 'email';
+      emailInput.id = 'lock-gate-email';
+      emailInput.name = 'email';
+      emailInput.autocomplete = 'email';
+      emailInput.required = true;
+      emailInput.placeholder = 'you@example.com';
+      form.appendChild(lbl);
+      form.appendChild(emailInput);
+    }
+
+    var btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.className = 'nx-lock-gate__continue';
+    btn.textContent = 'Continue with ' + carrier + ' →';
+    form.appendChild(btn);
+
+    var micro = document.createElement('div');
+    micro.className = 'nx-lock-gate__micro';
+    micro.textContent = monthly
+      ? '✓ $' + monthly + '/mo locked · NPN #19482230'
+      : 'NPN #19482230 · Core Value Insurance Associates LLC';
+
+    host.appendChild(header);
+    host.appendChild(lead);
+    host.appendChild(sub);
+    host.appendChild(form);
+    host.appendChild(micro);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      // Gate (if not authed) → set authed via NoraSession before transitioning.
+      if (emailInput) {
+        var v = (emailInput.value || '').trim();
+        if (!v || !/^\S+@\S+\.\S+$/.test(v)) {
+          emailInput.focus();
+          emailInput.setAttribute('aria-invalid', 'true');
+          return;
+        }
+        try {
+          if (window.NoraSession && typeof window.NoraSession.setAuthed === 'function') {
+            window.NoraSession.setAuthed(v);
+          }
+        } catch (err) {}
+      }
+      // Trail: enroll phase active (terminal advance happens on Continue
+      // inside ENROLL screen receipt).
+      if (window.UnlockTrail && typeof window.UnlockTrail.advancePhase === 'function') {
+        try { window.UnlockTrail.advancePhase('enroll'); } catch (err) {}
+      }
+      // Layout: ENROLL — single-column drawer fullscreen with receipt.
+      if (window.LayoutDirector) {
+        try { window.LayoutDirector.setLayoutPhase('enroll'); } catch (err) {}
+      }
+      announce('Continuing to enrollment.');
+    });
+
+    // Focus the primary input (or button) for keyboard users.
+    setTimeout(function () {
+      if (emailInput) emailInput.focus();
+      else btn.focus();
+    }, REDUCED_MOTION ? 0 : 220);
   }
 
   function humanizeConditions(c, pregnant) {

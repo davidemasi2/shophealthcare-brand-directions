@@ -1947,3 +1947,243 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
     border-color: CanvasText !important;
   }
 }
+
+/* =============================================================
+   V28 — FOCUS PASS: COMPARE / LOCK / ENROLL single-task UI
+   Each phase asks for exactly ONE thing. Prior zones collapse via
+   display:none (driven by LayoutDirector zone-collapse contract).
+   The CSS below provides:
+     · LOCK   — Dash becomes 720 px single column. Chat + Drawer hidden
+                via JS-applied display:none. Non-chosen plan cards +
+                AuthGate banner + dash chrome (eyebrow, headline, value
+                stack) hidden via CSS. Inline AuthGate slot becomes
+                visible.
+     · ENROLL — Drawer becomes 720 px single column. Chat + Dash hidden
+                via JS-applied display:none. Drawer holds the receipt
+                (plan-report Mode 2A or 2B) + carrier handoff CTA.
+     · COMPARE — AuthGate banner suppressed (already gated mid-PRICE
+                or about to gate at LOCK). Drawer-mini placeholder
+                killed. Cards must render fully without scroll.
+   ============================================================= */
+
+/* ── LOCK phase ─────────────────────────────────────────────── */
+.nx-shell[data-layout-phase="lock"] {
+  /* Override V26 grid → single column max 720px centered. */
+  display: block !important;
+  grid-template-areas: none;
+  grid-template-columns: none;
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+/* Dash becomes the sole visible zone — kill chrome that distracts
+   from the chosen card + AuthGate inline. */
+.nx-shell[data-layout-phase="lock"] #zone-dash {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.nx-shell[data-layout-phase="lock"] .nx-dash {
+  padding: 0;
+  background: transparent;
+}
+.nx-shell[data-layout-phase="lock"] .nx-dash-estimate-block,
+.nx-shell[data-layout-phase="lock"] .nx-known-list-wrap,
+.nx-shell[data-layout-phase="lock"] .nx-dash-trust,
+.nx-shell[data-layout-phase="lock"] .nx-dash-headline,
+.nx-shell[data-layout-phase="lock"] .nx-dash-eyebrow,
+.nx-shell[data-layout-phase="lock"] .nx-dash-reinforce,
+.nx-shell[data-layout-phase="lock"] .nx-dash-divider,
+.nx-shell[data-layout-phase="lock"] .nx-dash-authskel,
+.nx-shell[data-layout-phase="lock"] [data-value-stack],
+.nx-shell[data-layout-phase="lock"] .value-stack {
+  display: none !important;
+}
+/* Show only the chosen plan card (the one that's locking or locked).
+   Non-chosen cards collapse out. The plan-cards host stays visible. */
+.nx-shell[data-layout-phase="lock"] .nx-plan-cards-host {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.nx-shell[data-layout-phase="lock"] .plan-card:not(.is-locking):not(.is-locked) {
+  display: none !important;
+}
+.nx-shell[data-layout-phase="lock"] .plan-card.is-locking,
+.nx-shell[data-layout-phase="lock"] .plan-card.is-locked {
+  /* Center the chosen card. Allow it to take full 720 px width. */
+  margin: 0 auto;
+  max-width: 480px;
+  width: 100%;
+}
+/* Suppress AuthGate banner + skip banner in customer chrome — gate
+   moment now lives inline below the chosen card. */
+.nx-shell[data-layout-phase="lock"] .auth-gate.is-banner,
+.nx-shell[data-layout-phase="lock"] .auth-skip-banner,
+.nx-shell[data-layout-phase="lock"] [data-auth-skip-banner-host] > .auth-skip-banner,
+.nx-shell[data-layout-phase="lock"] .auth-gate--banner {
+  display: none !important;
+}
+/* Reveal the inline LOCK gate slot. */
+.nx-shell[data-layout-phase="lock"] .nx-lock-gate {
+  display: block !important;
+  margin: 16px auto 0;
+  max-width: 480px;
+  width: 100%;
+}
+.nx-lock-gate[hidden] { display: none; }
+.nx-shell[data-layout-phase="lock"] .nx-lock-gate[hidden] {
+  display: block !important; /* phase override unhides */
+}
+
+/* ── ENROLL phase ───────────────────────────────────────────── */
+.nx-shell[data-layout-phase="enroll"] {
+  display: block !important;
+  grid-template-areas: none;
+  grid-template-columns: none;
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.nx-shell[data-layout-phase="enroll"] #zone-drawer {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.nx-shell[data-layout-phase="enroll"] .nx-drawer-content,
+.nx-shell[data-layout-phase="enroll"] [data-plan-report-host] {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+/* Hide drawer-empty placeholder when receipt is the screen. */
+.nx-shell[data-layout-phase="enroll"] .nx-drawer-empty {
+  display: none !important;
+}
+
+/* ── COMPARE phase chrome trim ──────────────────────────────── */
+.nx-shell[data-layout-phase="compare"] .auth-gate.is-banner,
+.nx-shell[data-layout-phase="compare"] .auth-skip-banner,
+.nx-shell[data-layout-phase="compare"] .auth-gate--banner {
+  display: none !important;
+}
+/* Drawer-mini placeholder strip suppressed at COMPARE — it was an
+   orphaned future-state hint that added vertical noise without value. */
+.nx-shell[data-layout-phase="compare"] .nx-drawer-empty .nx-drawer-eyebrow,
+.nx-shell[data-layout-phase="compare"] .nx-drawer-empty .nx-drawer-title,
+.nx-shell[data-layout-phase="compare"] .nx-drawer-empty .nx-drawer-illo {
+  display: none !important;
+}
+
+/* ── Inline LOCK gate visual treatment ──────────────────────── */
+.nx-lock-gate {
+  background: var(--cream, #FFFAF2);
+  border: 2px solid var(--ink, #0E2A3A);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 4px 4px 0 var(--ink, #0E2A3A);
+}
+.nx-lock-gate__header {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em;
+  color: var(--mute, #4A6678);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.nx-lock-gate__lead {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink, #0E2A3A);
+  margin: 0 0 6px;
+}
+.nx-lock-gate__sub {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--mute, #4A6678);
+  margin: 0 0 18px;
+}
+.nx-lock-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nx-lock-gate__form label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .12em;
+  color: var(--mute, #4A6678);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.nx-lock-gate__form input[type="email"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--ink, #0E2A3A);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink, #0E2A3A);
+  min-height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.nx-lock-gate__form input[type="email"]:focus-visible {
+  outline: 3px solid var(--lemon, #FFC857);
+  outline-offset: 2px;
+}
+.nx-lock-gate__continue {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .01em;
+  background: var(--lemon, #FFC857);
+  color: var(--ink, #0E2A3A);
+  border: 1.5px solid var(--ink, #0E2A3A);
+  border-radius: 999px;
+  padding: 14px 22px;
+  min-height: 48px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink, #0E2A3A);
+  transition: transform var(--t-quick, 180ms) cubic-bezier(.22,.61,.36,1),
+              box-shadow var(--t-quick, 180ms) cubic-bezier(.22,.61,.36,1);
+}
+.nx-lock-gate__continue:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink, #0E2A3A);
+}
+.nx-lock-gate__continue:active {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 var(--ink, #0E2A3A);
+}
+.nx-lock-gate__micro {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .08em;
+  color: var(--mute, #4A6678);
+  text-transform: uppercase;
+  margin-top: 8px;
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .nx-lock-gate { padding: 18px 18px; box-shadow: 3px 3px 0 var(--ink); }
+  .nx-shell[data-layout-phase="lock"] .plan-card.is-locking,
+  .nx-shell[data-layout-phase="lock"] .plan-card.is-locked,
+  .nx-shell[data-layout-phase="lock"] .nx-lock-gate { max-width: 100%; }
+}
+@media (forced-colors: active) {
+  .nx-lock-gate { border-color: CanvasText; }
+  .nx-lock-gate__continue {
+    background: ButtonFace; color: ButtonText; border-color: ButtonText;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-lock-gate__continue { transition: none; }
+}
+
