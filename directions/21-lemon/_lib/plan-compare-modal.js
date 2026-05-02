@@ -289,6 +289,8 @@
   var _options = null;
   var _onCloseCb = null;
   var _escHandler = null;
+  var _trapHandler = null;
+  var _previouslyFocused = null;
 
   function ensureOverlay() {
     if (!_overlay) {
@@ -316,6 +318,22 @@
     foot.innerHTML = renderFoot(options.planSet, licenseText);
   }
 
+  // V24 Tier 7 · A11y · Get all keyboard-focusable elements inside an
+  // element. Used for focus-trap inside the modal.
+  function getFocusable(root) {
+    if (!root) return [];
+    var sel = 'a[href], button:not([disabled]), input:not([disabled]),' +
+              ' select:not([disabled]), textarea:not([disabled]),' +
+              ' [tabindex]:not([tabindex="-1"])';
+    return Array.prototype.filter.call(
+      root.querySelectorAll(sel),
+      function (el) {
+        // Filter out elements whose offsetParent is null (display:none).
+        return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+      }
+    );
+  }
+
   function show(options) {
     if (!options || !options.planSet) {
       console.warn('[PlanCompareModal] options.planSet is required.');
@@ -323,15 +341,43 @@
     }
     _options = Object.assign({ diffsOnly: true }, options);
     _onCloseCb = options.onClose || null;
+    // V24 Tier 7 · Capture currently focused element to restore on close.
+    try { _previouslyFocused = document.activeElement; } catch (e) { _previouslyFocused = null; }
+
     var overlay = ensureOverlay();
     renderInto(overlay, _options);
     requestAnimationFrame(function () {
       overlay.classList.add('is-open');
+      // V24 Tier 7 · Move focus into the modal — first focusable (close btn).
+      var focusables = getFocusable(overlay);
+      if (focusables.length) {
+        try { focusables[0].focus(); } catch (e) {}
+      }
     });
     document.body.style.overflow = 'hidden';
     // ESC to close
     _escHandler = function (e) { if (e.key === 'Escape') hide(); };
     document.addEventListener('keydown', _escHandler);
+    // V24 Tier 7 · Focus-trap: cycle Tab/Shift+Tab inside modal only.
+    _trapHandler = function (e) {
+      if (e.key !== 'Tab') return;
+      var focusables = getFocusable(_overlay);
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || !_overlay.contains(document.activeElement)) {
+          e.preventDefault();
+          try { last.focus(); } catch (er) {}
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          try { first.focus(); } catch (er) {}
+        }
+      }
+    };
+    document.addEventListener('keydown', _trapHandler);
   }
 
   function hide() {
@@ -342,6 +388,15 @@
       document.removeEventListener('keydown', _escHandler);
       _escHandler = null;
     }
+    if (_trapHandler) {
+      document.removeEventListener('keydown', _trapHandler);
+      _trapHandler = null;
+    }
+    // V24 Tier 7 · Restore focus to the element that triggered the modal.
+    if (_previouslyFocused && typeof _previouslyFocused.focus === 'function') {
+      try { _previouslyFocused.focus(); } catch (e) {}
+    }
+    _previouslyFocused = null;
     if (typeof _onCloseCb === 'function') _onCloseCb();
   }
 

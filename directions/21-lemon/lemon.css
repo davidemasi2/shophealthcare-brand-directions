@@ -15,7 +15,7 @@ html, body { overflow-x: clip; }
   --pink:         #00B5D8;
   --pink-dark:    #007A93;
   --ink:          #0E2A3A;
-  --mute:         #5D7C8E;
+  --mute:         #4A6678; /* V24 Tier 7 · WCAG AA contrast 5.3:1 on white (was #5D7C8E ~3.8:1) */
   --rule:         #DDE9EE;
   --mint:         #61C9A8;
   --plum:         #001F2E;

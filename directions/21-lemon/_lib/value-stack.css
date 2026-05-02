@@ -387,3 +387,23 @@
     transition: none !important;
   }
 }
+
+/* =============================================================
+   V24 Tier 7 · A11y / HCM for value stack
+   ============================================================= */
+@media (forced-colors: active) {
+  .value-stack {
+    border: 2px solid CanvasText;
+    background: Canvas;
+  }
+  .value-stack .vs-arc-bg,
+  .value-stack .vs-arc-fg {
+    stroke: CanvasText !important;
+  }
+  .value-stack .vs-lock-caption {
+    border: 1px solid CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+}
+

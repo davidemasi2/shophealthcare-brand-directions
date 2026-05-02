@@ -301,12 +301,16 @@
   .pcm-panel {
     width: 100vw;
     height: 100vh;
+    height: 100svh;
     border-radius: 0;
     border: none;
     box-shadow: none;
     top: 0;
     left: 0;
     transform: scale(.98);
+    /* V24 Tier 7 · Safe-area insets for iOS notch + home indicator */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .pcm-overlay.is-open .pcm-panel {
     transform: scale(1);
@@ -321,4 +325,24 @@
   }
   .pcm-title { font-size: 17px; }
   .pcm-table { min-width: 720px; }
+  /* V24 Tier 7 · 44px min tap target on close */
+  .pcm-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* V24 Tier 7 · Windows High Contrast Mode for compare modal */
+@media (forced-colors: active) {
+  .pcm-panel {
+    border: 2px solid CanvasText;
+  }
+  .pcm-table th,
+  .pcm-table td {
+    border: 1px solid CanvasText !important;
+  }
+  .pcm-close,
+  .pcm-toggle {
+    border-color: CanvasText !important;
+  }
 }

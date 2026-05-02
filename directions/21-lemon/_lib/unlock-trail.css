@@ -440,3 +440,26 @@
     transition: none;
   }
 }
+
+/* =============================================================
+   V24 Tier 7 · A11y / mobile / HCM
+   ============================================================= */
+@media (forced-colors: active) {
+  .unlock-trail {
+    background: Canvas !important;
+    border: 1px solid CanvasText;
+  }
+  .unlock-trail .ut-dot {
+    border: 2px solid CanvasText !important;
+    background: Canvas !important;
+  }
+  .unlock-trail .ut-stage.is-completed .ut-dot,
+  .unlock-trail .ut-stage.is-active .ut-dot {
+    background: Highlight !important;
+    forced-color-adjust: none;
+  }
+  .unlock-trail .ut-rail::before {
+    background: CanvasText !important;
+  }
+}
+

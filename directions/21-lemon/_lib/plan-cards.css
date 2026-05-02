@@ -525,6 +525,43 @@
   .plan-card--recommended {
     order: -1;
   }
+  /* V24 Tier 7 · 44px min tap targets on mobile */
+  .plan-card {
+    min-height: 44px;
+  }
+  .plan-card__cta-btn,
+  .plan-cards__compare,
+  .plan-cards__pager-btn {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+  /* Replace hover-lift with tap-active feedback on touch */
+  .plan-card:active {
+    transform: scale(0.98);
+    transition: transform 100ms cubic-bezier(.22,.61,.36,1);
+  }
+}
+
+/* V24 Tier 7 · Windows High Contrast Mode */
+@media (forced-colors: active) {
+  .plan-card,
+  .plan-card__cta-btn,
+  .plan-cards__compare,
+  .plan-cards__pager-btn {
+    border: 2px solid CanvasText !important;
+    box-shadow: none !important;
+  }
+  .plan-card.is-selected,
+  .plan-card[aria-pressed="true"] {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+  .plan-card--recommended .plan-card__tier-badge {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
 }
 
 /* Reduced motion */

@@ -242,12 +242,15 @@
     els.stageEls.forEach(function (stageEl, idx) {
       var stageNum = idx + 1; // 1-indexed
       stageEl.classList.remove('is-completed', 'is-active');
+      stageEl.removeAttribute('aria-current');
       if (stageNum < s.currentStep) {
         stageEl.classList.add('is-completed');
         stageEl.setAttribute('aria-label', STAGES[idx].label + ' — completed');
       } else if (stageNum === s.currentStep) {
         stageEl.classList.add('is-active');
         stageEl.setAttribute('aria-label', STAGES[idx].label + ' — current');
+        // V24 Tier 7 · A11y · Mark the active stage for screen readers
+        stageEl.setAttribute('aria-current', 'step');
       } else {
         stageEl.setAttribute('aria-label', STAGES[idx].label + ' — upcoming');
       }

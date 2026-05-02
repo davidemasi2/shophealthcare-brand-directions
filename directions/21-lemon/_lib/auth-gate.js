@@ -263,6 +263,8 @@
     // Inline error
     var errBox = el('div', 'auth-gate__error');
     errBox.setAttribute('role', 'alert');
+    errBox.setAttribute('aria-live', 'assertive');
+    errBox.id = 'ag-errbox-email';
     errBox.setAttribute('data-ag-errbox', '');
 
     form.appendChild(divider);
@@ -361,6 +363,8 @@
         inst.state.error = null;
         host.classList.remove('is-error');
       }
+      // V24 Tier 7 · A11y · Clear aria-invalid as soon as user starts typing.
+      try { inst.els.emailInput.removeAttribute('aria-invalid'); } catch (e) {}
       // V23 M6 — sync Continue button validity
       syncContinueValidity(inst);
     });
@@ -399,8 +403,12 @@
     input.type = type;
     input.name = name;
     input.placeholder = placeholder;
+    input.id = 'ag-input-' + name + '-' + Math.random().toString(36).slice(2, 7);
     input.setAttribute('autocomplete', autocomplete);
     input.setAttribute('aria-label', placeholder);
+    // V24 Tier 7 · A11y · Link input to the global error region so screen
+    // readers announce field-level errors via aria-describedby.
+    input.setAttribute('aria-describedby', 'ag-errbox-' + name);
     input.setAttribute('data-ag-input', name);
     field.appendChild(input);
 
@@ -581,6 +589,15 @@
       inst.state.hidden = false;
       inst.state.success = false;
       inst.host.classList.remove('is-hidden', 'is-success', 'is-error', 'is-loading');
+      // V24 Tier 7 · A11y · Move focus to email field when gate appears.
+      // Defer one frame so the bubble has rendered before focus shifts.
+      requestAnimationFrame(function () {
+        try {
+          if (inst.els && inst.els.emailInput) {
+            inst.els.emailInput.focus({ preventScroll: false });
+          }
+        } catch (e) {}
+      });
       if (typeof inst.opts.onShow === 'function') {
         try { inst.opts.onShow(); } catch (err) {}
       }
@@ -819,6 +836,13 @@
     inst.host.classList.add('is-error');
     inst.host.classList.remove('is-success');
     inst.els.errBox.textContent = msg;
+    // V24 Tier 7 · A11y · Mark the email input as invalid when the field is
+    // in error state. Cleared on input via the existing input listener.
+    try {
+      if (inst.els.emailInput) {
+        inst.els.emailInput.setAttribute('aria-invalid', 'true');
+      }
+    } catch (e) {}
   }
 
   function isValidEmail(email) {

@@ -526,18 +526,34 @@
     var fineToggle = target.querySelector('[data-pr-fine-toggle]');
     var fineEl = target.querySelector('[data-pr-fine]');
     if (fineToggle && fineEl) {
+      // V24 Tier 7 · A11y · aria-expanded + aria-controls
+      if (!fineEl.id) fineEl.id = 'pr-fineprint-' + Math.random().toString(36).slice(2, 7);
+      fineToggle.setAttribute('aria-expanded', fineEl.classList.contains('is-open') ? 'true' : 'false');
+      fineToggle.setAttribute('aria-controls', fineEl.id);
       fineToggle.addEventListener('click', function () {
         fineEl.classList.toggle('is-open');
+        fineToggle.setAttribute('aria-expanded', fineEl.classList.contains('is-open') ? 'true' : 'false');
       });
     }
 
     // V24 · Generic collapsible toggles (Things to know, etc.)
     // Apple Card pattern — collapse-by-default, expand on click.
+    // V24 Tier 7 · A11y · aria-expanded reflects open state, aria-controls
+    // links button to its panel for screen readers.
     var genericToggles = target.querySelectorAll('[data-pr-collapsible-toggle]');
-    Array.prototype.forEach.call(genericToggles, function (toggle) {
+    Array.prototype.forEach.call(genericToggles, function (toggle, idx) {
+      var section = toggle.closest('[data-pr-collapsible]');
+      // Initial aria-expanded state
+      toggle.setAttribute('aria-expanded', section && section.classList.contains('is-open') ? 'true' : 'false');
+      // Tag the panel for aria-controls
+      if (section && !section.id) {
+        section.id = 'pr-collapsible-' + idx + '-' + Math.random().toString(36).slice(2, 7);
+      }
+      if (section) toggle.setAttribute('aria-controls', section.id);
       toggle.addEventListener('click', function () {
-        var section = toggle.closest('[data-pr-collapsible]');
-        if (section) section.classList.toggle('is-open');
+        if (!section) return;
+        section.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', section.classList.contains('is-open') ? 'true' : 'false');
       });
     });
 

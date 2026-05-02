@@ -286,9 +286,11 @@
           '</div>'
         : '';
       target.classList.add('plan-cards');
+      target.setAttribute('role', 'region');
+      target.setAttribute('aria-label', 'Plan options');
       target.innerHTML =
         headHTML +
-        '<div class="plan-cards__grid" data-pc-grid>' + cardsHTML + '</div>' +
+        '<div class="plan-cards__grid" data-pc-grid role="group" aria-label="Available plans (use arrow keys to navigate)">' + cardsHTML + '</div>' +
         compareHTML;
       mountValueStacks(target, planSet);
       bind();
@@ -303,7 +305,7 @@
     function bind() {
       // Card select
       var cards = target.querySelectorAll('.plan-card');
-      Array.prototype.forEach.call(cards, function (card) {
+      Array.prototype.forEach.call(cards, function (card, idx) {
         card.addEventListener('click', function () {
           var id = card.getAttribute('data-plan-id');
           selectedPlanId = id;
@@ -321,6 +323,32 @@
           });
           if (typeof options.onSelect === 'function') {
             options.onSelect(id);
+          }
+        });
+
+        // V24 Tier 7 · A11y · Arrow-key navigation between plan cards.
+        // ArrowRight / ArrowDown → next card. ArrowLeft / ArrowUp → prev.
+        // Home → first, End → last. Wraps for circular feel.
+        card.addEventListener('keydown', function (e) {
+          var key = e.key;
+          if (key !== 'ArrowRight' && key !== 'ArrowLeft' &&
+              key !== 'ArrowDown' && key !== 'ArrowUp' &&
+              key !== 'Home' && key !== 'End') return;
+          e.preventDefault();
+          var len = cards.length;
+          var nextIdx = idx;
+          if (key === 'ArrowRight' || key === 'ArrowDown') {
+            nextIdx = (idx + 1) % len;
+          } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+            nextIdx = (idx - 1 + len) % len;
+          } else if (key === 'Home') {
+            nextIdx = 0;
+          } else if (key === 'End') {
+            nextIdx = len - 1;
+          }
+          var nextCard = cards[nextIdx];
+          if (nextCard && typeof nextCard.focus === 'function') {
+            nextCard.focus();
           }
         });
       });

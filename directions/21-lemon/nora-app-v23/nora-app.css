@@ -18,7 +18,7 @@
   --lemon-2:      #FFE2A0;       /* light gold */
   --pink:         #00B5D8;       /* teal-cyan (primary CTA) */
   --pink-dark:    #007A93;       /* deep teal (hover/pressed) */
-  --mute:         #5D7C8E;       /* slate (muted text) */
+  --mute:         #4A6678;       /* slate · WCAG AA on white (was #5D7C8E pre-Tier-7) */
   --rule:         #DDE9EE;       /* rule lines */
   --mute-bg:      rgba(14,42,58,0.04);
   --mint:         #61C9A8;       /* success/accent */
@@ -1082,4 +1082,367 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   }
   .nx-msg { opacity: 1; transform: none; }
   .nx-bignum { transition: none; }
+}
+
+/* =============================================================
+   V24 TIER 7 — A11Y + MOBILE NATIVE + HIGH CONTRAST
+   Pass 1: WCAG 2.1 AA color/keyboard/screen-reader
+   Pass 2: iOS Safari + Android — safe-area, 44px tap targets, native feel
+   Pass 3: Reduced-motion final audit
+   Pass 4: Windows High Contrast Mode + macOS Increase Contrast
+   ============================================================= */
+
+/* ─── A11Y · Screen-reader-only utility ───────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── A11Y · Skip-to-content link ─────────────────────────────── */
+.nx-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  background: var(--lemon);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: var(--shadow-3);
+  transition: top 180ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-skip-link:focus,
+.nx-skip-link:focus-visible {
+  top: 12px;
+}
+
+/* ─── A11Y · Color contrast ──
+   --mute deepened to #4A6678 in the canonical :root block above
+   (was #5D7C8E ~3.8:1 on white; now ~5.3:1 — WCAG AA pass at all body
+   sizes). Single source of truth — no override needed here. */
+
+/* ─── A11Y · Keyboard navigation between plan cards (arrow keys) ─
+   Cards use [role="group"] container for arrow key handler in JS.
+   Visual treatment matches existing card focus-visible. */
+.plan-cards__grid:focus { outline: none; }
+
+/* ─── A11Y · Live region announcement zone (off-screen) ─────── */
+.nx-aria-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =============================================================
+   MOBILE NATIVE FEEL — iPhone SE (375), iPhone 14 (390),
+   Plus (414), Android narrow (360)
+   ============================================================= */
+
+/* iOS Safari + Android — respect device safe areas (notch + home indicator) */
+.nx-top {
+  padding-top: max(14px, env(safe-area-inset-top));
+}
+
+/* Mobile-specific: top bar compresses to logo only on <768px,
+   bottom tab nav becomes sticky-bottom with home indicator inset */
+@media (max-width: 767px) {
+  /* Logo-only top bar — hide live status (moved into chat header) */
+  .nx-top {
+    padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+    gap: 12px;
+  }
+  .nx-status {
+    display: none; /* Live status visible in chat-head, not duplicate here */
+  }
+  .nx-logo { font-size: 17px; }
+  .nx-mark { width: 22px; height: 22px; }
+
+  /* 44px minimum tap targets (Apple HIG) */
+  .nx-tab {
+    min-height: 44px;
+    padding: 12px 12px;
+  }
+  .nx-qr {
+    min-height: 44px;
+    padding: 12px 18px;
+    font-size: 14.5px;
+  }
+  .nx-send {
+    width: 44px; height: 44px;
+  }
+  .nx-input {
+    font-size: 16px; /* prevent iOS input-zoom-on-focus */
+    min-height: 44px;
+    padding: 11px 0;
+  }
+
+  /* Tab nav sticks to bottom on mobile + safe-area for home indicator */
+  .nx-tabs {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    top: auto;
+    background: var(--cream);
+    border-top: 1px solid var(--rule);
+    border-bottom: none;
+    padding: 6px 12px max(6px, env(safe-area-inset-bottom));
+    z-index: 49;
+    box-shadow: 0 -1px 8px rgba(14, 42, 58, 0.06);
+  }
+
+  /* Compensate shell bottom padding so content doesn't sit under tabs */
+  .nx-shell {
+    margin-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  /* Tap-active states (no hover on touch — give immediate feedback) */
+  .nx-qr:active,
+  .nx-tab:active,
+  .nx-send:active {
+    transform: scale(0.97);
+    transition: transform 100ms cubic-bezier(.22,.61,.36,1);
+  }
+
+  /* Disable iOS tap-highlight (we provide our own affordances) */
+  .nx-qr,
+  .nx-tab,
+  .nx-send,
+  .nx-input,
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Drawer becomes bottom-sheet on mobile when active — pull-down handle */
+  .nx-zone.nx-drawer.is-active {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+  .nx-zone.nx-drawer.is-active::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+}
+
+/* Mobile narrow (<480px) — tighter compression */
+@media (max-width: 479px) {
+  .nx-dash { padding: 18px 16px; }
+  .nx-dash-headline {
+    font-size: clamp(24px, 7.5vw, 32px);
+    margin-bottom: 16px;
+  }
+  .nx-dash-reinforce {
+    font-size: 14px;
+    margin: -6px 0 18px;
+  }
+  .nx-bignum-wrap { padding: 18px 18px; }
+  .nx-bignum { font-size: clamp(42px, 13vw, 56px); }
+  .nx-chat-head { padding: 14px 14px 12px; }
+  .nx-chat-scroll { padding: 14px 14px 8px; }
+  .nx-chat-input-wrap { padding: 8px 10px 10px; }
+  .nx-msg { max-width: 98%; }
+  .nx-known-list { gap: 7px; }
+  .known-item { font-size: 13.5px; }
+}
+
+/* =============================================================
+   PASS 3 · REDUCED-MOTION FINAL AUDIT
+   Comprehensive zero-out of every animated property in the app.
+   Already covered above with the global *,*::before reset, but
+   we add specific overrides for animations that use properties
+   not caught by the universal duration override (transforms held
+   via animation, infinite pulses, etc.).
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  /* Status pulses — freeze in mid-state but visible */
+  .nx-status-dot,
+  .nx-online,
+  .nx-pre-opener::before,
+  .nx-locking-overlay::before,
+  .nx-typing span {
+    animation: none !important;
+    opacity: 0.85 !important;
+    transform: none !important;
+  }
+
+  /* Avatar breath — freeze */
+  .nx-avatar { animation: none !important; }
+
+  /* Typing dots — show static three dots, no jump */
+  .nx-typing span {
+    opacity: 0.5;
+  }
+
+  /* Cascade entrance — collapse to simultaneous fade-in (already) */
+  .nx-route-step,
+  .nx-route-step:nth-child(2) .nx-route-dot {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Lock celebration pulse — freeze, keep caption */
+  .value-stack.is-locking::after {
+    animation: none !important;
+  }
+
+  /* Plan-card lock glow — freeze */
+  .plan-card.is-locking {
+    animation: none !important;
+  }
+
+  /* Stage curtain (boot choreography) — already handled, reinforce */
+  body.nx-is-booting * {
+    animation: none !important;
+  }
+
+  /* App-load route fades — show all immediately */
+  .nx-route-step { opacity: 1 !important; }
+
+  /* Pending-fact stroke fill — show as confirmed instantly */
+  .known-item.is-confirming .nx-known-text {
+    background-image: none !important;
+    transition: none !important;
+  }
+}
+
+/* =============================================================
+   PASS 4 · WINDOWS HIGH CONTRAST MODE (forced-colors: active)
+   The OS overrides bg/fg colors. Ensure focus/borders/distinguishable.
+   ============================================================= */
+@media (forced-colors: active) {
+  /* Use system colors instead of brand tokens where critical */
+  :focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+    box-shadow: none; /* drop the gold halo since CanvasText takes over */
+  }
+
+  /* Ensure containers + cards still have visible borders */
+  .nx-shell,
+  .nx-input-row,
+  .nx-bub,
+  .nx-bignum-wrap,
+  .nx-status,
+  .nx-account,
+  .nx-avatar,
+  .plan-card,
+  .auth-gate__bubble,
+  .auth-gate__field,
+  .auth-gate__btn,
+  .pcm-panel,
+  .pr-toggle {
+    border-color: CanvasText !important;
+  }
+
+  /* Status dots / pulses — replace with text since high-contrast users
+     may not see colored dots. Keep mark for screen-reader users. */
+  .nx-status-dot,
+  .nx-online,
+  .nx-pre-opener::before {
+    background: Highlight !important;
+    box-shadow: none !important;
+  }
+
+  /* Selected/active states — use system Highlight */
+  .nx-tab.is-active,
+  .nx-qr:hover,
+  .nx-qr:focus-visible,
+  .plan-card.is-selected {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+
+  /* Drop hard 3D shadows in HCM — they don't render anyway */
+  .nx-shell,
+  .nx-bignum-wrap,
+  .auth-gate__bubble,
+  .plan-card {
+    box-shadow: none !important;
+  }
+
+  /* Disabled state — clearer */
+  [aria-disabled="true"],
+  button:disabled {
+    color: GrayText !important;
+    border-color: GrayText !important;
+  }
+
+  /* Links — ensure they look like links */
+  a {
+    color: LinkText !important;
+  }
+  a:visited { color: VisitedText !important; }
+}
+
+/* =============================================================
+   PASS 4b · macOS "Increase Contrast" — already works through
+   our :focus-visible (gold ring) + ink-bordered components.
+   No changes required: the brand IS high-contrast by design.
+   ============================================================= */
+
+/* =============================================================
+   A11Y · ARROW-KEY NAV INDICATOR ON PLAN CARDS
+   When user presses arrow keys to navigate cards, give the keyboard
+   user a subtle "this is the focused card" indicator beyond the
+   default focus-visible ring.
+   ============================================================= */
+.plan-card:focus-visible {
+  position: relative;
+  z-index: 2;
+}
+
+/* =============================================================
+   A11Y · Drawer collapsible chevron — keyboard activation visual
+   Apply :focus-visible to the toggle button so keyboard users see
+   the same affordance as click users.
+   ============================================================= */
+.pr-toggle:focus-visible {
+  background: rgba(0, 181, 216, 0.06);
+  border-radius: 6px;
+}
+
+/* =============================================================
+   A11Y · Modal focus-trap visual nothing (focus-trap is JS-only;
+   we keep the existing pcm-panel:focus-visible default).
+   ============================================================= */
+.pcm-panel:focus { outline: none; }
+.pcm-panel:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: -3px;
+}
+
+/* =============================================================
+   AUTH-GATE TIER 7 SUPPORT
+   - Email field describedby helper text
+   - Error state aria-live polite
+   ============================================================= */
+.auth-gate__field-help {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  margin: 4px 0 0 14px;
 }

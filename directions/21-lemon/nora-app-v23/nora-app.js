@@ -659,6 +659,10 @@
     // V24 Tier 6 · Hide plan-peek now that real cards are arriving.
     removePlanPeek();
 
+    // V24 Tier 7 · Advance the drawer route preview to "Lock your plan".
+    advanceDrawerRoute(2);
+    announce('Plan options ready. Pick a plan from the dashboard.');
+
     // Compress the estimate block — keep eyebrow/headline visible but de-emphasize
     var estimateBlock = $('#dash-estimate-block');
     if (estimateBlock) {
@@ -814,6 +818,12 @@
     var empty   = $('#drawer-empty');
     if (!content || !planSet || !window.PlanReport) return;
 
+    // V24 Tier 7 · Advance the drawer route to "Report appears here" before
+    // the empty state hides — gives screen-reader users a final progress
+    // confirmation.
+    advanceDrawerRoute(3);
+    announce('Your report is ready in the drawer.');
+
     if (empty) empty.classList.add('is-hidden');
     content.style.display = 'block';
 
@@ -954,6 +964,35 @@
         try { peek.parentNode.removeChild(peek); } catch (e) {}
       }, 280);
     }
+  }
+
+  // V24 Tier 7 · Advance the drawer's 3-step route preview.
+  // stepIndex is 1-based: 1=Chat, 2=Lock plan, 3=Report appears.
+  function advanceDrawerRoute(stepIndex) {
+    var steps = document.querySelectorAll('.nx-drawer-route .nx-route-step');
+    if (!steps || !steps.length) return;
+    Array.prototype.forEach.call(steps, function (step, i) {
+      var n = i + 1;
+      step.classList.toggle('is-active', n === stepIndex);
+      step.classList.toggle('is-faded', n < stepIndex);
+      if (n === stepIndex) {
+        step.setAttribute('aria-current', 'step');
+      } else {
+        step.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  // V24 Tier 7 · A11y · Announce status messages via the off-screen live
+  // region. Uses polite mode (won't interrupt screen readers).
+  function announce(msg) {
+    var liveRegion = document.getElementById('nx-aria-live');
+    if (!liveRegion) return;
+    // Clear and re-set to force re-announcement even if same text.
+    liveRegion.textContent = '';
+    setTimeout(function () {
+      liveRegion.textContent = msg;
+    }, 60);
   }
 
   // V24 Tier 6 · "Locking your plan with [Carrier]…" pre-celebration

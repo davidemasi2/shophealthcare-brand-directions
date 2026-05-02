@@ -764,7 +764,8 @@
     font-size: 14px;
     padding: 11px 16px;
   }
-  .auth-gate__field input { font-size: 14.5px; }
+  /* V24 Tier 7 · iOS zoom prevention — must be ≥16px on mobile */
+  .auth-gate__field input { font-size: 16px; }
   .auth-skip-banner {
     flex-direction: column;
     align-items: flex-start;
@@ -783,5 +784,47 @@
   }
   .auth-gate__spinner {
     animation: none !important;
+  }
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 7 · A11y / mobile native — auth-gate
+   ----------------------------------------------------------- */
+@media (max-width: 480px) {
+  /* 44px minimum tap target on continue/google buttons */
+  .auth-gate__btn {
+    min-height: 44px;
+    padding: 12px 18px;
+  }
+  /* SMS checkbox row — taller hit area */
+  .auth-gate__sms-toggle {
+    min-height: 44px;
+    padding: 8px 0;
+  }
+  /* Skip link — wider hit zone */
+  .auth-gate__skip a {
+    display: inline-block;
+    padding: 10px 8px;
+    min-height: 44px;
+  }
+  /* Resend link inside success */
+  .auth-gate__success-resend {
+    display: inline-block;
+    padding: 10px 6px;
+    min-height: 44px;
+  }
+}
+
+/* Windows High Contrast Mode for auth-gate */
+@media (forced-colors: active) {
+  .auth-gate__bubble,
+  .auth-gate__field,
+  .auth-gate__btn {
+    border-color: CanvasText !important;
+    box-shadow: none !important;
+  }
+  .auth-gate__field--error {
+    outline: 2px solid Highlight;
+    box-shadow: none !important;
   }
 }

@@ -548,3 +548,22 @@
   .plan-report__premium-fallback .prf-primary { font-size: 44px; }
   .plan-report__addon-tiers { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* V24 Tier 7 · A11y / HCM for plan-report drawer */
+@media (forced-colors: active) {
+  .plan-report__section {
+    border: 1px solid CanvasText !important;
+  }
+  .plan-report__fineprint-toggle,
+  .plan-report__cta {
+    border: 2px solid CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+  .plan-report__fineprint-toggle[aria-expanded="true"] {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+}
+
