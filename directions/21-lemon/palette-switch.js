@@ -8,8 +8,8 @@
 
   var pages = [
     { href: 'toc.html',                         label: 'TOC',            klass: 'ps-home'   },
-    { href: 'homepage-v23-persona-quiz.html',   label: 'V23 · Persona Quiz', klass: 'ps-current' },
-    { href: 'nora-app-v23/?p=SP1&s=TX&a=35&x=M&pg=0&c=none', label: 'V23 · Nora App', klass: 'ps-current' },
+    { href: 'homepage-v25-persona-quiz.html',   label: 'V25 · Persona Quiz', klass: 'ps-current' },
+    { href: 'nora-app-v25/?p=SP1&s=TX&a=35&x=M&pg=0&c=none', label: 'V25 · Nora App', klass: 'ps-current' },
     { href: 'homepage-v1-original-quiet.html',  label: 'V1 · Orig Quiet',   klass: 'ps-archive' },
     { href: 'homepage-v2-original-loud.html',   label: 'V2 · Orig Loud',    klass: 'ps-archive' },
     { href: 'homepage-v3-heritage-quiet.html',  label: 'V3 · Hrtg Quiet',   klass: 'ps-archive' },
