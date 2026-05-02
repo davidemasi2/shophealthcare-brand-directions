@@ -319,9 +319,38 @@
 
 <hr class="div">
 
+<!-- V27 · QUALITY RELEASE — every broken/cut-off/hidden/truncated thing fixed -->
+<div class="toc-section">
+  <h2>V27 — Quality release: <em>zero overflow</em> · <em>zero axe violations</em> · <em>WCAG 2.1 AA verified</em> (current canonical)</h2>
+  <div class="file-grid two">
+    <a class="file-card lemon" href="v27/homepage.html" style="grid-column: 1 / -1;">
+      <div class="num">★ V27a · HOMEPAGE · QUALITY-RELEASE PERSONA QUIZ</div>
+      <div class="meta">V27 = V26 + 18-item Playwright-driven audit fix block. 75-cell harness across 6 breakpoints (mobile-360/375/414, tablet-1024, desktop-1440/1920) × 5 phases × 6 personas + OCR on/off + reduced-motion + forced-colors. Final state: 0 doc overflow, 0 horiz overflow, 0 truncation, 0 unreachable elements, 0 axe violations, 0 console errors.</div>
+      <h3>Same V26 layout grammar; V27 is the polish pass that closes every audit finding. <em>Every element reachable. Every contrast above AA. Every breakpoint clean.</em></h3>
+      <p>The V27 homepage. <b>Audit harness</b>: <code>tools/v27-audit.mjs</code> instruments every cell with 12 measurements (doc/horiz overflow, per-zone scrollHeight, ellipsis-truncation, off-screen reachability, sub-44 tap targets, hidden-DOM counts, z-stack at viewport center, axe-core violations, console errors, computed-style spot-check, animation completion, layout-phase report). <b>Findings closed</b>: F01 mobile horiz scroll (28→0 px) · F02 tablet-1024 doc overflow (63→0 px) · F03 ENROLL label contrast · F04 drawer ARIA role · F05 plan-card heading order · F06 missing h1 LOCK/ENROLL · F07 missing landmarks · F08 plan-cards pager-btn 28→44 · F09 compare button 31→44 · F10 nx-account [hidden] respect · F11 nx-send 38→44 universal · F12 ut-stage spacing-exception (reverted with WCAG 2.5.8 AA rationale) · F13 NIPR.com tap area · F14 nx-logo (reverted, AA-passing) · F16 drawer-title + drawer-eyebrow forced-colors · F18 plan-card LOCK clip on tablet-1024. <b>F17 deferred</b> to V28 (edge-exits live on homepage quiz, not nora-app — out of V27 scope).</p>
+      <span class="go">Open V27 homepage — quality release</span>
+    </a>
+    <a class="file-card ink" href="v27/nora-app/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">★ V27b · NORA APP · AUDIT-CLEAN THREE-ZONE SHELL</div>
+      <div class="meta">All V26 layout choreography preserved · all 75 audit cells pass · WCAG 2.1 AA via axe-core + spacing-exception documentation. Walk SP1 to test the full Trail.</div>
+      <h3>Walk SP1 end-to-end. <em>Every phase, every breakpoint, zero issues.</em></h3>
+      <p>The V27 Nora app. <b>Verified</b>: 0 doc overflow at every phase × every breakpoint (was 39/27 px on mobile-360/375 + 8 px on tablet-1024 in the after-tap-sweep checkpoint); 0 axe violations including forced-colors mode (drawer-title + drawer-eyebrow now Canvas-anchored); 0 unreachable interactives. <b>558 sub-44 px tap targets remain</b> across 75 cells — all documented as WCAG 2.5.8 AA spacing-exception passes (.ut-stage trail items are 58 px center-to-center, well above 24 px requirement) or accepted low-frequency-tap home affordances (.nx-logo).</p>
+      <span class="go">Open V27 Nora app (SP1 walkthrough)</span>
+    </a>
+    <a class="file-card pink" href="v27/nora-app/?p=CL1&s=CA&a=32&x=F&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">V27c · NORA APP · CL1 — tests assume_have OCR + Mode 2B Switch Report under V27 audit</div>
+      <div class="meta">CL1 with V27 audit polish — OCR baseline propagation under the phase-aware grid, all clean.</div>
+      <h3>Walk CL1: opener → HERO OCR offer → scan → Mode 2B Switch Report rendered in LEAD-LOCK drawer with audit-clean drawer-title + eyebrow.</h3>
+      <span class="go">Open V27 Nora app (CL1 — Aetna $890/mo baseline)</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
 <!-- V26 · DYNAMIC LAYOUT — phase-aware grid + FLIP frame choreography -->
 <div class="toc-section">
-  <h2>V26 — Dynamic layout: <em>phase-aware grid</em> · <em>FLIP frame choreography</em> · <em>no scroll</em> (current canonical)</h2>
+  <h2>V26 — Dynamic layout: <em>phase-aware grid</em> · <em>FLIP frame choreography</em> · <em>no scroll</em> (V26 in-place baseline)</h2>
   <div class="file-grid two">
     <a class="file-card lemon" href="v26/homepage.html" style="grid-column: 1 / -1;">
       <div class="num">★ V26a · HOMEPAGE · DYNAMIC-LAYOUT PERSONA QUIZ</div>

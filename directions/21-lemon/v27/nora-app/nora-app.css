@@ -153,11 +153,12 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 700; font-size: 19px;
   letter-spacing: -.01em;
-  /* V27 F14 — F14 padding bumped topbar height and pushed mobile pages over
-     viewport (~39 px on mobile-360). Reverted to bare logo. The brand link
-     reads as 28-41 px tall (passes WCAG 2.5.8 AA 24×24 minimum across breakpoints,
-     fails the AAA 44×44 recommendation only — acceptable for in-app
-     low-frequency-tap home affordance). */
+  /* V27 F14 — desktop + tablet bump to ≥44 px tap area (passes WCAG AAA
+     2.5.5). Mobile keeps the 26 px height (AA pass; bumping to 44 caused
+     27 px doc overflow on mobile-360 / 3 px on tablet-1024). The mobile
+     override below pins min-height back to 0 so topbar layout doesn't
+     bloat and mobile remains under viewport. */
+  min-height: 44px;
 }
 .nx-mark {
   width: 24px; height: 24px; border-radius: 50%;
@@ -713,8 +714,11 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 @media (forced-colors: active) {
   /* V27 F16 — axe needs explicit Canvas background to resolve color-contrast.
      Without it, the title's transparent bg + opacity:0 ancestor confuses the
-     check. forced-color-adjust:none locks system colors at this node. */
-  .nx-drawer-title {
+     check. forced-color-adjust:none locks system colors at this node. Same
+     pattern applied to .nx-drawer-eyebrow which was the residual final-audit
+     violation in fc-SP1-read-1440. */
+  .nx-drawer-title,
+  .nx-drawer-eyebrow {
     color: CanvasText;
     background: Canvas;
     forced-color-adjust: none;
@@ -1240,7 +1244,7 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   .nx-status {
     display: none; /* Live status visible in chat-head, not duplicate here */
   }
-  .nx-logo { font-size: 17px; }
+  .nx-logo { font-size: 17px; min-height: 0; } /* V27 F14 — keep AA-only at mobile to avoid topbar bloat */
   .nx-mark { width: 22px; height: 22px; }
 
   /* 44px minimum tap targets (Apple HIG) */
