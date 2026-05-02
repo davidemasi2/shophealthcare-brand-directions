@@ -234,7 +234,11 @@
     return (
       '<div class="plan-report__section" data-pr-section="heading">' +
         '<div class="plan-report__heading-eyebrow">Chosen plan</div>' +
-        '<h3 class="plan-report__title">' + escapeHtml(plan.name) + '</h3>' +
+        // V28 — was h3, caused heading-order violation at ENROLL where
+        // dash h1 is hidden and the only visible heading was h3 jumping
+        // from h1 sr-only. h2 is the correct level for the receipt's
+        // top heading (sibling of dash-headline h2 across phases).
+        '<h2 class="plan-report__title">' + escapeHtml(plan.name) + '</h2>' +
         '<p class="plan-report__subtitle">' +
           escapeHtml(carrierShort) +
           '<span class="pr-dot">·</span>' +

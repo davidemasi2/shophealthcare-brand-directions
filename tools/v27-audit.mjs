@@ -103,10 +103,16 @@ async function injectV27Helpers(page) {
             try {
               prHost.style.display = 'block';
               if (empty) empty.style.display = 'none';
+              // V27/V28 API: PlanReport takes `selectedPlanId`, not `plan`.
               window.PlanReport.mount(prHost, {
                 planSet: planSet,
-                plan: firstPlan,
-                skipped: false
+                selectedPlanId: firstPlan.plan_id,
+                skipped: false,
+                onSave: function () {},
+                onEmailPdf: function () {},
+                onForward: function () {},
+                onContinueEnroll: function () {},
+                onOpenEmailGate: function () {}
               });
             } catch (e) { /* ignore */ }
           }
@@ -117,6 +123,51 @@ async function injectV27Helpers(page) {
         try {
           window.LayoutDirector.setLayoutPhase(phase, { animate: false });
         } catch (e) { /* ignore */ }
+      }
+
+      // V28 — at LOCK phase, simulate the real plan-pick state by marking
+      // the recommended card as locked and mounting the inline lock-gate.
+      // The harness can't trigger the actual onSelect callback chain, so we
+      // replicate its visible side effects.
+      if (phase === 'lock' && planSet) {
+        const firstPlan = (planSet.plans || []).filter(function(p){ return p.is_recommended; })[0]
+          || (planSet.plans || [])[0];
+        if (firstPlan) {
+          // Mark the chosen card .is-locked so V28 CSS shows it (others hide).
+          const chosenCard = document.querySelector(
+            '.plan-card[data-plan-id="' + firstPlan.plan_id + '"]'
+          );
+          if (chosenCard) chosenCard.classList.add('is-locked');
+          // Mount lock-gate inline. mountLockGate is on the closure scope of
+          // nora-app.js and not directly callable; replicate its DOM output.
+          const gateHost = document.getElementById('dash-lock-gate');
+          if (gateHost && !gateHost.firstChild) {
+            gateHost.removeAttribute('hidden');
+            gateHost.dataset.mountedPlan = firstPlan.plan_id;
+            const carrier = firstPlan.carrier_name || firstPlan.carrier || 'your carrier';
+            const monthly = firstPlan.monthly_premium ? Math.round(firstPlan.monthly_premium) : null;
+            const alreadyAuthed = !!(window.NoraSession &&
+                                     typeof window.NoraSession.isAuthed === 'function' &&
+                                     window.NoraSession.isAuthed());
+            gateHost.innerHTML =
+              '<div class="nx-lock-gate__header">✓ PLAN SELECTED</div>' +
+              '<div class="nx-lock-gate__lead">' + (alreadyAuthed
+                ? 'Hold this rate for 30 days.'
+                : 'Lock this rate for 30 days.') + '</div>' +
+              '<div class="nx-lock-gate__sub">' + (alreadyAuthed
+                ? 'Same gate, same offer. Continue when you’re ready.'
+                : 'Email me anytime — same gate, same offer. No follow-up unless you ask.') + '</div>' +
+              '<form class="nx-lock-gate__form" novalidate>' +
+                (alreadyAuthed ? '' :
+                  '<label for="lock-gate-email">Your email</label>' +
+                  '<input id="lock-gate-email" type="email" required placeholder="you@example.com" autocomplete="email">') +
+                '<button type="submit" class="nx-lock-gate__continue">Continue with ' + carrier + ' →</button>' +
+              '</form>' +
+              '<div class="nx-lock-gate__micro">' + (monthly
+                ? '✓ $' + monthly + '/mo locked · NPN #19482230'
+                : 'NPN #19482230 · Core Value Insurance Associates LLC') + '</div>';
+          }
+        }
       }
 
       return window.LayoutDirector && window.LayoutDirector.getCurrentPhase
@@ -635,10 +686,40 @@ async function main() {
       smallTargets: 0,
       axeViolations: 0,
       consoleErrors: 0,
-      cellErrors: 0
+      cellErrors: 0,
+      // V28 focus-rule violations
+      focusViolations: 0
     },
     perCell: []
   };
+
+  // V28 focus-rule evaluator. Runs against measurements for cells where a
+  // focus contract applies (LOCK / ENROLL / COMPARE phases).
+  function evalFocusRules(cell, m) {
+    const violations = [];
+    const phase = cell.phase || m.layoutPhase;
+    if (!phase) return violations;
+    const primary = (m.primaryCTAs || []).length;
+    const planCards = m.planCardsVisible || 0;
+    const zones = m.zoneVisible || {};
+    const banner = !!m.bannerVisible;
+    if (phase === 'lock') {
+      if (primary !== 1) violations.push(`LOCK primaryCTAs=${primary} (expected 1)`);
+      if (planCards !== 1) violations.push(`LOCK planCardsVisible=${planCards} (expected 1)`);
+      if (zones.chat) violations.push('LOCK chat zone visible (expected hidden)');
+      if (zones.drawer) violations.push('LOCK drawer zone visible (expected hidden)');
+      if (banner) violations.push('LOCK banner visible (expected hidden)');
+    } else if (phase === 'enroll') {
+      if (primary !== 1) violations.push(`ENROLL primaryCTAs=${primary} (expected 1)`);
+      if (planCards !== 0) violations.push(`ENROLL planCardsVisible=${planCards} (expected 0)`);
+      if (zones.chat) violations.push('ENROLL chat zone visible (expected hidden)');
+      if (zones.dash) violations.push('ENROLL dash zone visible (expected hidden)');
+      if (banner) violations.push('ENROLL banner visible (expected hidden)');
+    } else if (phase === 'compare') {
+      if (banner) violations.push('COMPARE banner visible (expected hidden)');
+    }
+    return violations;
+  }
 
   let i = 0;
   for (const cell of cells) {
@@ -664,6 +745,11 @@ async function main() {
     summary.findings.consoleErrors += (rec.consoleErrors || []).length;
     summary.findings.cellErrors    += (rec.errors || []).length;
 
+    // V28 focus rules
+    const focusVios = evalFocusRules(cell, m);
+    summary.findings.focusViolations += focusVios.length;
+    rec.focusViolations = focusVios;
+
     summary.perCell.push({
       id: rec.id, group: rec.group, bp: rec.bp,
       docOverflow: m.docOverflow || 0,
@@ -674,6 +760,7 @@ async function main() {
       axeViolations: rec.axe ? rec.axe.violationCount : 0,
       consoleErrors: (rec.consoleErrors || []).length,
       errors: (rec.errors || []).length,
+      focusViolations: focusVios.length,
       ms: rec.timing.totalMs || 0
     });
 
@@ -687,6 +774,7 @@ async function main() {
     if ((m.truncated || []).length) flagBits.push(`TR=${m.truncated.length}`);
     if (((m.offscreen || []).filter(o => o.reach === 'unreachable')).length) flagBits.push(`OFF=${((m.offscreen || []).filter(o => o.reach === 'unreachable')).length}`);
     if ((m.smallTargets || []).length) flagBits.push(`TT=${m.smallTargets.length}`);
+    if (focusVios.length) flagBits.push(`FOCUS=${focusVios.length}`);
     if (rec.axe && rec.axe.violationCount) flagBits.push(`AXE=${rec.axe.violationCount}`);
     if ((rec.consoleErrors || []).length) flagBits.push(`CON=${rec.consoleErrors.length}`);
     if ((rec.errors || []).length) flagBits.push(`ERR=${rec.errors.length}`);

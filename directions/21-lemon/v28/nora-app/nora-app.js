@@ -1517,17 +1517,26 @@
     // V26 · Mobile auto-pivot — listen for layoutPhaseChange and switch
     // to the LEAD zone unless the user manually picked a tab. Manual
     // override clears at the next phase boundary so auto-pivot resumes.
+    // V28 · The phase event now carries `visibleZones` (zones not hidden
+    // by the zone-collapse contract). When LOCK or ENROLL collapses to a
+    // single visible zone, that zone is the auto-pivot target — even if
+    // its role isn't 'lead' (V28 LOCK uses 'lead-fullscreen-dash').
     document.addEventListener('layoutPhaseChange', function (e) {
-      if (!e.detail || !e.detail.roles) return;
-      var roles = e.detail.roles;
-      // ENROLL phase: drawer is the only visible zone
+      if (!e.detail) return;
+      var roles = e.detail.roles || {};
+      var visibleZones = e.detail.visibleZones;
       var leadZone = null;
-      ['chat', 'dash', 'drawer'].forEach(function (z) {
-        if (roles[z] === 'lead' || roles[z] === 'lead-fullscreen') leadZone = z;
-      });
+      // V28 contract: if a single zone remains visible after collapse, that
+      // zone is the lead by definition.
+      if (Array.isArray(visibleZones) && visibleZones.length === 1) {
+        leadZone = visibleZones[0];
+      } else {
+        // V26 fallback: scan roles for lead / lead-fullscreen.
+        ['chat', 'dash', 'drawer'].forEach(function (z) {
+          if (roles[z] === 'lead' || roles[z] === 'lead-fullscreen') leadZone = z;
+        });
+      }
       if (!leadZone) return;
-      // If user just changed tabs manually within this same phase, respect it.
-      // Otherwise auto-pivot. We clear manualOverride on every phase change.
       if (window.matchMedia && window.matchMedia('(max-width: 767px)').matches) {
         activateZone(leadZone);
       }

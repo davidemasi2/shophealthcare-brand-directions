@@ -105,6 +105,11 @@
     { "id": "rm-SP1-enroll-1440",     "group": "rm",       "persona": "SP1", "phase": "enroll",  "bp": "desktop-1440", "reducedMotion": true },
 
     { "id": "fc-SP1-read-1440",       "group": "fc",       "persona": "SP1", "phase": "read",    "bp": "desktop-1440", "forcedColors": true },
-    { "id": "fc-SP1-compare-1440",    "group": "fc",       "persona": "SP1", "phase": "compare", "bp": "desktop-1440", "forcedColors": true }
+    { "id": "fc-SP1-compare-1440",    "group": "fc",       "persona": "SP1", "phase": "compare", "bp": "desktop-1440", "forcedColors": true },
+
+    { "id": "focus-SP1-compare-1440", "group": "focus",    "persona": "SP1", "phase": "compare", "bp": "desktop-1440" },
+    { "id": "focus-SP1-lock-1440",    "group": "focus",    "persona": "SP1", "phase": "lock",    "bp": "desktop-1440" },
+    { "id": "focus-SP1-enroll-1440",  "group": "focus",    "persona": "SP1", "phase": "enroll",  "bp": "desktop-1440" },
+    { "id": "focus-SP1-lock-414",     "group": "focus",    "persona": "SP1", "phase": "lock",    "bp": "mobile-414" }
   ]
 }

@@ -759,6 +759,23 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   .nx-unlock-trail-host { margin-top: 0; margin-bottom: 0; }
   .nx-shell { margin: 2px auto 0; }
 
+  /* V28 — at tablet-1024 height-constrained (768 px viewport with ~209 px
+     of header chrome), LOCK + ENROLL single-column layouts can produce
+     content taller than ~555 px available. Constrain shell to remaining
+     viewport + give the visible zone internal scroll. Buffer of 220 px
+     accounts for: nx-top (~62) + unlock-trail (~140) + margin/border (~18). */
+  .nx-shell[data-layout-phase="lock"],
+  .nx-shell[data-layout-phase="enroll"] {
+    max-height: calc(100vh - 220px);
+    overflow: hidden;
+    margin: 2px auto 4px;
+  }
+  .nx-shell[data-layout-phase="lock"] #zone-dash,
+  .nx-shell[data-layout-phase="enroll"] #zone-drawer {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
   /* V27 F18 — Plan cards naturally render ~486 px tall but the dash zone at
      LOCK on tablet-1024 only has ~428 px to give them. Reuse the COMPARE-phase
      compact override at LOCK on this breakpoint so cards fit without clipping;
@@ -1925,10 +1942,23 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
     border: none !important;
   }
   .nx-shell[data-layout-phase] .nx-zone:not(.is-active-tab) { display: none; }
-  /* When ENROLL collapses zones, force drawer visible */
+  /* V26 — when ENROLL collapses zones, force drawer visible. */
   .nx-shell[data-layout-phase="enroll"] #zone-drawer {
     display: flex !important;
   }
+  /* V28 — at LOCK on mobile, force dash visible (single visible zone
+     per zone-collapse contract). The auto-pivot logic also activates
+     the dash tab on phase change; this rule guarantees visibility even
+     if the auto-pivot listener hasn't run yet. Mirror rule for ENROLL
+     drawer above. */
+  .nx-shell[data-layout-phase="lock"] #zone-dash {
+    display: flex !important;
+  }
+  /* And ensure the inverse — chat/drawer at LOCK and chat/dash at ENROLL
+     stay hidden by the JS-applied display:none from the LayoutDirector
+     contract. The CSS-cascade is JS inline-style > stylesheet, so the
+     hidden zones honor display:none even when their is-active-tab class
+     toggle would normally show them. */
 }
 
 /* Reduced motion — disable FLIP transitions, opacity cross-fade only */
@@ -1968,13 +1998,18 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 
 /* ── LOCK phase ─────────────────────────────────────────────── */
 .nx-shell[data-layout-phase="lock"] {
-  /* Override V26 grid → single column max 720px centered. */
+  /* Override V26 grid → single column max 720px centered. The base
+     `.nx-shell` min-height: calc(100svh - 124px) is the V26 contract that
+     shell fills the viewport. V28 LOCK is a focused single-column screen
+     so we MUST clear that min-height — otherwise shell stretches to 644 px
+     at tablet-1024 and the page overflows. */
   display: block !important;
   grid-template-areas: none;
   grid-template-columns: none;
   max-width: 720px;
   margin: 24px auto;
   padding: 0 16px;
+  min-height: 0 !important;
 }
 /* Dash becomes the sole visible zone — kill chrome that distracts
    from the chosen card + AuthGate inline. */
@@ -2041,12 +2076,21 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 
 /* ── ENROLL phase ───────────────────────────────────────────── */
 .nx-shell[data-layout-phase="enroll"] {
-  display: block !important;
+  /* V28 — single-column max-720 receipt screen. Shell flex column with
+     constrained max-height + drawer-content overflow-y:auto so any plan-
+     report long enough to push past the viewport gets internal scroll
+     instead of escaping the layout. Base .nx-shell min-height: calc(100svh
+     - 124px) cleared per RULE 1 — single-column screens must not be forced
+     to fill viewport. */
+  display: flex !important;
+  flex-direction: column;
   grid-template-areas: none;
   grid-template-columns: none;
   max-width: 720px;
   margin: 24px auto;
   padding: 0 16px;
+  max-height: calc(100vh - 200px);
+  min-height: 0 !important;
 }
 .nx-shell[data-layout-phase="enroll"] #zone-drawer {
   width: 100%;
@@ -2055,12 +2099,19 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   background: transparent;
   border: none;
   box-shadow: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .nx-shell[data-layout-phase="enroll"] .nx-drawer-content,
 .nx-shell[data-layout-phase="enroll"] [data-plan-report-host] {
   width: 100%;
   max-width: 100%;
   padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 /* Hide drawer-empty placeholder when receipt is the screen. */
 .nx-shell[data-layout-phase="enroll"] .nx-drawer-empty {
