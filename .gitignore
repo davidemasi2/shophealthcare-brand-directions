@@ -1,0 +1,15 @@
+# Node tooling
+tools/node_modules/
+**/node_modules/
+
+# Audit run artifacts (kept in dir but not committed)
+directions/21-lemon/v27/_audit/
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+
+# Local env
+.env
+.env.local
