@@ -615,3 +615,80 @@
   color: var(--pc-pink);
   font-weight: 500;
 }
+
+/* =============================================================
+   V25 — 5-element card additions
+   ============================================================= */
+
+/* Tier eyebrow — universal small caps anchor at top of every card.
+   Replaces the V21/V24 split between .plan-card__tier and .plan-card__rec-badge. */
+.plan-card__tier-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pc-ink);
+  border: 1.5px solid var(--pc-ink);
+  border-radius: 999px;
+  background: var(--pc-cream);
+  line-height: 1;
+}
+.plan-card__tier-eyebrow--budget {
+  background: var(--pc-cream);
+}
+.plan-card__tier-eyebrow--recommended {
+  background: var(--pc-lemon);
+  border-width: 2px;
+  padding: 5px 12px;
+  box-shadow: 2px 2px 0 var(--pc-ink);
+}
+.plan-card__tier-eyebrow--premium {
+  background: var(--pc-cream);
+  border-style: dashed;
+}
+
+/* Standalone carrier block (no longer wrapped in __topline) */
+.plan-card > .plan-card__carrier {
+  margin-top: 4px;
+}
+
+/* V25 — savings delta line shown when window.NORA_OCR_BASELINE is set.
+   Renders between price block and rationale. */
+.plan-card__savings {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 10px;
+  margin: -2px 0 0;
+  background: var(--pc-cream);
+  border: 1px dashed var(--pc-ink);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--pc-pink-dark, #007A93);
+}
+.plan-card__savings .pcs-mark {
+  color: var(--pc-pink-dark, #007A93);
+  font-weight: 700;
+  font-size: 12px;
+}
+.plan-card__savings .pcs-anchor {
+  color: var(--pc-mute);
+  font-weight: 500;
+  letter-spacing: .02em;
+  font-size: 10.5px;
+  margin-left: 2px;
+  text-transform: uppercase;
+}
+.plan-card.is-selected .plan-card__savings {
+  background: rgba(255,255,255,0.7);
+  border-color: var(--pc-ink);
+}

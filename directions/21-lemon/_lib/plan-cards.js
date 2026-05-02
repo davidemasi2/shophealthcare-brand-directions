@@ -48,59 +48,41 @@
   }
 
   /* -----------------------------------------------------------
-     RENDER — per-card markup
+     RENDER — per-card markup (V25 — 5 elements)
+       1. Tier eyebrow badge (semantic anchor)
+       2. Carrier logo + short text
+       3. Tier headline + price block (+ optional savings delta vs OCR)
+       4. WHY THIS ONE rationale (universal, persona-aware, falls back to description)
+       5. Lock CTA pill
+     Cut from card surface (lives in Receipt / Compare modal):
+       · 3-bullet highlights list
+       · Full plan name (3-line clamp)
+       · Description paragraph (now repurposed as fallback rationale)
+       · Network type tag
      ----------------------------------------------------------- */
   function renderCard(plan, isSelected) {
-    var tierLabel = plan.tier_label || ({
-      budget: 'Budget',
-      recommended: 'Recommended',
-      premium: 'Premium'
-    })[plan.tier] || 'Plan';
-    var tierBadgeHTML;
-    if (plan.tier === 'recommended') {
-      // V23 H6 — RECOMMENDED ⭐ pill badge sits at the top of the card
-      tierBadgeHTML = '<span class="plan-card__rec-badge">' +
-                        '<span aria-hidden="true">⭐</span>' +
-                        '<span>RECOMMENDED</span>' +
-                      '</span>';
-    } else {
-      tierBadgeHTML = '<span class="plan-card__tier">' + escapeHtml(tierLabel) + '</span>';
-    }
+    // 1 — Tier eyebrow (universal, no separate "rec-badge" path)
+    var tierEyebrowText = ({
+      budget:      'SAVES MOST',
+      recommended: 'RECOMMENDED ⭐',
+      premium:     'FULL COVERAGE'
+    })[plan.tier] || 'PLAN';
+    var tierEyebrowHTML =
+      '<span class="plan-card__tier-eyebrow plan-card__tier-eyebrow--' +
+        (plan.tier || 'budget') + '">' +
+        escapeHtml(tierEyebrowText).replace('⭐', '<span aria-hidden="true">⭐</span>') +
+      '</span>';
 
-    // V24 Tier 3 · Wealthfront-style rationale band — Recommended ⭐ ONLY.
-    // Persona-aware: prefers plan.rationale_by_persona[persona] if available
-    // (set on mount), then plan.rationale. Renders nothing if neither exists.
-    // Note: rationale text contains intentional <em>…</em> for italic accent —
-    // do NOT escapeHtml the final string. It's a static string from mock data,
-    // not user input.
-    var rationaleHTML = '';
-    if (plan.tier === 'recommended') {
-      var personaKey = (window.NORA_ACTIVE_PERSONA || '').toUpperCase();
-      var personaRationale = (plan.rationale_by_persona && personaKey)
-        ? plan.rationale_by_persona[personaKey]
-        : null;
-      var rationaleText = personaRationale || plan.rationale || null;
-      if (rationaleText) {
-        rationaleHTML =
-          '<div class="plan-card__rationale">' +
-            '<span class="pc-rationale-eyebrow">WHY THIS ONE</span>' +
-            '<p class="pc-rationale-text">' + rationaleText + '</p>' +
-          '</div>';
-      }
-    }
-    // V24 — neutral category labels (Bronze/Silver/Gold are ACA metallic tiers
-    // and brand-voice §C4 forbids implying ACA). Plan NAME below still shows
-    // the carrier's actual product name verbatim.
+    // 3a — Tier headline (Fraunces, the "what kind of plan" anchor)
     var shortTierName = ({
-      budget: 'Lower premium',
+      budget:      'Lower premium',
       recommended: 'Best fit',
-      premium: 'Richer coverage'
-    })[plan.tier] || tierLabel;
+      premium:     'Richer coverage'
+    })[plan.tier] || (plan.tier_label || 'Plan');
 
-    // Carrier logo: SVG asset OR text fallback
+    // 2 — Carrier logo + short text
     var logoKey = carrierLogoKey(plan.carrier);
     var carrierTextShort = (function () {
-      // Trim long carrier names: "Regence BlueCross BlueShield of Utah" → "Regence BCBS"
       var c = plan.carrier || '';
       if (/regence/i.test(c)) return 'Regence BCBS';
       if (/university of utah/i.test(c)) return 'U of U Health';
@@ -118,18 +100,13 @@
     } else {
       logoHTML = '<span class="plan-card__carrier-logo" aria-hidden="true"></span>';
     }
-    var topline =
-      '<div class="plan-card__topline">' +
-        '<div class="plan-card__carrier">' +
-          logoHTML +
-          '<span class="plan-card__carrier-text">' + escapeHtml(carrierTextShort) + '</span>' +
-        '</div>' +
-        '<span class="plan-card__network">' + escapeHtml(plan.network_type || '') + '</span>' +
+    var carrierBlock =
+      '<div class="plan-card__carrier">' +
+        logoHTML +
+        '<span class="plan-card__carrier-text">' + escapeHtml(carrierTextShort) + '</span>' +
       '</div>';
 
-    // Price block — host element for ValueStack (compact mode).
-    // We render a fallback text immediately; mountValueStack() will
-    // try to overlay Component A on top after insertion into the DOM.
+    // 3b — Price block (ValueStack host — fallback rendered immediately)
     var priceFallback =
       '<div class="plan-card__price-fallback">' +
         '<span class="pcp-prefix">$</span>' +
@@ -143,46 +120,57 @@
         '</div>' +
       '</div>';
 
-    // Highlights
-    var highlightsHTML = '<ul class="plan-card__highlights">';
-    var highlights = (plan.highlights || []).slice(0, 3);
-    highlights.forEach(function (h) {
-      highlightsHTML +=
-        '<li>' +
-          '<strong>' + escapeHtml(h.label) + ':</strong>' +
-          '<span>' + escapeHtml(h.value) + '</span>' +
-        '</li>';
-    });
-    highlightsHTML += '</ul>';
+    // 3c — V25 OCR savings delta (only if window.NORA_OCR_BASELINE present)
+    var savingsHTML = '';
+    var ocr = window.NORA_OCR_BASELINE;
+    if (ocr && typeof ocr.monthly_premium === 'number') {
+      var annualDelta = (ocr.monthly_premium - plan.monthly_premium) * 12;
+      if (annualDelta > 0) {
+        savingsHTML =
+          '<div class="plan-card__savings">' +
+            '<span class="pcs-mark" aria-hidden="true">↓</span>' +
+            'saves $' + formatMoney(annualDelta) + '/yr ' +
+            '<span class="pcs-anchor">vs your card</span>' +
+          '</div>';
+      }
+    }
 
-    var ctaLabel = isSelected
-      ? '✓ Selected'
-      : 'Select this plan';
+    // 4 — Universal rationale (persona-aware → rationale → description fallback)
+    var personaKey = (window.NORA_ACTIVE_PERSONA || '').toUpperCase();
+    var personaRationale = (plan.rationale_by_persona && personaKey)
+      ? plan.rationale_by_persona[personaKey]
+      : null;
+    // description IS already a one-line "why" for budget/premium tiers — repurpose
+    var rationaleText = personaRationale || plan.rationale || plan.description || null;
+    var rationaleHTML = '';
+    if (rationaleText) {
+      rationaleHTML =
+        '<div class="plan-card__rationale">' +
+          '<span class="pc-rationale-eyebrow">WHY THIS ONE</span>' +
+          '<p class="pc-rationale-text">' + rationaleText + '</p>' +
+        '</div>';
+    }
+
+    // 5 — CTA (V25 — commitment language)
+    var ctaLabel = isSelected ? '✓ Locked' : 'Lock this plan →';
 
     var classes = ['plan-card', 'plan-card--' + (plan.tier || 'budget')];
     if (isSelected) classes.push('is-selected');
 
-    // V24 — name block: neutral tier label headline + full
-    // technical name as a 3-line max-clamp subhead. No ACA-metallic framing.
-    var nameBlock =
-      '<div class="plan-card__nameblock">' +
-        '<h4 class="plan-card__short">' + escapeHtml(shortTierName) + '</h4>' +
-        '<div class="plan-card__name-full" title="' + escapeHtml(plan.name) + '">' +
-          escapeHtml(plan.name) +
-        '</div>' +
-      '</div>';
+    // Headline + price grouped as the primary visual block
+    var headlineBlock =
+      '<h4 class="plan-card__short">' + escapeHtml(shortTierName) + '</h4>';
 
     return (
       '<button type="button" class="' + classes.join(' ') + '" ' +
         'data-plan-id="' + escapeHtml(plan.plan_id) + '" ' +
         'aria-pressed="' + (isSelected ? 'true' : 'false') + '">' +
-        tierBadgeHTML +
-        rationaleHTML +
-        topline +
-        nameBlock +
+        tierEyebrowHTML +
+        carrierBlock +
+        headlineBlock +
         priceBlock +
-        highlightsHTML +
-        '<p class="plan-card__desc">' + escapeHtml(plan.description) + '</p>' +
+        savingsHTML +
+        rationaleHTML +
         '<div class="plan-card__cta">' +
           '<span class="plan-card__cta-btn">' + escapeHtml(ctaLabel) + '</span>' +
         '</div>' +
@@ -281,7 +269,7 @@
       var compareHTML = planSet.plans.length > 1
         ? '<div class="plan-cards__foot">' +
             '<button type="button" class="plan-cards__compare" data-pc-compare>' +
-              'Compare side-by-side ↓' +
+              'Compare full details ↓' +
             '</button>' +
           '</div>'
         : '';
@@ -317,8 +305,8 @@
             var ctaBtn = c.querySelector('.plan-card__cta-btn');
             if (ctaBtn) {
               ctaBtn.textContent = isSel
-                ? '✓ Selected'
-                : 'Select this plan';
+                ? '✓ Locked'
+                : 'Lock this plan →';
             }
           });
           if (typeof options.onSelect === 'function') {
