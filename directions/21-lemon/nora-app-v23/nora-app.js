@@ -18,16 +18,16 @@
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Plan estimates per persona (used for dashboard initial state)
-  // Catalog (Plan 02) overrides apply when pg=1 or conditions=pregnancy
+  // Catalog overrides apply when pg=1 or conditions=pregnancy
   var PERSONA_NUMBERS = {
     RU1: { plan: 290, compare: 890, label: 'Open-market PPO' },
     SP1: { plan: 290, compare: 890, label: 'Open-market freelancer PPO' },
-    BR1: { plan: 520, compare: 1180, label: 'ACA bridge plan' },
+    BR1: { plan: 520, compare: 1180, label: 'Open-market typical premium' },
     CL1: { plan: 290, compare: 890, label: 'Your renewal premium' },
     PC1: { plan: 290, compare: 680, label: 'What others in your bracket pay' },
     GEN: { plan: 290, compare: 760, label: 'Typical premium for your situation' }
   };
-  var CATALOG_NUMBERS = { plan: 520, compare: 890, label: 'ACA marketplace bronze' };
+  var CATALOG_NUMBERS = { plan: 520, compare: 890, label: 'Open-market typical PPO' };
 
   var STATE_NAMES = {
     AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California',
@@ -88,7 +88,7 @@
   var FALLBACK_STRINGS = {
     RU1: {
       label: "Just lost insurance",
-      noraOpener: "Let's get you back on coverage fast. Plan 01 can be active in 24 hours.",
+      noraOpener: "Let's get you back on coverage fast. Your plan can be active in 24 hours.",
       reinforce: "You just got hit. The system failed you. We can have you covered by your start date.",
       revealReinforce: "You just got hit. Here's what coverage looks like by your start date — no gap.",
       dashboardHeadline: "Coverage in 24 hours.",
@@ -98,30 +98,30 @@
     },
     SP1: {
       label: "Self-employed / 1099",
-      noraOpener: "37% of self-employed people in your bracket save the most on Plan 01. Let me show you what that looks like for you.",
-      reinforce: "You're 1099 — and most freelancers don't realize Plan 01 exists. It was built for self-employed people with irregular income. ACA wasn't.",
-      revealReinforce: "You're 1099 — and most freelancers don't realize Plan 01 was built for them. Here's your real number.",
+      noraOpener: "37% of self-employed people in your bracket save the most on the right plan. Let me show you what that looks like for you.",
+      reinforce: "You're 1099 — and most freelancers don't realize this kind of plan exists. It was built for self-employed people with irregular income.",
+      revealReinforce: "You're 1099 — and most freelancers don't realize the plan we'd write you was built for them. Here's your real number.",
       dashboardHeadline: "Built for irregular income.",
       comparisonAnchor: "what most freelancers pay on the open market",
       hasCurrentCoverage: "maybe",
       cardScanRelevance: "optional"
     },
     BR1: {
-      label: "Pre-Medicare 55–64",
-      noraOpener: "5+ years from Medicare is the costliest stretch. Let's bridge it without the ACA cliff.",
-      reinforce: "You're in the longest, most expensive insurance gap of your life. Plan 01 was designed for exactly this window.",
-      revealReinforce: "Plan 01 was designed for exactly this window. Here's what bridging the gap to Medicare really costs.",
-      dashboardHeadline: "Bridge to Medicare.",
-      comparisonAnchor: "what you'd pay for ACA bridge coverage until Medicare",
+      label: "Pre-65 bridge years",
+      noraOpener: "5+ years from your transition is the costliest stretch. Let's bridge it without the premium spike.",
+      reinforce: "You're in the longest, most expensive insurance gap of your life. The plan we'd write you was designed for exactly this window.",
+      revealReinforce: "The plan we'd write you was designed for exactly this window. Here's what bridging the gap really costs.",
+      dashboardHeadline: "Bridge the gap.",
+      comparisonAnchor: "what you'd pay on the open market for bridge coverage",
       hasCurrentCoverage: "usually",
       cardScanRelevance: "optional"
     },
     CL1: {
       label: "My premium just spiked",
       noraOpener: "Let me see your current premium and show you the actual delta.",
-      reinforce: "Your renewal letter is real. Most renewals jumped 26–114%. Plan 01 sits 50–60% under what you're being asked to pay now.",
-      revealReinforce: "Your renewal letter is real. Here's what Plan 01 looks like next to it — same network, lower premium.",
-      dashboardHeadline: "Your renewal vs. Plan 01.",
+      reinforce: "Your renewal letter is real. Most renewals jumped 26–114%. Our number sits 50–60% under what you're being asked to pay now.",
+      revealReinforce: "Your renewal letter is real. Here's what our number looks like next to it — same network, lower premium.",
+      dashboardHeadline: "Your renewal vs. our number.",
       comparisonAnchor: "your renewal premium — the one that just spiked",
       hasCurrentCoverage: true,
       cardScanRelevance: "critical"
@@ -280,7 +280,7 @@
     // Pregnancy override: route to Catalog
     if (ctx.pregnancy) {
       return echo +
-        "Plan 01 doesn't cover maternity, so I'm routing you to our Catalog product line — same brokerage, different plan that covers it. " +
+        "The plan we'd usually write doesn't cover maternity, so I'm routing you to a product line that does — same shop, different plan. " +
         "Let me ask a few things. First — what's your name?";
     }
 
@@ -528,9 +528,9 @@
         then: function () {
           setTimeout(function () {
             noraSay(
-              "Estimate so far: <b class='aha-num'>~$" + currentNumbers().plan + "/mo</b> for Plan 01, vs. " +
+              "Estimate so far: <b class='aha-num'>~$" + currentNumbers().plan + "/mo</b> for your plan, vs. " +
               "<b>~$" + currentNumbers().compare + "/mo</b> on " + currentNumbers().label + ". " +
-              "You'd save around <b>$" + (currentNumbers().compare - currentNumbers().plan) + "/mo</b>.",
+              "You'd save around <b>~$" + (currentNumbers().compare - currentNumbers().plan) + "/mo</b>.",
               { isAha: true, delay: REDUCED_MOTION ? 60 : 1100, then: function () {
                 // V21 · Surface plan options now
                 surfacePlanOptions();
@@ -596,9 +596,9 @@
       var silver = Math.round(rec.monthly_premium);
       var gold = premium ? Math.round(premium.monthly_premium) : null;
       var bridgeMsg =
-        "Plan 01 baseline is <b>$" + bronze + "/mo</b> — that's Bronze, max deductible. " +
-        "Silver lands at <b>$" + silver + "/mo</b> with predictable copays. " +
-        (gold ? "Gold runs <b>$" + gold + "/mo</b> with the lowest deductible. " : "") +
+        "Your baseline is around <b>~$" + bronze + "/mo</b> — that's Bronze, max deductible. " +
+        "Silver lands at <b>~$" + silver + "/mo</b> with predictable copays. " +
+        (gold ? "Gold runs <b>~$" + gold + "/mo</b> with the lowest deductible. " : "") +
         "Most freelancers in your bracket pick Silver.";
       noraSay(bridgeMsg, { delay: REDUCED_MOTION ? 50 : 700 });
     }
@@ -706,7 +706,7 @@
       // V23 · Persona reinforce paragraph (Catalog variant)
       if (reinforceEl) {
         reinforceEl.textContent =
-          "Honest answer = right plan. Plan 02 covers what Plan 01 doesn't — same shop, different product.";
+          "Honest answer = right plan. The Catalog line covers what your usual plan wouldn't — same shop, different product.";
       }
     } else {
       eyebrow.textContent = '★ YOUR ESTIMATE';
@@ -724,7 +724,7 @@
       try {
         valueStackApi = window.ValueStack.mount(vsHost, {
           persona: ctx.pregnancy ? 'GEN' : (ctx.persona || 'GEN'),
-          primary:   { value: nums.plan,                suffix: '/mo',  label: ctx.pregnancy ? 'Catalog estimate' : 'Plan 01 estimate' },
+          primary:   { value: nums.plan,                suffix: '/mo',  label: ctx.pregnancy ? 'Catalog estimate' : 'Your estimate' },
           secondary: { value: nums.plan * 12,           suffix: '/yr',  label: "That's annual" },
           tertiary:  { value: (nums.compare - nums.plan) * 12, suffix: ' saved/yr', label: nums.label, direction: 'down' },
           compareValue: nums.compare,
@@ -745,14 +745,17 @@
     if (trustState) trustState.textContent = ctx.state ? STATE_NAMES[ctx.state] : 'all 50 states';
 
     // V21 · Mount Unlock Trail at top of app — Discovery stage (step 6/7)
+    // V24 · Trail value MUST match the dial (URL-authoritative `nums.plan`).
+    // Don't pull a stale `valueEstimate` from prior session's localStorage —
+    // we use saved `currentStep`/`completedPct` only.
     var trailHost = document.querySelector('[data-unlock-trail]');
     if (trailHost && window.UnlockTrail) {
       var savedTrail = null;
       try { savedTrail = window.UnlockTrail.hydrate(); } catch (e) {}
-      var trailState = savedTrail || {
-        currentStep: 6,
-        completedPct: 71,
-        valueEstimate: nums.plan,
+      var trailState = {
+        currentStep:  (savedTrail && typeof savedTrail.currentStep  === 'number') ? savedTrail.currentStep  : 6,
+        completedPct: (savedTrail && typeof savedTrail.completedPct === 'number') ? savedTrail.completedPct : 71,
+        valueEstimate: nums.plan,    // ALWAYS from current URL persona, never stale
         valueDelta: 0
       };
       // If hydrate produced a state but we have a fresh URL persona,
@@ -867,6 +870,28 @@
     inputEl  = $('#chat-input');
     formEl   = $('#chat-form');
 
+    // V24 — URL is authoritative. If the URL has any persona/quiz params AND
+    // localStorage holds a different persona, CLEAR localStorage so the URL
+    // wins. This prevents tab clicks / chat submits / reloads from flipping
+    // persona to a stale localStorage entry.
+    var urlHasPersonaParams = (function () {
+      var sp = new URLSearchParams(window.location.search);
+      return sp.has('p') || sp.has('s') || sp.has('a') || sp.has('x') || sp.has('pg') || sp.has('c');
+    })();
+    if (urlHasPersonaParams && window.localStorage) {
+      try {
+        var stored = window.localStorage.getItem('shc_session');
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          // Allow URL to win when persona/state mismatch.
+          if (!parsed || parsed.persona !== ctx.persona ||
+              (parsed.quiz_answers && parsed.quiz_answers.state !== ctx.state)) {
+            window.localStorage.removeItem('shc_session');
+          }
+        }
+      } catch (e) { /* swallow — non-critical */ }
+    }
+
     // V21 · Initialize NoraSession with URL params + start idle timer
     if (window.NoraSession) {
       try {
@@ -880,8 +905,10 @@
             conditions: ctx.conditions
           }
         };
-        // First try resuming via ?token= param
-        var hydrated = window.NoraSession.hydrateFromUrl();
+        // V24 · Only resume via ?token= magic link path. If no token, do NOT
+        // synthesize a sample — let init() use cleared/fresh localStorage.
+        var sp2 = new URLSearchParams(window.location.search);
+        var hydrated = sp2.has('token') ? window.NoraSession.hydrateFromUrl() : null;
         window.NoraSession.init(initialState);
         if (window.NoraSession.startIdleTimer) window.NoraSession.startIdleTimer();
         if (hydrated && hydrated.email) {

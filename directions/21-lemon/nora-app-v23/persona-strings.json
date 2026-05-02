@@ -1,7 +1,7 @@
 {
   "RU1": {
     "label": "Just lost insurance",
-    "noraOpener": "Let's get you back on coverage fast. Plan 01 can be active in 24 hours.",
+    "noraOpener": "Let's get you back on coverage fast. Your plan can be active in 24 hours.",
     "reinforce": "You just got hit. The system failed you. We can have you covered by your start date.",
     "revealReinforce": "You just got hit. Here's what coverage looks like by your start date — no gap.",
     "dashboardHeadline": "Coverage in 24 hours.",
@@ -11,30 +11,30 @@
   },
   "SP1": {
     "label": "Self-employed / 1099",
-    "noraOpener": "37% of self-employed people in your bracket save the most on Plan 01. Let me show you what that looks like for you.",
-    "reinforce": "You're 1099 — and most freelancers don't realize Plan 01 exists. It was built for self-employed people with irregular income. ACA wasn't.",
-    "revealReinforce": "You're 1099 — and most freelancers don't realize Plan 01 was built for them. Here's your real number.",
+    "noraOpener": "37% of self-employed people in your bracket save the most on the right plan. Let me show you what that looks like for you.",
+    "reinforce": "You're 1099 — and most freelancers don't realize this kind of plan exists. It was built for self-employed people with irregular income.",
+    "revealReinforce": "You're 1099 — and most freelancers don't realize the plan we'd write you was built for them. Here's your real number.",
     "dashboardHeadline": "Built for irregular income.",
     "comparisonAnchor": "what most freelancers pay on the open market",
     "hasCurrentCoverage": "maybe",
     "cardScanRelevance": "optional"
   },
   "BR1": {
-    "label": "Pre-Medicare 55–64",
-    "noraOpener": "5+ years from Medicare is the costliest stretch. Let's bridge it without the ACA cliff.",
-    "reinforce": "You're in the longest, most expensive insurance gap of your life. Plan 01 was designed for exactly this window.",
-    "revealReinforce": "Plan 01 was designed for exactly this window. Here's what bridging the gap to Medicare really costs.",
-    "dashboardHeadline": "Bridge to Medicare.",
-    "comparisonAnchor": "what you'd pay for ACA bridge coverage until Medicare",
+    "label": "Pre-65 bridge years",
+    "noraOpener": "5+ years from your transition is the costliest stretch. Let's bridge it without the premium spike.",
+    "reinforce": "You're in the longest, most expensive insurance gap of your life. The plan we'd write you was designed for exactly this window.",
+    "revealReinforce": "The plan we'd write you was designed for exactly this window. Here's what bridging the gap really costs.",
+    "dashboardHeadline": "Bridge the gap.",
+    "comparisonAnchor": "what you'd pay on the open market for bridge coverage",
     "hasCurrentCoverage": "usually",
     "cardScanRelevance": "optional"
   },
   "CL1": {
     "label": "My premium just spiked",
     "noraOpener": "Let me see your current premium and show you the actual delta.",
-    "reinforce": "Your renewal letter is real. Most renewals jumped 26–114%. Plan 01 sits 50–60% under what you're being asked to pay now.",
-    "revealReinforce": "Your renewal letter is real. Here's what Plan 01 looks like next to it — same network, lower premium.",
-    "dashboardHeadline": "Your renewal vs. Plan 01.",
+    "reinforce": "Your renewal letter is real. Most renewals jumped 26–114%. Our number sits 50–60% under what you're being asked to pay now.",
+    "revealReinforce": "Your renewal letter is real. Here's what our number looks like next to it — same network, lower premium.",
+    "dashboardHeadline": "Your renewal vs. our number.",
     "comparisonAnchor": "your renewal premium — the one that just spiked",
     "hasCurrentCoverage": true,
     "cardScanRelevance": "critical"

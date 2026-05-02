@@ -297,15 +297,14 @@
         state = local;
         log('[NoraSession] hydrated from local storage via ?token=', payload.ses);
       } else {
-        // Mocked "backend fetch" — in prod hits GET /api/session/:id.
-        // We synthesize a plausible state from the JWT payload.
+        // V24 — No more synthetic 57% default-sample. We only restore identity
+        // from the JWT, never invent progress. URL persona/state still wins.
         state = mergeState(defaultState(), {
           session_id: payload.ses,
           email: payload.email || null,
-          is_authed: payload.type === 'auth',
-          completed_pct: 57 // mocked default for cross-device demo
+          is_authed: payload.type === 'auth'
         });
-        log('[NoraSession] hydrated synthetic state from token (mocked)');
+        log('[NoraSession] hydrated identity-only state from token (no synthetic progress)');
       }
 
       state.last_activity = Date.now();

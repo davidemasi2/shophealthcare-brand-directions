@@ -179,7 +179,9 @@
       var secLabel = secondary.label
         ? '<span class="value-stack__secondary-label">' + escapeHtml(secondary.label) + '</span>'
         : '';
-      var secVal = '$' + formatNumber(secondary.value, { locked: !!options.locked }) +
+      // V24 · Estimate values get ~ prefix; locked finals do not
+      var secTilde = options.locked ? '' : '~';
+      var secVal = secTilde + '$' + formatNumber(secondary.value, { locked: !!options.locked }) +
         (secondary.suffix ? escapeHtml(secondary.suffix) : '');
       secondaryHTML =
         '<div class="value-stack__secondary">' +
@@ -191,9 +193,11 @@
     var tertiaryHTML = '';
     if (tertiary) {
       var arrow = direction === 'down' ? '↓' : '↑';
+      // V24 · Estimate savings get ~ prefix; locked finals do not
+      var tertTilde = options.locked ? '' : '~';
       var tertVal =
         '<span class="value-stack__tertiary-arrow">' + arrow + '</span>' +
-        '$' + formatNumber(tertiary.value, { locked: !!options.locked }) +
+        tertTilde + '$' + formatNumber(tertiary.value, { locked: !!options.locked }) +
         (tertiary.suffix ? escapeHtml(tertiary.suffix) : '');
       var tertLabel = tertiary.label
         ? '<span class="value-stack__tertiary-anchor">' + escapeHtml(tertiary.label) + '</span>'

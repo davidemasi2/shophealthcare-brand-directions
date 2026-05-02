@@ -17,7 +17,7 @@
   var COMPARISON_ANCHORS = {
     RU1: "what your monthly premium will be once you're back on coverage",
     SP1: "what most freelancers pay on the open market",
-    BR1: "what you'd pay for ACA bridge coverage until Medicare",
+    BR1: "what you'd pay on the open market for bridge coverage",
     CL1: "your renewal premium — the one that just spiked",
     PC1: "whether your current plan is the best deal in your state",
     GEN: "the typical premium for someone in your situation"
