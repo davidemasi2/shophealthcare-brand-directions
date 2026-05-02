@@ -185,6 +185,13 @@
       'think it over, and text you before your enrollment window closes.';
     copy.appendChild(p3);
 
+    // V24 Tier 4 · Enrollment-window deadline (TurboTax pattern).
+    // Honest OEP date — Dec 15 is the federal close for most states.
+    // Computed as days-until-Dec-15 from today (Pacific TZ ignored — close enough).
+    var deadlineLine = el('p', 'ag-window-deadline');
+    deadlineLine.setAttribute('data-ag-deadline', '');
+    copy.appendChild(deadlineLine);
+
     var noFollowup = el('div', 'auth-gate__no-followup');
     noFollowup.textContent = 'No follow-up unless you ask.';
     copy.appendChild(noFollowup);
@@ -279,11 +286,18 @@
     bubble.appendChild(micro);
 
     // V24 Tier 3 · Skip link with soft chevron + breathing room.
+    // V24 Tier 4 · Loss-aversion microcopy + tooltip explaining the trade.
     var skipWrap = el('div', 'auth-gate__skip');
     var skipA = document.createElement('a');
     skipA.setAttribute('href', '#');
     skipA.setAttribute('data-ag-skip', '');
-    skipA.innerHTML = 'Skip and just show me the plan <span class="ag-skip-chev" aria-hidden="true">▾</span>';
+    skipA.innerHTML =
+      'Skip — you' + "'" + 'll lose your locked rate ' +
+      '<span class="ag-skip-chev" aria-hidden="true">▾</span>' +
+      '<span class="ag-skip-tooltip" role="tooltip">' +
+        'Without your email we can' + "'" + 't hold the number for you. ' +
+        'You can still see the plan, but the rate may shift.' +
+      '</span>';
     skipWrap.appendChild(skipA);
     bubble.appendChild(skipWrap);
 
@@ -304,6 +318,7 @@
       bubble:        bubble,
       copyCarrotEl:  bubble.querySelector('[data-ag-carrot]'),
       socialProofEl: bubble.querySelector('[data-ag-social-proof]'),
+      deadlineEl:    bubble.querySelector('[data-ag-deadline]'),
       form:          form,
       emailInput:    emailField.input,
       emailField:    emailField.field,
@@ -403,6 +418,37 @@
       var proofLine = SOCIAL_PROOF_LINES[inst.opts.persona] || SOCIAL_PROOF_LINES.GEN;
       inst.els.socialProofEl.textContent = proofLine;
     }
+
+    // V24 Tier 4 · Enrollment-window deadline — TurboTax pattern.
+    // Honest OEP date — Dec 15 federal default. Days computed live.
+    if (inst.els.deadlineEl) {
+      var d = computeOEPDeadline();
+      if (d.daysLeft >= 0) {
+        inst.els.deadlineEl.innerHTML =
+          'Your enrollment window closes in ' +
+          '<span class="ag-wd-num">' + d.daysLeft + ' day' + (d.daysLeft === 1 ? '' : 's') + '</span> — ' +
+          '<span class="ag-wd-date">' + d.dateLabel + '</span>.';
+        inst.els.deadlineEl.style.display = '';
+      } else {
+        // OEP closed — hide the line cleanly rather than show 0/negative.
+        inst.els.deadlineEl.style.display = 'none';
+      }
+    }
+  }
+
+  // V24 Tier 4 · Compute days until next federal OEP close (Dec 15).
+  // If we're past Dec 15, roll forward to the next year's Dec 15.
+  // Returns { daysLeft, dateLabel } where dateLabel is "Dec 15".
+  function computeOEPDeadline() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var target = new Date(year, 11, 15); // Dec 15 of this year
+    if (now > target) {
+      target = new Date(year + 1, 11, 15); // next year's Dec 15
+    }
+    var msPerDay = 24 * 60 * 60 * 1000;
+    var daysLeft = Math.ceil((target - now) / msPerDay);
+    return { daysLeft: daysLeft, dateLabel: 'Dec 15' };
   }
 
   // ─── EVENT HANDLERS ──────────────────────────────────────────

@@ -7,7 +7,9 @@
     "dashboardHeadline": "Coverage in 24 hours.",
     "comparisonAnchor": "what your monthly premium will be once you're back on coverage",
     "hasCurrentCoverage": false,
-    "cardScanRelevance": "none"
+    "cardScanRelevance": "none",
+    "socialProofLabel": "first-coverage applications this hour",
+    "lockPercentile": 22
   },
   "SP1": {
     "label": "Self-employed / 1099",
@@ -17,7 +19,9 @@
     "dashboardHeadline": "Built for irregular income.",
     "comparisonAnchor": "what most freelancers pay on the open market",
     "hasCurrentCoverage": "maybe",
-    "cardScanRelevance": "optional"
+    "cardScanRelevance": "optional",
+    "socialProofLabel": "freelancers got their number this hour",
+    "lockPercentile": 12
   },
   "BR1": {
     "label": "Pre-65 bridge years",
@@ -27,7 +31,9 @@
     "dashboardHeadline": "Bridge the gap.",
     "comparisonAnchor": "what you'd pay on the open market for bridge coverage",
     "hasCurrentCoverage": "usually",
-    "cardScanRelevance": "optional"
+    "cardScanRelevance": "optional",
+    "socialProofLabel": "bridge year quotes this hour",
+    "lockPercentile": 18
   },
   "CL1": {
     "label": "My premium just spiked",
@@ -37,7 +43,9 @@
     "dashboardHeadline": "Your renewal vs. our number.",
     "comparisonAnchor": "your renewal premium — the one that just spiked",
     "hasCurrentCoverage": true,
-    "cardScanRelevance": "critical"
+    "cardScanRelevance": "critical",
+    "socialProofLabel": "renewal-spike checks this hour",
+    "lockPercentile": 8
   },
   "PC1": {
     "label": "Check if I'm overpaying",
@@ -47,7 +55,9 @@
     "dashboardHeadline": "Plan diagnostic.",
     "comparisonAnchor": "whether your current plan is the best deal in your state",
     "hasCurrentCoverage": true,
-    "cardScanRelevance": "critical"
+    "cardScanRelevance": "critical",
+    "socialProofLabel": "diagnostic checks this hour",
+    "lockPercentile": 28
   },
   "GEN": {
     "label": "Not sure",
@@ -57,6 +67,8 @@
     "dashboardHeadline": "Routing your numbers.",
     "comparisonAnchor": "the typical premium for someone in your situation",
     "hasCurrentCoverage": "unknown",
-    "cardScanRelevance": "ask"
+    "cardScanRelevance": "ask",
+    "socialProofLabel": "plan reviews this hour",
+    "lockPercentile": 25
   }
 }

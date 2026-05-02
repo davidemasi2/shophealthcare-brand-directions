@@ -10,9 +10,11 @@
 <link rel="stylesheet" href="lemon.css">
 <link rel="stylesheet" href="_lib/value-stack.css">
 <link rel="stylesheet" href="_lib/unlock-trail.css">
+<link rel="stylesheet" href="_lib/social-proof.css">
 <script src="palette-switch.js" defer></script>
 <script src="_lib/value-stack.js" defer></script>
 <script src="_lib/unlock-trail.js" defer></script>
+<script src="_lib/social-proof.js" defer></script>
 <style>
   /* =======================================================
      V8 — Clone Optimized — Persona-switchboard quiz gate
@@ -3454,6 +3456,8 @@
         </div></div>
       </div>
       </div><!-- /.v20-chat-frame -->
+      <!-- V24 Tier 4 · Social proof live counter — sits below chat-preview -->
+      <div data-social-proof data-sp-host="hero"></div>
     </div>
   </div>
 </header>
@@ -6753,6 +6757,28 @@
     // Kick off after hero settles
     setTimeout(function(){ playMsg(0); }, 600);
   })();
+
+  // 6b) V24 Tier 4 — Social proof live counter (hero)
+  // Persona detected from URL ?persona=, falls back to GEN.
+  // SocialProof loads via deferred script — wait for window.load so the
+  // module exists before we try to mount.
+  function mountSocialProofHero() {
+    try {
+      var node = document.querySelector('[data-social-proof][data-sp-host="hero"]');
+      if (!node || !window.SocialProof) return;
+      var p = (new URLSearchParams(window.location.search).get('persona') || 'GEN').toUpperCase();
+      var allowed = { SP1:1, CL1:1, BR1:1, RU1:1, PC1:1, GEN:1 };
+      if (!allowed[p]) p = 'GEN';
+      window.SocialProof.mount(node, { persona: p });
+    } catch (e) { /* fail-safe */ }
+  }
+  if (window.SocialProof) {
+    mountSocialProofHero();
+  } else if (document.readyState === 'complete') {
+    mountSocialProofHero();
+  } else {
+    window.addEventListener('load', mountSocialProofHero, { once: true });
+  }
 
   // 7) Smooth-scroll for nav anchors (preserve sticky-nav offset)
   document.querySelectorAll('a[href^="#"]').forEach(function(a){

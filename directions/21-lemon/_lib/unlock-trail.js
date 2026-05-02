@@ -289,26 +289,31 @@
 
   function renderCounter(s) {
     if (s.currentStep > TOTAL_STEPS) {
-      return '<strong>Complete</strong> <span class="ut-sep">·</span> ' +
-             '<span class="ut-tail">Your real plan is ready</span>';
+      // V24 Tier 4 · Step 7 (PLAN) — sunk-cost-light "locked in" framing.
+      return '<strong>Locked in</strong> <span class="ut-sep">·</span> ' +
+             '<span class="ut-tail">Your number is yours</span>';
     }
     var stepNum = Math.min(s.currentStep, TOTAL_STEPS);
     var remaining = TOTAL_STEPS - stepNum;
     var pct = Math.round(s.completedPct);
 
-    // Step counter copy chooser — tail rotates by progress band
+    // V24 Tier 4 · Sunk-cost-light progression copy. Each band leans into
+    // "you've already done X% — finish the last bit" framing.
+    // Investment language without manipulation: honest, premium-warm.
     var tail;
     if (stepNum === TOTAL_STEPS) {
       // Final step — pick a plan
-      tail = '<span class="ut-tail">Last step · Pick your plan</span>';
-    } else if (remaining === 1) {
-      tail = '<span class="ut-tail">Almost there · One more thing</span>';
-    } else if (pct >= 70) {
-      tail = '<span class="ut-tail">' + remaining + ' to your real plan</span>';
-    } else if (pct >= 40) {
-      tail = remaining + ' questions left <span class="ut-sep">·</span> Then Nora takes over';
+      tail = '<span class="ut-tail">Locked in · Your number is yours</span>';
+    } else if (stepNum >= 5) {
+      // Steps 5-6 — almost done · last stretch
+      tail = '<span class="ut-tail">Almost done · This is the last stretch</span>';
+    } else if (stepNum >= 3) {
+      // Steps 3-4 — halfway · investment anchor
+      tail = '<span class="ut-tail">Halfway there · You' + "'" +
+             're already ' + pct + '% to your real number</span>';
     } else {
-      tail = "You're " + pct + '% of the way to your real plan';
+      // Steps 1-2 — just getting started · 5 quick questions
+      tail = '<span class="ut-tail">Just getting started · 5 quick questions</span>';
     }
 
     return '<strong>Step ' + stepNum + ' of ' + TOTAL_STEPS + '</strong> ' +

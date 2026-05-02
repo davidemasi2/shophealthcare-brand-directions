@@ -577,6 +577,37 @@
     );
   }
 
+  // V24 Tier 4 — Spotify-Wrapped percentile framing. Insert (or re-show)
+  // a single-line callout below the value-stack dial after a successful
+  // plan-lock. Pulled from persona-strings.json `lockPercentile`.
+  // Honest framing: "you'd be in the bottom X% of premium-payers." It
+  // anchors identity, not pressure.
+  function surfacePercentile() {
+    try {
+      var pctNum = (personaCfg && typeof personaCfg.lockPercentile === 'number')
+        ? personaCfg.lockPercentile
+        : 25;
+      var dashWrap = document.getElementById('dash-vs-wrap');
+      if (!dashWrap) return;
+      // Idempotent: reuse existing node if present.
+      var node = dashWrap.querySelector('.nx-percentile');
+      if (!node) {
+        node = document.createElement('div');
+        node.className = 'nx-percentile';
+        node.setAttribute('aria-live', 'polite');
+        dashWrap.appendChild(node);
+      }
+      node.innerHTML =
+        "You'd be in the <span class='nx-pct-emph'>bottom</span> " +
+        "<span class='nx-pct-num'>" + pctNum + "%</span> " +
+        "of premium-payers in your bracket.";
+      // Slide in 1.5s after PLAN LOCKED caption fades — feels earned, not loud.
+      setTimeout(function () {
+        try { node.classList.add('is-visible'); } catch (e) {}
+      }, REDUCED_MOTION ? 50 : 1500);
+    } catch (e) { /* fail-safe — non-critical */ }
+  }
+
   // V21 — Reveal plan cards in dashboard zone, transform Value Stack into "locked" mode
   function surfacePlanOptions() {
     var planSet = window.MOCK_NORA_RESPONSE;
@@ -620,6 +651,9 @@
           },
           compareValue: compareValue
         });
+        // V24 Tier 4 · Spotify-Wrapped percentile callout — slides in 1.5s
+        // after the PLAN LOCKED caption fades. Single line under the dial.
+        surfacePercentile();
       } catch (e) { /* lock recompute failed; carry on */ }
     }
 
@@ -671,6 +705,8 @@
                 },
                 compareValue: compareValue
               });
+              // V24 Tier 4 · Re-surface percentile on user-chosen plan too.
+              surfacePercentile();
             }
             // Lemon-glow the chosen card.
             var chosenCard = pcEl.querySelector(
@@ -939,6 +975,18 @@
     // right copy variant without us having to thread `persona` through
     // every options bag.
     window.NORA_ACTIVE_PERSONA = ctx.persona;
+    // V24 Tier 4 · Surface persona-strings globally too, so satellite
+    // components (SocialProof, percentile insert) can read the persona's
+    // socialProofLabel + lockPercentile without re-fetching.
+    window.NORA_PERSONA_STRINGS = strings;
+
+    // V24 Tier 4 · Mount SocialProof live counter on dashboard.
+    try {
+      var spNode = document.querySelector('[data-social-proof][data-sp-host="dashboard"]');
+      if (spNode && window.SocialProof) {
+        window.SocialProof.mount(spNode, { persona: ctx.persona });
+      }
+    } catch (e) { /* fail-safe */ }
 
     scrollEl = $('#chat-scroll');
     qrEl     = $('#quick-replies');
@@ -1018,8 +1066,9 @@
       strings: strings,
       reset: function () { window.location.reload(); },
       // Test helpers — exposed for browser-console interactive testing
-      _testFinalize: function () { presentAuthGate(); },
-      _testPlans:    function () { surfacePlanOptions(); }
+      _testFinalize:   function () { presentAuthGate(); },
+      _testPlans:      function () { surfacePlanOptions(); },
+      _testPercentile: function () { surfacePercentile(); }
     };
   }
 

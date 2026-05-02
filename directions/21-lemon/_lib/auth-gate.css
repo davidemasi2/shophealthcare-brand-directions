@@ -383,6 +383,87 @@
   transform: translateY(2px);
 }
 
+/* -----------------------------------------------------------
+   V24 Tier 4 · Loss-aversion tooltip on Skip
+   ----------------------------------------------------------- */
+.auth-gate__skip {
+  position: relative;
+}
+.ag-skip-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--ag-ink);
+  color: var(--ag-cream);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 9px 14px;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 var(--ag-pink-dark);
+  max-width: 300px;
+  width: max-content;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity .18s cubic-bezier(.22,.61,.36,1),
+              transform .18s cubic-bezier(.22,.61,.36,1);
+}
+.ag-skip-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ag-ink);
+}
+.auth-gate__skip a:hover .ag-skip-tooltip,
+.auth-gate__skip a:focus-visible .ag-skip-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 4 · Enrollment-window deadline (TurboTax pattern)
+   Sits below the "30 days" carrot line. Honest OEP date.
+   ----------------------------------------------------------- */
+.ag-window-deadline {
+  display: block;
+  margin: 6px 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-mute);
+  line-height: 1.5;
+}
+.ag-window-deadline .ag-wd-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ag-ink);
+  padding: 0 1px;
+}
+.ag-window-deadline .ag-wd-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ag-pink-dark);
+  padding: 0 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-skip-tooltip,
+  .auth-gate__skip a:hover .ag-skip-tooltip {
+    transition: none;
+  }
+}
+
 /* Inline microcopy collapses on narrow */
 @media (max-width: 480px) {
   .auth-gate__microcopy--inline {
