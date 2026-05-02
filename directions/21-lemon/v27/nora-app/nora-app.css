@@ -772,6 +772,15 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   }
   .nx-shell[data-layout-phase="lock"] .plan-card__short { font-size: 18px; }
   .nx-shell[data-layout-phase="lock"] .plan-card__rationale { display: none; }
+  /* V27 F18 sibling — F18 compaction made carrier-text container ~38 px wide
+     which clipped "Regence BCBS" / "U of U Health" with ellipsis. Allow wrap
+     at this breakpoint+phase so the full carrier name reads. */
+  .nx-shell[data-layout-phase="lock"] .plan-card__carrier-text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.15;
+  }
 }
 
 /* Tablet (768–1023px) — drawer collapses */
