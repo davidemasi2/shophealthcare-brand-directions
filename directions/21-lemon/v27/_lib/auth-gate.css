@@ -1,0 +1,830 @@
+/* =============================================================
+   AUTH-GATE — V21 Component C
+   In-chat email gate that triggers during Nora's "while I finish"
+   moment. Plus banner UI for skip-for-now state.
+
+   Spec: front-end design/quiz-app-capture-flow.md §6
+         front-end design/nora-app-design-brief.md §7
+
+   Pairs with: auth-gate.js, session.js
+   ============================================================= */
+
+/* -----------------------------------------------------------
+   Local design tokens — fall back to lemon.css :root if available.
+   V24 Tier 5: defaults match V23 SHC-Match palette
+   (white/gold/teal/navy). NEVER use coral fallbacks here — they
+   would shadow the canonical teal --pink (#00B5D8).
+   ----------------------------------------------------------- */
+.auth-gate {
+  --ag-ink:        var(--ink, #0E2A3A);
+  --ag-cream:      var(--cream, #FFFFFF);
+  --ag-lemon:      var(--lemon, #FFC857);
+  --ag-blush:      var(--blush, #FFFFFF);
+  --ag-pink:       var(--pink, #00B5D8);
+  --ag-pink-dark:  var(--pink-dark, #007A93);
+  --ag-mute:       var(--mute, #5D7C8E);
+  --ag-rule:       var(--rule, #DDE9EE);
+
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ag-ink);
+  display: block;
+  width: 100%;
+}
+
+/* -----------------------------------------------------------
+   Chat bubble shell — looks like a Nora message extension
+   ----------------------------------------------------------- */
+.auth-gate__bubble {
+  position: relative;
+  background: var(--ag-cream);
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 18px;
+  /* V24 Tier 3 · Substack breathing — 28 24 from 22 24 20 */
+  padding: 28px 24px;
+  max-width: 520px;
+  box-shadow: 4px 4px 0 var(--ag-ink);
+  margin: 8px 0;
+  /* V24 Tier 5 — choreographed entrance: 460ms swift-settle from below */
+  animation: ag-bubble-in 460ms cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes ag-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-gate__bubble {
+    animation: none;
+  }
+}
+
+/* Avatar pip for "this is from Nora" continuity */
+.auth-gate__avatar {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 36px;
+  height: 36px;
+  background: var(--ag-lemon);
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ag-ink);
+  z-index: 2;
+}
+
+/* -----------------------------------------------------------
+   Copy block
+   ----------------------------------------------------------- */
+.auth-gate__copy {
+  margin: 0 0 16px;
+}
+.auth-gate__copy p {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ag-ink);
+}
+.auth-gate__copy p.is-lead {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  /* V24 Tier 3 · Substack moment — Fraunces 22px carries the headline */
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  margin-bottom: 14px;
+  color: var(--ag-ink);
+}
+.auth-gate__copy strong { font-weight: 600; }
+
+.auth-gate__no-followup {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 600;
+  margin: 14px 0 18px;
+}
+
+/* -----------------------------------------------------------
+   Form fields
+   ----------------------------------------------------------- */
+.auth-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-gate__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--ag-ink);
+  border-radius: 10px;
+  transition:
+    box-shadow 180ms cubic-bezier(.22,.61,.36,1),
+    border-color 180ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__field:focus-within {
+  border-color: var(--ag-ink);
+  box-shadow: 0 0 0 3px var(--ag-lemon);
+}
+.auth-gate__field-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  /* V24 Tier 3 · field height 44 → 52 for confidence */
+  height: 52px;
+  flex-shrink: 0;
+  color: var(--ag-mute);
+  font-size: 16px;
+}
+.auth-gate__field input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ag-ink);
+  /* V24 Tier 3 · matched 52px height via padding */
+  padding: 16px 14px 16px 0;
+  min-width: 0;
+}
+.auth-gate__field input::placeholder {
+  color: var(--ag-mute);
+}
+/* V24 Tier 6 · Teal correction halo, not red. Frames the error as
+   "Nora gently helping" not "you screwed up". */
+.auth-gate__field--error {
+  border-color: var(--ag-pink);
+  box-shadow: 0 0 0 3px rgba(0, 181, 216, .18);
+  transition: border-color 280ms cubic-bezier(.22,.61,.36,1),
+              box-shadow 280ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* V23 M5 — phone field hidden until SMS opt-in */
+.auth-gate__field--phone-hidden {
+  display: none;
+}
+
+/* -----------------------------------------------------------
+   Phone optional row
+   ----------------------------------------------------------- */
+.auth-gate__phone-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.auth-gate__sms-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ag-ink);
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 2px;
+}
+.auth-gate__sms-toggle input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ag-pink);
+  cursor: pointer;
+}
+.auth-gate__sms-toggle .ag-toggle-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--ag-mute);
+  margin-top: 2px;
+}
+
+/* -----------------------------------------------------------
+   "or" divider
+   ----------------------------------------------------------- */
+.auth-gate__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  color: var(--ag-mute);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.auth-gate__divider::before,
+.auth-gate__divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--ag-rule);
+}
+
+/* -----------------------------------------------------------
+   Buttons
+   ----------------------------------------------------------- */
+.auth-gate__btn {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1.5px solid var(--ag-ink);
+  border-radius: 10px;
+  /* V24 Tier 3 · CTA breathing — 12 18 → 16 28 for Substack-grade confidence */
+  padding: 16px 28px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 4px 4px 0 var(--ag-ink);
+  /* V24 Tier 5: unified 180ms swift-settle for all CTA hover state */
+  transition:
+    transform 180ms cubic-bezier(.22,.61,.36,1),
+    box-shadow 180ms cubic-bezier(.22,.61,.36,1),
+    background 180ms cubic-bezier(.22,.61,.36,1);
+  width: 100%;
+}
+.auth-gate__btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ag-ink);
+}
+.auth-gate__btn:active:not(:disabled) {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 var(--ag-ink);
+}
+.auth-gate__btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ag-ink);
+}
+
+.auth-gate__btn--primary {
+  background: var(--ag-pink);
+  color: #fff;
+}
+.auth-gate__btn--primary:hover:not(:disabled) {
+  background: var(--ag-pink-dark);
+}
+/* V23 M6 — visual disabled state for the Continue button until email validates */
+.auth-gate__btn--primary.is-disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.auth-gate__btn--primary.is-disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--ag-pink);
+}
+
+.auth-gate__btn--google {
+  background: #fff;
+  color: var(--ag-ink);
+}
+.auth-gate__btn--google .ag-google-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Spinner for loading state */
+.auth-gate__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ag-spin .7s linear infinite;
+}
+@keyframes ag-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 3 · Substack-grade social proof line — single mono-caps row
+   above the form. ink-mute, breathes between bubble copy + form.
+   ----------------------------------------------------------- */
+.auth-gate__social-proof {
+  margin: 4px 0 16px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* -----------------------------------------------------------
+   Microcopy — V24 Tier 3 · ONE inline single-line bottom strip,
+   separated by · for confident horizontal rhythm. Falls back to
+   stacked on narrow viewports.
+   ----------------------------------------------------------- */
+.auth-gate__microcopy {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--ag-rule);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 600;
+  line-height: 1.5;
+  /* default — kept for any consumer still using stacked variant */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.auth-gate__microcopy span { display: block; }
+.auth-gate__microcopy--inline {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  text-align: left;
+}
+.auth-gate__microcopy--inline span { display: inline; }
+.auth-gate__microcopy--inline .ag-micro-sep {
+  color: var(--ag-rule);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 3 · Skip link · breathing room + soft chevron
+   ----------------------------------------------------------- */
+.auth-gate__skip {
+  margin-top: 22px;
+  padding-top: 12px;
+  text-align: center;
+}
+.auth-gate__skip a {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-mute);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  cursor: pointer;
+  transition:
+    color 180ms cubic-bezier(.22,.61,.36,1),
+    border-color 180ms cubic-bezier(.22,.61,.36,1);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.auth-gate__skip a:hover {
+  color: var(--ag-ink);
+  border-bottom-color: var(--ag-ink);
+}
+.auth-gate__skip .ag-skip-chev {
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+  opacity: .85;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__skip a:hover .ag-skip-chev {
+  transform: translateY(2px);
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 4 · Loss-aversion tooltip on Skip
+   ----------------------------------------------------------- */
+.auth-gate__skip {
+  position: relative;
+}
+.ag-skip-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--ag-ink);
+  color: var(--ag-cream);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 9px 14px;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 var(--ag-pink-dark);
+  max-width: 300px;
+  width: max-content;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition:
+    opacity 180ms cubic-bezier(.22,.61,.36,1),
+    transform 180ms cubic-bezier(.22,.61,.36,1);
+}
+.ag-skip-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ag-ink);
+}
+.auth-gate__skip a:hover .ag-skip-tooltip,
+.auth-gate__skip a:focus-visible .ag-skip-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 4 · Enrollment-window deadline (TurboTax pattern)
+   Sits below the "30 days" carrot line. Honest OEP date.
+   ----------------------------------------------------------- */
+.ag-window-deadline {
+  display: block;
+  margin: 6px 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ag-mute);
+  line-height: 1.5;
+}
+.ag-window-deadline .ag-wd-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ag-ink);
+  padding: 0 1px;
+}
+.ag-window-deadline .ag-wd-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ag-pink-dark);
+  padding: 0 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-skip-tooltip,
+  .auth-gate__skip a:hover .ag-skip-tooltip {
+    transition: none;
+  }
+}
+
+/* Inline microcopy collapses on narrow */
+@media (max-width: 480px) {
+  .auth-gate__microcopy--inline {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .auth-gate__microcopy--inline .ag-micro-sep {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------
+   Inline error — V24 Tier 6 · teal-tinted Nora-helping framing,
+   not red-shoutiness. Soft fade-in + a small leading icon.
+   ----------------------------------------------------------- */
+.auth-gate__error {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 181, 216, 0.06);
+  border: 1px solid rgba(0, 181, 216, 0.32);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ag-pink-dark);
+  line-height: 1.4;
+  align-items: flex-start;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1),
+              transform 280ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__error::before {
+  content: '⊙';
+  flex: none;
+  font-size: 14px;
+  color: var(--ag-pink);
+  line-height: 1.2;
+}
+.auth-gate.is-error .auth-gate__error {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-gate__error { transition: none; }
+}
+
+/* -----------------------------------------------------------
+   Success state — replaces form with confirmation bubble
+   ----------------------------------------------------------- */
+.auth-gate__success {
+  display: none;
+}
+.auth-gate.is-success .auth-gate__form,
+.auth-gate.is-success .auth-gate__divider,
+.auth-gate.is-success .auth-gate__copy,
+.auth-gate.is-success .auth-gate__no-followup,
+.auth-gate.is-success .auth-gate__microcopy,
+.auth-gate.is-success .auth-gate__skip {
+  display: none;
+}
+.auth-gate.is-success .auth-gate__success {
+  display: block;
+}
+
+/* V24 Tier 6 · Eyebrow above the success message — frames it as a
+   completed step, not a casual confirmation. */
+.auth-gate__success-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-pink-dark);
+  margin: 0 0 10px;
+}
+.auth-gate__success-msg {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 0 0 8px;
+  color: var(--ag-ink);
+}
+.auth-gate__success-sub {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ag-mute);
+  margin: 0 0 14px;
+}
+.auth-gate__success-email {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  color: var(--ag-pink-dark);
+  font-size: .92em;
+}
+/* V24 Tier 6 · Soft Resend link — mute at rest, teal on hover. */
+.auth-gate__success-resend {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--ag-rule);
+  transition: color 180ms cubic-bezier(.22,.61,.36,1),
+              border-color 180ms cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__success-resend:hover {
+  color: var(--ag-pink-dark);
+  border-bottom-color: var(--ag-pink);
+}
+
+/* -----------------------------------------------------------
+   Hidden state
+   ----------------------------------------------------------- */
+.auth-gate.is-hidden {
+  display: none;
+}
+
+/* -----------------------------------------------------------
+   Loading state on Continue button — disable interactive
+   ----------------------------------------------------------- */
+.auth-gate.is-loading .auth-gate__btn {
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   Skip-banner — appears at top of dashboard when user skipped
+   ----------------------------------------------------------- */
+.auth-skip-banner {
+  background: var(--cream, #FFFFFF);
+  border: 1px solid var(--ink, #0E2A3A);
+  border-left: 6px solid var(--lemon, #FFC857);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink, #0E2A3A);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
+}
+.auth-skip-banner__icon {
+  font-size: 16px;
+  color: var(--pink-dark, #007A93);
+  flex-shrink: 0;
+}
+.auth-skip-banner__text {
+  flex: 1;
+  min-width: 200px;
+}
+.auth-skip-banner__btn {
+  appearance: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  background: var(--lemon, #FFC857);
+  color: var(--ink, #0E2A3A);
+  border: 1.5px solid var(--ink, #0E2A3A);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink, #0E2A3A);
+  transition:
+    transform 180ms cubic-bezier(.22,.61,.36,1),
+    box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+  flex-shrink: 0;
+}
+.auth-skip-banner__btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
+}
+
+/* -----------------------------------------------------------
+   Locked actions — graying out save/forward when skipped
+   ----------------------------------------------------------- */
+[data-auth-locked] {
+  position: relative;
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  filter: grayscale(0.4);
+}
+[data-auth-locked] * {
+  pointer-events: none !important;
+}
+[data-auth-locked]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+[data-auth-locked][data-auth-tooltip]::before {
+  content: attr(data-auth-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink, #0E2A3A);
+  color: var(--cream, #FFFFFF);
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms cubic-bezier(.22,.61,.36,1);
+  z-index: 10;
+}
+[data-auth-locked][data-auth-tooltip]:hover::before {
+  opacity: 1;
+}
+
+/* Lock icon overlay */
+.auth-locked-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: var(--ink, #0E2A3A);
+  color: var(--cream, #FFFFFF);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------
+   Mobile responsive
+   ----------------------------------------------------------- */
+@media (max-width: 480px) {
+  .auth-gate__bubble {
+    padding: 18px 16px 16px;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0 var(--ag-ink);
+  }
+  .auth-gate__avatar {
+    top: -8px;
+    left: -8px;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+  .auth-gate__copy p { font-size: 14px; }
+  .auth-gate__copy p.is-lead { font-size: 15.5px; }
+  .auth-gate__btn {
+    font-size: 14px;
+    padding: 11px 16px;
+  }
+  /* V24 Tier 7 · iOS zoom prevention — must be ≥16px on mobile */
+  .auth-gate__field input { font-size: 16px; }
+  .auth-skip-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* -----------------------------------------------------------
+   Reduced motion
+   ----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .auth-gate__btn,
+  .auth-gate__field,
+  .auth-gate__skip a,
+  .auth-skip-banner__btn {
+    transition: none !important;
+  }
+  .auth-gate__spinner {
+    animation: none !important;
+  }
+}
+
+/* -----------------------------------------------------------
+   V24 Tier 7 · A11y / mobile native — auth-gate
+   ----------------------------------------------------------- */
+@media (max-width: 480px) {
+  /* 44px minimum tap target on continue/google buttons */
+  .auth-gate__btn {
+    min-height: 44px;
+    padding: 12px 18px;
+  }
+  /* SMS checkbox row — taller hit area */
+  .auth-gate__sms-toggle {
+    min-height: 44px;
+    padding: 8px 0;
+  }
+  /* Skip link — wider hit zone */
+  .auth-gate__skip a {
+    display: inline-block;
+    padding: 10px 8px;
+    min-height: 44px;
+  }
+  /* Resend link inside success */
+  .auth-gate__success-resend {
+    display: inline-block;
+    padding: 10px 6px;
+    min-height: 44px;
+  }
+}
+
+/* Windows High Contrast Mode for auth-gate */
+@media (forced-colors: active) {
+  .auth-gate__bubble,
+  .auth-gate__field,
+  .auth-gate__btn {
+    border-color: CanvasText !important;
+    box-shadow: none !important;
+  }
+  .auth-gate__field--error {
+    outline: 2px solid Highlight;
+    box-shadow: none !important;
+  }
+}

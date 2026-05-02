@@ -1,0 +1,760 @@
+{
+  "id": "ocr-ON-compare-414",
+  "group": "ocr",
+  "persona": "CL1",
+  "edgeExit": null,
+  "phase": "compare",
+  "bp": "mobile-414",
+  "bpDims": {
+    "width": 414,
+    "height": 896
+  },
+  "ocr": true,
+  "reducedMotion": false,
+  "forcedColors": false,
+  "url": "http://localhost:8745/directions/21-lemon/v26/nora-app/index.html?p=CL1&s=CA&a=32&x=F&pg=0&c=none",
+  "params": {
+    "p": "CL1",
+    "s": "CA",
+    "a": 32,
+    "x": "F",
+    "pg": 0,
+    "c": "none"
+  },
+  "target": "v26",
+  "runLabel": "baseline-v26",
+  "timestamp": "2026-05-02T21:26:16.617Z",
+  "timing": {
+    "phaseSet": "compare",
+    "totalMs": 1543
+  },
+  "measurements": {
+    "viewport": {
+      "width": 414,
+      "height": 896,
+      "dpr": 1
+    },
+    "layoutPhase": "compare",
+    "docOverflow": 0,
+    "horizOverflow": 14,
+    "zones": {
+      "nx-shell": {
+        "rect": {
+          "top": 215,
+          "left": 12,
+          "width": 390,
+          "height": 652,
+          "right": 402,
+          "bottom": 867
+        },
+        "scrollHeight": 648,
+        "clientHeight": 648,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "grid",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-chat": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "none",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": false
+      },
+      "zone-dash": {
+        "rect": {
+          "top": 217,
+          "left": 14,
+          "width": 386,
+          "height": 648,
+          "right": 400,
+          "bottom": 865
+        },
+        "scrollHeight": 648,
+        "clientHeight": 648,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0.997858",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-drawer": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "none",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": false
+      },
+      "dash-estimate-block": {
+        "rect": {
+          "top": 237,
+          "left": 42,
+          "width": 330,
+          "height": 96,
+          "right": 372,
+          "bottom": 333
+        },
+        "scrollHeight": 95,
+        "clientHeight": 95,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      },
+      "dash-plan-cards-host": {
+        "rect": {
+          "top": 416,
+          "left": 42,
+          "width": 330,
+          "height": 426,
+          "right": 372,
+          "bottom": 843
+        },
+        "scrollHeight": 612,
+        "clientHeight": 426,
+        "scrollTop": 0,
+        "internallyScrollable": true,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "drawer-content": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "none",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "auto",
+        "overflowY": "auto",
+        "rendered": false
+      },
+      "drawer-empty": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": false
+      }
+    },
+    "truncated": [],
+    "offscreen": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "id": null,
+        "cls": "nx-logo",
+        "text": "\n      \n      ShopHealthcare\n    ",
+        "w": 167,
+        "h": 26
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "nx-account",
+        "text": "\n      \n    ",
+        "w": 36,
+        "h": 36
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "MATCHMATCH — We see you. Persona + state",
+        "w": 63,
+        "h": 11
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "READREAD — Age, sex, conditions — plus y",
+        "w": 63,
+        "h": 11
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-active",
+        "text": "PRICEPRICE — Your real number with your ",
+        "w": 63,
+        "h": 14
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "COMPARECOMPARE — Weigh your options. We ",
+        "w": 63,
+        "h": 8
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "LOCKLOCK — Hold this rate for 30 days.",
+        "w": 63,
+        "h": 8
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-conditional is-parked",
+        "text": "ENROLLENROLL — Ready when you are.",
+        "w": 63,
+        "h": 8
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "plan-cards__pager-btn",
+        "text": "›",
+        "w": 34,
+        "h": 44
+      }
+    ],
+    "hiddenCounts": {
+      "displayNone": 63,
+      "visibilityHidden": 5,
+      "hiddenAttr": 2,
+      "zeroOpacity": 12
+    },
+    "topAtCenter": [
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "plan-cards__head",
+        "z": "auto"
+      },
+      {
+        "tag": "div",
+        "id": "dashPlanCards",
+        "cls": "plan-cards is-revealed",
+        "z": "auto"
+      },
+      {
+        "tag": "div",
+        "id": "dash-plan-cards-host",
+        "cls": "nx-plan-cards-host",
+        "z": "auto"
+      },
+      {
+        "tag": "section",
+        "id": "zone-dash",
+        "cls": "nx-zone nx-dash nx-zone--lead is-active is-active-tab",
+        "z": "auto"
+      },
+      {
+        "tag": "main",
+        "id": "nx-shell",
+        "cls": "nx-shell",
+        "z": "auto"
+      }
+    ],
+    "planCardsMounted": 3,
+    "spotStyles": [
+      {
+        "tag": "h1",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "22.8px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "button",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "15px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "15px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "a",
+        "ff": "JetBrains Mono",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "a",
+        "ff": "Fraunces",
+        "fs": "17px",
+        "lh": "26.35px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "17px",
+        "lh": "26.35px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "17px",
+        "lh": "26.35px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "16px",
+        "lh": "24.8px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11.5px",
+        "lh": "17.825px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "13.65px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgb(0, 181, 216)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "13.65px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "13.65px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10px",
+        "lh": "14px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "14.7px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(14, 42, 58, 0.22)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(14, 42, 58, 0.22)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "56px",
+        "lh": "56px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(0, 122, 147)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9px",
+        "lh": "9px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11.5px",
+        "lh": "14.375px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(0, 181, 216)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "56px",
+        "lh": "56px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(0, 122, 147)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      }
+    ]
+  },
+  "axe": {
+    "violationCount": 2,
+    "violations": [
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "nodes": 1,
+        "selectors": [
+          ".plan-card--budget > h4"
+        ]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "nodes": 2,
+        "selectors": [
+          ".nx-unlock-trail-host",
+          "nav"
+        ]
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "screenshots": {
+    "full": "directions/21-lemon/v27/_audit/baseline-v26/ocr-ON-compare-414.png",
+    "chat": null,
+    "dash": "directions/21-lemon/v27/_audit/baseline-v26/ocr-ON-compare-414__dash.png",
+    "drawer": null
+  },
+  "errors": []
+}

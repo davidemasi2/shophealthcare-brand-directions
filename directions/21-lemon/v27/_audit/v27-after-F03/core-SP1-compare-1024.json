@@ -1,0 +1,776 @@
+{
+  "id": "core-SP1-compare-1024",
+  "group": "core",
+  "persona": "SP1",
+  "edgeExit": null,
+  "phase": "compare",
+  "bp": "tablet-1024",
+  "bpDims": {
+    "width": 1024,
+    "height": 768
+  },
+  "ocr": false,
+  "reducedMotion": false,
+  "forcedColors": false,
+  "url": "http://localhost:8745/directions/21-lemon/v27/nora-app/index.html?p=SP1&s=TX&a=35&x=M&pg=0&c=none",
+  "params": {
+    "p": "SP1",
+    "s": "TX",
+    "a": 35,
+    "x": "M",
+    "pg": 0,
+    "c": "none"
+  },
+  "target": "v27",
+  "runLabel": "v27-after-F03",
+  "timestamp": "2026-05-02T21:40:21.390Z",
+  "timing": {
+    "phaseSet": "compare",
+    "totalMs": 1955
+  },
+  "measurements": {
+    "viewport": {
+      "width": 1024,
+      "height": 768,
+      "dpr": 1
+    },
+    "layoutPhase": "compare",
+    "docOverflow": 0,
+    "horizOverflow": 0,
+    "zones": {
+      "nx-shell": {
+        "rect": {
+          "top": 183,
+          "left": 0,
+          "width": 1024,
+          "height": 580,
+          "right": 1024,
+          "bottom": 763
+        },
+        "scrollHeight": 576,
+        "clientHeight": 576,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "grid",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-chat": {
+        "rect": {
+          "top": 185,
+          "left": 2,
+          "width": 1020,
+          "height": 96,
+          "right": 1022,
+          "bottom": 281
+        },
+        "scrollHeight": 95,
+        "clientHeight": 95,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-dash": {
+        "rect": {
+          "top": 281,
+          "left": 2,
+          "width": 1020,
+          "height": 392,
+          "right": 1022,
+          "bottom": 673
+        },
+        "scrollHeight": 392,
+        "clientHeight": 392,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0.997858",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-drawer": {
+        "rect": {
+          "top": 673,
+          "left": 2,
+          "width": 1020,
+          "height": 88,
+          "right": 1022,
+          "bottom": 761
+        },
+        "scrollHeight": 87,
+        "clientHeight": 87,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "dash-estimate-block": {
+        "rect": {
+          "top": 301,
+          "left": 30,
+          "width": 964,
+          "height": 97,
+          "right": 994,
+          "bottom": 398
+        },
+        "scrollHeight": 96,
+        "clientHeight": 96,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      },
+      "dash-plan-cards-host": {
+        "rect": {
+          "top": 468,
+          "left": 30,
+          "width": 964,
+          "height": 183,
+          "right": 994,
+          "bottom": 651
+        },
+        "scrollHeight": 345,
+        "clientHeight": 183,
+        "scrollTop": 0,
+        "internallyScrollable": true,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "drawer-content": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "none",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "auto",
+        "overflowY": "auto",
+        "rendered": false
+      },
+      "drawer-empty": {
+        "rect": {
+          "top": 702,
+          "left": 372,
+          "width": 280,
+          "height": 35,
+          "right": 652,
+          "bottom": 736
+        },
+        "scrollHeight": 33,
+        "clientHeight": 33,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0.743748",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      }
+    },
+    "truncated": [],
+    "offscreen": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "id": null,
+        "cls": "nx-logo",
+        "text": "\n      \n      ShopHealthcare\n    ",
+        "w": 185,
+        "h": 29
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "nx-account",
+        "text": "\n      \n    ",
+        "w": 36,
+        "h": 36
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "MATCHMATCH — We see you. Persona + state",
+        "w": 113,
+        "h": 38
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "READREAD — Age, sex, conditions — plus y",
+        "w": 113,
+        "h": 38
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-active",
+        "text": "PRICEPRICE — Your real number with your ",
+        "w": 113,
+        "h": 42
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "COMPARECOMPARE — Weigh your options. We ",
+        "w": 113,
+        "h": 34
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "LOCKLOCK — Hold this rate for 30 days.",
+        "w": 113,
+        "h": 34
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-conditional is-parked",
+        "text": "ENROLLENROLL — Ready when you are.",
+        "w": 113,
+        "h": 32
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "plan-cards__pager-btn",
+        "text": "›",
+        "w": 28,
+        "h": 28
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "plan-cards__compare",
+        "text": "Compare full details ↓",
+        "w": 152,
+        "h": 31
+      }
+    ],
+    "hiddenCounts": {
+      "displayNone": 60,
+      "visibilityHidden": 0,
+      "hiddenAttr": 2,
+      "zeroOpacity": 7
+    },
+    "topAtCenter": [
+      {
+        "tag": "div",
+        "id": "dash-estimate-block",
+        "cls": "nx-dash-estimate-block",
+        "z": "auto"
+      },
+      {
+        "tag": "section",
+        "id": "zone-dash",
+        "cls": "nx-zone nx-dash nx-zone--lead",
+        "z": "auto"
+      },
+      {
+        "tag": "main",
+        "id": "nx-shell",
+        "cls": "nx-shell",
+        "z": "auto"
+      },
+      {
+        "tag": "body",
+        "id": null,
+        "cls": "motif-quiet nx-is-booting",
+        "z": "auto"
+      },
+      {
+        "tag": "html",
+        "id": null,
+        "cls": null,
+        "z": "auto"
+      }
+    ],
+    "planCardsMounted": 3,
+    "spotStyles": [
+      {
+        "tag": "h1",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "22.8px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "p",
+        "ff": "Fraunces",
+        "fs": "12px",
+        "lh": "16.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "15px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "15px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "a",
+        "ff": "JetBrains Mono",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "a",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(97, 201, 168)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "20px",
+        "lh": "31px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12.5px",
+        "lh": "19.375px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgb(0, 181, 216)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10px",
+        "lh": "14px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "14.7px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(14, 42, 58, 0.22)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(14, 42, 58, 0.22)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "56px",
+        "lh": "56px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9px",
+        "lh": "9px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11.5px",
+        "lh": "14.375px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(0, 181, 216)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "9.5px",
+        "lh": "9.5px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "56px",
+        "lh": "56px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "23.52px",
+        "lh": "23.52px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      }
+    ]
+  },
+  "axe": {
+    "violationCount": 3,
+    "violations": [
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "help": "ARIA role should be appropriate for the element",
+        "nodes": 1,
+        "selectors": [
+          "#zone-drawer"
+        ]
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "nodes": 1,
+        "selectors": [
+          ".plan-card--budget > h4"
+        ]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "nodes": 1,
+        "selectors": [
+          ".nx-unlock-trail-host"
+        ]
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "screenshots": {
+    "full": "directions/21-lemon/v27/_audit/v27-after-F03/core-SP1-compare-1024.png",
+    "chat": "directions/21-lemon/v27/_audit/v27-after-F03/core-SP1-compare-1024__chat.png",
+    "dash": "directions/21-lemon/v27/_audit/v27-after-F03/core-SP1-compare-1024__dash.png",
+    "drawer": "directions/21-lemon/v27/_audit/v27-after-F03/core-SP1-compare-1024__drawer.png"
+  },
+  "errors": []
+}

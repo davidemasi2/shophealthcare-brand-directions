@@ -1,0 +1,795 @@
+{
+  "id": "ocr-OFF-read-1440",
+  "group": "ocr",
+  "persona": "CL1",
+  "edgeExit": null,
+  "phase": "read",
+  "bp": "desktop-1440",
+  "bpDims": {
+    "width": 1440,
+    "height": 900
+  },
+  "ocr": false,
+  "reducedMotion": false,
+  "forcedColors": false,
+  "url": "http://localhost:8745/directions/21-lemon/v26/nora-app/index.html?p=CL1&s=CA&a=32&x=F&pg=0&c=none",
+  "params": {
+    "p": "CL1",
+    "s": "CA",
+    "a": 32,
+    "x": "F",
+    "pg": 0,
+    "c": "none"
+  },
+  "target": "v26",
+  "runLabel": "baseline-v26",
+  "timestamp": "2026-05-02T21:25:49.330Z",
+  "timing": {
+    "phaseSet": "read",
+    "totalMs": 1668
+  },
+  "measurements": {
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1
+    },
+    "layoutPhase": "read",
+    "docOverflow": 0,
+    "horizOverflow": 0,
+    "zones": {
+      "nx-shell": {
+        "rect": {
+          "top": 211,
+          "left": 0,
+          "width": 1440,
+          "height": 656,
+          "right": 1440,
+          "bottom": 867
+        },
+        "scrollHeight": 652,
+        "clientHeight": 652,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "grid",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-chat": {
+        "rect": {
+          "top": 213,
+          "left": 2,
+          "width": 890,
+          "height": 564,
+          "right": 892,
+          "bottom": 777
+        },
+        "scrollHeight": 564,
+        "clientHeight": 564,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-dash": {
+        "rect": {
+          "top": 213,
+          "left": 892,
+          "width": 546,
+          "height": 564,
+          "right": 1438,
+          "bottom": 777
+        },
+        "scrollHeight": 713,
+        "clientHeight": 564,
+        "scrollTop": 0,
+        "internallyScrollable": true,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0.995323",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "zone-drawer": {
+        "rect": {
+          "top": 777,
+          "left": 2,
+          "width": 1436,
+          "height": 88,
+          "right": 1438,
+          "bottom": 865
+        },
+        "scrollHeight": 87,
+        "clientHeight": 87,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "hidden",
+        "overflowY": "hidden",
+        "rendered": true
+      },
+      "dash-estimate-block": {
+        "rect": {
+          "top": 229,
+          "left": 910,
+          "width": 509,
+          "height": 553,
+          "right": 1419,
+          "bottom": 782
+        },
+        "scrollHeight": 553,
+        "clientHeight": 553,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      },
+      "dash-plan-cards-host": {
+        "rect": {
+          "top": 860,
+          "left": 910,
+          "width": 509,
+          "height": 0,
+          "right": 1419,
+          "bottom": 860
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      },
+      "drawer-content": {
+        "rect": {
+          "top": 0,
+          "left": 0,
+          "width": 0,
+          "height": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "scrollHeight": 0,
+        "clientHeight": 0,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "none",
+        "visibility": "visible",
+        "opacity": "1",
+        "zIndex": "auto",
+        "overflowX": "auto",
+        "overflowY": "auto",
+        "rendered": false
+      },
+      "drawer-empty": {
+        "rect": {
+          "top": 806,
+          "left": 580,
+          "width": 280,
+          "height": 35,
+          "right": 860,
+          "bottom": 840
+        },
+        "scrollHeight": 33,
+        "clientHeight": 33,
+        "scrollTop": 0,
+        "internallyScrollable": false,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "0.698427",
+        "zIndex": "auto",
+        "overflowX": "visible",
+        "overflowY": "visible",
+        "rendered": true
+      }
+    },
+    "truncated": [],
+    "offscreen": [
+      {
+        "tag": "a",
+        "id": null,
+        "text": "NIPR.com",
+        "rect": {
+          "top": 895,
+          "bottom": 908
+        },
+        "reach": "unreachable"
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "id": null,
+        "cls": "nx-logo",
+        "text": "\n      \n      ShopHealthcare\n    ",
+        "w": 185,
+        "h": 29
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "nx-account",
+        "text": "\n      \n    ",
+        "w": 36,
+        "h": 36
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "MATCHMATCH — We see you. Persona + state",
+        "w": 180,
+        "h": 38
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-completed",
+        "text": "READREAD — Age, sex, conditions — plus y",
+        "w": 180,
+        "h": 38
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-active",
+        "text": "PRICEPRICE — Your real number with your ",
+        "w": 180,
+        "h": 42
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "COMPARECOMPARE — Weigh your options. We ",
+        "w": 180,
+        "h": 34
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage",
+        "text": "LOCKLOCK — Hold this rate for 30 days.",
+        "w": 180,
+        "h": 34
+      },
+      {
+        "tag": "div",
+        "id": null,
+        "cls": "ut-stage is-conditional is-parked",
+        "text": "ENROLLENROLL — Ready when you are.",
+        "w": 180,
+        "h": 32
+      },
+      {
+        "tag": "input",
+        "id": "chat-input",
+        "cls": "nx-input",
+        "text": "Message Nora",
+        "w": 789,
+        "h": 38
+      },
+      {
+        "tag": "button",
+        "id": null,
+        "cls": "nx-send",
+        "text": "\n            \n              \n           ",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "tag": "a",
+        "id": null,
+        "cls": null,
+        "text": "NIPR.com",
+        "w": 54,
+        "h": 13
+      }
+    ],
+    "hiddenCounts": {
+      "displayNone": 47,
+      "visibilityHidden": 0,
+      "hiddenAttr": 2,
+      "zeroOpacity": 7
+    },
+    "topAtCenter": [
+      {
+        "tag": "div",
+        "id": "chat-scroll",
+        "cls": "nx-chat-scroll",
+        "z": "auto"
+      },
+      {
+        "tag": "section",
+        "id": "zone-chat",
+        "cls": "nx-zone nx-chat is-active nx-zone--lead",
+        "z": "auto"
+      },
+      {
+        "tag": "main",
+        "id": "nx-shell",
+        "cls": "nx-shell",
+        "z": "auto"
+      },
+      {
+        "tag": "body",
+        "id": null,
+        "cls": "motif-quiet nx-is-booting",
+        "z": "auto"
+      },
+      {
+        "tag": "html",
+        "id": null,
+        "cls": null,
+        "z": "auto"
+      }
+    ],
+    "planCardsMounted": 0,
+    "spotStyles": [
+      {
+        "tag": "h1",
+        "ff": "Fraunces",
+        "fs": "16px",
+        "lh": "19.2px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "h2",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 255, 255)"
+      },
+      {
+        "tag": "button",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "a",
+        "ff": "JetBrains Mono",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "a",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "a",
+        "ff": "JetBrains Mono",
+        "fs": "10px",
+        "lh": "16px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "input",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "normal",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "label",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(255, 200, 87)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "19px",
+        "lh": "29.45px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(97, 201, 168)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Fraunces",
+        "fs": "20px",
+        "lh": "31px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12.5px",
+        "lh": "19.375px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "16.275px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgb(97, 201, 168)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "14.5px",
+        "lh": "21.75px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgb(0, 181, 216)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "11px",
+        "lh": "14.3px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "15px",
+        "lh": "23.25px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "13px",
+        "lh": "20.15px",
+        "color": "rgb(255, 200, 87)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "13px",
+        "lh": "20.15px",
+        "color": "rgb(255, 200, 87)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "13px",
+        "lh": "20.15px",
+        "color": "rgb(255, 200, 87)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "13px",
+        "lh": "20.15px",
+        "color": "rgb(255, 200, 87)",
+        "bg": "rgb(14, 42, 58)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(14, 42, 58)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "11px",
+        "lh": "17.05px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "Inter",
+        "fs": "12px",
+        "lh": "18.6px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10px",
+        "lh": "14px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "tag": "span",
+        "ff": "JetBrains Mono",
+        "fs": "10.5px",
+        "lh": "14.7px",
+        "color": "rgb(74, 102, 120)",
+        "bg": "rgba(0, 0, 0, 0)"
+      }
+    ]
+  },
+  "axe": {
+    "violationCount": 3,
+    "violations": [
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "help": "ARIA role should be appropriate for the element",
+        "nodes": 1,
+        "selectors": [
+          "#zone-drawer"
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selectors": [
+          ".is-conditional > .ut-label"
+        ]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "nodes": 1,
+        "selectors": [
+          ".nx-unlock-trail-host"
+        ]
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "screenshots": {
+    "full": "directions/21-lemon/v27/_audit/baseline-v26/ocr-OFF-read-1440.png",
+    "chat": "directions/21-lemon/v27/_audit/baseline-v26/ocr-OFF-read-1440__chat.png",
+    "dash": "directions/21-lemon/v27/_audit/baseline-v26/ocr-OFF-read-1440__dash.png",
+    "drawer": "directions/21-lemon/v27/_audit/baseline-v26/ocr-OFF-read-1440__drawer.png"
+  },
+  "errors": []
+}

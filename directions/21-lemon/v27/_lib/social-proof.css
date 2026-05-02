@@ -1,0 +1,97 @@
+/* =============================================================
+   SOCIAL PROOF — V24 Tier 4
+   Live ticker badge for hero + dashboard. Persona-aware label.
+   Single-line, mono caps, ink-mute, with teal pulsing dot.
+   Premium-warm — never casino-dopamine.
+   ============================================================= */
+
+[data-social-proof] {
+  /* Keep it as a clean inline-flex chip line */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--mute, #5D7C8E);
+  line-height: 1.3;
+  margin: 14px 0 0;
+  white-space: nowrap;
+  /* Container is layout-neutral; consumers slot it where they want */
+  pointer-events: none; /* visual only — never blocks clicks */
+}
+
+[data-social-proof] .sp-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink, #00B5D8);
+  position: relative;
+  flex-shrink: 0;
+  /* Soft pulse ring */
+  box-shadow: 0 0 0 0 rgba(0, 181, 216, 0.6);
+  animation: sp-pulse 2s cubic-bezier(.22,.61,.36,1) infinite;
+}
+
+[data-social-proof] .sp-num {
+  /* The number itself stays in ink for prominence — slight bump */
+  color: var(--ink, #0E2A3A);
+  font-weight: 700;
+  /* Subtle slot-machine highlight when changing */
+  transition: color 460ms cubic-bezier(.22,.61,.36,1),
+              transform 460ms cubic-bezier(.22,.61,.36,1);
+  display: inline-block;
+}
+
+[data-social-proof] .sp-num.is-ticking {
+  color: var(--pink-dark, #007A93);
+  transform: translateY(-1px);
+}
+
+[data-social-proof] .sp-label,
+[data-social-proof] .sp-sep {
+  color: var(--mute, #5D7C8E);
+}
+
+@keyframes sp-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0, 181, 216, 0.55); }
+  50%  { box-shadow: 0 0 0 6px rgba(0, 181, 216, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 181, 216, 0); }
+}
+
+/* Hero slot — sits below the chat-preview card, light separation */
+.hero-right [data-social-proof],
+.hero-left  [data-social-proof] {
+  margin-top: 16px;
+}
+
+/* Dashboard slot — sits below reinforce paragraph, tight to the eyebrow rhythm */
+.nx-dash-header [data-social-proof],
+.nx-dash [data-social-proof] {
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+/* Mobile — wrap allowed, tighter rhythm */
+@media (max-width: 480px) {
+  [data-social-proof] {
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    white-space: normal;
+  }
+}
+
+/* Reduced motion — kill pulse + tick highlight, keep static count */
+@media (prefers-reduced-motion: reduce) {
+  [data-social-proof] .sp-dot {
+    animation: none;
+    box-shadow: none;
+  }
+  [data-social-proof] .sp-num.is-ticking {
+    color: var(--ink, #0E2A3A);
+    transform: none;
+  }
+}

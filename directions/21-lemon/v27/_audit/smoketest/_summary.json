@@ -1,0 +1,34 @@
+{
+  "target": "v26",
+  "runLabel": "smoketest",
+  "timestamp": "2026-05-02T21:23:36.217Z",
+  "cellCount": 1,
+  "completed": 1,
+  "failed": 0,
+  "findings": {
+    "docOverflow": 0,
+    "horizOverflow": 0,
+    "truncated": 0,
+    "offscreenUnreachable": 1,
+    "smallTargets": 11,
+    "axeViolations": 4,
+    "consoleErrors": 0,
+    "cellErrors": 0
+  },
+  "perCell": [
+    {
+      "id": "core-SP1-compare-1440",
+      "group": "core",
+      "bp": "desktop-1440",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 1,
+      "smallTargets": 11,
+      "axeViolations": 4,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1793
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "target": "v27",
+  "runLabel": "v27-after-F07",
+  "timestamp": "2026-05-02T21:46:46.639Z",
+  "cellCount": 5,
+  "completed": 5,
+  "failed": 0,
+  "findings": {
+    "docOverflow": 0,
+    "horizOverflow": 0,
+    "truncated": 0,
+    "offscreenUnreachable": 2,
+    "smallTargets": 49,
+    "axeViolations": 10,
+    "consoleErrors": 0,
+    "cellErrors": 0
+  },
+  "perCell": [
+    {
+      "id": "core-SP1-read-360",
+      "group": "core",
+      "bp": "mobile-360",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 0,
+      "smallTargets": 8,
+      "axeViolations": 2,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1641
+    },
+    {
+      "id": "core-SP1-compare-414",
+      "group": "core",
+      "bp": "mobile-414",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 0,
+      "smallTargets": 9,
+      "axeViolations": 2,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1644
+    },
+    {
+      "id": "core-SP1-read-1440",
+      "group": "core",
+      "bp": "desktop-1440",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 1,
+      "smallTargets": 11,
+      "axeViolations": 2,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1789
+    },
+    {
+      "id": "core-SP1-compare-1440",
+      "group": "core",
+      "bp": "desktop-1440",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 0,
+      "smallTargets": 10,
+      "axeViolations": 2,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1807
+    },
+    {
+      "id": "persona-CL1-read-1440",
+      "group": "persona",
+      "bp": "desktop-1440",
+      "docOverflow": 0,
+      "horizOverflow": 0,
+      "truncated": 0,
+      "offscreen": 1,
+      "smallTargets": 11,
+      "axeViolations": 2,
+      "consoleErrors": 0,
+      "errors": 0,
+      "ms": 1765
+    }
+  ]
+}
