@@ -1,0 +1,743 @@
+/* =============================================================
+   PLAN-REPORT — V21 Component D · Mode 2
+   Detailed plan report rendered inside the right drawer.
+   Sections cascade-reveal with 200ms stagger on mount.
+   ============================================================= */
+
+.plan-report {
+  /* V24 Tier 5: SHC-Match defaults (white/gold/teal/navy) */
+  --pr-ink:        var(--ink, #0E2A3A);
+  --pr-cream:      var(--cream, #FFFFFF);
+  --pr-lemon:      var(--lemon, #FFC857);
+  --pr-blush:      var(--blush, #FFFFFF);
+  --pr-pink:       var(--pink, #00B5D8);
+  --pr-pink-dark:  var(--pink-dark, #007A93);
+  --pr-mute:       var(--mute, #5D7C8E);
+  --pr-rule:       var(--rule, #DDE9EE);
+
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--pr-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 4px;
+}
+
+/* Each section reveals with translateY + opacity stagger */
+.plan-report__section {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report.is-revealed .plan-report__section {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plan-report__section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Eyebrow rows shared across all sections */
+.plan-report__eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pr-mute);
+  margin: 0 0 10px;
+}
+
+/* SECTION 1 — Heading
+   V23 H7 — heading sticks to top of drawer scroll. Background matches drawer
+   so contents flow underneath cleanly. */
+.plan-report__section[data-pr-section="heading"] {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--pr-cream);
+  margin: -4px -4px 0;
+  padding: 12px 4px 14px;
+  border-bottom: 1.5px solid var(--pr-rule);
+}
+.plan-report__heading-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pr-mute);
+  margin: 0 0 4px;
+}
+.plan-report__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--pr-ink);
+  margin: 0 0 6px;
+  /* V23 H7 — wrap full plan name; never truncate */
+  word-break: break-word;
+  hyphens: auto;
+}
+.plan-report__subtitle {
+  font-size: 12px;
+  color: var(--pr-mute);
+  margin: 0;
+}
+.plan-report__subtitle .pr-dot {
+  display: inline-block;
+  margin: 0 6px;
+  opacity: .5;
+}
+
+/* SECTION 2 — Premium block (ValueStack host) */
+.plan-report__premium {
+  display: flex;
+  justify-content: center;
+  padding: 8px 4px 12px;
+  border-top: 1px dashed var(--pr-rule);
+  border-bottom: 1px dashed var(--pr-rule);
+}
+.plan-report__premium-host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+/* Fallback (when ValueStack not loaded) */
+.plan-report__premium-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.plan-report__premium-fallback .prf-primary {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--pr-ink);
+  display: inline-flex;
+  align-items: baseline;
+}
+.plan-report__premium-fallback .prf-primary .prf-prefix,
+.plan-report__premium-fallback .prf-primary .prf-suffix {
+  font-size: 0.42em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pr-mute);
+}
+.plan-report__premium-fallback .prf-primary .prf-prefix { margin-right: 0.05em; }
+.plan-report__premium-fallback .prf-primary .prf-suffix { margin-left: 0.06em; }
+.plan-report__premium-fallback .prf-secondary {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--pr-ink);
+}
+.plan-report__premium-fallback .prf-secondary-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--pr-mute);
+  margin-right: 6px;
+}
+.plan-report__premium-fallback .prf-tertiary {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--pr-pink-dark);
+}
+.plan-report__premium-fallback .prf-tertiary-anchor {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pr-mute);
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+  max-width: 280px;
+  text-align: center;
+}
+
+/* SECTION 3/4/5 — Bullet rows (things-youll-use, things-to-know, exclusions) */
+.plan-report__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.plan-report__list-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--pr-ink);
+}
+.plan-report__list-row .pr-mark {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--pr-ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  margin-top: 1px;
+}
+.plan-report__list--use .pr-mark {
+  color: var(--pr-pink-dark);
+}
+.plan-report__list--know .pr-mark {
+  color: var(--pr-mute);
+}
+.plan-report__list--excl .pr-mark {
+  color: var(--pr-pink-dark);
+}
+.plan-report__list-row .pr-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* SECTION 6 — Add-ons */
+.plan-report__addons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.plan-report__addon-cat {
+  border: 1.5px solid var(--pr-rule);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--pr-cream);
+}
+.plan-report__addon-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.plan-report__addon-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--pr-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.plan-report__addon-name .pr-icon {
+  font-size: 16px;
+}
+.plan-report__addon-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.plan-report__addon-tier {
+  background: var(--pr-cream);
+  border: 1.5px solid var(--pr-ink);
+  border-radius: 8px;
+  padding: 8px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+.plan-report__addon-tier .pr-tier-price {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+}
+.plan-report__addon-tier .pr-tier-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pr-mute);
+  font-weight: 600;
+}
+.plan-report__addon-tier:hover {
+  background: var(--pr-blush);
+}
+.plan-report__addon-tier.is-selected {
+  background: var(--pr-lemon);
+  box-shadow: 2px 2px 0 var(--pr-ink);
+  transform: translate(-1px, -1px);
+}
+.plan-report__addon-foot {
+  font-size: 11px;
+  color: var(--pr-mute);
+  margin: 0;
+}
+.plan-report__addon-cta {
+  background: none;
+  border: none;
+  padding: 6px 0 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pr-pink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Add-on flash badge — pops in then fades */
+.plan-report__addon-flash {
+  position: fixed;
+  z-index: 50;
+  background: var(--pr-lemon);
+  color: var(--pr-ink);
+  border: 2px solid var(--pr-ink);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1), transform 280ms cubic-bezier(.22,.61,.36,1);
+  box-shadow: 3px 3px 0 var(--pr-ink);
+}
+.plan-report__addon-flash.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* SECTION 7 — Fine print collapse · V24 Tier 3 Apple-Card progressive depth */
+.plan-report__fineprint {
+  background: rgba(14,42,58,0.04);
+  border: 1.5px dashed var(--pr-rule);
+  border-radius: 10px;
+  transition: background 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__fineprint-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pr-mute);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-radius: 9px 9px 0 0;
+  transition: background 180ms cubic-bezier(.22,.61,.36,1),
+              color 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__fineprint-toggle:hover {
+  background: rgba(0, 181, 216, 0.04);
+  color: var(--pr-ink);
+}
+.plan-report__fineprint-toggle:hover .pr-chev {
+  color: var(--pink, #00B5D8);
+}
+.plan-report__fineprint-toggle .pr-toggle-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  letter-spacing: .14em;
+}
+.plan-report__fineprint-toggle .pr-toggle-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--pr-mute);
+  text-transform: none;
+  opacity: .85;
+}
+.plan-report__fineprint-toggle .pr-chev {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--pr-mute);
+  transition:
+    transform 180ms cubic-bezier(.22,.61,.36,1),
+    color 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__fineprint.is-open .plan-report__fineprint-toggle .pr-chev {
+  transform: rotate(90deg);
+  color: var(--pink, #00B5D8);
+}
+.plan-report__fineprint-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+.plan-report__fineprint.is-open .plan-report__fineprint-body {
+  display: block;
+}
+.plan-report__benefits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.plan-report__benefits-table th,
+.plan-report__benefits-table td {
+  text-align: left;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+.plan-report__benefits-table tr {
+  border-top: 1px dashed var(--pr-rule);
+}
+.plan-report__benefits-table th {
+  font-weight: 600;
+  color: var(--pr-ink);
+  width: 45%;
+}
+.plan-report__benefits-table td {
+  color: var(--pr-mute);
+}
+
+/* SECTION 8 — Action row */
+.plan-report__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.plan-report__action {
+  background: var(--pr-cream);
+  border: 1.5px solid var(--pr-ink);
+  border-radius: 10px;
+  padding: 10px 6px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--pr-ink);
+  position: relative;
+  box-shadow: 2px 2px 0 var(--pr-ink);
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__action:hover {
+  background: var(--pr-lemon);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--pr-ink);
+}
+.plan-report__action .pr-act-icon {
+  font-size: 16px;
+}
+.plan-report__action.is-locked {
+  opacity: .55;
+  cursor: not-allowed;
+  background: rgba(14,42,58,0.04);
+}
+.plan-report__action.is-locked:hover {
+  background: rgba(14,42,58,0.04);
+  transform: none;
+  box-shadow: 2px 2px 0 var(--pr-ink);
+}
+.plan-report__action-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--pr-ink);
+  color: var(--pr-cream);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__action.is-locked:hover .plan-report__action-tooltip {
+  opacity: 1;
+}
+
+/* SECTION 9 — Continue CTA */
+.plan-report__continue {
+  width: 100%;
+  background: var(--pr-pink);
+  color: var(--pr-ink);
+  border: 2px solid var(--pr-ink);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--pr-ink);
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__continue:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--pr-ink);
+}
+.plan-report__continue:active {
+  transform: translate(0,0);
+  box-shadow: 1px 1px 0 var(--pr-ink);
+}
+
+/* License footer */
+.plan-report__license {
+  font-size: 10.5px;
+  color: var(--pr-mute);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Skip-mode banner at top of drawer */
+.plan-report__skip-banner {
+  background: var(--pr-blush);
+  border: 1.5px dashed var(--pr-pink-dark);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--pr-ink);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.plan-report__skip-banner button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--pr-pink-dark);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .plan-report__title { font-size: 20px; }
+  .plan-report__premium-fallback .prf-primary { font-size: 44px; }
+  .plan-report__addon-tiers { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* V24 Tier 7 · A11y / HCM for plan-report drawer */
+@media (forced-colors: active) {
+  .plan-report__section {
+    border: 1px solid CanvasText !important;
+  }
+  .plan-report__fineprint-toggle,
+  .plan-report__cta {
+    border: 2px solid CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+  .plan-report__fineprint-toggle[aria-expanded="true"] {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+}
+
+
+/* =============================================================
+   V25 · MODE 2B — Switch Report
+   Renders when window.NORA_OCR_BASELINE is set. Replaces the
+   heading + premium block with a 4-section switch summary.
+   ============================================================= */
+
+.plan-report__section--switch-header {
+  margin-bottom: 4px;
+}
+.plan-report__switch-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  line-height: 1.18;
+  color: var(--pr-ink, #0E2A3A);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  margin: 4px 0 0;
+}
+.pr-switch-from {
+  text-decoration: line-through;
+  text-decoration-color: rgba(14, 42, 58, 0.4);
+  color: var(--pr-mute, #4A6678);
+  font-weight: 500;
+}
+.pr-switch-arrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: var(--pr-pink, #00B5D8);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.pr-switch-to {
+  color: var(--pr-ink, #0E2A3A);
+  font-weight: 600;
+}
+
+/* The savings number — Fraunces, large, lemon-anchored */
+.plan-report__section--switch-savings {
+  background: linear-gradient(180deg, #FFF8C8 0%, var(--pr-cream, #FFFFFF) 100%);
+  border: 2px solid var(--pr-ink, #0E2A3A);
+  border-radius: 14px;
+  padding: 18px 20px 16px;
+  box-shadow: 4px 4px 0 var(--pr-ink, #0E2A3A);
+  margin: 12px 0 6px;
+}
+.plan-report__savings-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pr-mute, #4A6678);
+  margin-bottom: 4px;
+}
+.plan-report__savings-amount {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--pr-ink, #0E2A3A);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: baseline;
+  margin: 4px 0 4px;
+}
+.plan-report__savings-amount .pr-savings-prefix {
+  font-size: 0.42em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pr-mute, #4A6678);
+  letter-spacing: 0;
+  margin-right: 0.04em;
+}
+.plan-report__savings-label {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pr-ink, #0E2A3A);
+  margin-bottom: 12px;
+}
+.plan-report__savings-monthly {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pr-ink, #0E2A3A);
+  padding-top: 10px;
+  border-top: 1px dashed rgba(14, 42, 58, 0.25);
+  font-variant-numeric: tabular-nums;
+}
+.plan-report__savings-monthly strong {
+  font-weight: 700;
+  color: var(--pr-pink-dark, #007A93);
+}
+.plan-report__savings-tradeoff {
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--pr-ink, #0E2A3A);
+  margin: 4px 0 0;
+}
+.plan-report__savings-tradeoff strong {
+  font-weight: 700;
+}
+
+/* Diff bullet list (What changes / What stays) */
+.plan-report__list--diff,
+.plan-report__list--stays {
+  margin-top: 4px;
+}
+.plan-report__list--diff .pr-mark,
+.plan-report__list--stays .pr-mark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  width: 18px;
+  display: inline-flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pr-mark--down  { color: var(--pr-pink-dark, #007A93); }
+.pr-mark--up    { color: #B97A00; }
+.pr-mark--right { color: var(--pr-pink, #00B5D8); }
+.pr-mark--check { color: var(--pr-pink-dark, #007A93); }
+
+/* Mode 2B body padding tightening — savings panel already has
+   strong visual weight, so we don't need extra section gaps */
+.plan-report.plan-report--mode-2b .plan-report__section {
+  padding-top: 8px;
+}
+.plan-report.plan-report--mode-2b .plan-report__section--switch-header,
+.plan-report.plan-report--mode-2b .plan-report__section--switch-savings {
+  padding-top: 0;
+}
+
+/* Cross-fade transition when 2A → 2B (retroactive scan) */
+.plan-report {
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report.is-mode-flipping {
+  opacity: 0.4;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .plan-report__savings-amount {
+    font-size: 44px;
+  }
+  .plan-report__savings-label { font-size: 14px; }
+  .plan-report__switch-title { font-size: 18px; }
+  .plan-report__section--switch-savings {
+    padding: 14px 16px 12px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .plan-report { transition: none; }
+}
+
+/* Forced colors */
+@media (forced-colors: active) {
+  .plan-report__section--switch-savings {
+    background: Canvas !important;
+    border: 2px solid CanvasText;
+  }
+}

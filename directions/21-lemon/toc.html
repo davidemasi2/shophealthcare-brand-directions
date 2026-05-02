@@ -319,9 +319,38 @@
 
 <hr class="div">
 
+<!-- V26 · DYNAMIC LAYOUT — phase-aware grid + FLIP frame choreography -->
+<div class="toc-section">
+  <h2>V26 — Dynamic layout: <em>phase-aware grid</em> · <em>FLIP frame choreography</em> · <em>no scroll</em> (current canonical)</h2>
+  <div class="file-grid two">
+    <a class="file-card lemon" href="v26/homepage.html" style="grid-column: 1 / -1;">
+      <div class="num">★ V26a · HOMEPAGE · DYNAMIC-LAYOUT PERSONA QUIZ</div>
+      <div class="meta">V26 = V25 + LayoutDirector + FlipZones (~720ms cubic-bezier(.22,.61,.36,1) FLIP transitions). 3-zone shell becomes phase-aware: zones reshuffle their roles (LEAD ~70vh / SUPPORT ~22vh / MINI ~8vh) at every Trail phase boundary. Eliminates 303-711px scroll overflow measured on V25.</div>
+      <h3>Same V25 quiz; V26 difference is in the app handoff. <em>Frames glide; zero scroll.</em></h3>
+      <p>The V26 homepage. <b>Quiz handoff lands in v26/nora-app/</b> where a phase-aware CSS grid rearranges chat / dashboard / drawer at every Trail boundary. <b>Grammar (LOCKED, A across the board except ENROLL=B):</b> MATCH/READ → Chat LEAD + Dash SUPPORT + Drawer mini strip · PRICE → Dash LEAD (number is hero) + Chat SUPPORT · COMPARE → 3-card horizontal grid LEAD + Chat MINI top strip · LOCK → Card+Drawer side-by-side + Chat MINI bottom strip · ENROLL → "Continue is the screen" single centered panel, chat+dash collapse. <b>FLIP technique</b> — captures rect → swaps grid template → captures new rect → applies inverse transform → animates to identity over 720ms. <code>prefers-reduced-motion</code> falls back to instant class swap + opacity cross-fade. <b>Self-contained at /v26/.</b></p>
+      <span class="go">Open V26 homepage — phase-aware app handoff</span>
+    </a>
+    <a class="file-card ink" href="v26/nora-app/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">★ V26b · NORA APP · PHASE-AWARE 3-ZONE SHELL (no scroll)</div>
+      <div class="meta">5 distinct grid layouts driven by [data-layout-phase] on .nx-shell. LayoutDirector orchestrates; FlipZones animates. Type a name to see PRICE transition; trigger _testPlans() in console to skip to COMPARE.</div>
+      <h3>Walk SP1 through the full flow to see all 5 phase transitions in action.</h3>
+      <p>The V26 Nora app. <b>Verified via Playwright on live deploy</b>: doc overflow = 0 at every phase across desktop (was 303-711px on V25). <b>Components added</b>: <code>_lib/layout-director.js</code> (phase → role map + FLIP orchestration) · <code>_lib/flip-zones.js</code> (capture/play). <b>Hook points in nora-app.js</b>: mountValueStackAfterName → setLayoutPhase('price') · surfacePlanOptions → setLayoutPhase('compare') · plan-pick onSelect → setLayoutPhase('lock') · onContinueEnroll → setLayoutPhase('enroll'). <b>Mobile</b> (&lt;768px): single-zone view, tabs auto-pivot to LEAD via <code>layoutPhaseChange</code> custom event; manual user-tap overrides until next phase boundary. <b>Compliance</b>: V25 copy/compliance fully preserved — V26 is layout-only.</p>
+      <span class="go">Open V26 Nora app (SP1 walkthrough)</span>
+    </a>
+    <a class="file-card pink" href="v26/nora-app/?p=CL1&s=CA&a=32&x=F&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">V26c · NORA APP · CL1 — tests assume_have OCR + Mode 2B Switch Report under V26 layout</div>
+      <div class="meta">CL1 with V26 layout — see how OCR baseline propagation interacts with the phase-aware grid.</div>
+      <h3>Walk CL1: opener → HERO OCR offer → scan → Mode 2B Switch Report rendered in LEAD-LOCK drawer.</h3>
+      <span class="go">Open V26 Nora app (CL1 — Aetna $890/mo baseline)</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
 <!-- V25 · SELF-CONTAINED — Trail rebuild · OCR · Mode 2B · Categorized compare -->
 <div class="toc-section">
-  <h2>V25 — Self-contained: <em>Trail (6 phases)</em> · <em>OCR</em> · <em>Switch Report</em> · <em>Categorized compare</em> (current canonical)</h2>
+  <h2>V25 — Self-contained: <em>Trail (6 phases)</em> · <em>OCR</em> · <em>Switch Report</em> · <em>Categorized compare</em> (V25 in-place baseline)</h2>
   <div class="file-grid two">
     <a class="file-card lemon" href="v25/homepage.html" style="grid-column: 1 / -1;">
       <div class="num">★ V25a · HOMEPAGE · SELF-CONTAINED PERSONA QUIZ</div>

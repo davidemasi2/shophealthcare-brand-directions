@@ -1,0 +1,1861 @@
+@charset "UTF-8";
+/* =============================================================
+   NORA APP — Milestone 1
+   V21 post-quiz workspace · three-zone layout (chat / dash / drawer)
+   Tokens duplicated from V19 SHC-Match canonical (lemon.css theme G)
+   ============================================================= */
+
+/* --- design tokens (V23 canonical SHC-Match — white/gold/teal/navy) ---
+   These mirror lemon.css :root values so nora-app surfaces inherit the
+   exact same palette as the homepage. Variable names are historical;
+   actual values are SHC-Match (--pink → teal #00B5D8, NOT coral). */
+:root {
+  --ink:          #0E2A3A;       /* deep navy */
+  --cream:        #FFFFFF;       /* true white */
+  --blush:        #FFFFFF;       /* white surface */
+  --blush-2:      #EAF6F8;       /* icy teal-tinted secondary */
+  --lemon:        #FFC857;       /* warm gold (primary highlight) */
+  --lemon-2:      #FFE2A0;       /* light gold */
+  --pink:         #00B5D8;       /* teal-cyan (primary CTA) */
+  --pink-dark:    #007A93;       /* deep teal (hover/pressed) */
+  --mute:         #4A6678;       /* slate · WCAG AA on white (was #5D7C8E pre-Tier-7) */
+  --rule:         #DDE9EE;       /* rule lines */
+  --mute-bg:      rgba(14,42,58,0.04);
+  --mint:         #61C9A8;       /* success/accent */
+  --plum:         #001F2E;       /* deepest navy */
+  --sky:          #BFE9F0;       /* light sky teal */
+
+  --shadow-2:     2px 2px 0 var(--ink);
+  --shadow-3:     3px 3px 0 var(--ink);
+  --shadow-4:     4px 4px 0 var(--ink);
+  --shadow-6:     6px 6px 0 var(--ink);
+
+  /* V24 Tier 5 motion DNA — ONE motion vocabulary across all surfaces */
+  --ease:         cubic-bezier(.22,.61,.36,1);   /* swift settle */
+  --t-quick:      180ms var(--ease);             /* hover, micro-interactions */
+  --t-small:      280ms var(--ease);             /* state changes, fades */
+  --t-medium:     460ms var(--ease);             /* reveals, entrances */
+  --t-large:      720ms var(--ease);             /* big reveals, lock celebration */
+  --t-state:      .9s var(--ease);               /* legacy alias for big stage transitions */
+  --stagger:      60ms;                          /* cascade between items */
+}
+
+/* --- global ------------------------------------------------- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background: var(--cream); }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
+}
+.serif { font-family: 'Fraunces', Georgia, serif; }
+.mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+b, strong { font-weight: 600; }
+button { font: inherit; cursor: pointer; }
+input, button { font-family: inherit; }
+/* V24 Tier 6 · Brand-aligned keyboard focus.
+   Gold ring (--lemon) at 3px is highly visible and on-brand. Uses
+   :focus-visible (NOT :focus) so mouse users don't get the ring on click,
+   but keyboard users always do. 2px outer ink for contrast on light bg. */
+:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+/* High-contrast surfaces (e.g. ink-bg buttons) want the ring inverted —
+   ink ring inside, gold halo outside */
+.nx-send:focus-visible,
+.nx-tab:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px var(--ink), 0 0 0 5px rgba(255, 200, 87, 0.25);
+}
+
+.nx-mute { color: var(--mute); }
+
+/* =============================================================
+   V24 TIER 5 · APP-LOAD CHOREOGRAPHY (stage curtain rising)
+   Sequence:
+     T+0ms     top bar fades in        (180ms)
+     T+120ms   trail fades in          (280ms)
+     T+280ms   chat zone slides in     (460ms swift-settle)
+     T+460ms   dashboard zone fades in (460ms)
+     T+720ms   drawer empty fades in   (460ms)
+   Calm, intentional, premium — sets the tone before Nora speaks.
+   prefers-reduced-motion: skips entirely. Active when body has .is-loading
+   class (set on init, dropped after final stage settles).
+   ============================================================= */
+@keyframes nx-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes nx-slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes nx-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+body.nx-is-booting .nx-top {
+  animation: nx-fade-in 180ms cubic-bezier(.22,.61,.36,1) 0ms both;
+}
+body.nx-is-booting .nx-unlock-trail-host {
+  animation: nx-fade-in 280ms cubic-bezier(.22,.61,.36,1) 120ms both;
+}
+body.nx-is-booting #zone-chat {
+  animation: nx-slide-in-left 460ms cubic-bezier(.22,.61,.36,1) 280ms both;
+}
+body.nx-is-booting #zone-dash {
+  animation: nx-fade-up 460ms cubic-bezier(.22,.61,.36,1) 460ms both;
+}
+body.nx-is-booting #zone-drawer .nx-drawer-empty {
+  animation: nx-fade-up 460ms cubic-bezier(.22,.61,.36,1) 720ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.nx-is-booting .nx-top,
+  body.nx-is-booting .nx-unlock-trail-host,
+  body.nx-is-booting #zone-chat,
+  body.nx-is-booting #zone-dash,
+  body.nx-is-booting #zone-drawer .nx-drawer-empty {
+    animation: none;
+  }
+}
+
+/* =============================================================
+   TOP BAR
+   ============================================================= */
+.nx-top {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 28px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 50;
+}
+.nx-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--ink);
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700; font-size: 19px;
+  letter-spacing: -.01em;
+}
+.nx-mark {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--lemon);
+  border: 1.5px solid var(--ink);
+  position: relative; flex: none;
+}
+.nx-mark::after {
+  content: ""; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pink);
+}
+.nx-status {
+  margin: 0 auto;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  background: var(--cream);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: var(--shadow-2);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+}
+.nx-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.22);
+  animation: nx-pulse 2.2s ease-in-out infinite;
+}
+.nx-account {
+  background: var(--cream); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 999px;
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-2);
+}
+
+@keyframes nx-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .6; transform: scale(1.12); }
+}
+
+/* =============================================================
+   MOBILE TAB NAV
+   ============================================================= */
+.nx-tabs {
+  display: none;
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 12px;
+  gap: 6px;
+  position: sticky; top: 60px; z-index: 49;
+}
+.nx-tab {
+  flex: 1; padding: 10px 12px;
+  background: transparent;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  transition: background var(--t-quick), color var(--t-quick), border-color var(--t-quick);
+}
+.nx-tab.is-active {
+  background: var(--lemon); color: var(--ink);
+  border-color: var(--ink);
+  box-shadow: var(--shadow-2);
+}
+
+/* =============================================================
+   SHELL — single ink-bordered three-zone container
+   ============================================================= */
+.nx-shell {
+  max-width: 1440px;
+  margin: 24px auto 40px;
+  padding: 0;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: var(--shadow-6);
+  display: grid;
+  grid-template-columns: 36% 38% 26%;
+  align-items: stretch;
+  min-height: calc(100vh - 60px - 24px - 40px);
+  min-height: calc(100svh - 60px - 24px - 40px);
+  overflow: hidden;
+}
+
+.nx-zone {
+  position: relative;
+  display: flex; flex-direction: column;
+  min-height: 0;
+}
+.nx-zone + .nx-zone {
+  border-left: 1px dashed var(--rule);
+}
+
+/* =============================================================
+   ZONE 1 — NORA CHAT
+   ============================================================= */
+.nx-chat {
+  background: linear-gradient(180deg, rgba(255,232,110,0.10) 0%, rgba(255,250,234,0) 220px);
+}
+.nx-chat-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 22px 24px 16px;
+  border-bottom: 1px dashed var(--rule);
+  background: var(--cream);
+  position: sticky; top: 0; z-index: 5;
+}
+.nx-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--lemon); color: var(--ink);
+  border: 2px solid var(--ink);
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-weight: 700; font-size: 22px;
+  flex: none;
+  box-shadow: var(--shadow-3);
+  animation: nx-breath 4s ease-in-out infinite;
+}
+@keyframes nx-breath {
+  0%, 100% { box-shadow: var(--shadow-3); }
+  50%       { box-shadow: 5px 5px 0 var(--ink); }
+}
+.nx-chat-name {
+  font-family: 'Fraunces', serif; font-weight: 700;
+  font-size: 19px; line-height: 1.1; color: var(--ink);
+}
+.nx-chat-credential {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--mute); font-weight: 700;
+  display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  margin-top: 3px;
+}
+.nx-chat-sep { opacity: .5; }
+.nx-online {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.22);
+  animation: nx-pulse 2.2s ease-in-out infinite;
+  margin-right: 2px;
+}
+
+/* --- chat scroll area + bubbles ----------------------------- */
+.nx-chat-scroll {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding: 22px 24px 12px;
+  display: flex; flex-direction: column; gap: 14px;
+  scroll-behavior: smooth;
+}
+.nx-chat-scroll::-webkit-scrollbar { width: 6px; }
+.nx-chat-scroll::-webkit-scrollbar-thumb { background: rgba(14,42,58,.18); border-radius: 4px; }
+
+.nx-msg {
+  display: flex; gap: 10px;
+  align-items: flex-end;
+  max-width: 92%;
+  opacity: 0; transform: translateY(6px);
+  animation: nx-msg-in .4s var(--ease) forwards;
+}
+@keyframes nx-msg-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+.nx-msg.from-nora { align-self: flex-start; }
+.nx-msg.from-user { align-self: flex-end; flex-direction: row-reverse; }
+
+.nx-msg-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-weight: 700; font-size: 14px;
+  border: 1.5px solid var(--ink);
+  flex: none;
+}
+.nx-msg.from-nora .nx-msg-avatar { background: var(--lemon); color: var(--ink); }
+.nx-msg.from-user .nx-msg-avatar { background: var(--ink); color: var(--cream); }
+
+.nx-bub {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 18px;
+  padding: 13px 17px;
+  font-size: 14.5px; line-height: 1.5;
+  box-shadow: var(--shadow-2);
+  max-width: 100%;
+}
+.nx-msg.from-nora .nx-bub { border-bottom-left-radius: 6px; }
+.nx-msg.from-user .nx-bub {
+  background: var(--lemon);
+  border-bottom-right-radius: 6px;
+}
+.nx-bub.is-aha {
+  background: linear-gradient(135deg, var(--lemon) 0%, #FFF1A6 100%);
+  border-color: var(--ink);
+}
+.nx-bub.is-aha .aha-num {
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 700;
+  color: var(--pink-dark);
+  font-size: 1.05em;
+}
+.nx-bub p { margin: 0 0 6px; }
+.nx-bub p:last-child { margin: 0; }
+.nx-ts {
+  display: block; margin-top: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  opacity: .5;
+}
+
+/* --- typing indicator --------------------------------------- */
+.nx-typing { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
+.nx-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink); opacity: .3;
+  animation: nx-typing-dot 1.2s ease-in-out infinite;
+}
+.nx-typing span:nth-child(2) { animation-delay: .15s; }
+.nx-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes nx-typing-dot {
+  0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+  30%            { opacity: 1; transform: translateY(-3px); }
+}
+
+/* --- quick replies + input row ------------------------------ */
+.nx-chat-input-wrap {
+  border-top: 1px dashed var(--rule);
+  padding: 12px 16px 14px;
+  background: var(--cream);
+}
+.nx-quick-replies {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 10px;
+}
+.nx-quick-replies:empty { display: none; }
+.nx-qr {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13.5px; font-weight: 500;
+  box-shadow: var(--shadow-2);
+  transition: transform var(--t-quick), box-shadow var(--t-quick), background var(--t-quick);
+}
+.nx-qr:hover { background: var(--lemon); transform: translate(-1px, -1px); box-shadow: var(--shadow-3); }
+.nx-qr:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+.nx-input-row {
+  display: flex; gap: 8px; align-items: stretch;
+  background: var(--cream);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 4px 4px 16px;
+  box-shadow: var(--shadow-2);
+  transition: box-shadow var(--t-quick);
+}
+.nx-input-row:focus-within { box-shadow: var(--shadow-3); }
+.nx-input {
+  flex: 1; min-width: 0;
+  border: 0; outline: 0; background: transparent;
+  padding: 8px 0;
+  font-size: 14.5px; color: var(--ink);
+}
+.nx-input::placeholder { color: var(--mute); }
+.nx-send {
+  background: var(--lemon); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 999px;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  flex: none;
+  transition: transform var(--t-quick), background var(--t-quick);
+}
+.nx-send:hover { background: var(--pink); color: var(--cream); transform: translate(-1px, -1px); }
+.nx-send:active { transform: translate(0, 0); }
+.nx-send:disabled { opacity: .45; cursor: not-allowed; }
+
+/* =============================================================
+   ZONE 2 — DASHBOARD (M1 scaffold; live updates land in M2)
+   ============================================================= */
+.nx-dash {
+  padding: 30px 30px 28px;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(255,232,110,0.18) 0, transparent 36%),
+    var(--cream);
+}
+.nx-dash-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 14px;
+}
+.nx-dash-headline {
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: clamp(32px, 3.6vw, 44px); line-height: 1.05; letter-spacing: -.025em;
+  margin: 0 0 22px;
+  color: var(--ink);
+}
+.nx-dash-headline em { font-style: italic; color: var(--pink); font-weight: 400; }
+
+/* V23 · Persona reinforce paragraph beneath the dashboard headline.
+   Mirrors V20 quiz reveal layout. */
+.nx-dash-reinforce {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(14px, 1.05vw, 16px);
+  line-height: 1.55;
+  letter-spacing: -.005em;
+  color: var(--ink);
+  opacity: .82;
+  margin: -10px 0 22px;
+  max-width: 64ch;
+}
+.nx-dash-reinforce:empty { display: none; }
+
+/* V23 · AuthGate dashboard skeleton — keeps the middle column alive
+   while the gate is mid-flight. */
+.nx-dash-authskel {
+  margin-top: 14px;
+  background: rgba(14,42,58,0.04);
+  border: 1.5px dashed var(--rule);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nx-dash-authskel[hidden] { display: none; }
+.nx-dash-authskel-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+}
+.nx-dash-authskel-status {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+  opacity: .8;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-dash-authskel.is-cycling .nx-dash-authskel-status::after {
+  content: ' …';
+  opacity: .55;
+}
+
+.nx-dash-divider {
+  height: 0; border: 0;
+  border-top: 1px dashed var(--rule);
+  margin: 22px 0;
+}
+
+/* V24 · Pre-name-bind ValueStack placeholder.
+   Renders inside #dashValueStack until the user types their first name. */
+.nx-vs-pre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 36px 12px;
+  min-height: 200px;
+}
+.nx-vs-pre-pip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 12px;
+}
+.nx-vs-pre-pip span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.35;
+  animation: nx-vs-pre-bounce 1.2s ease-in-out infinite;
+}
+.nx-vs-pre-pip span:nth-child(2) { animation-delay: 0.18s; }
+.nx-vs-pre-pip span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes nx-vs-pre-bounce {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40%           { opacity: 1;    transform: translateY(-4px); }
+}
+.nx-vs-pre-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink);
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-vs-pre-pip span { animation: none; opacity: 0.5; }
+}
+
+.nx-bignum-wrap {
+  background: linear-gradient(135deg, var(--lemon) 0%, #FFF1A6 100%);
+  border: 1.5px solid var(--ink);
+  border-radius: 18px;
+  padding: 24px 26px;
+  box-shadow: var(--shadow-3);
+  margin-bottom: 14px;
+}
+.nx-bignum {
+  font-family: 'Fraunces', serif; font-weight: 600; font-style: italic;
+  font-size: clamp(48px, 6vw, 72px);
+  line-height: .95; letter-spacing: -.035em;
+  color: var(--ink);
+  /* V24 Tier 5: 460ms swift-settle */
+  transition:
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    opacity 460ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-bignum-unit {
+  font-family: 'Inter', sans-serif; font-style: normal; font-weight: 600;
+  font-size: 0.4em; letter-spacing: 0; opacity: .8;
+  margin-left: 4px;
+}
+.nx-bignum-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink);
+  margin-top: 6px;
+}
+
+.nx-dash-compare { display: flex; flex-direction: column; gap: 6px; }
+.nx-compare-row {
+  display: flex; gap: 10px; align-items: baseline;
+  font-size: 14px;
+}
+.nx-compare-label { color: var(--mute); flex: none; }
+.nx-compare-val { color: var(--ink); font-weight: 600; }
+.nx-savings .nx-compare-val { color: var(--pink-dark); }
+
+/* "What we know so far" --- */
+.nx-known-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  margin-bottom: 12px;
+}
+.nx-known-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.known-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px;
+  /* V24 Tier 5: 280ms swift-settle on color shift when fact confirms */
+  transition: color 280ms cubic-bezier(.22,.61,.36,1);
+}
+.known-item .nx-known-mark {
+  display: inline-grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  font-size: 13px; font-weight: 700;
+  flex: none;
+}
+.known-item.is-confirmed .nx-known-mark {
+  background: var(--ink); color: var(--lemon);
+}
+.known-item.is-pending .nx-known-mark {
+  background: transparent; color: var(--mute);
+  border: 1.5px solid var(--rule);
+  font-size: 11px;
+}
+.known-item.is-pending .nx-known-text { color: var(--mute); }
+.known-item .nx-known-text b { font-weight: 600; }
+
+/* M2 stub callout */
+.nx-dash-stub {
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: rgba(14,42,58,0.04);
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  font-size: 13px; color: var(--mute);
+}
+.nx-dash-stub .nx-stub-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 6px;
+}
+.nx-dash-stub p { margin: 0; line-height: 1.5; }
+
+.nx-dash-trust {
+  margin-top: auto; padding-top: 18px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--mute); line-height: 1.6;
+}
+.nx-dash-trust a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+
+/* =============================================================
+   ZONE 3 — REPORT DRAWER (M5 placeholder)
+   ============================================================= */
+.nx-drawer {
+  padding: 30px 26px;
+  background:
+    linear-gradient(180deg, rgba(255,232,110,0.05) 0%, rgba(255,250,234,0) 200px),
+    var(--cream);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.nx-drawer-empty {
+  /* V24 · Ghost-card feel — no longer competes with dashboard headline.
+     Wrap the empty state in a subtle dashed-rule container so it reads
+     as a placeholder slot, not a primary heading. */
+  max-width: 280px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 28px 24px;
+  border: 1px dashed var(--rule);
+  border-radius: 14px;
+  background: rgba(14,42,58,0.025);
+  opacity: 0.78;
+}
+.nx-drawer-illo {
+  /* V24 · Smaller, quieter — supports the ghost-card framing */
+  color: var(--ink); opacity: .28;
+  width: 48px; height: 48px;
+}
+.nx-drawer-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+}
+.nx-drawer-title {
+  /* V24 · Demoted from 22px → 17px Fraunces, opacity 0.7 — no longer
+     competes with the dash-headline (clamp 32-44px) for the eye. */
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 17px; line-height: 1.25; letter-spacing: -.005em;
+  color: var(--ink);
+  opacity: 0.7;
+}
+.nx-drawer-copy {
+  font-size: 13.5px; line-height: 1.55;
+  color: var(--mute);
+  margin: 0;
+}
+.nx-drawer-meta {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--mute);
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+
+/* Laptop (1024–1279px) — slightly compressed grid (33/40/27) */
+@media (max-width: 1279px) {
+  .nx-shell { grid-template-columns: 33% 40% 27%; }
+}
+
+/* Tablet (768–1023px) — drawer collapses */
+@media (max-width: 1023px) {
+  .nx-shell { grid-template-columns: 42% 58%; margin: 16px 16px 24px; }
+  .nx-drawer { display: none; }
+}
+
+/* Mobile (<768px) — single-zone tab navigation */
+@media (max-width: 767px) {
+  .nx-tabs { display: flex; }
+  .nx-shell {
+    grid-template-columns: 1fr;
+    margin: 12px 12px 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-4);
+    min-height: calc(100vh - 60px - 52px - 12px - 24px);
+    min-height: calc(100svh - 60px - 52px - 12px - 24px);
+  }
+  .nx-zone { display: none; }
+  .nx-zone.is-active { display: flex; }
+  .nx-zone + .nx-zone { border-left: none; border-top: 1px dashed var(--rule); }
+  .nx-top { padding: 12px 18px; }
+  .nx-status { font-size: 10px; padding: 5px 10px; }
+  .nx-dash { padding: 22px 20px; }
+  .nx-dash-headline { font-size: clamp(28px, 6.5vw, 36px); }
+  .nx-bignum { font-size: clamp(48px, 12vw, 64px); }
+  .nx-bignum-wrap { padding: 20px 22px; }
+  .nx-chat-head { padding: 18px 18px 14px; }
+  .nx-chat-scroll { padding: 18px 18px 8px; }
+  .nx-chat-input-wrap { padding: 10px 12px 12px; }
+  .nx-qr { font-size: 14px; padding: 10px 16px; min-height: 40px; }
+  .nx-input { font-size: 16px; } /* prevent iOS zoom-on-focus */
+  .nx-msg { max-width: 96%; }
+}
+
+/* =============================================================
+   V24 Tier 4 — Percentile framing post-plan-lock (Spotify Wrapped)
+   Slides in 1.5s after PLAN LOCKED caption fades; stays visible
+   as identity anchor.
+   ============================================================= */
+.nx-percentile {
+  display: block;
+  margin: 16px auto 0;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--mute, #5D7C8E);
+  line-height: 1.5;
+  max-width: 460px;
+  padding: 8px 14px;
+  opacity: 0;
+  transform: translateY(6px);
+  /* V24 Tier 5: 720ms swift-settle large reveal */
+  transition:
+    opacity 720ms cubic-bezier(.22,.61,.36,1),
+    transform 720ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-percentile.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nx-percentile .nx-pct-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--pink, #00B5D8);
+  padding: 0 1px;
+}
+.nx-percentile .nx-pct-emph {
+  color: var(--ink, #0E2A3A);
+  font-weight: 600;
+}
+
+/* =============================================================
+   V24 TIER 6 · STATE DESIGN — empty / loading / error / confirmation
+   Every non-happy-path state designed as deliberately as the happy path.
+   ============================================================= */
+
+/* ─── 1a · Drawer route preview (3-dot journey)─────────────── */
+.nx-drawer-route {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 14px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 220px;
+  border-top: 1px dashed var(--rule);
+}
+.nx-route-step {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  opacity: 0;
+  animation: nx-route-fade 460ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+.nx-route-step:nth-child(1) { animation-delay: 0ms; }
+.nx-route-step:nth-child(2) { animation-delay: 60ms; }
+.nx-route-step:nth-child(3) { animation-delay: 120ms; }
+@keyframes nx-route-fade {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nx-route-dot {
+  flex: none;
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  background: transparent;
+  transition: background-color 280ms cubic-bezier(.22,.61,.36,1),
+              border-color 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-route-step.is-active {
+  color: var(--ink);
+}
+.nx-route-step.is-active .nx-route-dot {
+  background: var(--ink);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.30);
+}
+/* The middle (next) dot pulses subtly — anticipation */
+.nx-route-step:nth-child(2) .nx-route-dot {
+  animation: nx-route-pulse 2.4s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+@keyframes nx-route-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.15); }
+}
+.nx-route-step.is-faded { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-route-step,
+  .nx-route-step:nth-child(2) .nx-route-dot { animation: none; opacity: 1; }
+}
+
+/* ─── 1b · Pre-opener "Nora is gathering your context" loader ── */
+.nx-pre-opener {
+  align-self: flex-start;
+  display: flex; align-items: center; gap: 8px;
+  margin: 4px 0 0 44px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+  opacity: 0;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-pre-opener.is-visible { opacity: 0.78; }
+.nx-pre-opener.is-fading  { opacity: 0; }
+.nx-pre-opener::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--pink);
+  animation: nx-pre-opener-pulse 1.4s ease-in-out infinite;
+}
+@keyframes nx-pre-opener-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-pre-opener::before { animation: none; }
+}
+
+/* ─── 1c · "What we know" pending → confirmed animated stroke ── */
+.known-item.is-pending .nx-known-text {
+  position: relative;
+  background-image: linear-gradient(to right, var(--rule) 0%, var(--rule) 100%);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 720ms cubic-bezier(.22,.61,.36,1);
+  padding-bottom: 1px;
+}
+.known-item.is-confirming .nx-known-text {
+  background-size: 100% 1px;
+  background-image: linear-gradient(to right, var(--pink) 0%, var(--pink) 100%);
+}
+.known-item.is-confirming .nx-known-mark {
+  background: var(--ink);
+  color: var(--lemon);
+  border-color: var(--ink);
+  transform: scale(1);
+  animation: nx-known-confirm 460ms cubic-bezier(.22,.61,.36,1);
+}
+@keyframes nx-known-confirm {
+  0%   { transform: scale(0.7); opacity: 0.5; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .known-item.is-confirming .nx-known-text { transition: none; }
+  .known-item.is-confirming .nx-known-mark  { animation: none; }
+}
+
+/* ─── 1d · Plan-cards locked-preview peek ─────────────────────── */
+.nx-plan-cards-host:not(.is-active) {
+  display: block; /* override default `display:none` so the peek shows */
+}
+.nx-plan-cards-host.is-active .nx-plan-peek { display: none; }
+/* V24 Tier 8 · "less but better" — peek pill quieted to a tighter,
+   single-line strip. Was 16-18px padded card with 22px icon. Now an
+   inline strip that whispers anticipation, doesn't shout for attention. */
+.nx-plan-peek {
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px dashed var(--rule);
+  border-radius: 10px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  line-height: 1.4;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-plan-peek-icon {
+  flex: none;
+  display: inline-grid; place-items: center;
+  width: 16px; height: 16px;
+  font-size: 10px;
+  color: var(--mute);
+  opacity: .6;
+}
+/* Hide the peek when the plan-cards host has been already activated */
+.nx-plan-cards-host.is-active + .nx-plan-peek,
+.nx-plan-cards-host.is-active .nx-plan-peek { display: none; }
+
+/* ─── 2a · Inline status text on long Nora typing pauses ──────── */
+.nx-typing-status {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mute);
+  margin: -2px 0 6px;
+  opacity: 0;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-typing-status.is-visible { opacity: 0.75; }
+
+/* ─── 2b · Plan-options fetching loader ───────────────────────── */
+.nx-plan-fetching {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: rgba(0, 181, 216, 0.04);
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.nx-plan-fetching-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+}
+.nx-plan-fetching-status {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px; color: var(--ink);
+  margin: 0;
+}
+.nx-plan-fetching-bars {
+  display: flex; gap: 4px; align-items: flex-end; height: 12px;
+}
+.nx-plan-fetching-bars span {
+  flex: 1; max-width: 40px;
+  background: var(--pink);
+  border-radius: 2px;
+  height: 100%;
+  opacity: 0.4;
+  animation: nx-fetch-bar 1.2s ease-in-out infinite;
+}
+.nx-plan-fetching-bars span:nth-child(1) { animation-delay: 0ms; }
+.nx-plan-fetching-bars span:nth-child(2) { animation-delay: 150ms; }
+.nx-plan-fetching-bars span:nth-child(3) { animation-delay: 300ms; }
+@keyframes nx-fetch-bar {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+  50%      { opacity: 1;   transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-plan-fetching-bars span { animation: none; opacity: 0.6; }
+}
+
+/* ─── 2c · Pre-celebration "Locking your plan…" overlay ───────── */
+.nx-locking-overlay {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(1.05);
+  border-radius: 14px;
+  z-index: 12;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-locking-overlay.is-visible { opacity: 1; pointer-events: auto; }
+.nx-locking-overlay::before {
+  content: '';
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pink); margin-right: 9px;
+  animation: nx-pre-opener-pulse 1.0s ease-in-out infinite;
+}
+.nx-bignum-wrap { position: relative; }
+
+/* ─── 3b · Network drop banner ────────────────────────────────── */
+.nx-net-banner {
+  display: none;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: rgba(0, 181, 216, 0.08);
+  border: 1px solid rgba(0, 181, 216, 0.32);
+  border-radius: 10px;
+  font-size: 13px; line-height: 1.45;
+  color: var(--ink);
+}
+.nx-net-banner.is-visible { display: block; }
+.nx-net-banner-eyebrow {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 2px;
+}
+
+/* ─── 5b · Plan-locked "Continue when ready" CTA ──────────────── */
+.nx-locked-cta {
+  display: block;
+  margin: 14px auto 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--pink-dark);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    color 180ms cubic-bezier(.22,.61,.36,1);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.nx-locked-cta.is-visible {
+  opacity: 0.82;
+  transform: translateY(0);
+}
+.nx-locked-cta:hover {
+  opacity: 1;
+  color: var(--ink);
+}
+.nx-locked-cta::after {
+  content: ' →';
+  font-family: 'Inter', sans-serif;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1);
+  display: inline-block;
+}
+.nx-locked-cta:hover::after { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .nx-locked-cta { transition: opacity 0ms; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-percentile { transition: none; }
+  .nx-percentile.is-visible { opacity: 1; transform: none; }
+}
+
+/* =============================================================
+   prefers-reduced-motion — kill animations
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .nx-msg { opacity: 1; transform: none; }
+  .nx-bignum { transition: none; }
+}
+
+/* =============================================================
+   V24 TIER 7 — A11Y + MOBILE NATIVE + HIGH CONTRAST
+   Pass 1: WCAG 2.1 AA color/keyboard/screen-reader
+   Pass 2: iOS Safari + Android — safe-area, 44px tap targets, native feel
+   Pass 3: Reduced-motion final audit
+   Pass 4: Windows High Contrast Mode + macOS Increase Contrast
+   ============================================================= */
+
+/* ─── A11Y · Screen-reader-only utility ───────────────────────── */
+.sr-only,
+.is-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── A11Y · Skip-to-content link ─────────────────────────────── */
+.nx-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  background: var(--lemon);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: var(--shadow-3);
+  transition: top 180ms cubic-bezier(.22,.61,.36,1);
+}
+.nx-skip-link:focus,
+.nx-skip-link:focus-visible {
+  top: 12px;
+}
+
+/* ─── A11Y · Color contrast ──
+   --mute deepened to #4A6678 in the canonical :root block above
+   (was #5D7C8E ~3.8:1 on white; now ~5.3:1 — WCAG AA pass at all body
+   sizes). Single source of truth — no override needed here. */
+
+/* ─── A11Y · Keyboard navigation between plan cards (arrow keys) ─
+   Cards use [role="group"] container for arrow key handler in JS.
+   Visual treatment matches existing card focus-visible. */
+.plan-cards__grid:focus { outline: none; }
+
+/* ─── A11Y · Live region announcement zone (off-screen) ─────── */
+.nx-aria-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =============================================================
+   MOBILE NATIVE FEEL — iPhone SE (375), iPhone 14 (390),
+   Plus (414), Android narrow (360)
+   ============================================================= */
+
+/* iOS Safari + Android — respect device safe areas (notch + home indicator) */
+.nx-top {
+  padding-top: max(14px, env(safe-area-inset-top));
+}
+
+/* Mobile-specific: top bar compresses to logo only on <768px,
+   bottom tab nav becomes sticky-bottom with home indicator inset */
+@media (max-width: 767px) {
+  /* Logo-only top bar — hide live status (moved into chat header) */
+  .nx-top {
+    padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+    gap: 12px;
+  }
+  .nx-status {
+    display: none; /* Live status visible in chat-head, not duplicate here */
+  }
+  .nx-logo { font-size: 17px; }
+  .nx-mark { width: 22px; height: 22px; }
+
+  /* 44px minimum tap targets (Apple HIG) */
+  .nx-tab {
+    min-height: 44px;
+    padding: 12px 12px;
+  }
+  .nx-qr {
+    min-height: 44px;
+    padding: 12px 18px;
+    font-size: 14.5px;
+  }
+  .nx-send {
+    width: 44px; height: 44px;
+  }
+  .nx-input {
+    font-size: 16px; /* prevent iOS input-zoom-on-focus */
+    min-height: 44px;
+    padding: 11px 0;
+  }
+
+  /* Tab nav sticks to bottom on mobile + safe-area for home indicator */
+  .nx-tabs {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    top: auto;
+    background: var(--cream);
+    border-top: 1px solid var(--rule);
+    border-bottom: none;
+    padding: 6px 12px max(6px, env(safe-area-inset-bottom));
+    z-index: 49;
+    box-shadow: 0 -1px 8px rgba(14, 42, 58, 0.06);
+  }
+
+  /* Compensate shell bottom padding so content doesn't sit under tabs */
+  .nx-shell {
+    margin-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  /* Tap-active states (no hover on touch — give immediate feedback) */
+  .nx-qr:active,
+  .nx-tab:active,
+  .nx-send:active {
+    transform: scale(0.97);
+    transition: transform 100ms cubic-bezier(.22,.61,.36,1);
+  }
+
+  /* Disable iOS tap-highlight (we provide our own affordances) */
+  .nx-qr,
+  .nx-tab,
+  .nx-send,
+  .nx-input,
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Drawer becomes bottom-sheet on mobile when active — pull-down handle */
+  .nx-zone.nx-drawer.is-active {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+  .nx-zone.nx-drawer.is-active::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+}
+
+/* Mobile narrow (<480px) — tighter compression */
+@media (max-width: 479px) {
+  .nx-dash { padding: 18px 16px; }
+  .nx-dash-headline {
+    font-size: clamp(24px, 7.5vw, 32px);
+    margin-bottom: 16px;
+  }
+  .nx-dash-reinforce {
+    font-size: 14px;
+    margin: -6px 0 18px;
+  }
+  .nx-bignum-wrap { padding: 18px 18px; }
+  .nx-bignum { font-size: clamp(42px, 13vw, 56px); }
+  .nx-chat-head { padding: 14px 14px 12px; }
+  .nx-chat-scroll { padding: 14px 14px 8px; }
+  .nx-chat-input-wrap { padding: 8px 10px 10px; }
+  .nx-msg { max-width: 98%; }
+  .nx-known-list { gap: 7px; }
+  .known-item { font-size: 13.5px; }
+}
+
+/* =============================================================
+   PASS 3 · REDUCED-MOTION FINAL AUDIT
+   Comprehensive zero-out of every animated property in the app.
+   Already covered above with the global *,*::before reset, but
+   we add specific overrides for animations that use properties
+   not caught by the universal duration override (transforms held
+   via animation, infinite pulses, etc.).
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  /* Status pulses — freeze in mid-state but visible */
+  .nx-status-dot,
+  .nx-online,
+  .nx-pre-opener::before,
+  .nx-locking-overlay::before,
+  .nx-typing span {
+    animation: none !important;
+    opacity: 0.85 !important;
+    transform: none !important;
+  }
+
+  /* Avatar breath — freeze */
+  .nx-avatar { animation: none !important; }
+
+  /* Typing dots — show static three dots, no jump */
+  .nx-typing span {
+    opacity: 0.5;
+  }
+
+  /* Cascade entrance — collapse to simultaneous fade-in (already) */
+  .nx-route-step,
+  .nx-route-step:nth-child(2) .nx-route-dot {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Lock celebration pulse — freeze, keep caption */
+  .value-stack.is-locking::after {
+    animation: none !important;
+  }
+
+  /* Plan-card lock glow — freeze */
+  .plan-card.is-locking {
+    animation: none !important;
+  }
+
+  /* Stage curtain (boot choreography) — already handled, reinforce */
+  body.nx-is-booting * {
+    animation: none !important;
+  }
+
+  /* App-load route fades — show all immediately */
+  .nx-route-step { opacity: 1 !important; }
+
+  /* Pending-fact stroke fill — show as confirmed instantly */
+  .known-item.is-confirming .nx-known-text {
+    background-image: none !important;
+    transition: none !important;
+  }
+}
+
+/* =============================================================
+   PASS 4 · WINDOWS HIGH CONTRAST MODE (forced-colors: active)
+   The OS overrides bg/fg colors. Ensure focus/borders/distinguishable.
+   ============================================================= */
+@media (forced-colors: active) {
+  /* Use system colors instead of brand tokens where critical */
+  :focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+    box-shadow: none; /* drop the gold halo since CanvasText takes over */
+  }
+
+  /* Ensure containers + cards still have visible borders */
+  .nx-shell,
+  .nx-input-row,
+  .nx-bub,
+  .nx-bignum-wrap,
+  .nx-status,
+  .nx-account,
+  .nx-avatar,
+  .plan-card,
+  .auth-gate__bubble,
+  .auth-gate__field,
+  .auth-gate__btn,
+  .pcm-panel,
+  .pr-toggle {
+    border-color: CanvasText !important;
+  }
+
+  /* Status dots / pulses — replace with text since high-contrast users
+     may not see colored dots. Keep mark for screen-reader users. */
+  .nx-status-dot,
+  .nx-online,
+  .nx-pre-opener::before {
+    background: Highlight !important;
+    box-shadow: none !important;
+  }
+
+  /* Selected/active states — use system Highlight */
+  .nx-tab.is-active,
+  .nx-qr:hover,
+  .nx-qr:focus-visible,
+  .plan-card.is-selected {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+
+  /* Drop hard 3D shadows in HCM — they don't render anyway */
+  .nx-shell,
+  .nx-bignum-wrap,
+  .auth-gate__bubble,
+  .plan-card {
+    box-shadow: none !important;
+  }
+
+  /* Disabled state — clearer */
+  [aria-disabled="true"],
+  button:disabled {
+    color: GrayText !important;
+    border-color: GrayText !important;
+  }
+
+  /* Links — ensure they look like links */
+  a {
+    color: LinkText !important;
+  }
+  a:visited { color: VisitedText !important; }
+}
+
+/* =============================================================
+   PASS 4b · macOS "Increase Contrast" — already works through
+   our :focus-visible (gold ring) + ink-bordered components.
+   No changes required: the brand IS high-contrast by design.
+   ============================================================= */
+
+/* =============================================================
+   A11Y · ARROW-KEY NAV INDICATOR ON PLAN CARDS
+   When user presses arrow keys to navigate cards, give the keyboard
+   user a subtle "this is the focused card" indicator beyond the
+   default focus-visible ring.
+   ============================================================= */
+.plan-card:focus-visible {
+  position: relative;
+  z-index: 2;
+}
+
+/* =============================================================
+   A11Y · Drawer collapsible chevron — keyboard activation visual
+   Apply :focus-visible to the toggle button so keyboard users see
+   the same affordance as click users.
+   ============================================================= */
+.pr-toggle:focus-visible {
+  background: rgba(0, 181, 216, 0.06);
+  border-radius: 6px;
+}
+
+/* =============================================================
+   A11Y · Modal focus-trap visual nothing (focus-trap is JS-only;
+   we keep the existing pcm-panel:focus-visible default).
+   ============================================================= */
+.pcm-panel:focus { outline: none; }
+.pcm-panel:focus-visible {
+  outline: 3px solid var(--lemon);
+  outline-offset: -3px;
+}
+
+/* =============================================================
+   AUTH-GATE TIER 7 SUPPORT
+   - Email field describedby helper text
+   - Error state aria-live polite
+   ============================================================= */
+.auth-gate__field-help {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  color: var(--mute);
+  margin: 4px 0 0 14px;
+}
+
+/* =============================================================
+   V26 — DYNAMIC LAYOUT (phase-aware grid + zone roles)
+   Driven by [data-layout-phase] on .nx-shell + .nx-zone--{role}
+   classes set by LayoutDirector. FLIP-animated transitions.
+   ============================================================= */
+
+/* Shell becomes a viewport-pinned grid; never grows past visible area.
+   Internal zone scroll handles overflow. */
+.nx-shell[data-layout-phase] {
+  display: grid;
+  align-items: stretch;
+  /* Viewport - top bar (64) - trail (~110) - margin (24+40) - safety (8) */
+  height: calc(100vh - 64px - 116px - 24px - 40px);
+  height: calc(100svh - 64px - 116px - 24px - 40px);
+  min-height: 580px;
+  max-height: calc(100vh - 64px - 116px - 24px - 40px);
+  max-height: calc(100svh - 64px - 116px - 24px - 40px);
+  overflow: hidden;
+  /* Grid template + areas defined per-phase below */
+}
+
+/* Zones map to named grid areas universally;
+   per-phase grid-template-areas reshape the layout. */
+.nx-shell[data-layout-phase] #zone-chat   { grid-area: chat; }
+.nx-shell[data-layout-phase] #zone-dash   { grid-area: dash; }
+.nx-shell[data-layout-phase] #zone-drawer { grid-area: drawer; }
+
+/* Universal zone behavior under V26 layout */
+.nx-shell[data-layout-phase] .nx-zone {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* The dashed divider only between adjacent grid items */
+.nx-shell[data-layout-phase] #zone-chat   { border-right: 1px dashed var(--rule); }
+.nx-shell[data-layout-phase] #zone-dash   { border-right: 1px dashed var(--rule); }
+.nx-shell[data-layout-phase] #zone-drawer { border-left:  1px dashed var(--rule); border-right: none; }
+.nx-shell[data-layout-phase] .nx-zone + .nx-zone { border-left: none; }
+/* Cleaner: rebuild dividers per phase below */
+
+/* ── PHASE: MATCH / READ — Chat LEAD, Dash SUPPORT, Drawer MINI ── */
+.nx-shell[data-layout-phase="match"],
+.nx-shell[data-layout-phase="read"] {
+  grid-template-columns: 62% 38%;
+  grid-template-rows: 1fr 88px;
+  grid-template-areas:
+    "chat dash"
+    "drawer drawer";
+}
+.nx-shell[data-layout-phase="match"] #zone-drawer,
+.nx-shell[data-layout-phase="read"]  #zone-drawer {
+  border-top: 1px dashed var(--rule);
+  border-left: none;
+}
+
+/* ── PHASE: PRICE — Dash LEAD (number is hero), Chat SUPPORT, Drawer MINI ── */
+.nx-shell[data-layout-phase="price"] {
+  grid-template-columns: 32% 68%;
+  grid-template-rows: 1fr 88px;
+  grid-template-areas:
+    "chat dash"
+    "drawer drawer";
+}
+.nx-shell[data-layout-phase="price"] #zone-drawer {
+  border-top: 1px dashed var(--rule);
+  border-left: none;
+}
+
+/* ── PHASE: COMPARE — Plans full-width, Chat strip top, Drawer hint mini ── */
+.nx-shell[data-layout-phase="compare"] {
+  grid-template-columns: 1fr;
+  grid-template-rows: 96px 1fr 88px;
+  grid-template-areas:
+    "chat"
+    "dash"
+    "drawer";
+}
+.nx-shell[data-layout-phase="compare"] #zone-chat,
+.nx-shell[data-layout-phase="compare"] #zone-dash,
+.nx-shell[data-layout-phase="compare"] #zone-drawer {
+  border-left: none;
+  border-right: none;
+}
+.nx-shell[data-layout-phase="compare"] #zone-chat   { border-bottom: 1px dashed var(--rule); }
+.nx-shell[data-layout-phase="compare"] #zone-drawer { border-top:    1px dashed var(--rule); }
+
+/* ── PHASE: LOCK — Card center + Drawer slides in right + Chat bottom strip ── */
+.nx-shell[data-layout-phase="lock"] {
+  grid-template-columns: 58% 42%;
+  grid-template-rows: 1fr 110px;
+  grid-template-areas:
+    "dash   drawer"
+    "chat   drawer";
+}
+.nx-shell[data-layout-phase="lock"] #zone-dash    { border-right: 1px dashed var(--rule); border-bottom: 1px dashed var(--rule); }
+.nx-shell[data-layout-phase="lock"] #zone-chat    { border-right: 1px dashed var(--rule); border-left: none; }
+.nx-shell[data-layout-phase="lock"] #zone-drawer  { border-left: none; }
+
+/* ── PHASE: ENROLL — Single column, drawer fills as "Continue is the screen" ── */
+.nx-shell[data-layout-phase="enroll"] {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "drawer";
+}
+.nx-shell[data-layout-phase="enroll"] #zone-chat,
+.nx-shell[data-layout-phase="enroll"] #zone-dash {
+  display: none !important;
+}
+.nx-shell[data-layout-phase="enroll"] #zone-drawer {
+  border: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ROLE-BASED CONTENT REVEALS
+   ───────────────────────────────────────────────────────────── */
+
+/* CHAT — internal scroll always; sized by grid */
+.nx-shell[data-layout-phase] .nx-chat-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* CHAT @ MINI (COMPARE) — strip ticker; show only latest message + earlier link */
+.nx-zone--mini.nx-chat .nx-chat-head {
+  padding: 8px 14px;
+  border-bottom: none;
+}
+.nx-zone--mini.nx-chat .nx-chat-head .nx-avatar { width: 28px; height: 28px; font-size: 12px; }
+.nx-zone--mini.nx-chat .nx-chat-name { font-size: 13px; }
+.nx-zone--mini.nx-chat .nx-chat-credential { display: none; }
+.nx-zone--mini.nx-chat .nx-chat-scroll {
+  padding: 4px 14px 6px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.nx-zone--mini.nx-chat .nx-chat-scroll .nx-msg {
+  flex-shrink: 0;
+  margin: 0;
+}
+.nx-zone--mini.nx-chat .nx-chat-scroll .nx-msg:not(:last-child) {
+  display: none; /* hide all but the latest in mini mode */
+}
+.nx-zone--mini.nx-chat .nx-chat-input-wrap {
+  display: none; /* no input in mini */
+}
+
+/* CHAT @ SUPPORT (PRICE / LOCK) — last 3 msgs visible, smaller header */
+.nx-zone--support.nx-chat .nx-chat-credential { font-size: 10.5px; }
+.nx-zone--support.nx-chat .nx-chat-head { padding: 12px 18px; }
+
+/* DASH @ SUPPORT (MATCH / READ / LOCK) — ValueStack scales down, hide reinforce */
+.nx-zone--support.nx-dash {
+  padding: 16px 18px;
+  overflow-y: auto;
+}
+.nx-zone--support.nx-dash .nx-dash-headline { font-size: 16px; line-height: 1.2; }
+.nx-zone--support.nx-dash .nx-dash-reinforce { display: none; }
+.nx-zone--support.nx-dash .nx-dash-divider { margin: 8px 0; }
+.nx-zone--support.nx-dash .nx-bignum-wrap { padding: 6px 8px 8px; }
+.nx-zone--support.nx-dash .value-stack__primary-number { font-size: 36px; }
+.nx-zone--support.nx-dash .value-stack__arc { display: none; }
+.nx-zone--support.nx-dash .nx-known {
+  /* Tighten facts list */
+}
+.nx-zone--support.nx-dash .nx-known-list { gap: 4px; }
+.nx-zone--support.nx-dash .nx-known-list li { font-size: 12px; }
+.nx-zone--support.nx-dash .nx-dash-trust { font-size: 10px; }
+
+/* DASH @ LEAD-PRICE — ValueStack BIG + reinforce + social proof */
+.nx-zone--lead.nx-dash {
+  padding: 28px 32px 22px;
+  overflow-y: auto;
+}
+.nx-zone--lead.nx-dash .value-stack__primary-number { font-size: 56px; }
+
+/* DASH @ LEAD-COMPARE — estimate-block CONDENSES, plan-cards-host expands */
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash {
+  padding: 20px 28px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block {
+  flex: 0 0 auto;
+  padding: 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-dash-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 0;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-dash-reinforce,
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-known,
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-dash-divider,
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-bignum-wrap,
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-estimate-block .nx-plan-peek {
+  display: none;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-plan-cards-host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-plan-cards-host .plan-cards {
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-plan-cards-host .plan-cards__head {
+  flex: 0 0 auto;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-plan-cards-host .plan-cards__grid {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-plan-cards-host .plan-cards__foot {
+  flex: 0 0 auto;
+}
+.nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash .nx-dash-trust {
+  display: none;
+}
+
+/* COMPARE — compact card content so 3 cards fit within available height */
+.nx-shell[data-layout-phase="compare"] .plan-card {
+  padding: 14px 14px 12px;
+  gap: 8px;
+  height: 100%;
+  min-height: 0 !important; /* override .plan-card min-height: 480px from plan-cards.css */
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__tier-eyebrow {
+  font-size: 9.5px;
+  padding: 3px 8px;
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__short {
+  font-size: 18px;
+  line-height: 1.05;
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__price-fallback {
+  font-size: 26px;
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__price {
+  padding: 6px 0 4px;
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__rationale {
+  padding: 8px 10px;
+  margin: 0;
+}
+.nx-shell[data-layout-phase="compare"] .pc-rationale-eyebrow {
+  font-size: 9px;
+}
+.nx-shell[data-layout-phase="compare"] .pc-rationale-text {
+  font-size: 12px;
+  line-height: 1.35;
+}
+.nx-shell[data-layout-phase="compare"] .plan-card__cta-btn {
+  padding: 8px 6px;
+  font-size: 11.5px;
+}
+/* Plan cards grid: ensure cards stretch to fill available height */
+.nx-shell[data-layout-phase="compare"] .plan-cards__grid {
+  align-items: stretch;
+  height: 100%;
+}
+
+/* DASH @ LEAD-LOCK — chosen card lemon-glow center, plans grid stays but compressed */
+.nx-shell[data-layout-phase="lock"] .nx-zone--support.nx-dash {
+  padding: 20px 28px;
+}
+.nx-shell[data-layout-phase="lock"] .nx-zone--support.nx-dash .nx-dash-estimate-block {
+  display: none;
+}
+.nx-shell[data-layout-phase="lock"] .nx-zone--support.nx-dash .nx-dash-trust {
+  display: none;
+}
+
+/* DRAWER @ MINI (MATCH/READ/PRICE/COMPARE) — horizontal route-preview strip */
+.nx-zone--mini.nx-drawer {
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255,232,110,0.04) 0%, rgba(255,250,234,0) 100%);
+}
+.nx-zone--mini.nx-drawer .nx-drawer-empty {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+.nx-zone--mini.nx-drawer .nx-drawer-illo { display: none; }
+.nx-zone--mini.nx-drawer .nx-drawer-eyebrow { font-size: 10px; flex-shrink: 0; }
+.nx-zone--mini.nx-drawer .nx-drawer-title { font-size: 13px; flex: 1; text-align: left; }
+.nx-zone--mini.nx-drawer .nx-drawer-route {
+  display: flex !important;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.nx-zone--mini.nx-drawer .nx-drawer-content { display: none; }
+
+/* DRAWER @ LEAD (LOCK) — slides in, full plan-report content */
+.nx-zone--lead.nx-drawer {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.nx-zone--lead.nx-drawer .nx-drawer-empty { display: none; }
+.nx-zone--lead.nx-drawer .nx-drawer-content {
+  display: block !important;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 22px 24px 30px;
+}
+
+/* DRAWER @ LEAD-FULLSCREEN (ENROLL) — single-column "Continue is the screen" */
+.nx-zone--lead-fullscreen.nx-drawer {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background: var(--cream);
+}
+.nx-zone--lead-fullscreen.nx-drawer .nx-drawer-empty { display: none; }
+.nx-zone--lead-fullscreen.nx-drawer .nx-drawer-content {
+  display: block !important;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 32px 40px;
+  overflow-y: auto;
+  align-self: stretch;
+}
+/* In ENROLL mode, promote the Continue CTA visually */
+.nx-zone--lead-fullscreen.nx-drawer .plan-report__continue {
+  font-size: 16px;
+  padding: 16px 22px;
+  margin-top: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile (<768px) — single-zone view, tabs auto-pivot to LEAD
+   The existing .nx-tabs nav system stays — V26 just listens for
+   layoutPhaseChange events to set aria-selected on the lead zone.
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .nx-shell[data-layout-phase] {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr !important;
+    grid-template-areas: "active" !important;
+    height: calc(100vh - 64px - 116px - 16px - 24px) !important;
+    height: calc(100svh - 64px - 116px - 16px - 24px) !important;
+    margin: 16px 12px 24px;
+  }
+  /* Only the LEAD zone is visible; SUPPORT/MINI hidden behind tabs */
+  .nx-shell[data-layout-phase] .nx-zone {
+    grid-area: active;
+    border: none !important;
+  }
+  .nx-shell[data-layout-phase] .nx-zone:not(.is-active-tab) { display: none; }
+  /* When ENROLL collapses zones, force drawer visible */
+  .nx-shell[data-layout-phase="enroll"] #zone-drawer {
+    display: flex !important;
+  }
+}
+
+/* Reduced motion — disable FLIP transitions, opacity cross-fade only */
+@media (prefers-reduced-motion: reduce) {
+  .nx-shell[data-layout-phase] .nx-zone {
+    transition: opacity 200ms linear !important;
+  }
+}
+
+/* Forced colors */
+@media (forced-colors: active) {
+  .nx-shell[data-layout-phase] {
+    border: 2px solid CanvasText !important;
+  }
+  .nx-shell[data-layout-phase] .nx-zone {
+    border-color: CanvasText !important;
+  }
+}
