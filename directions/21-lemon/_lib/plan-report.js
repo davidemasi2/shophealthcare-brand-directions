@@ -95,6 +95,134 @@
      RENDER — sectioned markup
      ----------------------------------------------------------- */
 
+  // ─── V25 · MODE 2B (Switch Report) renderers ────────────────
+  // Fire when window.NORA_OCR_BASELINE is present. Replaces the top-half
+  // (heading + premium) with a 4-section Switch Report. Bottom-half
+  // (use-list, exclusions, CTA, actions, accordions) stays the same.
+
+  function renderSwitchHeader(plan, baseline) {
+    var fromName = baseline.plan_name || baseline.carrier || 'your current plan';
+    var toName = plan.name || (plan.carrier || 'the new plan');
+    return (
+      '<div class="plan-report__section plan-report__section--switch-header" data-pr-section="switch-header">' +
+        '<div class="plan-report__heading-eyebrow">★ Your switch report</div>' +
+        '<div class="plan-report__switch-title">' +
+          '<span class="pr-switch-from">' + escapeHtml(fromName) + '</span>' +
+          '<span class="pr-switch-arrow" aria-hidden="true">→</span>' +
+          '<span class="pr-switch-to">' + escapeHtml(toName) + '</span>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderSwitchSavings(plan, baseline) {
+    var fromMonthly = baseline.monthly_premium || 0;
+    var toMonthly = plan.monthly_premium || 0;
+    var monthlyDelta = fromMonthly - toMonthly;
+    var annualDelta = monthlyDelta * 12;
+    if (annualDelta <= 0) {
+      // The new plan costs MORE — be honest, frame as coverage trade-off
+      return (
+        '<div class="plan-report__section plan-report__section--switch-savings" data-pr-section="switch-savings">' +
+          '<div class="plan-report__savings-eyebrow">The number</div>' +
+          '<p class="plan-report__savings-tradeoff">' +
+            'This plan costs <strong>$' + formatMoney(Math.abs(monthlyDelta)) + '/mo more</strong> than your current. ' +
+            'You\'re paying for richer coverage — see what changes below.' +
+          '</p>' +
+        '</div>'
+      );
+    }
+    return (
+      '<div class="plan-report__section plan-report__section--switch-savings" data-pr-section="switch-savings">' +
+        '<div class="plan-report__savings-eyebrow">The number</div>' +
+        '<div class="plan-report__savings-amount">' +
+          '<span class="pr-savings-prefix">$</span>' +
+          '<span class="pr-savings-value">' + formatMoney(annualDelta) + '</span>' +
+        '</div>' +
+        '<div class="plan-report__savings-label">saved per year</div>' +
+        '<div class="plan-report__savings-monthly">' +
+          '$' + formatMoney(fromMonthly) + '/mo → $' + formatMoney(toMonthly) + '/mo · ' +
+          '<strong>$' + formatMoney(monthlyDelta) + '/mo back in your pocket</strong>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderSwitchChanges(plan, baseline) {
+    var bullets = [];
+    // Premium delta
+    var monthlyDelta = (baseline.monthly_premium || 0) - (plan.monthly_premium || 0);
+    if (Math.abs(monthlyDelta) >= 5) {
+      var dir = monthlyDelta > 0 ? 'down' : 'up';
+      var word = monthlyDelta > 0 ? 'Lower' : 'Higher';
+      bullets.push({
+        mark: dir,
+        text: word + ' premium: $' + formatMoney(baseline.monthly_premium) + '/mo → $' + formatMoney(plan.monthly_premium) + '/mo'
+      });
+    }
+    // Deductible delta
+    var fromDed = baseline.deductible || 0;
+    var toDed = (plan.benefits && plan.benefits.medical_deductible_individual) || plan.deductible || 0;
+    if (typeof toDed === 'number' && Math.abs(fromDed - toDed) >= 100) {
+      var dDir = fromDed > toDed ? 'down' : 'up';
+      var dWord = fromDed > toDed ? 'Lower' : 'Higher';
+      bullets.push({
+        mark: dDir,
+        text: dWord + ' deductible: $' + formatMoney(fromDed) + ' → $' + formatMoney(toDed)
+      });
+    }
+    // Network type — same or different
+    if (baseline.network_type && plan.network_type) {
+      if (baseline.network_type.toLowerCase() === plan.network_type.toLowerCase()) {
+        bullets.push({ mark: 'check', text: 'Same network type (' + plan.network_type + ')' });
+      } else {
+        bullets.push({
+          mark: 'right',
+          text: 'New network type: ' + baseline.network_type + ' → ' + plan.network_type
+        });
+      }
+    }
+    if (!bullets.length) return '';
+    var items = bullets.map(function (b) {
+      var cls = 'pr-mark--' + b.mark;
+      var glyph = b.mark === 'down' ? '↓' : b.mark === 'up' ? '↑' : b.mark === 'check' ? '✓' : '→';
+      return '<li class="plan-report__list-row">' +
+        '<span class="pr-mark ' + cls + '">' + glyph + '</span>' +
+        '<span class="pr-text">' + escapeHtml(b.text) + '</span>' +
+      '</li>';
+    }).join('');
+    return (
+      '<div class="plan-report__section" data-pr-section="switch-changes">' +
+        '<div class="plan-report__eyebrow">⌬ What changes for you</div>' +
+        '<ul class="plan-report__list plan-report__list--diff">' + items + '</ul>' +
+      '</div>'
+    );
+  }
+
+  // "What stays the same" — render only when backend-confirmable parities exist.
+  // For V25 mock: confirm network parity. Doctor / Rx parity will be added
+  // when backend ships verification.
+  function renderSwitchStays(plan, baseline) {
+    var stays = [];
+    if (baseline.network_type && plan.network_type &&
+        baseline.network_type.toLowerCase() === plan.network_type.toLowerCase()) {
+      stays.push('Same network type — your providers should still be in-network');
+    }
+    if (!stays.length) return '';
+    var items = stays.map(function (text) {
+      return '<li class="plan-report__list-row">' +
+        '<span class="pr-mark pr-mark--check">✓</span>' +
+        '<span class="pr-text">' + escapeHtml(text) + '</span>' +
+      '</li>';
+    }).join('');
+    return (
+      '<div class="plan-report__section" data-pr-section="switch-stays">' +
+        '<div class="plan-report__eyebrow">⌬ What stays the same</div>' +
+        '<ul class="plan-report__list plan-report__list--stays">' + items + '</ul>' +
+      '</div>'
+    );
+  }
+
   // SECTION 1 — Heading
   function renderHeading(plan) {
     var carrierShort = (function () {
@@ -483,28 +611,31 @@
 
     target.classList.add('plan-report');
     target.classList.remove('is-revealed');
-    // V25 · Mode 2A vs 2B branching — 2B (Switch Report) ships in Tier 4b.
-    // For now the body renders Mode 2A regardless of OCR baseline; the
-    // premium block already conditionally shows compared_to_user savings
-    // when present, so OCR-aware messaging works inside 2A too.
-    target.classList.toggle('plan-report--mode-2b', !!window.NORA_OCR_BASELINE);
+    // V25 · Mode 2A vs 2B branching — driven by window.NORA_OCR_BASELINE.
+    var baseline = window.NORA_OCR_BASELINE;
+    var isMode2B = !!baseline;
+    target.classList.toggle('plan-report--mode-2b', isMode2B);
 
     var skipBanner = skipped ? renderSkipBanner() : '';
-    // V25 · Mode 2A section order — primary CTA promotes above accordions.
-    //   1. SkipBanner (if skipped)
-    //   2. Heading
-    //   3. Premium block (uses compared_to_user when available)
-    //   4. What you'll actually use
-    //   5. Not covered  (compliance, ALWAYS visible)
-    //   6. Continue to enrollment  (PRIMARY visual anchor)
-    //   7. Actions row (Save / Email PDF / Forward)
-    //   8. ▸ Things to know       (accordion, collapsed-by-default)
-    //   9. ▸ Add-ons              (accordion, collapsed-by-default)
-    //  10. ▸ Fine print           (accordion, collapsed-by-default)
+
+    // Top-half (varies by mode); bottom-half (identical across modes).
+    var topHalf;
+    if (isMode2B) {
+      // Mode 2B — Switch Report
+      topHalf =
+        renderSwitchHeader(plan, baseline) +
+        renderSwitchSavings(plan, baseline) +
+        renderSwitchChanges(plan, baseline) +
+        renderSwitchStays(plan, baseline);
+    } else {
+      // Mode 2A — Receipt
+      topHalf =
+        renderHeading(plan) +
+        renderPremium(plan);
+    }
     target.innerHTML =
       skipBanner +
-      renderHeading(plan) +
-      renderPremium(plan) +
+      topHalf +
       renderUseList(plan) +
       renderExclusions(plan) +              // ALWAYS visible — compliance
       renderContinue(licenseText) +         // PRIMARY CTA, promoted
@@ -513,8 +644,9 @@
       renderAddons(planSet.addons) +        // collapsed accordion
       renderFinePrint(plan);                // collapsed accordion
 
-    // Mount Component A premium block
-    mountPremium(target, plan);
+    // Mount Component A premium block — Mode 2A only
+    // (Mode 2B replaces the premium block with the savings number)
+    if (!isMode2B) mountPremium(target, plan);
 
     // Sectioned cascade reveal — apply staggered delays to each section
     var sections = target.querySelectorAll('.plan-report__section');

@@ -567,3 +567,177 @@
   }
 }
 
+
+/* =============================================================
+   V25 · MODE 2B — Switch Report
+   Renders when window.NORA_OCR_BASELINE is set. Replaces the
+   heading + premium block with a 4-section switch summary.
+   ============================================================= */
+
+.plan-report__section--switch-header {
+  margin-bottom: 4px;
+}
+.plan-report__switch-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  line-height: 1.18;
+  color: var(--pr-ink, #0E2A3A);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  margin: 4px 0 0;
+}
+.pr-switch-from {
+  text-decoration: line-through;
+  text-decoration-color: rgba(14, 42, 58, 0.4);
+  color: var(--pr-mute, #4A6678);
+  font-weight: 500;
+}
+.pr-switch-arrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: var(--pr-pink, #00B5D8);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.pr-switch-to {
+  color: var(--pr-ink, #0E2A3A);
+  font-weight: 600;
+}
+
+/* The savings number — Fraunces, large, lemon-anchored */
+.plan-report__section--switch-savings {
+  background: linear-gradient(180deg, #FFF8C8 0%, var(--pr-cream, #FFFFFF) 100%);
+  border: 2px solid var(--pr-ink, #0E2A3A);
+  border-radius: 14px;
+  padding: 18px 20px 16px;
+  box-shadow: 4px 4px 0 var(--pr-ink, #0E2A3A);
+  margin: 12px 0 6px;
+}
+.plan-report__savings-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pr-mute, #4A6678);
+  margin-bottom: 4px;
+}
+.plan-report__savings-amount {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--pr-ink, #0E2A3A);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: baseline;
+  margin: 4px 0 4px;
+}
+.plan-report__savings-amount .pr-savings-prefix {
+  font-size: 0.42em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pr-mute, #4A6678);
+  letter-spacing: 0;
+  margin-right: 0.04em;
+}
+.plan-report__savings-label {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pr-ink, #0E2A3A);
+  margin-bottom: 12px;
+}
+.plan-report__savings-monthly {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--pr-ink, #0E2A3A);
+  padding-top: 10px;
+  border-top: 1px dashed rgba(14, 42, 58, 0.25);
+  font-variant-numeric: tabular-nums;
+}
+.plan-report__savings-monthly strong {
+  font-weight: 700;
+  color: var(--pr-pink-dark, #007A93);
+}
+.plan-report__savings-tradeoff {
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--pr-ink, #0E2A3A);
+  margin: 4px 0 0;
+}
+.plan-report__savings-tradeoff strong {
+  font-weight: 700;
+}
+
+/* Diff bullet list (What changes / What stays) */
+.plan-report__list--diff,
+.plan-report__list--stays {
+  margin-top: 4px;
+}
+.plan-report__list--diff .pr-mark,
+.plan-report__list--stays .pr-mark {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  width: 18px;
+  display: inline-flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pr-mark--down  { color: var(--pr-pink-dark, #007A93); }
+.pr-mark--up    { color: #B97A00; }
+.pr-mark--right { color: var(--pr-pink, #00B5D8); }
+.pr-mark--check { color: var(--pr-pink-dark, #007A93); }
+
+/* Mode 2B body padding tightening — savings panel already has
+   strong visual weight, so we don't need extra section gaps */
+.plan-report.plan-report--mode-2b .plan-report__section {
+  padding-top: 8px;
+}
+.plan-report.plan-report--mode-2b .plan-report__section--switch-header,
+.plan-report.plan-report--mode-2b .plan-report__section--switch-savings {
+  padding-top: 0;
+}
+
+/* Cross-fade transition when 2A → 2B (retroactive scan) */
+.plan-report {
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-report.is-mode-flipping {
+  opacity: 0.4;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .plan-report__savings-amount {
+    font-size: 44px;
+  }
+  .plan-report__savings-label { font-size: 14px; }
+  .plan-report__switch-title { font-size: 18px; }
+  .plan-report__section--switch-savings {
+    padding: 14px 16px 12px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .plan-report { transition: none; }
+}
+
+/* Forced colors */
+@media (forced-colors: active) {
+  .plan-report__section--switch-savings {
+    background: Canvas !important;
+    border: 2px solid CanvasText;
+  }
+}
