@@ -427,9 +427,12 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 }
 .nx-input::placeholder { color: var(--mute); }
 .nx-send {
+  /* V27 F11 — was 38×38 base + 44×44 mobile @media. Bumped base universally
+     to 44×44 so desktop also passes WCAG 2.5.5 (Target Size, AAA, 44 px) and
+     2.5.8 (AA, 24 px). Mobile rule below still applies but is now no-op. */
   background: var(--lemon); color: var(--ink);
   border: 1.5px solid var(--ink); border-radius: 999px;
-  width: 38px; height: 38px;
+  width: 44px; height: 44px;
   display: grid; place-items: center;
   flex: none;
   transition: transform var(--t-quick), background var(--t-quick);
@@ -697,12 +700,25 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   color: var(--mute);
 }
 .nx-drawer-title {
-  /* V24 · Demoted from 22px → 17px Fraunces, opacity 0.7 — no longer
-     competes with the dash-headline (clamp 32-44px) for the eye. */
+  /* V24 · Demoted from 22px → 17px Fraunces — no longer competes with
+     dash-headline (clamp 32-44px) for the eye.
+     V27 F16 · Was opacity 0.7 + var(--ink). Under forced-colors that drops
+     contrast below WCAG 2.1 AA (effective contrast collapses when system
+     compositor doesn't honor opacity). Replaced with var(--mute) which is
+     #4A6678 (5.3:1 on white, AA-pass), and a forced-colors override below. */
   font-family: 'Fraunces', serif; font-weight: 500;
   font-size: 17px; line-height: 1.25; letter-spacing: -.005em;
-  color: var(--ink);
-  opacity: 0.7;
+  color: var(--mute);
+}
+@media (forced-colors: active) {
+  /* V27 F16 — axe needs explicit Canvas background to resolve color-contrast.
+     Without it, the title's transparent bg + opacity:0 ancestor confuses the
+     check. forced-color-adjust:none locks system colors at this node. */
+  .nx-drawer-title {
+    color: CanvasText;
+    background: Canvas;
+    forced-color-adjust: none;
+  }
 }
 .nx-drawer-copy {
   font-size: 13.5px; line-height: 1.55;
@@ -734,7 +750,11 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 820px) {
   .nx-top { padding: 6px 28px; }
   .nx-unlock-trail-host { margin-top: 0; margin-bottom: 0; }
-  .nx-shell { margin: 4px auto 8px; }
+  /* V27 tablet-1024 residual fix — F02's `margin: 4px auto 8px` added 8 px
+     margin-bottom that became visible doc-overflow because shell ended exactly
+     at viewport.bottom. Drop bottom margin to 0; visual breathing already
+     handled by zone-drawer's 88 px strip below the shell. */
+  .nx-shell { margin: 4px auto 0; }
 
   /* V27 F18 — Plan cards naturally render ~486 px tall but the dash zone at
      LOCK on tablet-1024 only has ~428 px to give them. Reuse the COMPARE-phase
