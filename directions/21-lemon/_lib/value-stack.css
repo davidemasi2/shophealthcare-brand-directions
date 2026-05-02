@@ -310,3 +310,80 @@
   .value-stack__secondary { font-size: 19px; margin-top: 14px; }
   .value-stack__tertiary-value { font-size: 15px; }
 }
+
+/* =============================================================
+   V24 Tier 3 · Robinhood-style milestone celebration on lock.
+   Subtle radial gold pulse emanates from the dial — single 1.4s
+   animation, NO continuous loop. Plus tiny "● PLAN LOCKED"
+   mono caption fades in for 4s. Dignified, never confetti.
+   ============================================================= */
+.value-stack__primary {
+  /* Allow the pulse pseudo to escape the dial bounds */
+  overflow: visible;
+}
+.value-stack__primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    var(--vs-lemon) 0%,
+    rgba(255, 200, 87, 0.45) 40%,
+    rgba(255, 200, 87, 0) 70%
+  );
+}
+.value-stack.is-locking .value-stack__primary::after {
+  animation: vs-lock-pulse 1.4s cubic-bezier(.22,.61,.36,1) 1 forwards;
+}
+@keyframes vs-lock-pulse {
+  0%   { opacity: 0;   transform: scale(1); }
+  35%  { opacity: 0.4; transform: scale(1.18); }
+  100% { opacity: 0;   transform: scale(1.6); }
+}
+
+/* "● PLAN LOCKED" caption appears below the dial */
+.value-stack__lock-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--vs-ink);
+  background: rgba(255, 200, 87, 0.18);
+  border: 1px solid var(--vs-lemon);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .3s cubic-bezier(.22,.61,.36,1),
+              transform .3s cubic-bezier(.22,.61,.36,1);
+  pointer-events: none;
+}
+.value-stack__lock-caption .vs-lock-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--vs-pink-dark, var(--vs-pink));
+  border-radius: 50%;
+}
+.value-stack.is-lock-caption-visible .value-stack__lock-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .value-stack.is-locking .value-stack__primary::after {
+    animation: none !important;
+    opacity: 0;
+  }
+  .value-stack__lock-caption {
+    /* Caption is information — keep it visible but skip transition */
+    transition: none !important;
+  }
+}

@@ -66,6 +66,28 @@
     } else {
       tierBadgeHTML = '<span class="plan-card__tier">' + escapeHtml(tierLabel) + '</span>';
     }
+
+    // V24 Tier 3 · Wealthfront-style rationale band — Recommended ⭐ ONLY.
+    // Persona-aware: prefers plan.rationale_by_persona[persona] if available
+    // (set on mount), then plan.rationale. Renders nothing if neither exists.
+    // Note: rationale text contains intentional <em>…</em> for italic accent —
+    // do NOT escapeHtml the final string. It's a static string from mock data,
+    // not user input.
+    var rationaleHTML = '';
+    if (plan.tier === 'recommended') {
+      var personaKey = (window.NORA_ACTIVE_PERSONA || '').toUpperCase();
+      var personaRationale = (plan.rationale_by_persona && personaKey)
+        ? plan.rationale_by_persona[personaKey]
+        : null;
+      var rationaleText = personaRationale || plan.rationale || null;
+      if (rationaleText) {
+        rationaleHTML =
+          '<div class="plan-card__rationale">' +
+            '<span class="pc-rationale-eyebrow">WHY THIS ONE</span>' +
+            '<p class="pc-rationale-text">' + rationaleText + '</p>' +
+          '</div>';
+      }
+    }
     // V24 — neutral category labels (Bronze/Silver/Gold are ACA metallic tiers
     // and brand-voice §C4 forbids implying ACA). Plan NAME below still shows
     // the carrier's actual product name verbatim.
@@ -155,6 +177,7 @@
         'data-plan-id="' + escapeHtml(plan.plan_id) + '" ' +
         'aria-pressed="' + (isSelected ? 'true' : 'false') + '">' +
         tierBadgeHTML +
+        rationaleHTML +
         topline +
         nameBlock +
         priceBlock +

@@ -325,11 +325,12 @@
   transform: translateY(0);
 }
 
-/* SECTION 7 — Fine print collapse */
+/* SECTION 7 — Fine print collapse · V24 Tier 3 Apple-Card progressive depth */
 .plan-report__fineprint {
   background: rgba(14,42,58,0.04);
   border: 1.5px dashed var(--pr-rule);
   border-radius: 10px;
+  transition: background .18s cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__fineprint-toggle {
   width: 100%;
@@ -348,13 +349,43 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  border-radius: 9px 9px 0 0;
+  transition: background .18s cubic-bezier(.22,.61,.36,1),
+              color .18s cubic-bezier(.22,.61,.36,1);
+}
+.plan-report__fineprint-toggle:hover {
+  background: rgba(0, 181, 216, 0.04);
+  color: var(--pr-ink);
+}
+.plan-report__fineprint-toggle:hover .pr-chev {
+  color: var(--pink, #00B5D8);
+}
+.plan-report__fineprint-toggle .pr-toggle-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  letter-spacing: .14em;
+}
+.plan-report__fineprint-toggle .pr-toggle-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--pr-mute);
+  text-transform: none;
+  opacity: .85;
 }
 .plan-report__fineprint-toggle .pr-chev {
   display: inline-block;
-  transition: transform .2s ease;
+  font-size: 14px;
+  color: var(--pr-mute);
+  transition: transform .18s cubic-bezier(.22,.61,.36,1),
+              color .15s ease;
 }
 .plan-report__fineprint.is-open .plan-report__fineprint-toggle .pr-chev {
   transform: rotate(90deg);
+  color: var(--pink, #00B5D8);
 }
 .plan-report__fineprint-body {
   display: none;

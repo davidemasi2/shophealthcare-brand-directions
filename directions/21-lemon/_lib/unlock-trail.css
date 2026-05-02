@@ -253,6 +253,23 @@
   color: var(--mute, #6A5E70);
   margin-left: 2px;
 }
+/* V24 Tier 3 · Bonus 5 — persona-aware context tag (subtle, mono-mute) */
+.unlock-trail .ut-value .ut-context {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mute, #6A5E70);
+  margin-left: 4px;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .unlock-trail .ut-value .ut-context {
+    /* Hide context on tightest mobile so the dollar number doesn't wrap */
+    display: none;
+  }
+}
 
 /* Pop-badge — "+$50 just unlocked" */
 .unlock-trail .ut-pop {

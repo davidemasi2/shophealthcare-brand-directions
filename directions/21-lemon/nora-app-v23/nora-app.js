@@ -648,6 +648,43 @@
       planCardsApi = window.PlanCards.mount(pcEl, {
         planSet: planSet,
         onSelect: function (planId) {
+          // V24 Tier 3 · Robinhood milestone — re-fire the lock with the
+          // user's chosen plan's number so the dial radial pulse + caption
+          // play. Then glow the chosen card border for 1s.
+          try {
+            var chosen = (planSet.plans || []).filter(function (p) {
+              return p.plan_id === planId;
+            })[0];
+            if (chosen && valueStackApi && typeof valueStackApi.lock === 'function') {
+              var lockedMonthly = Math.round(chosen.monthly_premium);
+              var compareValue = (chosen.compared_to_user &&
+                                  chosen.compared_to_user.current_plan_premium) ||
+                                 currentNumbers().compare;
+              var annualSavings = (compareValue - lockedMonthly) * 12;
+              valueStackApi.lock(lockedMonthly, {
+                secondary: { value: lockedMonthly * 12, suffix: '/yr', label: "That's annual" },
+                tertiary: {
+                  value: annualSavings,
+                  suffix: ' saved/yr',
+                  label: currentNumbers().label,
+                  direction: 'down'
+                },
+                compareValue: compareValue
+              });
+            }
+            // Lemon-glow the chosen card.
+            var chosenCard = pcEl.querySelector(
+              '.plan-card[data-plan-id="' + planId + '"]'
+            );
+            if (chosenCard) {
+              chosenCard.classList.remove('is-locking');
+              void chosenCard.offsetWidth;
+              chosenCard.classList.add('is-locking');
+              setTimeout(function () {
+                try { chosenCard.classList.remove('is-locking'); } catch (e) {}
+              }, 1100);
+            }
+          } catch (e) { /* celebration failed; continue */ }
           surfacePlanReport(planId);
         },
         onCompareClick: function () {
@@ -896,6 +933,12 @@
   function boot(strings) {
     ctx = parseContext();
     personaCfg = strings[ctx.persona] || strings.GEN;
+
+    // V24 Tier 3 · Surface active persona globally so satellite components
+    // (PlanCards rationale band, UnlockTrail context tag) can pick the
+    // right copy variant without us having to thread `persona` through
+    // every options bag.
+    window.NORA_ACTIVE_PERSONA = ctx.persona;
 
     scrollEl = $('#chat-scroll');
     qrEl     = $('#quick-replies');

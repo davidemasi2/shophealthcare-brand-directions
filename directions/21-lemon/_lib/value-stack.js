@@ -417,6 +417,51 @@
         options.locked = true;
         render(target, options);
         renderFinal(target, options);
+
+        // V24 Tier 3 · Robinhood milestone celebration.
+        // Trigger AFTER render so the radial pulse + caption sit on top of
+        // the freshly rendered locked state. Only fire when this is a
+        // post-mount lock (not the initial locked-on-mount path).
+        try {
+          var reduced = false;
+          try {
+            reduced = window.matchMedia &&
+                      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          } catch (e) {}
+
+          // Inject the caption element if not already present.
+          var captionEl = target.querySelector('.value-stack__lock-caption');
+          if (!captionEl) {
+            captionEl = document.createElement('div');
+            captionEl.className = 'value-stack__lock-caption';
+            captionEl.setAttribute('aria-live', 'polite');
+            captionEl.innerHTML =
+              '<span class="vs-lock-dot" aria-hidden="true"></span>' +
+              '<span>Plan Locked</span>';
+            target.appendChild(captionEl);
+          }
+
+          // Fire the radial pulse class — animation runs once via CSS.
+          if (!reduced) {
+            target.classList.remove('is-locking');
+            // Force reflow so re-adding the class restarts animation.
+            void target.offsetWidth;
+            target.classList.add('is-locking');
+            setTimeout(function () {
+              try { target.classList.remove('is-locking'); } catch (e) {}
+            }, 1500);
+          }
+
+          // Caption fade-in regardless of motion preference (it's content).
+          requestAnimationFrame(function () {
+            target.classList.add('is-lock-caption-visible');
+          });
+          setTimeout(function () {
+            try { target.classList.remove('is-lock-caption-visible'); } catch (e) {}
+          }, 4000);
+        } catch (e) {
+          // Celebration failed; lock state is still valid.
+        }
       },
       destroy: function () { teardown(target); }
     };

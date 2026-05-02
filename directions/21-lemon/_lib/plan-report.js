@@ -171,17 +171,22 @@
 
   // SECTION 4 — Things to know (V24 · collapse-by-default per Apple Card pattern)
   function renderKnowList(plan) {
-    var items = (plan.things_to_know || []).map(function (line) {
+    var lines = (plan.things_to_know || []);
+    var items = lines.map(function (line) {
       return '<li class="plan-report__list-row">' +
         '<span class="pr-mark">•</span>' +
         '<span class="pr-text">' + escapeHtml(line) + '</span>' +
       '</li>';
     }).join('');
     if (!items) return '';
+    var count = lines.length;
+    var countLabel = count + (count === 1 ? ' item' : ' items');
     return (
       '<div class="plan-report__section plan-report__fineprint" data-pr-section="know" data-pr-collapsible>' +
         '<button type="button" class="plan-report__fineprint-toggle" data-pr-collapsible-toggle>' +
-          '<span>⚠ Things to know</span>' +
+          '<span class="pr-toggle-title">⚠ Things to know' +
+            '<span class="pr-toggle-count">· ' + countLabel + '</span>' +
+          '</span>' +
           '<span class="pr-chev" aria-hidden="true">›</span>' +
         '</button>' +
         '<div class="plan-report__fineprint-body">' +
@@ -255,10 +260,24 @@
         '</div>'
       );
     }).join('');
+    // V24 Tier 3 · Apple Card pattern — Add-ons collapse-by-default with
+    // a category list as the scope hint. "Add-ons · Dental, Vision,
+    // Critical Illness" tells the user what's inside without revealing.
+    var labelList = catMeta
+      .filter(function (c) { return (addons[c.key] || []).length > 0; })
+      .map(function (c) { return c.label; });
+    var labelString = labelList.join(', ');
     return (
-      '<div class="plan-report__section" data-pr-section="addons">' +
-        '<div class="plan-report__eyebrow">⌬ Complement your coverage</div>' +
-        '<div class="plan-report__addons">' + blocks + '</div>' +
+      '<div class="plan-report__section plan-report__fineprint" data-pr-section="addons" data-pr-collapsible>' +
+        '<button type="button" class="plan-report__fineprint-toggle" data-pr-collapsible-toggle>' +
+          '<span class="pr-toggle-title">⌬ Add-ons' +
+            '<span class="pr-toggle-count">· ' + escapeHtml(labelString) + '</span>' +
+          '</span>' +
+          '<span class="pr-chev" aria-hidden="true">›</span>' +
+        '</button>' +
+        '<div class="plan-report__fineprint-body">' +
+          '<div class="plan-report__addons">' + blocks + '</div>' +
+        '</div>' +
       '</div>'
     );
   }
@@ -277,10 +296,15 @@
         '</tr>'
       );
     }).join('');
+    // V24 Tier 3 · scope hint
+    var rowCount = keys.length;
+    var countLabel = rowCount + (rowCount === 1 ? ' line' : ' lines');
     return (
       '<div class="plan-report__section plan-report__fineprint" data-pr-section="fine" data-pr-fine>' +
         '<button type="button" class="plan-report__fineprint-toggle" data-pr-fine-toggle>' +
-          '<span>⌬ Fine print — full benefit table</span>' +
+          '<span class="pr-toggle-title">⌬ Fine print' +
+            '<span class="pr-toggle-count">· ' + countLabel + '</span>' +
+          '</span>' +
           '<span class="pr-chev" aria-hidden="true">›</span>' +
         '</button>' +
         '<div class="plan-report__fineprint-body">' +

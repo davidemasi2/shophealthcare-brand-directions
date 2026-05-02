@@ -23,6 +23,18 @@
     GEN: "the typical premium for someone in your situation"
   };
 
+  // V24 Tier 3 · Substack-grade AuthGate · persona-specific social proof.
+  // One mono-caps line above the form. Number is illustrative for now —
+  // real-time count arrives in V25 when analytics wiring lands.
+  var SOCIAL_PROOF_LINES = {
+    SP1: '12,847 freelancers got their number this week.',
+    CL1: '5,290 renewal-spike checks this week.',
+    BR1: '3,160 bridge-year checks this week.',
+    PC1: '8,420 second-opinion checks this week.',
+    RU1: '2,940 coverage restarts this week.',
+    GEN: '12,847 people got their number this week.'
+  };
+
   // V24 · State-specific carrot variants — when the consumer passes
   // `state` in opts, we inject the abbreviation into the anchor copy
   // for personas whose phrasing reads tighter with state context.
@@ -179,6 +191,13 @@
 
     bubble.appendChild(copy);
 
+    // V24 Tier 3 · Substack-grade social-proof line above the form.
+    // Mono caps, ink-mute, single line — gives the form a sense of
+    // shared momentum without claiming, promising, or pressuring.
+    var socialProof = el('div', 'auth-gate__social-proof');
+    socialProof.setAttribute('data-ag-social-proof', '');
+    bubble.appendChild(socialProof);
+
     // Form
     var form = el('form', 'auth-gate__form');
     form.setAttribute('novalidate', '');
@@ -247,20 +266,24 @@
 
     bubble.appendChild(form);
 
-    // Microcopy stack
+    // V24 Tier 3 · Microcopy reorganized as ONE single-line bottom strip,
+    // separated by · — less stack, more confident. Still mono caps.
     var micro = el('div', 'auth-gate__microcopy');
+    micro.classList.add('auth-gate__microcopy--inline');
     micro.innerHTML =
       '<span>Email = your account. Not a list.</span>' +
+      '<span class="ag-micro-sep" aria-hidden="true">·</span>' +
       '<span>No follow-up unless you ask.</span>' +
+      '<span class="ag-micro-sep" aria-hidden="true">·</span>' +
       '<span>We never sell your data. Ever.</span>';
     bubble.appendChild(micro);
 
-    // Skip link
+    // V24 Tier 3 · Skip link with soft chevron + breathing room.
     var skipWrap = el('div', 'auth-gate__skip');
     var skipA = document.createElement('a');
     skipA.setAttribute('href', '#');
     skipA.setAttribute('data-ag-skip', '');
-    skipA.textContent = 'Skip and just show me the plan ↓';
+    skipA.innerHTML = 'Skip and just show me the plan <span class="ag-skip-chev" aria-hidden="true">▾</span>';
     skipWrap.appendChild(skipA);
     bubble.appendChild(skipWrap);
 
@@ -280,6 +303,7 @@
     inst.els = {
       bubble:        bubble,
       copyCarrotEl:  bubble.querySelector('[data-ag-carrot]'),
+      socialProofEl: bubble.querySelector('[data-ag-social-proof]'),
       form:          form,
       emailInput:    emailField.input,
       emailField:    emailField.field,
@@ -373,6 +397,12 @@
       'Give me your email and I' + "'" + 'll prepare a full plan-vs-plan ' +
       'breakdown — line by line, exactly what you' + "'" + 'd save over ' +
       '<strong>' + escapeHtml(carrot) + '</strong>.';
+
+    // V24 Tier 3 · Persona-specific social proof line above the form.
+    if (inst.els.socialProofEl) {
+      var proofLine = SOCIAL_PROOF_LINES[inst.opts.persona] || SOCIAL_PROOF_LINES.GEN;
+      inst.els.socialProofEl.textContent = proofLine;
+    }
   }
 
   // ─── EVENT HANDLERS ──────────────────────────────────────────

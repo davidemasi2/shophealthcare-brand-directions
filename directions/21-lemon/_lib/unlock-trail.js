@@ -253,15 +253,31 @@
       }
     });
 
-    // Value pill
+    // Value pill — V24 Tier 3 · persona-aware context tag.
+    // ~$xxx/mo · self-employed | bridge years | etc.
+    // Subtle context that makes the number feel earned.
     if (s.valueEstimate === null || typeof s.valueEstimate === 'undefined') {
       els.valueEl.classList.add('is-pending');
       els.valueEl.textContent = 'Calculating…';
     } else {
       els.valueEl.classList.remove('is-pending');
+      var personaTag = '';
+      var personaKey = (window.NORA_ACTIVE_PERSONA || '').toUpperCase();
+      var TAGS = {
+        SP1: 'self-employed',
+        CL1: 'vs $890 renewal',
+        BR1: 'bridge years',
+        RU1: '24h coverage',
+        PC1: 'diagnostic',
+        GEN: 'estimate'
+      };
+      if (TAGS[personaKey]) {
+        personaTag = '<span class="ut-context"> · ' + TAGS[personaKey] + '</span>';
+      }
       els.valueEl.innerHTML =
         '<span class="ut-tilde">~</span>$' + formatNumber(s.valueEstimate) +
-        '<span class="ut-suffix">/mo</span>';
+        '<span class="ut-suffix">/mo</span>' +
+        personaTag;
     }
 
     // Step counter

@@ -141,6 +141,18 @@
     network_type: 'EPO',
     monthly_premium: 420,
     description: 'Balanced premium with predictable copays. Most chosen by freelancers in your bracket.',
+    // V24 Tier 3 · Wealthfront "We picked this because…" rationale.
+    // Renders ONLY on the Recommended ⭐ card. ≤14 words, italic accent
+    // on the *emphasized phrase* (rendered as <em>…</em>).
+    rationale: 'Best balance of premium and out-of-pocket for <em>irregular income</em>.',
+    rationale_by_persona: {
+      SP1: 'Best balance of premium and out-of-pocket for <em>irregular income</em>.',
+      CL1: 'Cuts your renewal almost in half — <em>same major network</em>.',
+      BR1: 'Bridges the gap years with <em>predictable copays</em>, not coinsurance.',
+      PC1: 'Drops your monthly while keeping your <em>specialists in-network</em>.',
+      RU1: 'Active in <em>24 hours</em>, no underwriting wait.',
+      GEN: 'Best balance of premium and out-of-pocket for your <em>situation</em>.'
+    },
     highlights: [
       { label: 'Deductible', value: '$6,500 individual / $13,000 family' },
       { label: 'Primary care', value: '$20 copay' },

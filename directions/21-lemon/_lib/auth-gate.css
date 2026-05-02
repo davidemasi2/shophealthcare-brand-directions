@@ -37,7 +37,8 @@
   background: var(--ag-cream);
   border: 1.5px solid var(--ag-ink);
   border-radius: 18px;
-  padding: 22px 24px 20px;
+  /* V24 Tier 3 · Substack breathing — 28 24 from 22 24 20 */
+  padding: 28px 24px;
   max-width: 520px;
   box-shadow: 4px 4px 0 var(--ag-ink);
   margin: 8px 0;
@@ -78,8 +79,12 @@
 .auth-gate__copy p.is-lead {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 500;
-  font-size: 17px;
-  letter-spacing: -.005em;
+  /* V24 Tier 3 · Substack moment — Fraunces 22px carries the headline */
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  margin-bottom: 14px;
+  color: var(--ag-ink);
 }
 .auth-gate__copy strong { font-weight: 600; }
 
@@ -120,7 +125,8 @@
   align-items: center;
   justify-content: center;
   width: 40px;
-  height: 44px;
+  /* V24 Tier 3 · field height 44 → 52 for confidence */
+  height: 52px;
   flex-shrink: 0;
   color: var(--ag-mute);
   font-size: 16px;
@@ -133,7 +139,8 @@
   font: inherit;
   font-size: 15px;
   color: var(--ag-ink);
-  padding: 12px 14px 12px 0;
+  /* V24 Tier 3 · matched 52px height via padding */
+  padding: 16px 14px 16px 0;
   min-width: 0;
 }
 .auth-gate__field input::placeholder {
@@ -215,7 +222,8 @@
   font-size: 15px;
   border: 1.5px solid var(--ag-ink);
   border-radius: 10px;
-  padding: 12px 18px;
+  /* V24 Tier 3 · CTA breathing — 12 18 → 16 28 for Substack-grade confidence */
+  padding: 16px 28px;
   cursor: pointer;
   text-align: center;
   display: inline-flex;
@@ -286,10 +294,28 @@
 }
 
 /* -----------------------------------------------------------
-   Microcopy stack (compliance)
+   V24 Tier 3 · Substack-grade social proof line — single mono-caps row
+   above the form. ink-mute, breathes between bubble copy + form.
+   ----------------------------------------------------------- */
+.auth-gate__social-proof {
+  margin: 4px 0 16px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ag-mute);
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* -----------------------------------------------------------
+   Microcopy — V24 Tier 3 · ONE inline single-line bottom strip,
+   separated by · for confident horizontal rhythm. Falls back to
+   stacked on narrow viewports.
    ----------------------------------------------------------- */
 .auth-gate__microcopy {
-  margin-top: 16px;
+  margin-top: 18px;
   padding-top: 14px;
   border-top: 1px dashed var(--ag-rule);
   font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -298,18 +324,34 @@
   text-transform: uppercase;
   color: var(--ag-mute);
   font-weight: 600;
+  line-height: 1.5;
+  /* default — kept for any consumer still using stacked variant */
   display: flex;
   flex-direction: column;
   gap: 5px;
-  line-height: 1.5;
 }
 .auth-gate__microcopy span { display: block; }
+.auth-gate__microcopy--inline {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  text-align: left;
+}
+.auth-gate__microcopy--inline span { display: inline; }
+.auth-gate__microcopy--inline .ag-micro-sep {
+  color: var(--ag-rule);
+  font-weight: 400;
+  letter-spacing: 0;
+}
 
 /* -----------------------------------------------------------
-   Skip link
+   V24 Tier 3 · Skip link · breathing room + soft chevron
    ----------------------------------------------------------- */
 .auth-gate__skip {
-  margin-top: 14px;
+  margin-top: 22px;
+  padding-top: 12px;
   text-align: center;
 }
 .auth-gate__skip a {
@@ -321,10 +363,35 @@
   border-bottom: 1px dashed transparent;
   cursor: pointer;
   transition: color .15s, border-color .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .auth-gate__skip a:hover {
   color: var(--ag-ink);
   border-bottom-color: var(--ag-ink);
+}
+.auth-gate__skip .ag-skip-chev {
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  top: -1px;
+  opacity: .85;
+  transition: transform .15s cubic-bezier(.22,.61,.36,1);
+}
+.auth-gate__skip a:hover .ag-skip-chev {
+  transform: translateY(2px);
+}
+
+/* Inline microcopy collapses on narrow */
+@media (max-width: 480px) {
+  .auth-gate__microcopy--inline {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .auth-gate__microcopy--inline .ag-micro-sep {
+    display: none;
+  }
 }
 
 /* -----------------------------------------------------------
