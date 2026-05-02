@@ -250,9 +250,17 @@
   function noraSay(html, opts) {
     opts = opts || {};
     var typing = appendTypingIndicator();
-    var delay = REDUCED_MOTION ? 50 : (opts.delay || (800 + Math.random() * 700));
+    // V24 — clamp the delay so the opener never feels stuck. If the host
+    // is throttling timers (background tab, slow CPU), the typing dots
+    // were occasionally surfacing without ever revealing the message.
+    // Cap at 1500ms (was unbounded via Math.random()*700 + 800) and
+    // floor at 50ms when reduced motion.
+    var rawDelay = opts.delay != null ? opts.delay : (800 + Math.random() * 700);
+    var delay = REDUCED_MOTION ? 50 : Math.min(1500, rawDelay);
     setTimeout(function () {
-      typing.remove();
+      // Defensive: if the typing node was already removed (race / re-init),
+      // skip removal but still append the message so the opener lands.
+      if (typing && typing.parentNode) typing.parentNode.removeChild(typing);
       appendMessage({ from: 'nora', html: html, isAha: !!opts.isAha });
       if (opts.then) opts.then();
     }, delay);
@@ -354,9 +362,35 @@
   function askForZip(name) {
     setInputPlaceholder("Type your ZIP…");
     var firstName = (name || '').split(' ')[0] || name;
+    // V24 · Reveal ValueStack now that the user has identified themselves.
+    // Post-name-bind reveal lands the dramatic moment when there's a
+    // person to attach it to.
+    mountValueStackAfterName();
     noraSay("Thanks, " + escapeHtml(firstName) + ". What's your ZIP code? I use it to pull the right network and rate.", {
       then: function () { convoState.step = 'awaiting-zip'; }
     });
+  }
+
+  // V24 · ValueStack reveal — fires after the user binds their first name.
+  // Idempotent: re-calls are silently no-ops.
+  function mountValueStackAfterName() {
+    var vsHost = $('#dashValueStack');
+    if (!vsHost || !window.ValueStack) return;
+    if (vsHost.dataset.vsMounted === '1') return;
+    var nums = currentNumbers();
+    try {
+      valueStackApi = window.ValueStack.mount(vsHost, {
+        persona: ctx.pregnancy ? 'GEN' : (ctx.persona || 'GEN'),
+        primary:   { value: nums.plan,                suffix: '/mo',  label: ctx.pregnancy ? 'Catalog estimate' : 'Your estimate' },
+        secondary: { value: nums.plan * 12,           suffix: '/yr',  label: "That's annual" },
+        tertiary:  { value: (nums.compare - nums.plan) * 12, suffix: ' saved/yr', label: nums.label, direction: 'down' },
+        compareValue: nums.compare,
+        autoplayOnVisible: true,
+        isEstimate: true,
+        locked: false
+      });
+      vsHost.dataset.vsMounted = '1';
+    } catch (e) { /* Value Stack non-critical; continue */ }
   }
 
   function askForDob() {
@@ -409,7 +443,7 @@
 
     noraSay(
       "Got everything I need, " + escapeHtml(firstName) + ". " +
-      "Quick thing while I finish — give me your email and I'll lock this rate in writing.",
+      "Quick thing while I finish — give me your email and I'll hold this number for you in writing.",
       {
         delay: REDUCED_MOTION ? 60 : 1100,
         then: function () {
@@ -475,6 +509,7 @@
     try {
       window.AuthGate.mount(gateSlot, {
         persona: ctx.persona || 'GEN',
+        state: ctx.state || null,                  // V24 · enable state-specific carrot
         comparisonAnchor: noraComparisonAnchor,
         onSubmit: function (payload) {
           // session.js will handle the mocked Klaviyo + JWT round-trip
@@ -718,21 +753,18 @@
       }
     }
 
-    // V21 · Mount Value Stack into the dashboard's bignum slot
+    // V24 · Defer ValueStack reveal until after name-bind. On init we show
+    // a "Pulling your numbers…" placeholder; mountValueStackAfterName() is
+    // called from askForZip() once the user has typed their first name.
+    // This applies the Apple Card / Wealthfront pattern — the headline +
+    // rationale arrive first, the number lands as a dramatic reveal.
     var vsHost = $('#dashValueStack');
-    if (vsHost && window.ValueStack) {
-      try {
-        valueStackApi = window.ValueStack.mount(vsHost, {
-          persona: ctx.pregnancy ? 'GEN' : (ctx.persona || 'GEN'),
-          primary:   { value: nums.plan,                suffix: '/mo',  label: ctx.pregnancy ? 'Catalog estimate' : 'Your estimate' },
-          secondary: { value: nums.plan * 12,           suffix: '/yr',  label: "That's annual" },
-          tertiary:  { value: (nums.compare - nums.plan) * 12, suffix: ' saved/yr', label: nums.label, direction: 'down' },
-          compareValue: nums.compare,
-          autoplayOnVisible: true,
-          isEstimate: true,
-          locked: false
-        });
-      } catch (e) { /* Value Stack non-critical; continue */ }
+    if (vsHost) {
+      vsHost.innerHTML =
+        '<div class="nx-vs-pre" aria-live="polite">' +
+          '<div class="nx-vs-pre-pip"><span></span><span></span><span></span></div>' +
+          '<div class="nx-vs-pre-label">Pulling your numbers…</div>' +
+        '</div>';
     }
     noraComparisonAnchor = personaCfg.comparisonAnchor || 'the typical premium for someone in your situation';
 

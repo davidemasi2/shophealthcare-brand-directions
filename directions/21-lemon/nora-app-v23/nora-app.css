@@ -428,6 +428,45 @@ input, button { font-family: inherit; }
   margin: 22px 0;
 }
 
+/* V24 · Pre-name-bind ValueStack placeholder.
+   Renders inside #dashValueStack until the user types their first name. */
+.nx-vs-pre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 36px 12px;
+  min-height: 200px;
+}
+.nx-vs-pre-pip {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 12px;
+}
+.nx-vs-pre-pip span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.35;
+  animation: nx-vs-pre-bounce 1.2s ease-in-out infinite;
+}
+.nx-vs-pre-pip span:nth-child(2) { animation-delay: 0.18s; }
+.nx-vs-pre-pip span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes nx-vs-pre-bounce {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40%           { opacity: 1;    transform: translateY(-4px); }
+}
+.nx-vs-pre-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+  color: var(--ink);
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-vs-pre-pip span { animation: none; opacity: 0.5; }
+}
+
 .nx-bignum-wrap {
   background: linear-gradient(135deg, var(--lemon) 0%, #FFF1A6 100%);
   border: 1.5px solid var(--ink);
@@ -534,21 +573,34 @@ input, button { font-family: inherit; }
   text-align: center;
 }
 .nx-drawer-empty {
-  max-width: 240px;
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  /* V24 · Ghost-card feel — no longer competes with dashboard headline.
+     Wrap the empty state in a subtle dashed-rule container so it reads
+     as a placeholder slot, not a primary heading. */
+  max-width: 280px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 28px 24px;
+  border: 1px dashed var(--rule);
+  border-radius: 14px;
+  background: rgba(14,42,58,0.025);
+  opacity: 0.78;
 }
 .nx-drawer-illo {
-  color: var(--ink); opacity: .35;
+  /* V24 · Smaller, quieter — supports the ghost-card framing */
+  color: var(--ink); opacity: .28;
+  width: 48px; height: 48px;
 }
 .nx-drawer-eyebrow {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 10px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
-  color: var(--pink-dark);
+  color: var(--mute);
 }
 .nx-drawer-title {
-  font-family: 'Fraunces', serif; font-weight: 600;
-  font-size: 22px; line-height: 1.15; letter-spacing: -.015em;
+  /* V24 · Demoted from 22px → 17px Fraunces, opacity 0.7 — no longer
+     competes with the dash-headline (clamp 32-44px) for the eye. */
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 17px; line-height: 1.25; letter-spacing: -.005em;
   color: var(--ink);
+  opacity: 0.7;
 }
 .nx-drawer-copy {
   font-size: 13.5px; line-height: 1.55;

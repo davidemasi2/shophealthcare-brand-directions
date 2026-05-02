@@ -169,7 +169,7 @@
     );
   }
 
-  // SECTION 4 — Things to know
+  // SECTION 4 — Things to know (V24 · collapse-by-default per Apple Card pattern)
   function renderKnowList(plan) {
     var items = (plan.things_to_know || []).map(function (line) {
       return '<li class="plan-report__list-row">' +
@@ -179,9 +179,14 @@
     }).join('');
     if (!items) return '';
     return (
-      '<div class="plan-report__section" data-pr-section="know">' +
-        '<div class="plan-report__eyebrow">⚠ Things to know</div>' +
-        '<ul class="plan-report__list plan-report__list--know">' + items + '</ul>' +
+      '<div class="plan-report__section plan-report__fineprint" data-pr-section="know" data-pr-collapsible>' +
+        '<button type="button" class="plan-report__fineprint-toggle" data-pr-collapsible-toggle>' +
+          '<span>⚠ Things to know</span>' +
+          '<span class="pr-chev" aria-hidden="true">›</span>' +
+        '</button>' +
+        '<div class="plan-report__fineprint-body">' +
+          '<ul class="plan-report__list plan-report__list--know">' + items + '</ul>' +
+        '</div>' +
       '</div>'
     );
   }
@@ -500,6 +505,16 @@
         fineEl.classList.toggle('is-open');
       });
     }
+
+    // V24 · Generic collapsible toggles (Things to know, etc.)
+    // Apple Card pattern — collapse-by-default, expand on click.
+    var genericToggles = target.querySelectorAll('[data-pr-collapsible-toggle]');
+    Array.prototype.forEach.call(genericToggles, function (toggle) {
+      toggle.addEventListener('click', function () {
+        var section = toggle.closest('[data-pr-collapsible]');
+        if (section) section.classList.toggle('is-open');
+      });
+    });
 
     // Add-on tier picker
     var tierBtns = target.querySelectorAll('[data-pr-addon-tier]');

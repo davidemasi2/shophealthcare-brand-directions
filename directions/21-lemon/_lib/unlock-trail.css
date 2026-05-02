@@ -329,23 +329,49 @@
   .unlock-trail .ut-stages {
     gap: 2px;
   }
-  /* H8 — mobile labels stay visible in compact mode (2-letter abbreviation via CSS).
-     Keep full label for screen readers; clip visually to first 2 chars. */
+  /* V24 — On narrow phones we hide labels under EVERY dot and only render
+     the active stage's full label inline beside the dots row. This kills
+     the "CONDITI…/DISCOV…" truncation entirely. The full label is still
+     in the DOM for screen readers; we clip with visibility, not display. */
   .unlock-trail .ut-label {
-    display: block;
-    font-size: 9px;
-    letter-spacing: .08em;
-    margin-top: 6px;
+    visibility: hidden;
+    height: 0;
+    margin-top: 0;
+    line-height: 0;
+    max-height: 0;
     overflow: hidden;
-    max-width: 100%;
-    /* Show only first 2 chars for STATE/AGE/SEX-style labels */
-    max-height: 12px;
-    line-height: 12px;
   }
-  /* Active stage label gets a slight bump for emphasis */
+  /* Active label: lift back into the layout, render below the dot row,
+     full text, no truncation. The non-active labels stay invisible. */
   .unlock-trail .ut-stage.is-active .ut-label {
-    font-size: 10px;
+    visibility: visible;
+    height: auto;
+    line-height: 1.2;
+    max-height: none;
+    margin-top: 8px;
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--ink, #0E2A3A);
+    text-align: center;
+    /* Span the row so it doesn't push neighbor dots */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Override the desktop default's clamp/ellipsis so the full label renders */
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+    width: auto;
+    top: 22px;
+  }
+  .unlock-trail .ut-stage {
+    position: relative;
+  }
+  /* Reserve room below the dots for the lone active label */
+  .unlock-trail .ut-stages {
+    padding-bottom: 22px;
   }
   .unlock-trail .ut-stage::after {
     top: 6px;

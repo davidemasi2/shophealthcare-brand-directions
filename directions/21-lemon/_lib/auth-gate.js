@@ -23,6 +23,29 @@
     GEN: "the typical premium for someone in your situation"
   };
 
+  // V24 · State-specific carrot variants — when the consumer passes
+  // `state` in opts, we inject the abbreviation into the anchor copy
+  // for personas whose phrasing reads tighter with state context.
+  // Falls back to plain anchor if state not provided / persona not in map.
+  var STATE_NAMES = {
+    AL:'AL',AK:'AK',AZ:'AZ',AR:'AR',CA:'CA',CO:'CO',CT:'CT',DE:'DE',FL:'FL',GA:'GA',
+    HI:'HI',ID:'ID',IL:'IL',IN:'IN',IA:'IA',KS:'KS',KY:'KY',LA:'LA',ME:'ME',MD:'MD',
+    MA:'MA',MI:'MI',MN:'MN',MS:'MS',MO:'MO',MT:'MT',NE:'NE',NV:'NV',NH:'NH',NJ:'NJ',
+    NM:'NM',NY:'NY',NC:'NC',ND:'ND',OH:'OH',OK:'OK',OR:'OR',PA:'PA',RI:'RI',SC:'SC',
+    SD:'SD',TN:'TN',TX:'TX',UT:'UT',VT:'VT',VA:'VA',WA:'WA',WV:'WV',WI:'WI',WY:'WY'
+  };
+  function buildStateSpecificAnchor(persona, state) {
+    if (!state || !STATE_NAMES[state]) return null;
+    var s = state;
+    if (persona === 'SP1') return 'what most ' + s + ' self-employed pay on the open market';
+    if (persona === 'BR1') return 'what you’d pay in ' + s + ' on the open market for bridge coverage';
+    if (persona === 'CL1') return 'your ' + s + ' renewal premium — the one that just spiked';
+    if (persona === 'PC1') return 'whether your current plan is the best deal in ' + s;
+    if (persona === 'RU1') return 'what your ' + s + ' premium will be once you’re back on coverage';
+    if (persona === 'GEN') return 'the typical ' + s + ' premium for someone in your situation';
+    return null;
+  }
+
   var GOOGLE_G_SVG =
     '<svg class="ag-google-icon" viewBox="0 0 18 18" aria-hidden="true">' +
       '<path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.79 2.72v2.26h2.9c1.7-1.56 2.69-3.87 2.69-6.62z"/>' +
@@ -143,9 +166,11 @@
     copy.appendChild(p2);
 
     var p3 = el('p');
+    // V24 · Soften "lock this rate for 30 days" — too binding-promise-y.
+    // "Hold this number" is honest about what we can actually do.
     p3.innerHTML =
-      'Plus I' + "'" + 'll lock this rate for 30 days, and text you ' +
-      'before your enrollment window closes.';
+      'Plus I' + "'" + 'll hold this number for 30 days so you can ' +
+      'think it over, and text you before your enrollment window closes.';
     copy.appendChild(p3);
 
     var noFollowup = el('div', 'auth-gate__no-followup');
@@ -336,7 +361,12 @@
 
   // ─── RENDER (apply opts to DOM) ──────────────────────────────
   function render(inst) {
-    var carrot = inst.opts.comparisonAnchor ||
+    // V24 · Prefer a state-specific carrot if state is in opts and the
+    // persona has a state-aware variant. Fall back to consumer-supplied
+    // comparisonAnchor, then generic persona default.
+    var stateSpecific = buildStateSpecificAnchor(inst.opts.persona, inst.opts.state);
+    var carrot = stateSpecific ||
+                 inst.opts.comparisonAnchor ||
                  COMPARISON_ANCHORS[inst.opts.persona] ||
                  COMPARISON_ANCHORS.GEN;
     inst.els.copyCarrotEl.innerHTML =

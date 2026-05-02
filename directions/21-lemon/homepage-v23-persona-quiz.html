@@ -1977,6 +1977,13 @@
     margin-top: 18px; font-size: 12px; color: rgba(14,42,58,.55);
     font-family: 'JetBrains Mono', monospace; letter-spacing: .1em;
   }
+  /* V24 · single progress source = Unlock Trail at top.
+     Hide the per-step counter on the right of every q-foot.
+     Exit-state tags (STATE RULE / DIFFERENT CATEGORY / NOT ELIGIBLE) keep
+     visibility because they describe routing context, not pagination. */
+  .v8-quiz-modal .q-foot > span:not(.q-foot-tag) { display: none; }
+  .v8-quiz-modal .q-foot { justify-content: flex-start; }
+  .v8-quiz-modal .q-foot .q-back ~ * { margin-left: auto; }
   .v8-quiz-modal .q-back {
     background: none; border: none; color: rgba(14,42,58,.55);
     font-family: inherit; cursor: pointer; font-size: 12px; letter-spacing: .1em;
@@ -4153,8 +4160,7 @@
         <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
       </select>
       <div class="q-foot">
-        <span>STEP 1 / 4</span>
-        <span>&larr; ESC to close</span>
+        <span class="q-foot-tag">&larr; ESC to close</span>
       </div>
     </div>
 
@@ -4218,7 +4224,7 @@
       <button type="button" class="v11-age-submit" id="quizDeContinue">Continue with the bridge &rarr;</button>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
-        <span>STATE RULE</span>
+        <span class="q-foot-tag">STATE RULE</span>
       </div>
     </div>
 
@@ -4231,7 +4237,7 @@
       <a class="exit-cta" href="#" id="exitSeniorBack">Go back to the home page &rarr;</a>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
-        <span>DIFFERENT CATEGORY</span>
+        <span class="q-foot-tag">DIFFERENT CATEGORY</span>
       </div>
     </div>
 
@@ -4244,7 +4250,7 @@
       <a class="exit-cta" href="#" id="exitMinorBack">Go back to the home page &rarr;</a>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
-        <span>NOT ELIGIBLE</span>
+        <span class="q-foot-tag">NOT ELIGIBLE</span>
       </div>
     </div>
 
@@ -4255,8 +4261,8 @@
       <p class="q-sub">The routing question. The honest answer gets you the right plan &mdash; the lower-premium one, or a broader-coverage option.</p>
       <div class="v8-quiz-opts">
         <button type="button" data-conditions="none">No ongoing conditions for anyone <span class="arw">&rarr;</span></button>
-        <button type="button" data-conditions="managed">Managed pre-existing condition <span class="arw">&rarr;</span></button>
-        <button type="button" data-conditions="utilization">Regular specialist or high utilization <span class="arw">&rarr;</span></button>
+        <button type="button" data-conditions="managed">Yes &mdash; currently being treated for something <span class="arw">&rarr;</span></button>
+        <button type="button" data-conditions="utilization">Yes &mdash; regular specialist visits <span class="arw">&rarr;</span></button>
       </div>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
@@ -4282,7 +4288,7 @@
       </div>
       <div class="q-foot" style="margin-top: 18px;">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
-        <span id="quizDashFootLabel">SAVINGS REVEAL</span>
+        <span id="quizDashFootLabel" class="q-foot-tag">SAVINGS REVEAL</span>
       </div>
     </div>
 
@@ -4298,7 +4304,7 @@
       </div>
       <div class="q-foot">
         <button class="q-back" type="button" data-back>&larr; BACK</button>
-        <span>READY</span>
+        <span class="q-foot-tag">READY</span>
       </div>
     </div>
   </div>

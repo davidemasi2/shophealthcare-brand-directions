@@ -66,11 +66,13 @@
     } else {
       tierBadgeHTML = '<span class="plan-card__tier">' + escapeHtml(tierLabel) + '</span>';
     }
-    // V23 H5 — short tier name as primary; technical name as secondary
+    // V24 — neutral category labels (Bronze/Silver/Gold are ACA metallic tiers
+    // and brand-voice §C4 forbids implying ACA). Plan NAME below still shows
+    // the carrier's actual product name verbatim.
     var shortTierName = ({
-      budget: 'Bronze',
-      recommended: 'Silver',
-      premium: 'Gold'
+      budget: 'Lower premium',
+      recommended: 'Best fit',
+      premium: 'Richer coverage'
     })[plan.tier] || tierLabel;
 
     // Carrier logo: SVG asset OR text fallback
@@ -138,8 +140,8 @@
     var classes = ['plan-card', 'plan-card--' + (plan.tier || 'budget')];
     if (isSelected) classes.push('is-selected');
 
-    // V23 H5 — name block: short tier (Bronze/Silver/Gold) headline + full
-    // technical name as a 3-line max-clamp subhead. No more truncated ellipsis.
+    // V24 — name block: neutral tier label headline + full
+    // technical name as a 3-line max-clamp subhead. No ACA-metallic framing.
     var nameBlock =
       '<div class="plan-card__nameblock">' +
         '<h4 class="plan-card__short">' + escapeHtml(shortTierName) + '</h4>' +

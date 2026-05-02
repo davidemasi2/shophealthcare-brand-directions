@@ -232,6 +232,24 @@
   opacity: 1;
   transform: translateY(0);
 }
+/* V24 · Persona-uniform reveal — guarantee no persona-modifier class
+   accidentally fades tier-2/3 by inheriting an opacity from elsewhere.
+   Audit found RU1 occasionally rendered tier-2/3 faded when BR1 didn't. */
+.value-stack--SP1.is-revealed   .value-stack__secondary,
+.value-stack--CL1.is-revealed   .value-stack__secondary,
+.value-stack--BR1.is-revealed   .value-stack__secondary,
+.value-stack--RU1.is-revealed   .value-stack__secondary,
+.value-stack--PC1.is-revealed   .value-stack__secondary,
+.value-stack--GEN.is-revealed   .value-stack__secondary,
+.value-stack--SP1.is-revealed-2 .value-stack__tertiary,
+.value-stack--CL1.is-revealed-2 .value-stack__tertiary,
+.value-stack--BR1.is-revealed-2 .value-stack__tertiary,
+.value-stack--RU1.is-revealed-2 .value-stack__tertiary,
+.value-stack--PC1.is-revealed-2 .value-stack__tertiary,
+.value-stack--GEN.is-revealed-2 .value-stack__tertiary {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* Spark burst (run via JS class toggle) */
 .value-stack.is-sparking .value-stack__spark {
