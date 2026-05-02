@@ -752,13 +752,12 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
    Targeted at desktop-grid widths with constrained heights so we don't affect
    iPad Pro portrait (1024×1366) or any tall display. */
 @media (min-width: 1024px) and (max-width: 1279px) and (max-height: 820px) {
-  .nx-top { padding: 6px 28px; }
+  /* nx-top padding 4px (was 6) — F14 logo bumped link 29→44 (+15 px) which
+     pushed tablet-1024 doc 3 px over viewport even with the original F02
+     trims; reclaiming the padding here gives the budget back. */
+  .nx-top { padding: 4px 28px; }
   .nx-unlock-trail-host { margin-top: 0; margin-bottom: 0; }
-  /* V27 tablet-1024 residual fix — F02's `margin: 4px auto 8px` added 8 px
-     margin-bottom that became visible doc-overflow because shell ended exactly
-     at viewport.bottom. Drop bottom margin to 0; visual breathing already
-     handled by zone-drawer's 88 px strip below the shell. */
-  .nx-shell { margin: 4px auto 0; }
+  .nx-shell { margin: 2px auto 0; }
 
   /* V27 F18 — Plan cards naturally render ~486 px tall but the dash zone at
      LOCK on tablet-1024 only has ~428 px to give them. Reuse the COMPARE-phase
