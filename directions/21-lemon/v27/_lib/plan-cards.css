@@ -254,10 +254,14 @@
   display: block;
 }
 .plan-card__carrier-text {
-  font-size: 11px;
+  /* V27 — was clipping "Regence BCBS" by 3 px (78/75) under default container.
+     Tightened letter-spacing -.005 → -.012 + slight font-size trim from 11→10.5
+     fits the longest carrier name in the canonical mock data without changing
+     the visual hierarchy on shorter strings (UHC / Aetna / Cigna). */
+  font-size: 10.5px;
   font-weight: 600;
   color: var(--pc-mute);
-  letter-spacing: -.005em;
+  letter-spacing: -.012em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
