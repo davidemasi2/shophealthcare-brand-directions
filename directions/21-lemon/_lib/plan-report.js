@@ -483,19 +483,35 @@
 
     target.classList.add('plan-report');
     target.classList.remove('is-revealed');
+    // V25 · Mode 2A vs 2B branching — 2B (Switch Report) ships in Tier 4b.
+    // For now the body renders Mode 2A regardless of OCR baseline; the
+    // premium block already conditionally shows compared_to_user savings
+    // when present, so OCR-aware messaging works inside 2A too.
+    target.classList.toggle('plan-report--mode-2b', !!window.NORA_OCR_BASELINE);
 
     var skipBanner = skipped ? renderSkipBanner() : '';
+    // V25 · Mode 2A section order — primary CTA promotes above accordions.
+    //   1. SkipBanner (if skipped)
+    //   2. Heading
+    //   3. Premium block (uses compared_to_user when available)
+    //   4. What you'll actually use
+    //   5. Not covered  (compliance, ALWAYS visible)
+    //   6. Continue to enrollment  (PRIMARY visual anchor)
+    //   7. Actions row (Save / Email PDF / Forward)
+    //   8. ▸ Things to know       (accordion, collapsed-by-default)
+    //   9. ▸ Add-ons              (accordion, collapsed-by-default)
+    //  10. ▸ Fine print           (accordion, collapsed-by-default)
     target.innerHTML =
       skipBanner +
       renderHeading(plan) +
       renderPremium(plan) +
       renderUseList(plan) +
-      renderKnowList(plan) +
-      renderExclusions(plan) +     // ALWAYS visible — compliance
-      renderAddons(planSet.addons) +
-      renderFinePrint(plan) +
+      renderExclusions(plan) +              // ALWAYS visible — compliance
+      renderContinue(licenseText) +         // PRIMARY CTA, promoted
       renderActions(skipped) +
-      renderContinue(licenseText);
+      renderKnowList(plan) +                // collapsed accordion
+      renderAddons(planSet.addons) +        // collapsed accordion
+      renderFinePrint(plan);                // collapsed accordion
 
     // Mount Component A premium block
     mountPremium(target, plan);
