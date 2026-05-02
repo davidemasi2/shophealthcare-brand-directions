@@ -45,8 +45,11 @@
   gap: 10px;
 }
 .plan-cards__pager-btn {
-  width: 28px;
-  height: 28px;
+  /* V27 F08 — was 28×28 (passes WCAG AA 24×24 minimum but fails AAA 44×44).
+     Bumped to 44×44 universally — touch UX baseline; on desktop the
+     larger circle is fine in plan-cards layout. */
+  width: 44px;
+  height: 44px;
   border: 1.5px solid var(--pc-ink);
   border-radius: 999px;
   background: var(--pc-cream);
@@ -483,7 +486,10 @@
 .plan-cards__compare {
   background: none;
   border: none;
-  padding: 6px 12px;
+  /* V27 F09 — was padding 6×12 yielding 31px height. Bumped to 12×18 so
+     button reaches 44px tap target without changing label or visual style. */
+  padding: 12px 18px;
+  min-height: 44px;
   color: var(--pc-mute);
   font: inherit;
   font-size: 12px;

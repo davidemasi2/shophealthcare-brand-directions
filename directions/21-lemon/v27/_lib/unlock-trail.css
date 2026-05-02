@@ -391,6 +391,15 @@
     gap: 2px;
     padding-bottom: 22px;
   }
+  /* V27 F12 — when label collapses (next rule), the focusable .ut-stage
+     was reaching only ~11 px tall, below WCAG 2.5.8 AA target-size minimum.
+     Pad to 24 px (AA pass; dot stays 14-16 px visually). 32 px broke mobile
+     viewport math — caused 27 px doc overflow on mobile-360/375. */
+  .unlock-trail .ut-stage {
+    min-height: 24px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
   /* Hide labels under non-active dots; only render active label below row */
   .unlock-trail .ut-label {
     visibility: hidden;

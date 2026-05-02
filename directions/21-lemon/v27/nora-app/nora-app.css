@@ -44,6 +44,12 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 html { background: var(--cream); }
+
+/* V27 F10 — universal `[hidden]` attribute respect. Without this, author CSS
+   like `.nx-account { display: grid }` overrides the UA `[hidden] { display: none }`
+   stylesheet (specificity tie + cascade order), which renders elements that
+   were marked hidden in markup. Forcing `!important` keeps the contract. */
+[hidden] { display: none !important; }
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 15px;
@@ -147,6 +153,11 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 700; font-size: 19px;
   letter-spacing: -.01em;
+  /* V27 F14 — F14 padding bumped topbar height and pushed mobile pages over
+     viewport (~39 px on mobile-360). Reverted to bare logo. The brand link
+     reads as 28-41 px tall (passes WCAG 2.5.8 AA 24×24 minimum across breakpoints,
+     fails the AAA 44×44 recommendation only — acceptable for in-app
+     low-frequency-tap home affordance). */
 }
 .nx-mark {
   width: 24px; height: 24px; border-radius: 50%;
@@ -641,7 +652,16 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
   color: var(--mute); line-height: 1.6;
 }
-.nx-dash-trust a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.nx-dash-trust a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  /* V27 F13 — was 54×13 (height fails WCAG 2.5.8 AA 24px target). Inline-block
+     padding gives clickable area without changing the in-line trust strip layout. */
+  display: inline-block;
+  padding: 6px 4px;
+  min-height: 24px;
+}
 
 /* =============================================================
    ZONE 3 — REPORT DRAWER (M5 placeholder)
@@ -715,6 +735,20 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   .nx-top { padding: 6px 28px; }
   .nx-unlock-trail-host { margin-top: 0; margin-bottom: 0; }
   .nx-shell { margin: 4px auto 8px; }
+
+  /* V27 F18 — Plan cards naturally render ~486 px tall but the dash zone at
+     LOCK on tablet-1024 only has ~428 px to give them. Reuse the COMPARE-phase
+     compact override at LOCK on this breakpoint so cards fit without clipping;
+     also hide the rationale paragraph (the long descriptive copy) which saves
+     ~80 px and brings cards under 400 px without sacrificing the price + tier
+     summary the user needs at lock-in. */
+  .nx-shell[data-layout-phase="lock"] .plan-card {
+    padding: 14px 14px 12px;
+    gap: 8px;
+    min-height: 0 !important; /* override plan-cards.css default 480px */
+  }
+  .nx-shell[data-layout-phase="lock"] .plan-card__short { font-size: 18px; }
+  .nx-shell[data-layout-phase="lock"] .plan-card__rationale { display: none; }
 }
 
 /* Tablet (768–1023px) — drawer collapses */
@@ -1623,9 +1657,20 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 .nx-zone--support.nx-chat .nx-chat-head { padding: 12px 18px; }
 
 /* DASH @ SUPPORT (MATCH / READ / LOCK) — ValueStack scales down, hide reinforce */
+/* V27 F19 — V26 added `.nx-shell[data-layout-phase] .nx-zone { overflow: hidden }`
+   (specificity 0,3,0) which beat the .nx-zone--support.nx-dash { overflow-y: auto }
+   declared here (specificity 0,2,0). Result: at SUPPORT the dash content (estimate
+   block ~553 px + trust strip + plan-cards-host) exceeds the zone height (~564 px)
+   and the trust strip + NIPR.com link were clipped — measured as
+   reach="unreachable" in 30 cells. !important re-asserts the dash override
+   without touching V26's FLIP contract on the other zones. */
 .nx-zone--support.nx-dash {
   padding: 16px 18px;
-  overflow-y: auto;
+  overflow-y: auto !important;
+}
+.nx-zone--lead.nx-dash {
+  /* same fix at LEAD where price-phase content can overflow the bigger zone too */
+  overflow-y: auto !important;
 }
 .nx-zone--support.nx-dash .nx-dash-headline { font-size: 16px; line-height: 1.2; }
 .nx-zone--support.nx-dash .nx-dash-reinforce { display: none; }
