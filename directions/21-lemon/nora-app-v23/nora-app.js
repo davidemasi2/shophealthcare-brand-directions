@@ -94,7 +94,8 @@
       dashboardHeadline: "Coverage in 24 hours.",
       comparisonAnchor: "what your monthly premium will be once you're back on coverage",
       hasCurrentCoverage: false,
-      cardScanRelevance: "none"
+      cardScanStrategy: "assume_recent",
+      cardScanOffer: "Have your old card? 10 seconds to show what stays vs what changes."
     },
     SP1: {
       label: "Self-employed / 1099",
@@ -104,7 +105,8 @@
       dashboardHeadline: "Built for irregular income.",
       comparisonAnchor: "what most freelancers pay on the open market",
       hasCurrentCoverage: "maybe",
-      cardScanRelevance: "optional"
+      cardScanStrategy: "neutral_ask",
+      cardScanOffer: "Quick one — do you have current insurance you're shopping against?"
     },
     BR1: {
       label: "Pre-65 bridge years",
@@ -114,7 +116,8 @@
       dashboardHeadline: "Bridge the gap.",
       comparisonAnchor: "what you'd pay on the open market for bridge coverage",
       hasCurrentCoverage: "usually",
-      cardScanRelevance: "optional"
+      cardScanStrategy: "assume_have",
+      cardScanOffer: "Got your current card? I'll show the bridge math against what you have."
     },
     CL1: {
       label: "My premium just spiked",
@@ -124,7 +127,8 @@
       dashboardHeadline: "Your renewal vs. our number.",
       comparisonAnchor: "your renewal premium — the one that just spiked",
       hasCurrentCoverage: true,
-      cardScanRelevance: "critical"
+      cardScanStrategy: "assume_have",
+      cardScanOffer: "Want me to read your current card and show what your renewal actually changes?"
     },
     PC1: {
       label: "Check if I'm overpaying",
@@ -134,7 +138,8 @@
       dashboardHeadline: "Plan diagnostic.",
       comparisonAnchor: "whether your current plan is the best deal in your state",
       hasCurrentCoverage: true,
-      cardScanRelevance: "critical"
+      cardScanStrategy: "assume_have",
+      cardScanOffer: "Scan your card — I'll check coverage parity for your conditions before we shop."
     },
     GEN: {
       label: "Not sure",
@@ -144,7 +149,8 @@
       dashboardHeadline: "Routing your numbers.",
       comparisonAnchor: "the typical premium for someone in your situation",
       hasCurrentCoverage: "unknown",
-      cardScanRelevance: "ask"
+      cardScanStrategy: "neutral_ask",
+      cardScanOffer: "Quick gut-check — do you have current insurance you're shopping against?"
     }
   };
 
@@ -353,6 +359,10 @@
         // No quick replies for an open name field — just text input
         setInputPlaceholder("Type your first name…");
         convoState.step = 'awaiting-name';
+        // V25 · HERO entry — assume_have / assume_recent personas get a
+        // card-scan offer right after the opener. Parallel to the name
+        // field; user can take either path.
+        maybeOfferCardScan('opener');
       }
     });
   }
@@ -389,8 +399,9 @@
     if (convoState.step === 'awaiting-conditions-text') {
       userSay(escapeHtml(text));
       updateFact('conditions', text);
-      // V21 · Same auth-gate moment as the quick-reply path
-      presentAuthGate();
+      // V25 · MID-DISCOVERY entry — neutral_ask personas (SP1 / GEN) get
+      // the gating question here. Other strategies fall through directly.
+      maybeOfferCardScan('mid-discovery', presentAuthGate);
       return;
     }
 
@@ -399,6 +410,193 @@
       userSay(escapeHtml(text));
       noraSay("Got it. Hang tight — we'll pick this back up the moment your real quote lands. <span class='nx-mute'>(Milestone 2 wires this to a live backend.)</span>");
       return;
+    }
+  }
+
+  // -----------------------------------------------------------
+  // V25 · OCR card-scan integration
+  // -----------------------------------------------------------
+  // Persona-keyed entry strategy. Every persona gets the offer; persona
+  // governs WHEN (hero vs mid-discovery vs on-demand) and HOW it's framed
+  // (assume_have vs assume_recent vs neutral_ask).
+  //
+  //   assume_have   → CL1, BR1, PC1 — almost certainly has current insurance
+  //   assume_recent → RU1            — just lost coverage, has old card
+  //   neutral_ask   → SP1, GEN       — mixed reality, ask before offering
+  //   on_demand     → (none default) — only available via dashboard footer
+  //
+  // SP1 (1099) is `neutral_ask`, NOT `none` — freelancers may or may not
+  // have current insurance (self-paid ACA, partner's plan, COBRA, none).
+
+  function maybeOfferCardScan(stage, onContinue) {
+    var done = function () {
+      if (typeof onContinue === 'function') {
+        try { onContinue(); } catch (e) {}
+      }
+    };
+    if (window.NORA_OCR_BASELINE || convoState.ocrOffered) {
+      done();
+      return false;
+    }
+    var strategy = (personaCfg && personaCfg.cardScanStrategy) || 'on_demand';
+
+    if (stage === 'opener' && (strategy === 'assume_have' || strategy === 'assume_recent')) {
+      offerCardScan({ mode: 'direct', afterDelay: 1500, onContinue: onContinue });
+      return true;
+    }
+    if (stage === 'mid-discovery' && strategy === 'neutral_ask') {
+      offerCardScan({ mode: 'ask', afterDelay: 700, onContinue: onContinue });
+      return true;
+    }
+    done();
+    return false;
+  }
+
+  function offerCardScan(opts) {
+    opts = opts || {};
+    convoState.ocrOffered = true;
+
+    var prompt = (personaCfg && personaCfg.cardScanOffer) ||
+      'Have your current card? I can show you exactly what changes.';
+
+    var fireContinue = function () {
+      if (typeof opts.onContinue === 'function') {
+        try { opts.onContinue(); } catch (e) {}
+      }
+    };
+
+    noraSay(escapeHtml(prompt), {
+      delay: typeof opts.afterDelay === 'number' ? opts.afterDelay : 600,
+      then: function () {
+        var replies = (opts.mode === 'ask') ? [
+          { label: 'Yes — let me show you', value: '__ocr_yes' },
+          { label: "No, I'm fresh",         value: '__ocr_no' },
+          { label: 'Not sure',              value: '__ocr_unsure' }
+        ] : [
+          { label: 'Snap your card →',      value: '__ocr_yes' },
+          { label: 'Skip for now',          value: '__ocr_no' }
+        ];
+        setQuickReplies(replies, function (pick) {
+          clearQuickReplies();
+          userSay(escapeHtml(pick.label));
+          if (pick.value === '__ocr_yes') {
+            openOCRCapture({ onContinue: opts.onContinue });
+          } else if (pick.value === '__ocr_no') {
+            if (opts.mode === 'ask') {
+              noraSay("No problem — I'll work from state typicals.", {
+                delay: REDUCED_MOTION ? 50 : 500,
+                then: fireContinue
+              });
+            } else {
+              setTimeout(fireContinue, REDUCED_MOTION ? 50 : 250);
+            }
+          } else if (pick.value === '__ocr_unsure') {
+            noraSay("No worries. We'll work from state typicals — and you can always upload from the dashboard later.", {
+              delay: REDUCED_MOTION ? 50 : 500,
+              then: fireContinue
+            });
+          }
+        });
+      }
+    });
+  }
+
+  function openOCRCapture(opts) {
+    opts = opts || {};
+    var fireContinue = function () {
+      if (typeof opts.onContinue === 'function') {
+        try { opts.onContinue(); } catch (e) {}
+      }
+    };
+    if (!window.OCRCapture || typeof window.OCRCapture.show !== 'function') {
+      fireContinue();
+      return;
+    }
+    window.OCRCapture.show({
+      persona: ctx.persona || 'GEN',
+      onConfirm: function (card) {
+        // Avoid "Aetna Aetna Silver 5500" duplication when plan_name
+        // already includes the carrier brand. Show plan_name when it
+        // contains the carrier; otherwise show "carrier · plan_name".
+        var displayName = ocrDisplayName(card);
+        var line = '<strong>' + escapeHtml(displayName) +
+          ' · $' + card.monthly_premium + '/mo</strong>. Rolling that into your numbers.';
+        noraSay(line, {
+          delay: REDUCED_MOTION ? 50 : 600,
+          then: fireContinue
+        });
+        applyOCRBaselineToDash(card);
+      },
+      onSkip: function () {
+        setTimeout(fireContinue, REDUCED_MOTION ? 50 : 200);
+      }
+    });
+  }
+
+  function ocrDisplayName(card) {
+    if (!card) return '';
+    var carrier = card.carrier || '';
+    var planName = card.plan_name || '';
+    if (!planName) return carrier;
+    if (!carrier) return planName;
+    // If plan_name already contains the carrier (case-insensitive), show
+    // plan_name alone — otherwise concatenate with a separator.
+    if (planName.toLowerCase().indexOf(carrier.toLowerCase()) !== -1) {
+      return planName;
+    }
+    return carrier + ' · ' + planName;
+  }
+
+  function applyOCRBaselineToDash(card) {
+    // 1) Add/update "Current plan" row in dashboard fact list
+    var knownList = document.getElementById('known-list');
+    if (knownList) {
+      var existing = knownList.querySelector('[data-key="current-plan"]');
+      var bodyHtml = '<span class="nx-known-mark" aria-hidden="true">✓</span>' +
+                     '<span class="nx-known-text">Current: <b>' +
+                     escapeHtml(ocrDisplayName(card)) +
+                     ' · $' + card.monthly_premium + '/mo</b></span>';
+      if (existing) {
+        existing.innerHTML = bodyHtml;
+      } else {
+        var li = document.createElement('li');
+        li.className = 'known-item is-confirmed';
+        li.setAttribute('data-key', 'current-plan');
+        li.innerHTML = bodyHtml;
+        knownList.insertBefore(li, knownList.firstChild);
+      }
+    }
+    // 2) Trigger Trail re-render to pick up new value-pill context
+    if (window.UnlockTrail && typeof window.UnlockTrail.update === 'function') {
+      try { window.UnlockTrail.update({}); } catch (e) {}
+    }
+    // 3) If plan-cards already mounted, re-mount to surface savings deltas
+    if (planCardsApi && window.MOCK_NORA_RESPONSE) {
+      var pcEl = document.querySelector('[data-plan-cards]');
+      if (pcEl) {
+        try {
+          window.PlanCards.mount(pcEl, { planSet: window.MOCK_NORA_RESPONSE });
+        } catch (e) {}
+      }
+    }
+    // 4) If plan-report already mounted, re-mount so Mode 2A/2B selection updates
+    if (planReportApi && window.MOCK_NORA_RESPONSE) {
+      var prEl = document.getElementById('drawer-content');
+      if (prEl && prEl.style.display !== 'none') {
+        // Re-mount with same selectedPlanId — Tier 4b will swap to Mode 2B
+        var firstPlan = (window.MOCK_NORA_RESPONSE.plans || [])
+          .filter(function (p) { return p.tier === 'recommended'; })[0] ||
+          window.MOCK_NORA_RESPONSE.plans[0];
+        if (firstPlan) {
+          try {
+            window.PlanReport.mount(prEl, {
+              planSet: window.MOCK_NORA_RESPONSE,
+              selectedPlanId: firstPlan.plan_id,
+              skipped: window.NoraSession && window.NoraSession.isSkipped ? window.NoraSession.isSkipped() : false
+            });
+          } catch (e) {}
+        }
+      }
     }
   }
 
@@ -461,8 +659,9 @@
           }
           userSay(escapeHtml(pick.label));
           updateFact('conditions', pick.label);
-          // V21 · After 4-step discovery, run auth-gate moment BEFORE finalize
-          presentAuthGate();
+          // V25 · MID-DISCOVERY entry — neutral_ask personas get the
+          // gating question; other strategies pass through to AuthGate.
+          maybeOfferCardScan('mid-discovery', presentAuthGate);
         });
       }
     });

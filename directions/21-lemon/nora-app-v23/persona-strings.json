@@ -7,7 +7,8 @@
     "dashboardHeadline": "Coverage in 24 hours.",
     "comparisonAnchor": "what your monthly premium will be once you're back on coverage",
     "hasCurrentCoverage": false,
-    "cardScanRelevance": "none",
+    "cardScanStrategy": "assume_recent",
+    "cardScanOffer": "Have your old card? 10 seconds to show what stays vs what changes.",
     "socialProofLabel": "first-coverage applications this hour",
     "lockPercentile": 22
   },
@@ -19,7 +20,8 @@
     "dashboardHeadline": "Built for irregular income.",
     "comparisonAnchor": "what most freelancers pay on the open market",
     "hasCurrentCoverage": "maybe",
-    "cardScanRelevance": "optional",
+    "cardScanStrategy": "neutral_ask",
+    "cardScanOffer": "Quick one — do you have current insurance you're shopping against?",
     "socialProofLabel": "freelancers got their number this hour",
     "lockPercentile": 12
   },
@@ -31,7 +33,8 @@
     "dashboardHeadline": "Bridge the gap.",
     "comparisonAnchor": "what you'd pay on the open market for bridge coverage",
     "hasCurrentCoverage": "usually",
-    "cardScanRelevance": "optional",
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Got your current card? I'll show the bridge math against what you have.",
     "socialProofLabel": "bridge year quotes this hour",
     "lockPercentile": 18
   },
@@ -43,7 +46,8 @@
     "dashboardHeadline": "Your renewal vs. our number.",
     "comparisonAnchor": "your renewal premium — the one that just spiked",
     "hasCurrentCoverage": true,
-    "cardScanRelevance": "critical",
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Want me to read your current card and show what your renewal actually changes?",
     "socialProofLabel": "renewal-spike checks this hour",
     "lockPercentile": 8
   },
@@ -55,7 +59,8 @@
     "dashboardHeadline": "Plan diagnostic.",
     "comparisonAnchor": "whether your current plan is the best deal in your state",
     "hasCurrentCoverage": true,
-    "cardScanRelevance": "critical",
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Scan your card — I'll check coverage parity for your conditions before we shop.",
     "socialProofLabel": "diagnostic checks this hour",
     "lockPercentile": 28
   },
@@ -67,7 +72,8 @@
     "dashboardHeadline": "Routing your numbers.",
     "comparisonAnchor": "the typical premium for someone in your situation",
     "hasCurrentCoverage": "unknown",
-    "cardScanRelevance": "ask",
+    "cardScanStrategy": "neutral_ask",
+    "cardScanOffer": "Quick gut-check — do you have current insurance you're shopping against?",
     "socialProofLabel": "plan reviews this hour",
     "lockPercentile": 25
   }
