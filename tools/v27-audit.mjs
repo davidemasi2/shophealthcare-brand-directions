@@ -295,6 +295,89 @@ async function injectV27Helpers(page) {
       const pcHost = document.getElementById('dashPlanCards');
       const planCards = pcHost ? pcHost.querySelectorAll('.plan-card').length : 0;
 
+      // V28 — focus-rule measurements.
+      // (a) Visible plan cards — count `.plan-card` whose computed display
+      //     is not 'none' AND has a non-zero rect.
+      const planCardsVisible = (function () {
+        const cards = document.querySelectorAll('.plan-card');
+        let count = 0;
+        cards.forEach(function (c) {
+          const cs = getComputedStyle(c);
+          if (cs.display === 'none' || cs.visibility === 'hidden') return;
+          const r = c.getBoundingClientRect();
+          if (r.width === 0 && r.height === 0) return;
+          count++;
+        });
+        return count;
+      })();
+      // (b) Zone visibility — chat / dash / drawer.
+      const zoneVisible = (function () {
+        const out = {};
+        ['chat', 'dash', 'drawer'].forEach(function (key) {
+          const el = document.getElementById('zone-' + key);
+          if (!el) { out[key] = null; return; }
+          const cs = getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') { out[key] = false; return; }
+          const r = el.getBoundingClientRect();
+          out[key] = r.width > 0 && r.height > 0;
+        });
+        return out;
+      })();
+      // (c) AuthGate banner visible? Match common selectors used by V25/V27
+      //     auth-gate.js when the banner mode mounts.
+      const bannerVisible = (function () {
+        const candidates = document.querySelectorAll(
+          '.auth-gate.is-banner, .auth-gate--banner, .auth-skip-banner, [data-auth-skip-banner]'
+        );
+        for (const el of candidates) {
+          const cs = getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+          const r = el.getBoundingClientRect();
+          if (r.width === 0 && r.height === 0) continue;
+          return true;
+        }
+        return false;
+      })();
+      // (d) Primary CTA count — visible buttons/links that read as "primary".
+      //     Heuristic: explicit primary classes, lemon button styling, or
+      //     known LOCK/ENROLL CTAs. Anything inside .nx-zone--mini does NOT
+      //     count as primary (it's a secondary/condense zone).
+      const primaryCTAs = (function () {
+        const sels = [
+          '.plan-card__lock-cta',
+          '.nx-lock-gate__continue',
+          '.pr-continue-cta',
+          '.pr-cta--primary',
+          '.plan-report__continue',
+          '.auth-gate__submit',
+          '.nx-locked-cta'
+        ];
+        const found = [];
+        sels.forEach(function (sel) {
+          const list = document.querySelectorAll(sel);
+          list.forEach(function (el) {
+            const cs = getComputedStyle(el);
+            if (cs.display === 'none' || cs.visibility === 'hidden') return;
+            const r = el.getBoundingClientRect();
+            if (r.width === 0 && r.height === 0) return;
+            // Inside a nx-zone--mini ancestor? Skip (secondary).
+            let n = el.parentElement, mini = false;
+            while (n && n !== document.body) {
+              if (n.classList && n.classList.contains('nx-zone--mini')) { mini = true; break; }
+              n = n.parentElement;
+            }
+            if (mini) return;
+            found.push({
+              sel: sel,
+              text: (el.textContent || el.value || el.getAttribute('aria-label') || '').slice(0, 60).trim(),
+              w: Math.round(r.width),
+              h: Math.round(r.height)
+            });
+          });
+        });
+        return found;
+      })();
+
       // Spot-style on top 50 visible nodes.
       let spotStyles = [];
       const spotPicks = ['h1','h2','h3','p','button','a','input','label','span'];
@@ -331,7 +414,12 @@ async function injectV27Helpers(page) {
         hiddenCounts: hiddenCounts,
         topAtCenter: topAtCenter,
         planCardsMounted: planCards,
-        spotStyles: spotStyles
+        spotStyles: spotStyles,
+        // V28 focus-rule fields
+        planCardsVisible: planCardsVisible,
+        zoneVisible: zoneVisible,
+        bannerVisible: bannerVisible,
+        primaryCTAs: primaryCTAs
       };
     };
   });
@@ -430,8 +518,18 @@ async function runCell(browser, cell) {
     await page.waitForTimeout(800);
   } else {
     try {
-      await page.waitForFunction(() => window.LayoutDirector && window.MOCK_NORA_RESPONSE,
-        null, { timeout: 12000 });
+      // Wait for full app boot — including LayoutDirector.init() which sets the
+      // initial data-layout-phase attribute. Without the [data-layout-phase]
+      // selector, waitForFunction races against initLayoutDirector() and our
+      // __v27_force() can fire BEFORE init runs — at which point init's own
+      // setLayoutPhase('read') overwrites the forced phase.
+      await page.waitForFunction(
+        () => window.LayoutDirector
+          && window.MOCK_NORA_RESPONSE
+          && document.querySelector('#nx-shell[data-layout-phase]'),
+        null,
+        { timeout: 12000 }
+      );
     } catch (e) {
       cell_record.errors.push('boot-wait: ' + e.message);
     }
