@@ -1,0 +1,409 @@
+/* =============================================================
+   VALUE-STACK — V21 Component A
+   Universal 3-tier accumulating value reveal
+   Spec: front-end design/quiz-app-capture-flow.md §9.A
+   Used by: V20 quiz-end mini dashboard, V21 Nora dashboard zone,
+            V21 plan selection cards, V21 plan report drawer
+   ============================================================= */
+
+/* -----------------------------------------------------------
+   Local design tokens — fall back to lemon.css :root if in scope.
+   V24 Tier 5: defaults match V23 SHC-Match palette
+   (white/gold/teal/navy). NEVER coral fallbacks.
+   ----------------------------------------------------------- */
+.value-stack {
+  --vs-ink:        var(--ink, #0E2A3A);
+  --vs-cream:      var(--cream, #FFFFFF);
+  --vs-lemon:      var(--lemon, #FFC857);
+  --vs-blush:      var(--blush, #FFFFFF);
+  --vs-pink:       var(--pink, #00B5D8);
+  --vs-pink-dark:  var(--pink-dark, #007A93);
+  --vs-mute:       var(--mute, #5D7C8E);
+
+  /* Per-tier accent — overridable via persona modifier classes */
+  --vs-arc-stroke:    var(--vs-lemon);
+  --vs-arc-ground:    rgba(14, 42, 58, 0.10);
+  --vs-spark-color:   var(--vs-lemon);
+  --vs-tertiary-pos:  var(--vs-pink-dark);  /* "down" = savings (good) */
+  --vs-tertiary-neg:  var(--vs-mute);       /* "up" = premium (informational) */
+}
+
+/* Persona accent modifiers --------------------------------- */
+.value-stack--CL1 {
+  /* Renewal anger — pink-tinted arc */
+  --vs-arc-stroke:    var(--vs-pink);
+  --vs-spark-color:   var(--vs-pink);
+}
+.value-stack--BR1 {
+  /* Pre-Medicare — warmer ochre */
+  --vs-arc-stroke:    #E8A82E;
+  --vs-spark-color:   #E8A82E;
+}
+
+/* -----------------------------------------------------------
+   LAYOUT
+   ----------------------------------------------------------- */
+.value-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--vs-ink);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Tier 1 — the big number with arc */
+.value-stack__primary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(180px, 22vw, 240px);
+  height: clamp(180px, 22vw, 240px);
+}
+.value-stack__arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.value-stack__arc-ground {
+  fill: none;
+  stroke: var(--vs-arc-ground);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.value-stack__arc-fill {
+  fill: none;
+  stroke: var(--vs-arc-stroke);
+  stroke-width: 6;
+  stroke-linecap: round;
+  /* dasharray + offset set inline via JS once total length known */
+  transition: stroke-dashoffset 720ms cubic-bezier(.22,.61,.36,1);
+}
+.value-stack__primary-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.value-stack__primary-number {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(48px, 6vw, 72px);
+  letter-spacing: -.025em;
+  color: var(--vs-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+}
+.value-stack__primary-number .vs-prefix,
+.value-stack__primary-number .vs-suffix {
+  font-size: 0.42em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--vs-mute);
+  letter-spacing: 0;
+}
+.value-stack__primary-number .vs-prefix { margin-right: 0.05em; }
+.value-stack__primary-number .vs-suffix { margin-left: 0.06em; }
+
+/* Approximation marker (the "~") — only when isEstimate */
+.value-stack__primary-number .vs-approx {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--vs-mute);
+  font-size: 0.55em;
+  margin-right: 0.04em;
+}
+
+/* Estimate disclaimer below Tier 1 */
+.value-stack__estimate-note {
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--vs-mute);
+  font-weight: 600;
+}
+.value-stack__estimate-note .vs-dot {
+  display: inline-block;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--vs-mute);
+  margin: 0 8px;
+  vertical-align: middle;
+}
+
+/* Spark layer (positioned on top of primary arc) */
+.value-stack__sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.value-stack__spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vs-spark-color);
+  opacity: 0;
+  /* Each spark gets per-element angle + distance via inline style */
+}
+
+/* Tier 2 — annual */
+.value-stack__secondary {
+  margin-top: 18px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--vs-ink);
+  letter-spacing: -.005em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 460ms cubic-bezier(.22,.61,.36,1), transform 460ms cubic-bezier(.22,.61,.36,1);
+}
+.value-stack__secondary-label {
+  font-style: normal;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vs-mute);
+  margin-right: 6px;
+}
+
+/* Tier 3 — vs delta / savings */
+.value-stack__tertiary {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 460ms cubic-bezier(.22,.61,.36,1), transform 460ms cubic-bezier(.22,.61,.36,1);
+}
+.value-stack__tertiary-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.2;
+  color: var(--vs-tertiary-pos);
+}
+.value-stack--up .value-stack__tertiary-value { color: var(--vs-tertiary-neg); }
+
+.value-stack__tertiary-arrow {
+  display: inline-block;
+  margin-right: 4px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+.value-stack--down .value-stack__tertiary-arrow { color: var(--vs-tertiary-pos); }
+.value-stack--up   .value-stack__tertiary-arrow { color: var(--vs-mute); }
+
+.value-stack__tertiary-anchor {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--vs-mute);
+  font-weight: 600;
+  max-width: 260px;
+}
+
+/* -----------------------------------------------------------
+   STATE — animation triggers (added/removed by JS)
+   ----------------------------------------------------------- */
+.value-stack.is-revealed .value-stack__secondary,
+.value-stack.is-revealed-2 .value-stack__tertiary {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* V24 · Persona-uniform reveal — guarantee no persona-modifier class
+   accidentally fades tier-2/3 by inheriting an opacity from elsewhere.
+   Audit found RU1 occasionally rendered tier-2/3 faded when BR1 didn't. */
+.value-stack--SP1.is-revealed   .value-stack__secondary,
+.value-stack--CL1.is-revealed   .value-stack__secondary,
+.value-stack--BR1.is-revealed   .value-stack__secondary,
+.value-stack--RU1.is-revealed   .value-stack__secondary,
+.value-stack--PC1.is-revealed   .value-stack__secondary,
+.value-stack--GEN.is-revealed   .value-stack__secondary,
+.value-stack--SP1.is-revealed-2 .value-stack__tertiary,
+.value-stack--CL1.is-revealed-2 .value-stack__tertiary,
+.value-stack--BR1.is-revealed-2 .value-stack__tertiary,
+.value-stack--RU1.is-revealed-2 .value-stack__tertiary,
+.value-stack--PC1.is-revealed-2 .value-stack__tertiary,
+.value-stack--GEN.is-revealed-2 .value-stack__tertiary {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Spark burst (run via JS class toggle) */
+.value-stack.is-sparking .value-stack__spark {
+  animation: vs-spark-burst 460ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+@keyframes vs-spark-burst {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  20%  { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc(-50% + var(--vs-spark-x, 0px)),
+      calc(-50% + var(--vs-spark-y, 0px))
+    ) scale(1);
+  }
+}
+
+/* -----------------------------------------------------------
+   LOCKED STATE — final, no animation
+   ----------------------------------------------------------- */
+.value-stack--locked .value-stack__secondary,
+.value-stack--locked .value-stack__tertiary {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.value-stack--locked .value-stack__arc-fill {
+  transition: none;
+}
+.value-stack--locked .value-stack__primary-number {
+  font-style: normal;
+}
+
+/* -----------------------------------------------------------
+   REDUCED MOTION
+   ----------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .value-stack__secondary,
+  .value-stack__tertiary {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .value-stack__arc-fill {
+    transition: none !important;
+  }
+  .value-stack__spark {
+    display: none !important;
+  }
+}
+
+/* -----------------------------------------------------------
+   RESPONSIVE
+   ----------------------------------------------------------- */
+@media (max-width: 480px) {
+  .value-stack__primary { width: 168px; height: 168px; }
+  .value-stack__primary-number { font-size: 44px; }
+  .value-stack__secondary { font-size: 19px; margin-top: 14px; }
+  .value-stack__tertiary-value { font-size: 15px; }
+}
+
+/* =============================================================
+   V24 Tier 3 · Robinhood-style milestone celebration on lock.
+   Subtle radial gold pulse emanates from the dial — single 1.4s
+   animation, NO continuous loop. Plus tiny "● PLAN LOCKED"
+   mono caption fades in for 4s. Dignified, never confetti.
+   ============================================================= */
+.value-stack__primary {
+  /* Allow the pulse pseudo to escape the dial bounds */
+  overflow: visible;
+}
+.value-stack__primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    var(--vs-lemon) 0%,
+    rgba(255, 200, 87, 0.45) 40%,
+    rgba(255, 200, 87, 0) 70%
+  );
+}
+.value-stack.is-locking .value-stack__primary::after {
+  animation: vs-lock-pulse 1.4s cubic-bezier(.22,.61,.36,1) 1 forwards;
+}
+@keyframes vs-lock-pulse {
+  0%   { opacity: 0;   transform: scale(1); }
+  35%  { opacity: 0.4; transform: scale(1.18); }
+  100% { opacity: 0;   transform: scale(1.6); }
+}
+
+/* "● PLAN LOCKED" caption appears below the dial */
+.value-stack__lock-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--vs-ink);
+  background: rgba(255, 200, 87, 0.18);
+  border: 1px solid var(--vs-lemon);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1),
+              transform 280ms cubic-bezier(.22,.61,.36,1);
+  pointer-events: none;
+}
+.value-stack__lock-caption .vs-lock-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--vs-pink-dark, var(--vs-pink));
+  border-radius: 50%;
+}
+.value-stack.is-lock-caption-visible .value-stack__lock-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .value-stack.is-locking .value-stack__primary::after {
+    animation: none !important;
+    opacity: 0;
+  }
+  .value-stack__lock-caption {
+    /* Caption is information — keep it visible but skip transition */
+    transition: none !important;
+  }
+}
+
+/* =============================================================
+   V24 Tier 7 · A11y / HCM for value stack
+   ============================================================= */
+@media (forced-colors: active) {
+  .value-stack {
+    border: 2px solid CanvasText;
+    background: Canvas;
+  }
+  .value-stack .vs-arc-bg,
+  .value-stack .vs-arc-fg {
+    stroke: CanvasText !important;
+  }
+  .value-stack .vs-lock-caption {
+    border: 1px solid CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+}
+

@@ -319,9 +319,38 @@
 
 <hr class="div">
 
+<!-- V28 · FOCUS PASS — single-task UI per phase, COMPARE/LOCK/ENROLL redesigned -->
+<div class="toc-section">
+  <h2>V28 — Focus pass: <em>single task per phase</em> · <em>zones collapse, not layer</em> · <em>AuthGate inline at LOCK</em> (current canonical)</h2>
+  <div class="file-grid two">
+    <a class="file-card lemon" href="v28/homepage.html" style="grid-column: 1 / -1;">
+      <div class="num">★ V28a · HOMEPAGE · FOCUS-PASS PERSONA QUIZ</div>
+      <div class="meta">V28 = V27 + architectural redesign of COMPARE/LOCK/ENROLL phases. V27's audit harness measured geometry (0 overflow, 0 axe). V28 measures focus: at every phase boundary, ONE primary CTA visible, prior zones collapse via display:none (not layer), AuthGate becomes inline at LOCK (not a banner). Audit harness extended with primaryCTAs rule and 4 new focus cells.</div>
+      <h3>V27 fixed "is anything broken?" · V28 fixes "is the user being asked one thing right now?" <em>One screen, one task, simple push to conversion.</em></h3>
+      <p>The V28 homepage. <b>Why V28</b>: V27 screenshots showed plan cards clipped on COMPARE; at ENROLL, two email banners + plan cards + chat bubble + receipt panel all competed for attention. <b>V28 grammar</b>: COMPARE = 3 cards full-width, no chat, no banner, no drawer-mini · LOCK = single chosen card centered (max 720px) + AuthGate inline below + single Continue CTA, everything else display:none · ENROLL = single receipt + single carrier-handoff CTA, same column position as LOCK so user sees visual transformation in place. <b>Self-contained at /v28/</b> per versioning convention.</p>
+      <span class="go">Open V28 homepage — focus pass</span>
+    </a>
+    <a class="file-card ink" href="v28/nora-app/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">★ V28b · NORA APP · FOCUS PASS THREE-PHASE</div>
+      <div class="meta">Walk SP1 to see COMPARE → LOCK → ENROLL as three single-task screens. Each phase boundary collapses prior zones; at LOCK + ENROLL the layout becomes a 720px single column.</div>
+      <h3>Walk SP1 end-to-end. <em>Each phase asks for exactly one thing.</em></h3>
+      <p>The V28 Nora app. <b>Verified via extended harness</b>: 79 cells, primaryCTAs.length === 1 at LOCK + ENROLL, 0 plan cards visible at ENROLL, 0 chat-scroll visible at LOCK + ENROLL, 0 AuthGate banner visible at COMPARE/LOCK/ENROLL. <b>All V27 audit gates preserved</b>: 0 doc overflow, 0 horiz overflow, 0 truncation, 0 axe violations, 0 console errors.</p>
+      <span class="go">Open V28 Nora app (SP1 walkthrough)</span>
+    </a>
+    <a class="file-card pink" href="v28/nora-app/?p=CL1&s=CA&a=32&x=F&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">V28c · NORA APP · CL1 — tests OCR + Mode 2B Switch Report under V28 single-column ENROLL</div>
+      <div class="meta">CL1 with V28 focus pass — OCR baseline propagation now flows into the single-column ENROLL receipt as Mode 2B Switch Report ($X/yr savings vs current).</div>
+      <h3>Walk CL1: opener → HERO OCR offer → scan → LOCK chosen card + inline gate → ENROLL Mode 2B Switch Report receipt.</h3>
+      <span class="go">Open V28 Nora app (CL1 — Aetna $890/mo baseline)</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
 <!-- V27 · QUALITY RELEASE — every broken/cut-off/hidden/truncated thing fixed -->
 <div class="toc-section">
-  <h2>V27 — Quality release: <em>zero overflow</em> · <em>zero axe violations</em> · <em>WCAG 2.1 AA verified</em> (current canonical)</h2>
+  <h2>V27 — Quality release: <em>zero overflow</em> · <em>zero axe violations</em> · <em>WCAG 2.1 AA verified</em> (V27 in-place baseline)</h2>
   <div class="file-grid two">
     <a class="file-card lemon" href="v27/homepage.html" style="grid-column: 1 / -1;">
       <div class="num">★ V27a · HOMEPAGE · QUALITY-RELEASE PERSONA QUIZ</div>

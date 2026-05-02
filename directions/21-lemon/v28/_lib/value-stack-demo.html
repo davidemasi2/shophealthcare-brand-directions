@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Value Stack — V21 Component A Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../lemon.css" />
+  <link rel="stylesheet" href="./value-stack.css" />
+  <style>
+    /* Demo-page chrome only — not part of the component */
+    body.theme-shc-match {
+      background: #FAF7EE;
+      padding: 0;
+    }
+    .demo-head {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 40px 12px;
+    }
+    .demo-head h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 36px;
+      letter-spacing: -.02em;
+      margin: 0 0 6px;
+    }
+    .demo-head p {
+      font-size: 15px;
+      color: var(--mute);
+      margin: 0 0 12px;
+      max-width: 720px;
+    }
+    .demo-controls {
+      display: inline-flex;
+      gap: 8px;
+      margin: 8px 0 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .demo-controls button {
+      padding: 8px 14px;
+      border: 1.5px solid var(--ink);
+      background: var(--cream);
+      color: var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+    .demo-controls button:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+    .demo-controls button.is-active {
+      background: var(--lemon);
+    }
+    .demo-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 40px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+    .demo-card {
+      background: var(--cream);
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      padding: 36px 24px 28px;
+      box-shadow: 4px 4px 0 var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      min-height: 460px;
+    }
+    .demo-card .demo-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--pink-dark);
+      font-weight: 700;
+    }
+    .demo-card .demo-headline {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -.015em;
+      margin: 0 0 4px;
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.2;
+    }
+    .demo-card .demo-headline em { font-style: italic; color: var(--pink); font-weight: 400; }
+    .demo-card .demo-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mute);
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(14,42,58,0.18);
+      width: 100%;
+      text-align: center;
+    }
+    .demo-card .demo-replay {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1.5px solid rgba(14,42,58,0.25);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mute);
+      background: transparent;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .demo-card .demo-replay:hover { background: var(--lemon); color: var(--ink); border-color: var(--ink); }
+
+    .demo-section-divider {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+    }
+
+    /* Reduced-motion test toggle: when body has class, force reduced */
+    body.demo-reduced-motion .value-stack__secondary,
+    body.demo-reduced-motion .value-stack__tertiary {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    body.demo-reduced-motion .value-stack__arc-fill { transition: none !important; }
+    body.demo-reduced-motion .value-stack__spark { display: none !important; }
+  </style>
+</head>
+<body class="theme-shc-match motif-quiet">
+  <div class="demo-head">
+    <h1>Value Stack — V21 Component A</h1>
+    <p>Universal 3-tier accumulating value reveal. Big-number odometer + arc + sparks (Tier 1) → annual (Tier 2) → vs-delta + comparison anchor (Tier 3). Used by V20 quiz dashboard, V21 Nora dashboard, V21 plan cards, V21 plan report drawer.</p>
+    <div class="demo-controls">
+      <button id="btnReplay" type="button">Replay all</button>
+      <button id="btnReducedMotion" type="button">Force reduced-motion</button>
+    </div>
+  </div>
+
+  <div class="demo-section-divider">★ 6 Personas — autoplay on visible</div>
+
+  <div class="demo-grid">
+    <!-- SP1 — 1099 / self-employed -->
+    <div class="demo-card">
+      <div class="demo-tag">SP1 · 1099</div>
+      <h3 class="demo-headline">Built for irregular income.</h3>
+      <div class="value-stack" data-vs-id="sp1"></div>
+      <button class="demo-replay" type="button" data-replay="sp1">↻ Replay</button>
+      <div class="demo-meta">Estimate · refines in 60s</div>
+    </div>
+
+    <!-- CL1 — premium spike (pink-tinted arc) -->
+    <div class="demo-card">
+      <div class="demo-tag">CL1 · renewal spike</div>
+      <h3 class="demo-headline">Your renewal vs. <em>Plan 01</em>.</h3>
+      <div class="value-stack" data-vs-id="cl1"></div>
+      <button class="demo-replay" type="button" data-replay="cl1">↻ Replay</button>
+      <div class="demo-meta">Strongest converting variant</div>
+    </div>
+
+    <!-- BR1 — Pre-Medicare (warmer ochre) -->
+    <div class="demo-card">
+      <div class="demo-tag">BR1 · pre-Medicare</div>
+      <h3 class="demo-headline">Bridge to Medicare.</h3>
+      <div class="value-stack" data-vs-id="br1"></div>
+      <button class="demo-replay" type="button" data-replay="br1">↻ Replay</button>
+      <div class="demo-meta">5+ year cost gap closed</div>
+    </div>
+
+    <!-- RU1 — just lost coverage -->
+    <div class="demo-card">
+      <div class="demo-tag">RU1 · just lost</div>
+      <h3 class="demo-headline">Coverage in 24 hours.</h3>
+      <div class="value-stack" data-vs-id="ru1"></div>
+      <button class="demo-replay" type="button" data-replay="ru1">↻ Replay</button>
+      <div class="demo-meta">No comparison anchor needed</div>
+    </div>
+
+    <!-- PC1 — check up -->
+    <div class="demo-card">
+      <div class="demo-tag">PC1 · diagnostic</div>
+      <h3 class="demo-headline">Plan diagnostic.</h3>
+      <div class="value-stack" data-vs-id="pc1"></div>
+      <button class="demo-replay" type="button" data-replay="pc1">↻ Replay</button>
+      <div class="demo-meta">vs current plan</div>
+    </div>
+
+    <!-- GEN — not sure -->
+    <div class="demo-card">
+      <div class="demo-tag">GEN · not sure</div>
+      <h3 class="demo-headline">Routing your numbers...</h3>
+      <div class="value-stack" data-vs-id="gen"></div>
+      <button class="demo-replay" type="button" data-replay="gen">↻ Replay</button>
+      <div class="demo-meta">Default lemon</div>
+    </div>
+  </div>
+
+  <div class="demo-section-divider">★ Locked state — final, no animation, no estimate disclaimer</div>
+
+  <div class="demo-grid">
+    <div class="demo-card" style="background: var(--cream); border-style: dashed;">
+      <div class="demo-tag">Locked · plan report drawer</div>
+      <h3 class="demo-headline">Locked — final quote.</h3>
+      <div class="value-stack" data-vs-id="locked"></div>
+      <div class="demo-meta">Used inside V21 plan report drawer · exact value · no animation</div>
+    </div>
+
+    <div class="demo-card" style="background: var(--cream); border-style: dashed;">
+      <div class="demo-tag">Plan card · locked</div>
+      <h3 class="demo-headline">Plan 01 · selected.</h3>
+      <div class="value-stack" data-vs-id="locked-card"></div>
+      <div class="demo-meta">Locked variant for selection cards</div>
+    </div>
+  </div>
+
+  <script src="./value-stack.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var configs = {
+        sp1: {
+          persona: 'SP1',
+          primary:   { value: 290,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 7200, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 7200, suffix: ' saved',
+            label: 'vs what most freelancers pay on the open market',
+            direction: 'down'
+          },
+          compareValue: 890,
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        cl1: {
+          persona: 'CL1',
+          primary:   { value: 290,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 7200, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 5064, suffix: ' saved',
+            label: 'vs your renewal premium — the one that just spiked',
+            direction: 'down'
+          },
+          compareValue: 712,
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        br1: {
+          persona: 'BR1',
+          primary:   { value: 412,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 4944, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 6300, suffix: ' saved',
+            label: 'vs ACA bridge coverage until Medicare',
+            direction: 'down'
+          },
+          compareValue: 950,
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        ru1: {
+          persona: 'RU1',
+          primary:   { value: 245,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 2940, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 24, suffix: 'h',
+            label: 'active in 24 hours from start date',
+            direction: 'down'
+          },
+          // No compare → arc fills 100%
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        pc1: {
+          persona: 'PC1',
+          primary:   { value: 290,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 7200, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 4200, suffix: ' saved',
+            label: 'vs your current plan in your state',
+            direction: 'down'
+          },
+          compareValue: 640,
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        gen: {
+          persona: 'GEN',
+          primary:   { value: 320,  suffix: '/mo', label: 'Plan 01 estimate' },
+          secondary: { value: 3840, suffix: '/yr', label: 'That’s' },
+          tertiary:  {
+            value: 3120, suffix: ' saved',
+            label: 'vs the typical premium for someone in your situation',
+            direction: 'down'
+          },
+          compareValue: 580,
+          autoplayOnVisible: true,
+          isEstimate: true
+        },
+        locked: {
+          persona: 'CL1',
+          primary:   { value: 290.86,  suffix: '/mo', label: 'Plan 01 final' },
+          secondary: { value: 3490, suffix: '/yr', label: 'Annual' },
+          tertiary:  {
+            value: 5064, suffix: ' saved',
+            label: 'locked vs your renewal premium',
+            direction: 'down'
+          },
+          compareValue: 712,
+          locked: true,
+          isEstimate: false
+        },
+        'locked-card': {
+          persona: 'SP1',
+          primary:   { value: 268,  suffix: '/mo' },
+          secondary: { value: 3216, suffix: '/yr', label: 'Annual' },
+          tertiary:  {
+            value: 7464, suffix: ' saved',
+            label: 'vs the open-market PPO',
+            direction: 'down'
+          },
+          compareValue: 890,
+          locked: true,
+          isEstimate: false
+        }
+      };
+
+      var instances = {};
+      function mountAll() {
+        Object.keys(configs).forEach(function (key) {
+          var el = document.querySelector('[data-vs-id="' + key + '"]');
+          if (el) instances[key] = window.ValueStack.mount(el, configs[key]);
+        });
+      }
+
+      mountAll();
+
+      // Replay buttons (per card)
+      document.querySelectorAll('[data-replay]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-replay');
+          var el = document.querySelector('[data-vs-id="' + id + '"]');
+          if (el) instances[id] = window.ValueStack.mount(el, configs[id]);
+        });
+      });
+
+      // Replay-all
+      document.getElementById('btnReplay').addEventListener('click', function () {
+        mountAll();
+      });
+
+      // Reduced-motion toggle
+      var rmBtn = document.getElementById('btnReducedMotion');
+      rmBtn.addEventListener('click', function () {
+        document.body.classList.toggle('demo-reduced-motion');
+        rmBtn.classList.toggle('is-active');
+        rmBtn.textContent = document.body.classList.contains('demo-reduced-motion')
+          ? 'Reduced-motion: ON'
+          : 'Force reduced-motion';
+        // Re-mount all so they pick up the simulated state
+        mountAll();
+      });
+    })();
+  </script>
+</body>
+</html>

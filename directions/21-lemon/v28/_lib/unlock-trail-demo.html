@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" class="theme-original motif-quiet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unlock Trail — V21 Component B Demo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="../lemon.css">
+  <link rel="stylesheet" href="./unlock-trail.css">
+  <style>
+    body {
+      background: var(--blush);
+      padding: 40px 0 80px;
+    }
+    .demo-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .demo-head {
+      margin-bottom: 36px;
+    }
+    .demo-head .kicker {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--pink-dark);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .demo-head h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 48px;
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      margin: 0 0 12px;
+    }
+    .demo-head h1 em { font-style: italic; color: var(--pink); font-weight: 400; }
+    .demo-head .lead {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--mute);
+      max-width: 640px;
+    }
+    .demo-section {
+      margin-top: 48px;
+    }
+    .demo-section h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: -.015em;
+      margin: 0 0 6px;
+    }
+    .demo-section .sub {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .demo-row {
+      margin-bottom: 22px;
+    }
+    .demo-row .row-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .demo-controls button {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border: 2px solid var(--ink);
+      background: var(--cream);
+      color: var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+      transition: transform .12s, box-shadow .12s;
+    }
+    .demo-controls button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .demo-controls button:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+    .demo-controls button.primary {
+      background: var(--lemon);
+    }
+    .demo-controls button.danger {
+      background: var(--cream);
+      color: var(--pink-dark);
+      border-color: var(--pink-dark);
+      box-shadow: 2px 2px 0 var(--pink-dark);
+    }
+
+    .responsive-frame-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+    .responsive-frame {
+      border: 2px dashed var(--rule);
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--cream);
+    }
+    .responsive-frame .frame-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .responsive-frame.mobile { max-width: 380px; }
+    .responsive-frame.tablet { max-width: 720px; }
+
+    .demo-footer {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--rule);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 600;
+    }
+    .demo-footer code {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      background: var(--lemon-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--ink);
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: 700;
+    }
+
+    .live-card {
+      background: var(--cream);
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 4px 4px 0 var(--ink);
+      margin-bottom: 16px;
+    }
+    .live-state {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: var(--mute);
+      margin-top: 14px;
+    }
+    .live-state b { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <main class="demo-page">
+
+    <header class="demo-head">
+      <div class="kicker">V21 · Component B</div>
+      <h1>Unlock <em>Trail</em> demo</h1>
+      <p class="lead">
+        7-stage gamified progress trail. Persists across the V20 quiz modal and the V21 Nora app via
+        <code style="font-family:'JetBrains Mono',monospace;background:var(--lemon-2);padding:2px 6px;border-radius:4px">localStorage.shc_session.unlock_trail</code>.
+        Hover or tap a future dot to read what unlocks.
+      </p>
+    </header>
+
+    <!-- Section 1: All 7 progress states -->
+    <section class="demo-section">
+      <h2>All seven states</h2>
+      <div class="sub">Step 1 → Step 7+, increasing progress</div>
+
+      <div class="demo-row">
+        <div class="row-label">Step 1 of 7 · 0% · Calculating…</div>
+        <div data-trail-1></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 2 of 7 · 14%</div>
+        <div data-trail-2></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 3 of 7 · 28% · ~$340/mo</div>
+        <div data-trail-3></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 4 of 7 · 57% · ~$290/mo · +$50 unlocked</div>
+        <div data-trail-4></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 5 of 7 · 71% · ~$290/mo</div>
+        <div data-trail-5></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 6 of 7 · 85% · ~$290/mo</div>
+        <div data-trail-6></div>
+      </div>
+      <div class="demo-row">
+        <div class="row-label">Step 7 of 7 · 100% · Complete · ~$284/mo</div>
+        <div data-trail-7></div>
+      </div>
+    </section>
+
+    <!-- Section 2: Live demo with controls -->
+    <section class="demo-section">
+      <h2>Live demo</h2>
+      <div class="sub">Use buttons to advance · inject delta · reset · hydrate from localStorage</div>
+
+      <div class="live-card">
+        <div data-trail-live></div>
+        <div class="demo-controls">
+          <button class="primary" data-action="advance">Advance step →</button>
+          <button data-action="back">← Back step</button>
+          <button data-action="inject">Inject +$50</button>
+          <button data-action="reset">Reset</button>
+          <button data-action="hydrate">Hydrate from localStorage</button>
+          <button class="danger" data-action="clear">Clear localStorage</button>
+        </div>
+        <div class="live-state">
+          <b>State:</b>
+          <span id="live-readout">step 1 · 0% · null</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Responsive frames -->
+    <section class="demo-section">
+      <h2>Responsive behavior</h2>
+      <div class="sub">Tablet ≤ 768px stacks the value pill below · Mobile ≤ 480px hides labels</div>
+
+      <div class="responsive-frame-wrap">
+        <div class="responsive-frame">
+          <div class="frame-label">Desktop · full row</div>
+          <div data-trail-resp-desktop></div>
+        </div>
+        <div class="responsive-frame tablet">
+          <div class="frame-label">Tablet (≤ 720px container)</div>
+          <div data-trail-resp-tablet></div>
+        </div>
+        <div class="responsive-frame mobile">
+          <div class="frame-label">Mobile (≤ 380px container)</div>
+          <div data-trail-resp-mobile></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="demo-footer">
+      Component B · Unlock Trail · <code>UnlockTrail.mount(host, opts)</code> · <code>UnlockTrail.update(next)</code> · <code>UnlockTrail.hydrate()</code>
+    </footer>
+  </main>
+
+  <script src="./unlock-trail.js"></script>
+  <script>
+    // ── Section 1: 7 static states ─────────────────────────────
+    UnlockTrail.mount(document.querySelector('[data-trail-1]'), {
+      currentStep: 1, completedPct: 0, valueEstimate: null
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-2]'), {
+      currentStep: 2, completedPct: 14, valueEstimate: null
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-3]'), {
+      currentStep: 3, completedPct: 28, valueEstimate: 340
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-4]'), {
+      currentStep: 4, completedPct: 57, valueEstimate: 290
+    });
+    // Fire pop on row 4 a moment after mount
+    setTimeout(function () {
+      UnlockTrail.update({
+        host: document.querySelector('[data-trail-4]'),
+        currentStep: 4, completedPct: 57, valueEstimate: 290, valueDelta: 50
+      });
+    }, 800);
+
+    UnlockTrail.mount(document.querySelector('[data-trail-5]'), {
+      currentStep: 5, completedPct: 71, valueEstimate: 290
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-6]'), {
+      currentStep: 6, completedPct: 85, valueEstimate: 290
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-7]'), {
+      currentStep: 8, completedPct: 100, valueEstimate: 284
+    });
+
+    // ── Section 2: live ────────────────────────────────────────
+    var liveHost = document.querySelector('[data-trail-live]');
+    var readout  = document.getElementById('live-readout');
+    var liveState = { currentStep: 1, completedPct: 0, valueEstimate: null };
+    // Reasonable per-step value progression for the demo
+    var STEP_VALUES = [null, null, 340, 320, 305, 290, 286, 284];
+    var STEP_PCT    = [0,    14,  28,  43,  57,  71,  85,  100];
+
+    function syncLive() {
+      liveState.completedPct  = STEP_PCT[Math.min(liveState.currentStep, STEP_PCT.length - 1)] || 0;
+      liveState.valueEstimate = STEP_VALUES[Math.min(liveState.currentStep, STEP_VALUES.length - 1)];
+      UnlockTrail.update({
+        host: liveHost,
+        currentStep:   liveState.currentStep,
+        completedPct:  liveState.completedPct,
+        valueEstimate: liveState.valueEstimate
+      });
+      readout.textContent = 'step ' + liveState.currentStep +
+                            ' · ' + liveState.completedPct + '%' +
+                            ' · ' + (liveState.valueEstimate === null ? 'null' : '$' + liveState.valueEstimate);
+    }
+    UnlockTrail.mount(liveHost, liveState);
+
+    document.querySelectorAll('[data-action]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var action = btn.getAttribute('data-action');
+        if (action === 'advance') {
+          if (liveState.currentStep < UnlockTrail.TOTAL_STEPS + 1) liveState.currentStep += 1;
+          syncLive();
+        } else if (action === 'back') {
+          if (liveState.currentStep > 1) liveState.currentStep -= 1;
+          syncLive();
+        } else if (action === 'inject') {
+          var delta = 50;
+          var newEst = (liveState.valueEstimate || 290) - delta; // savings = lower premium
+          UnlockTrail.update({
+            host: liveHost,
+            currentStep:   liveState.currentStep,
+            completedPct:  liveState.completedPct,
+            valueEstimate: newEst,
+            valueDelta:    delta
+          });
+          liveState.valueEstimate = newEst;
+          readout.textContent = 'step ' + liveState.currentStep +
+                                ' · ' + liveState.completedPct + '%' +
+                                ' · $' + newEst + ' (popped +$' + delta + ')';
+        } else if (action === 'reset') {
+          liveState = { currentStep: 1, completedPct: 0, valueEstimate: null };
+          syncLive();
+        } else if (action === 'hydrate') {
+          var saved = UnlockTrail.hydrate();
+          if (!saved) {
+            readout.textContent = 'no saved state in localStorage';
+            return;
+          }
+          liveState.currentStep   = saved.currentStep;
+          liveState.completedPct  = saved.completedPct;
+          liveState.valueEstimate = saved.valueEstimate;
+          UnlockTrail.update({
+            host: liveHost,
+            currentStep:   liveState.currentStep,
+            completedPct:  liveState.completedPct,
+            valueEstimate: liveState.valueEstimate
+          });
+          readout.textContent = 'hydrated → step ' + liveState.currentStep +
+                                ' · ' + liveState.completedPct + '%' +
+                                ' · ' + (liveState.valueEstimate === null ? 'null' : '$' + liveState.valueEstimate);
+        } else if (action === 'clear') {
+          try {
+            var raw = localStorage.getItem('shc_session');
+            if (raw) {
+              var parsed = JSON.parse(raw);
+              delete parsed.unlock_trail;
+              localStorage.setItem('shc_session', JSON.stringify(parsed));
+            }
+            readout.textContent = 'localStorage cleared';
+          } catch (err) {
+            readout.textContent = 'clear failed: ' + err.message;
+          }
+        }
+      });
+    });
+
+    // ── Section 3: responsive frames ───────────────────────────
+    UnlockTrail.mount(document.querySelector('[data-trail-resp-desktop]'), {
+      currentStep: 4, completedPct: 57, valueEstimate: 290
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-resp-tablet]'), {
+      currentStep: 4, completedPct: 57, valueEstimate: 290
+    });
+    UnlockTrail.mount(document.querySelector('[data-trail-resp-mobile]'), {
+      currentStep: 4, completedPct: 57, valueEstimate: 290
+    });
+  </script>
+</body>
+</html>
