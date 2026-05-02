@@ -740,6 +740,11 @@
           var carrier = (chosen && (chosen.carrier_name || chosen.carrier)) || 'your carrier';
           showLockingOverlay(carrier);
 
+          // V25 · Trail: COMPARE done → LOCK active (user just committed)
+          if (window.UnlockTrail && typeof window.UnlockTrail.completePhase === 'function') {
+            try { window.UnlockTrail.completePhase('compare'); } catch (e) {}
+          }
+
           var fireLock = function () {
             try {
               if (chosen && valueStackApi && typeof valueStackApi.lock === 'function') {
@@ -779,6 +784,10 @@
             // appears 2s after celebration. Gives the user an out without
             // rushing them.
             surfaceLockedCTA();
+            // V25 · Trail: LOCK done → ENROLL active (parked phase un-parks)
+            if (window.UnlockTrail && typeof window.UnlockTrail.completePhase === 'function') {
+              try { window.UnlockTrail.completePhase('lock'); } catch (e) {}
+            }
           };
 
           if (REDUCED_MOTION) { fireLock(); }
@@ -835,7 +844,13 @@
         onSave:           function () { console.log('[V21] Save clicked — wires to backend in V22'); },
         onEmailPdf:       function () { console.log('[V21] Email PDF clicked — wires in V22'); },
         onForward:        function () { console.log('[V21] Forward clicked — wires in V22'); },
-        onContinueEnroll: function () { console.log('[V21] Continue to enrollment'); },
+        onContinueEnroll: function () {
+          console.log('[V21] Continue to enrollment');
+          // V25 · Trail: ENROLL phase complete (terminal)
+          if (window.UnlockTrail && typeof window.UnlockTrail.completePhase === 'function') {
+            try { window.UnlockTrail.completePhase('enroll'); } catch (e) {}
+          }
+        },
         onOpenEmailGate:  function () {
           if (window.AuthGate) {
             try { window.AuthGate.show(); } catch (e) {}
