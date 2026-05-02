@@ -5,14 +5,15 @@
    ============================================================= */
 
 .plan-cards {
+  /* V24 Tier 5: SHC-Match defaults (white/gold/teal/navy) */
   --pc-ink:        var(--ink, #0E2A3A);
-  --pc-cream:      var(--cream, #FFFAEA);
-  --pc-lemon:      var(--lemon, #FFE86E);
-  --pc-blush:      var(--blush, #FFE4DB);
-  --pc-pink:       var(--pink, #FF6A5C);
-  --pc-pink-dark:  var(--pink-dark, #C84B3F);
-  --pc-mute:       var(--mute, rgba(14,42,58,0.62));
-  --pc-rule:       var(--rule, rgba(14,42,58,0.18));
+  --pc-cream:      var(--cream, #FFFFFF);
+  --pc-lemon:      var(--lemon, #FFC857);
+  --pc-blush:      var(--blush, #FFFFFF);
+  --pc-pink:       var(--pink, #00B5D8);
+  --pc-pink-dark:  var(--pink-dark, #007A93);
+  --pc-mute:       var(--mute, #5D7C8E);
+  --pc-rule:       var(--rule, #DDE9EE);
 
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--pc-ink);
@@ -93,7 +94,7 @@
   gap: 12px;
   box-shadow: 4px 4px 0 var(--pc-ink);
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
   font-family: inherit;
   color: inherit;
   text-align: left;
@@ -103,6 +104,31 @@
 .plan-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--pc-ink);
+}
+
+/* V24 Tier 5 — choreographed cascade entrance (60ms stagger, 460ms swift-settle) */
+.plan-cards .plan-card {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-cards.is-revealed .plan-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+.plan-cards.is-revealed .plan-card:nth-child(1) { transition-delay: 0ms, 0ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(2) { transition-delay: 60ms, 60ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(3) { transition-delay: 120ms, 120ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(4) { transition-delay: 180ms, 180ms, 0ms; }
+@media (prefers-reduced-motion: reduce) {
+  .plan-cards .plan-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 .plan-card:focus-visible {
   outline: 3px solid var(--pc-pink);
@@ -411,7 +437,7 @@
   letter-spacing: -.005em;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--pc-ink);
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
   text-align: center;
   white-space: normal;
   box-sizing: border-box;

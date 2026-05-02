@@ -16,13 +16,13 @@
 
 .unlock-trail {
   width: 100%;
-  background: var(--cream, #FFFAF2);
-  border: 2px solid var(--ink, #1A1322);
+  background: var(--cream, #FFFFFF);
+  border: 2px solid var(--ink, #0E2A3A);
   border-radius: 18px;
   padding: 18px 22px 16px;
-  box-shadow: 3px 3px 0 var(--ink, #1A1322);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
   font-family: 'Inter', system-ui, sans-serif;
-  color: var(--ink, #1A1322);
+  color: var(--ink, #0E2A3A);
   position: relative;
 }
 
@@ -65,16 +65,16 @@
   left: calc(50% + 10px);
   right: calc(-50% + 10px);
   height: 2px;
-  background: var(--ink, #1A1322);
+  background: var(--ink, #0E2A3A);
   opacity: .25;
   z-index: 0;
-  transition: background var(--ut-fill-dur) ease-out, opacity var(--ut-fill-dur) ease-out;
+  transition: background var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1), opacity var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1);
 }
 .unlock-trail .ut-stage:last-child::after { display: none; }
 
 /* When THIS stage is completed → its outgoing connector turns lemon */
 .unlock-trail .ut-stage.is-completed::after {
-  background: var(--lemon, #FFE86E);
+  background: var(--lemon, #FFC857);
   opacity: 1;
 }
 
@@ -86,10 +86,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: width var(--ut-fill-dur) ease-out,
-              height var(--ut-fill-dur) ease-out,
-              background var(--ut-fill-dur) ease-out,
-              box-shadow var(--ut-fill-dur) ease-out;
+  transition: width var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1),
+              height var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1),
+              background var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1),
+              box-shadow var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1);
 }
 
 /* Future (default): ink ring only, smallest */
@@ -97,7 +97,7 @@
   width: 10px;
   height: 10px;
   background: transparent;
-  border: 2px solid var(--ink, #1A1322);
+  border: 2px solid var(--ink, #0E2A3A);
   opacity: .4;
 }
 
@@ -105,8 +105,8 @@
 .unlock-trail .ut-stage.is-completed .ut-dot {
   width: 14px;
   height: 14px;
-  background: var(--lemon, #FFE86E);
-  border: 2px solid var(--ink, #1A1322);
+  background: var(--lemon, #FFC857);
+  border: 2px solid var(--ink, #0E2A3A);
   opacity: 1;
 }
 .unlock-trail .ut-dot .ut-check {
@@ -120,7 +120,7 @@
 }
 .unlock-trail .ut-dot .ut-check path {
   fill: none;
-  stroke: var(--ink, #1A1322);
+  stroke: var(--ink, #0E2A3A);
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -130,8 +130,8 @@
 .unlock-trail .ut-stage.is-active .ut-dot {
   width: 18px;
   height: 18px;
-  background: var(--lemon, #FFE86E);
-  border: 2px solid var(--ink, #1A1322);
+  background: var(--lemon, #FFC857);
+  border: 2px solid var(--ink, #0E2A3A);
   opacity: 1;
 }
 .unlock-trail .ut-stage.is-active .ut-dot::before {
@@ -139,7 +139,7 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  border: 2px solid var(--lemon, #FFE86E);
+  border: 2px solid var(--lemon, #FFC857);
   animation: ut-pulse var(--ut-pulse-dur) ease-in-out infinite;
 }
 
@@ -161,16 +161,16 @@
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  transition: color var(--ut-fill-dur) ease-out;
+  transition: color var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1);
 }
 .unlock-trail .ut-stage.is-active .ut-label,
 .unlock-trail .ut-stage.is-completed .ut-label {
-  color: var(--ink, #1A1322);
+  color: var(--ink, #0E2A3A);
 }
 
 /* ── Tooltip ────────────────────────────────────────────────── */
@@ -179,23 +179,23 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--cream, #FFFAF2);
-  border: 1.5px solid var(--ink, #1A1322);
+  background: var(--cream, #FFFFFF);
+  border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 8px;
   padding: 7px 11px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 11px;
   line-height: 1.4;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   white-space: nowrap;
-  box-shadow: 2px 2px 0 var(--ink, #1A1322);
+  box-shadow: 2px 2px 0 var(--ink, #0E2A3A);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--ut-tooltip-dur) ease-out;
+  transition: opacity var(--ut-tooltip-dur) cubic-bezier(.22,.61,.36,1);
   z-index: 10;
 }
 .unlock-trail .ut-tooltip strong {
-  color: var(--ink, #1A1322);
+  color: var(--ink, #0E2A3A);
   font-weight: 700;
 }
 .unlock-trail .ut-stage:hover .ut-tooltip,
@@ -229,7 +229,7 @@
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -.01em;
-  color: var(--ink, #1A1322);
+  color: var(--ink, #0E2A3A);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -239,10 +239,10 @@
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
 }
 .unlock-trail .ut-value .ut-tilde {
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   font-weight: 400;
   margin-right: 2px;
 }
@@ -250,7 +250,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   margin-left: 2px;
 }
 /* V24 Tier 3 · Bonus 5 — persona-aware context tag (subtle, mono-mute) */
@@ -260,7 +260,7 @@
   font-weight: 600;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   margin-left: 4px;
   white-space: nowrap;
 }
@@ -273,9 +273,9 @@
 
 /* Pop-badge — "+$50 just unlocked" */
 .unlock-trail .ut-pop {
-  background: var(--lemon, #FFE86E);
-  color: var(--ink, #1A1322);
-  border: 1.5px solid var(--ink, #1A1322);
+  background: var(--lemon, #FFC857);
+  color: var(--ink, #0E2A3A);
+  border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 999px;
   padding: 6px 11px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -284,13 +284,13 @@
   letter-spacing: .14em;
   text-transform: uppercase;
   white-space: nowrap;
-  box-shadow: 3px 3px 0 var(--ink, #1A1322);
+  box-shadow: 3px 3px 0 var(--ink, #0E2A3A);
   opacity: 0;
   transform: scale(.8);
   pointer-events: none;
 }
 .unlock-trail .ut-pop.is-popping {
-  animation: ut-pop var(--ut-pop-dur, 3000ms) ease-out forwards;
+  animation: ut-pop var(--ut-pop-dur, 3000ms) cubic-bezier(.22,.61,.36,1) forwards;
 }
 @keyframes ut-pop {
   0%   { opacity: 0; transform: scale(.8); }
@@ -304,25 +304,25 @@
 .unlock-trail .ut-counter {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px dashed var(--rule, #EED9D0);
+  border-top: 1px dashed var(--rule, #DDE9EE);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: var(--mute, #6A5E70);
+  color: var(--mute, #5D7C8E);
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 .unlock-trail .ut-counter strong {
-  color: var(--ink, #1A1322);
+  color: var(--ink, #0E2A3A);
   font-weight: 700;
 }
 .unlock-trail .ut-counter .ut-sep {
   opacity: .5;
 }
 .unlock-trail .ut-counter .ut-tail {
-  color: var(--pink-dark, #D94A3E);
+  color: var(--pink-dark, #007A93);
   font-weight: 600;
 }
 

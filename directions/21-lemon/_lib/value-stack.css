@@ -7,18 +7,18 @@
    ============================================================= */
 
 /* -----------------------------------------------------------
-   Local design tokens — fall back to lemon.css if in scope.
-   These defaults match the SHC-Match palette so the component
-   renders standalone (e.g. in tests) without lemon.css.
+   Local design tokens — fall back to lemon.css :root if in scope.
+   V24 Tier 5: defaults match V23 SHC-Match palette
+   (white/gold/teal/navy). NEVER coral fallbacks.
    ----------------------------------------------------------- */
 .value-stack {
   --vs-ink:        var(--ink, #0E2A3A);
-  --vs-cream:      var(--cream, #FFFAEA);
-  --vs-lemon:      var(--lemon, #FFE86E);
-  --vs-blush:      var(--blush, #FFE4DB);
-  --vs-pink:       var(--pink, #FF6A5C);
-  --vs-pink-dark:  var(--pink-dark, #C84B3F);
-  --vs-mute:       var(--mute, rgba(14,42,58,0.62));
+  --vs-cream:      var(--cream, #FFFFFF);
+  --vs-lemon:      var(--lemon, #FFC857);
+  --vs-blush:      var(--blush, #FFFFFF);
+  --vs-pink:       var(--pink, #00B5D8);
+  --vs-pink-dark:  var(--pink-dark, #007A93);
+  --vs-mute:       var(--mute, #5D7C8E);
 
   /* Per-tier accent — overridable via persona modifier classes */
   --vs-arc-stroke:    var(--vs-lemon);
@@ -82,7 +82,7 @@
   stroke-width: 6;
   stroke-linecap: round;
   /* dasharray + offset set inline via JS once total length known */
-  transition: stroke-dashoffset .8s cubic-bezier(.22,.61,.36,1);
+  transition: stroke-dashoffset 720ms cubic-bezier(.22,.61,.36,1);
 }
 .value-stack__primary-inner {
   display: flex;
@@ -173,7 +173,7 @@
   letter-spacing: -.005em;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity .4s ease-out, transform .4s ease-out;
+  transition: opacity 460ms cubic-bezier(.22,.61,.36,1), transform 460ms cubic-bezier(.22,.61,.36,1);
 }
 .value-stack__secondary-label {
   font-style: normal;
@@ -193,7 +193,7 @@
   gap: 4px;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity .4s ease-out, transform .4s ease-out;
+  transition: opacity 460ms cubic-bezier(.22,.61,.36,1), transform 460ms cubic-bezier(.22,.61,.36,1);
 }
 .value-stack__tertiary-value {
   font-family: 'Fraunces', Georgia, serif;
@@ -253,7 +253,7 @@
 
 /* Spark burst (run via JS class toggle) */
 .value-stack.is-sparking .value-stack__spark {
-  animation: vs-spark-burst 600ms ease-out forwards;
+  animation: vs-spark-burst 460ms cubic-bezier(.22,.61,.36,1) forwards;
 }
 @keyframes vs-spark-burst {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
@@ -362,8 +362,8 @@
   border-radius: 999px;
   opacity: 0;
   transform: translateY(-2px);
-  transition: opacity .3s cubic-bezier(.22,.61,.36,1),
-              transform .3s cubic-bezier(.22,.61,.36,1);
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1),
+              transform 280ms cubic-bezier(.22,.61,.36,1);
   pointer-events: none;
 }
 .value-stack__lock-caption .vs-lock-dot {

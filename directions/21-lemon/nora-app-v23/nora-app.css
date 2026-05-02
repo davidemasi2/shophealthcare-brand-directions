@@ -5,27 +5,39 @@
    Tokens duplicated from V19 SHC-Match canonical (lemon.css theme G)
    ============================================================= */
 
-/* --- design tokens (V19 canonical SHC-Match) ---------------- */
+/* --- design tokens (V23 canonical SHC-Match — white/gold/teal/navy) ---
+   These mirror lemon.css :root values so nora-app surfaces inherit the
+   exact same palette as the homepage. Variable names are historical;
+   actual values are SHC-Match (--pink → teal #00B5D8, NOT coral). */
 :root {
-  --ink:        #0E2A3A;
-  --cream:      #FFFAEA;
-  --lemon:      #FFE86E;
-  --blush:      #FFE4DB;
-  --pink:       #FF6A5C;
-  --pink-dark:  #C84B3F;
-  --mute:       rgba(14,42,58,0.62);
-  --rule:       rgba(14,42,58,0.18);
-  --mute-bg:    rgba(14,42,58,0.04);
-  --mint:       #4ade80;
+  --ink:          #0E2A3A;       /* deep navy */
+  --cream:        #FFFFFF;       /* true white */
+  --blush:        #FFFFFF;       /* white surface */
+  --blush-2:      #EAF6F8;       /* icy teal-tinted secondary */
+  --lemon:        #FFC857;       /* warm gold (primary highlight) */
+  --lemon-2:      #FFE2A0;       /* light gold */
+  --pink:         #00B5D8;       /* teal-cyan (primary CTA) */
+  --pink-dark:    #007A93;       /* deep teal (hover/pressed) */
+  --mute:         #5D7C8E;       /* slate (muted text) */
+  --rule:         #DDE9EE;       /* rule lines */
+  --mute-bg:      rgba(14,42,58,0.04);
+  --mint:         #61C9A8;       /* success/accent */
+  --plum:         #001F2E;       /* deepest navy */
+  --sky:          #BFE9F0;       /* light sky teal */
 
-  --shadow-2:   2px 2px 0 var(--ink);
-  --shadow-3:   3px 3px 0 var(--ink);
-  --shadow-4:   4px 4px 0 var(--ink);
-  --shadow-6:   6px 6px 0 var(--ink);
+  --shadow-2:     2px 2px 0 var(--ink);
+  --shadow-3:     3px 3px 0 var(--ink);
+  --shadow-4:     4px 4px 0 var(--ink);
+  --shadow-6:     6px 6px 0 var(--ink);
 
-  --ease:       cubic-bezier(.22,.61,.36,1);
-  --t-state:    .9s var(--ease);
-  --t-quick:    .15s ease;
+  /* V24 Tier 5 motion DNA — ONE motion vocabulary across all surfaces */
+  --ease:         cubic-bezier(.22,.61,.36,1);   /* swift settle */
+  --t-quick:      180ms var(--ease);             /* hover, micro-interactions */
+  --t-small:      280ms var(--ease);             /* state changes, fades */
+  --t-medium:     460ms var(--ease);             /* reveals, entrances */
+  --t-large:      720ms var(--ease);             /* big reveals, lock celebration */
+  --t-state:      .9s var(--ease);               /* legacy alias for big stage transitions */
+  --stagger:      60ms;                          /* cascade between items */
 }
 
 /* --- global ------------------------------------------------- */
@@ -52,6 +64,55 @@ input, button { font-family: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
 
 .nx-mute { color: var(--mute); }
+
+/* =============================================================
+   V24 TIER 5 · APP-LOAD CHOREOGRAPHY (stage curtain rising)
+   Sequence:
+     T+0ms     top bar fades in        (180ms)
+     T+120ms   trail fades in          (280ms)
+     T+280ms   chat zone slides in     (460ms swift-settle)
+     T+460ms   dashboard zone fades in (460ms)
+     T+720ms   drawer empty fades in   (460ms)
+   Calm, intentional, premium — sets the tone before Nora speaks.
+   prefers-reduced-motion: skips entirely. Active when body has .is-loading
+   class (set on init, dropped after final stage settles).
+   ============================================================= */
+@keyframes nx-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes nx-slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes nx-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+body.nx-is-booting .nx-top {
+  animation: nx-fade-in 180ms cubic-bezier(.22,.61,.36,1) 0ms both;
+}
+body.nx-is-booting .nx-unlock-trail-host {
+  animation: nx-fade-in 280ms cubic-bezier(.22,.61,.36,1) 120ms both;
+}
+body.nx-is-booting #zone-chat {
+  animation: nx-slide-in-left 460ms cubic-bezier(.22,.61,.36,1) 280ms both;
+}
+body.nx-is-booting #zone-dash {
+  animation: nx-fade-up 460ms cubic-bezier(.22,.61,.36,1) 460ms both;
+}
+body.nx-is-booting #zone-drawer .nx-drawer-empty {
+  animation: nx-fade-up 460ms cubic-bezier(.22,.61,.36,1) 720ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.nx-is-booting .nx-top,
+  body.nx-is-booting .nx-unlock-trail-host,
+  body.nx-is-booting #zone-chat,
+  body.nx-is-booting #zone-dash,
+  body.nx-is-booting #zone-drawer .nx-drawer-empty {
+    animation: none;
+  }
+}
 
 /* =============================================================
    TOP BAR
@@ -415,7 +476,7 @@ input, button { font-family: inherit; }
   color: var(--ink);
   margin: 0;
   opacity: .8;
-  transition: opacity .25s ease;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
 }
 .nx-dash-authskel.is-cycling .nx-dash-authskel-status::after {
   content: ' …';
@@ -480,7 +541,10 @@ input, button { font-family: inherit; }
   font-size: clamp(48px, 6vw, 72px);
   line-height: .95; letter-spacing: -.035em;
   color: var(--ink);
-  transition: transform .4s ease-out, opacity .4s ease-out;
+  /* V24 Tier 5: 460ms swift-settle */
+  transition:
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    opacity 460ms cubic-bezier(.22,.61,.36,1);
 }
 .nx-bignum-unit {
   font-family: 'Inter', sans-serif; font-style: normal; font-weight: 600;
@@ -517,7 +581,8 @@ input, button { font-family: inherit; }
 .known-item {
   display: flex; align-items: center; gap: 10px;
   font-size: 14px;
-  transition: color var(--t-state);
+  /* V24 Tier 5: 280ms swift-settle on color shift when fact confirms */
+  transition: color 280ms cubic-bezier(.22,.61,.36,1);
 }
 .known-item .nx-known-mark {
   display: inline-grid; place-items: center;
@@ -675,8 +740,10 @@ input, button { font-family: inherit; }
   padding: 8px 14px;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity .6s cubic-bezier(.22,.61,.36,1),
-              transform .6s cubic-bezier(.22,.61,.36,1);
+  /* V24 Tier 5: 720ms swift-settle large reveal */
+  transition:
+    opacity 720ms cubic-bezier(.22,.61,.36,1),
+    transform 720ms cubic-bezier(.22,.61,.36,1);
 }
 .nx-percentile.is-visible {
   opacity: 1;

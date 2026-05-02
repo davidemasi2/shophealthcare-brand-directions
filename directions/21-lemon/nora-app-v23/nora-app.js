@@ -304,8 +304,11 @@
 
   function startConversation() {
     // Step 0 — persona-tagged opener (first question is name)
+    // V24 Tier 5 — opener delay aligned with stage-curtain timing.
+    // Stage finishes at T+1180ms; typing-dots appear T+1180ms, message
+    // fully renders ~T+1500ms. Reduced motion: 50ms (legacy fast path).
     noraSay(buildOpener(), {
-      delay: REDUCED_MOTION ? 50 : 600,
+      delay: REDUCED_MOTION ? 50 : 1180,
       then: function () {
         // No quick replies for an open name field — just text input
         setInputPlaceholder("Type your first name…");
@@ -1044,6 +1047,9 @@
     // M1: chat zone is the primary "active" zone on mobile by default
     $('#zone-chat').classList.add('is-active');
 
+    // V24 Tier 5 — stage-curtain class is managed by primeBootClass() so
+    // its timing is anchored to page-load, not persona-strings fetch.
+
     // Wire form
     formEl.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -1072,10 +1078,30 @@
     };
   }
 
+  // V24 Tier 5 — set the boot class as early as possible so the stage
+  // curtain animations have a chance to play even if persona-strings
+  // load takes a beat. Class is dropped after final stage settles
+  // (1300ms from prime, NOT from boot — keeps timing tight regardless of
+  // how slowly the persona-strings fetch completes).
+  function primeBootClass() {
+    var REDUCED_BOOT = false;
+    try { REDUCED_BOOT = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+    if (!REDUCED_BOOT && document.body) {
+      document.body.classList.add('nx-is-booting');
+      setTimeout(function () {
+        if (document.body) document.body.classList.remove('nx-is-booting');
+      }, 1300);
+    }
+  }
+
   // Run on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { loadPersonaStrings().then(boot); });
+    document.addEventListener('DOMContentLoaded', function () {
+      primeBootClass();
+      loadPersonaStrings().then(boot);
+    });
   } else {
+    primeBootClass();
     loadPersonaStrings().then(boot);
   }
 })();

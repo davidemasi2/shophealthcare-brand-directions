@@ -19,11 +19,12 @@
 .pcm-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(255, 250, 234, 0.78);
+  background: rgba(14, 42, 58, 0.42);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   opacity: 0;
-  transition: opacity .22s ease-out;
+  /* V24 Tier 5 motion DNA: 280ms swift-settle */
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
 }
 .pcm-overlay.is-open .pcm-backdrop {
   opacity: 1;
@@ -37,7 +38,7 @@
   opacity: 0;
   width: min(92vw, 1280px);
   height: min(90vh, 980px);
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   border: 2px solid var(--ink, #0E2A3A);
   border-radius: 16px;
   box-shadow: 8px 8px 0 var(--ink, #0E2A3A);
@@ -46,7 +47,10 @@
   flex-direction: column;
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--ink, #0E2A3A);
-  transition: opacity .22s ease-out, transform .22s ease-out;
+  /* V24 Tier 5: 280ms fade + scale 0.96→1 swift-settle */
+  transition:
+    opacity 280ms cubic-bezier(.22,.61,.36,1),
+    transform 280ms cubic-bezier(.22,.61,.36,1);
 }
 .pcm-overlay.is-open .pcm-panel {
   opacity: 1;
@@ -69,7 +73,7 @@
   gap: 16px;
   padding: 14px 18px;
   border-bottom: 1.5px solid var(--ink, #0E2A3A);
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   flex-wrap: wrap;
 }
 .pcm-title {
@@ -100,11 +104,11 @@
 .pcm-toggle-track {
   width: 36px;
   height: 20px;
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 999px;
   position: relative;
-  transition: background .15s ease;
+  transition: background 180ms cubic-bezier(.22,.61,.36,1);
 }
 .pcm-toggle-track::after {
   content: '';
@@ -115,16 +119,16 @@
   height: 13px;
   background: var(--ink, #0E2A3A);
   border-radius: 50%;
-  transition: transform .15s ease;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1);
 }
 .pcm-toggle input:checked + .pcm-toggle-track {
-  background: var(--lemon, #FFE86E);
+  background: var(--lemon, #FFC857);
 }
 .pcm-toggle input:checked + .pcm-toggle-track::after {
   transform: translateX(16px);
 }
 .pcm-close {
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 999px;
   width: 32px;
@@ -138,7 +142,7 @@
   justify-content: center;
 }
 .pcm-close:hover {
-  background: var(--lemon, #FFE86E);
+  background: var(--lemon, #FFC857);
 }
 
 /* Body — scrollable both axes */
@@ -146,7 +150,7 @@
   flex: 1;
   overflow: auto;
   padding: 0;
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
 }
 
 /* The table */
@@ -169,7 +173,7 @@
 .pcm-table th.pcm-row-label {
   font-weight: 600;
   width: 220px;
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   position: sticky;
   left: 0;
   z-index: 2;
@@ -179,7 +183,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   border-bottom: 2px solid var(--ink, #0E2A3A);
 }
 .pcm-table thead th.pcm-row-label {
@@ -203,13 +207,13 @@
   text-transform: uppercase;
   font-weight: 700;
   color: var(--ink, #0E2A3A);
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 999px;
   line-height: 1;
 }
 .pcm-col-head .pcm-col-tier--recommended {
-  background: var(--lemon, #FFE86E);
+  background: var(--lemon, #FFC857);
 }
 .pcm-col-head .pcm-col-carrier {
   font-size: 11px;
@@ -228,7 +232,7 @@
   display: inline-flex;
   align-self: flex-start;
   padding: 2px 6px;
-  background: var(--lemon, #FFE86E);
+  background: var(--lemon, #FFC857);
   border: 1.5px solid var(--ink, #0E2A3A);
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
@@ -267,7 +271,7 @@
 .pcm-foot {
   border-top: 1.5px solid var(--ink, #0E2A3A);
   padding: 12px 18px;
-  background: var(--cream, #FFFAEA);
+  background: var(--cream, #FFFFFF);
   font-size: 10.5px;
   line-height: 1.45;
   color: rgba(14,42,58,0.62);

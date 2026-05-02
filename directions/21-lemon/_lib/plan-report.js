@@ -509,8 +509,9 @@
     if (reduced) {
       target.classList.add('is-revealed');
     } else {
+      // V24 Tier 5 — unified 60ms cascade stagger (was 80ms)
       Array.prototype.forEach.call(sections, function (s, i) {
-        s.style.transitionDelay = (i * 80) + 'ms';
+        s.style.transitionDelay = (i * 60) + 'ms';
       });
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {

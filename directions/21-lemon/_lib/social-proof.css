@@ -41,8 +41,8 @@
   color: var(--ink, #0E2A3A);
   font-weight: 700;
   /* Subtle slot-machine highlight when changing */
-  transition: color .35s cubic-bezier(.22,.61,.36,1),
-              transform .35s cubic-bezier(.22,.61,.36,1);
+  transition: color 460ms cubic-bezier(.22,.61,.36,1),
+              transform 460ms cubic-bezier(.22,.61,.36,1);
   display: inline-block;
 }
 

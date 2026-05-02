@@ -5,14 +5,15 @@
    ============================================================= */
 
 .plan-report {
+  /* V24 Tier 5: SHC-Match defaults (white/gold/teal/navy) */
   --pr-ink:        var(--ink, #0E2A3A);
-  --pr-cream:      var(--cream, #FFFAEA);
-  --pr-lemon:      var(--lemon, #FFE86E);
-  --pr-blush:      var(--blush, #FFE4DB);
-  --pr-pink:       var(--pink, #FF6A5C);
-  --pr-pink-dark:  var(--pink-dark, #C84B3F);
-  --pr-mute:       var(--mute, rgba(14,42,58,0.62));
-  --pr-rule:       var(--rule, rgba(14,42,58,0.18));
+  --pr-cream:      var(--cream, #FFFFFF);
+  --pr-lemon:      var(--lemon, #FFC857);
+  --pr-blush:      var(--blush, #FFFFFF);
+  --pr-pink:       var(--pink, #00B5D8);
+  --pr-pink-dark:  var(--pink-dark, #007A93);
+  --pr-mute:       var(--mute, #5D7C8E);
+  --pr-rule:       var(--rule, #DDE9EE);
 
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--pr-ink);
@@ -27,8 +28,8 @@
   opacity: 0;
   transform: translateY(8px);
   transition:
-    opacity .35s cubic-bezier(.22,.61,.36,1),
-    transform .35s cubic-bezier(.22,.61,.36,1);
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report.is-revealed .plan-report__section {
   opacity: 1;
@@ -317,7 +318,7 @@
   pointer-events: none;
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity .25s ease, transform .25s ease;
+  transition: opacity 280ms cubic-bezier(.22,.61,.36,1), transform 280ms cubic-bezier(.22,.61,.36,1);
   box-shadow: 3px 3px 0 var(--pr-ink);
 }
 .plan-report__addon-flash.is-shown {
@@ -330,7 +331,7 @@
   background: rgba(14,42,58,0.04);
   border: 1.5px dashed var(--pr-rule);
   border-radius: 10px;
-  transition: background .18s cubic-bezier(.22,.61,.36,1);
+  transition: background 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__fineprint-toggle {
   width: 100%;
@@ -350,8 +351,8 @@
   align-items: center;
   gap: 10px;
   border-radius: 9px 9px 0 0;
-  transition: background .18s cubic-bezier(.22,.61,.36,1),
-              color .18s cubic-bezier(.22,.61,.36,1);
+  transition: background 180ms cubic-bezier(.22,.61,.36,1),
+              color 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__fineprint-toggle:hover {
   background: rgba(0, 181, 216, 0.04);
@@ -380,8 +381,9 @@
   display: inline-block;
   font-size: 14px;
   color: var(--pr-mute);
-  transition: transform .18s cubic-bezier(.22,.61,.36,1),
-              color .15s ease;
+  transition:
+    transform 180ms cubic-bezier(.22,.61,.36,1),
+    color 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__fineprint.is-open .plan-report__fineprint-toggle .pr-chev {
   transform: rotate(90deg);
@@ -440,7 +442,7 @@
   color: var(--pr-ink);
   position: relative;
   box-shadow: 2px 2px 0 var(--pr-ink);
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__action:hover {
   background: var(--pr-lemon);
@@ -477,7 +479,7 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .15s ease;
+  transition: opacity 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__action.is-locked:hover .plan-report__action-tooltip {
   opacity: 1;
@@ -497,7 +499,7 @@
   letter-spacing: -.005em;
   cursor: pointer;
   box-shadow: 4px 4px 0 var(--pr-ink);
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
 }
 .plan-report__continue:hover {
   transform: translate(-2px, -2px);

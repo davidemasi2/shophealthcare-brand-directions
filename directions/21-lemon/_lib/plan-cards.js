@@ -292,6 +292,12 @@
         compareHTML;
       mountValueStacks(target, planSet);
       bind();
+      // V24 Tier 5 — choreographed cascade entrance (60ms stagger via CSS)
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          target.classList.add('is-revealed');
+        });
+      });
     }
 
     function bind() {
