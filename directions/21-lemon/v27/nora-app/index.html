@@ -182,10 +182,6 @@
         <div data-plan-cards id="dashPlanCards"></div>
       </div>
 
-      <div class="nx-dash-trust">
-        <div>Operated by Core Value Insurance Associates, LLC · NPN #19482230</div>
-        <div>Licensed in <span id="trust-state">all 50 states</span> · Verifiable at <a href="https://nipr.com" target="_blank" rel="noopener">NIPR.com</a></div>
-      </div>
     </section>
 
     <!-- ZONE 3 — Report drawer (V27 F04: was <aside>, axe disallows role="tabpanel" on aside; <section> matches the other two zones) -->
@@ -221,6 +217,17 @@
     </section>
 
   </main>
+
+  <!-- V27.1 — Trust footer relocated out of dash zone.
+       Was inside #zone-dash at the bottom of the dash; the FLIP grid sized
+       the dash to fixed dimensions per phase, which clipped the trust strip
+       below the visible area at READ / PRICE / LOCK (76-103 px hidden).
+       As a static footer below the shell it is always visible regardless of
+       phase, and matches its semantic role (legal / verification footer). -->
+  <footer class="nx-trust-footer" role="contentinfo" aria-label="Licensing and legal">
+    <div>Operated by Core Value Insurance Associates, LLC · NPN #19482230</div>
+    <div>Licensed in <span id="trust-state">all 50 states</span> · Verifiable at <a href="https://nipr.com" target="_blank" rel="noopener">NIPR.com</a></div>
+  </footer>
 
   <!-- V21 component scripts (load before nora-app.js so APIs are available) -->
   <script src="../_lib/session.js"></script>

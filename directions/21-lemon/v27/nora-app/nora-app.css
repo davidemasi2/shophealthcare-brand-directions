@@ -650,21 +650,37 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
 }
 .nx-dash-stub p { margin: 0; line-height: 1.5; }
 
-.nx-dash-trust {
-  margin-top: auto; padding-top: 18px;
+/* V27.1 — trust footer relocated from inside dash zone to below shell.
+   See index.html footer.nx-trust-footer rationale comment. */
+.nx-trust-footer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 14px 28px 24px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--mute); line-height: 1.6;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  line-height: 1.7;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
-.nx-dash-trust a {
+.nx-trust-footer a {
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 2px;
-  /* V27 F13 — was 54×13 (height fails WCAG 2.5.8 AA 24px target). Inline-block
-     padding gives clickable area without changing the in-line trust strip layout. */
   display: inline-block;
-  padding: 6px 4px;
+  padding: 4px 4px;
   min-height: 24px;
+}
+@media (max-width: 767px) {
+  .nx-trust-footer {
+    padding: 12px 16px 80px; /* extra bottom for mobile sticky tab nav */
+    font-size: 10px;
+  }
 }
 
 /* =============================================================
@@ -1723,6 +1739,19 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   overflow-y: auto;
 }
 .nx-zone--lead.nx-dash .value-stack__primary-number { font-size: 56px; }
+
+/* V27.1 — PRICE LEAD: hide redundant facts list + plan-peek + drawer-empty
+   subcontent so the big number arc is the focal point and the dash zone
+   doesn't clip 138 px below the fold. The user just saw the facts list at
+   READ; at PRICE the number is the headline. Plan-peek pill is wrong here
+   anyway — plans aren't unlocked yet but the user has already moved past
+   the "wait for Nora" gate. */
+.nx-shell[data-layout-phase="price"] .nx-zone--lead.nx-dash .nx-known {
+  display: none;
+}
+.nx-shell[data-layout-phase="price"] .nx-zone--lead.nx-dash #dash-plan-peek {
+  display: none;
+}
 
 /* DASH @ LEAD-COMPARE — estimate-block CONDENSES, plan-cards-host expands */
 .nx-shell[data-layout-phase="compare"] .nx-zone--lead.nx-dash {
