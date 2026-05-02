@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en" class="theme-original motif-quiet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auth Gate — V21 Component C Demo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="../lemon.css">
+  <link rel="stylesheet" href="./auth-gate.css">
+  <style>
+    body {
+      background: var(--blush);
+      padding: 32px 0 80px;
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--ink);
+    }
+    .demo-page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+    .demo-head {
+      margin-bottom: 28px;
+    }
+    .demo-head .kicker {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--pink-dark);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .demo-head h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 44px;
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      margin: 0 0 10px;
+    }
+    .demo-head h1 em { font-style: italic; color: var(--pink); font-weight: 400; }
+    .demo-head .lead {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--mute);
+      max-width: 720px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 920px) {
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+
+    .demo-stage {
+      background: var(--cream);
+      border: 1.5px solid var(--ink);
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: 6px 6px 0 var(--ink);
+      min-height: 480px;
+      position: relative;
+    }
+    .demo-stage[data-auth-skip-banner-host] { /* banner mounts here when skipped */ }
+
+    .stage-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10.5px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--pink-dark);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stage-label .pulse {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #2BB673;
+      box-shadow: 0 0 0 0 rgba(43, 182, 115, .55);
+      animation: pulse-dot 1.6s ease-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%   { box-shadow: 0 0 0 0 rgba(43, 182, 115, .55); }
+      100% { box-shadow: 0 0 0 12px rgba(43, 182, 115, 0); }
+    }
+    .stage-meta {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10.5px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 600;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px dashed rgba(14, 42, 58, .18);
+    }
+
+    .demo-controls {
+      background: var(--cream);
+      border: 1.5px solid var(--ink);
+      border-radius: 16px;
+      padding: 22px 20px;
+      box-shadow: 4px 4px 0 var(--ink);
+      position: sticky;
+      top: 24px;
+    }
+    .demo-controls h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -.01em;
+      margin: 0 0 4px;
+    }
+    .demo-controls .sub {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .control-group { margin-bottom: 18px; }
+    .control-group .label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn-row button, .btn-row a.btn-link {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border: 1.5px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+      transition: transform .12s, box-shadow .12s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-row button:hover, .btn-row a.btn-link:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .btn-row button.is-active {
+      background: var(--lemon);
+    }
+
+    .console-box {
+      margin-top: 32px;
+      background: #0E2A3A;
+      color: #F4F1E2;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11.5px;
+      line-height: 1.55;
+      border-radius: 12px;
+      padding: 14px 16px;
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1.5px solid #0E2A3A;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .console-box .ts { color: #FFE86E; font-weight: 700; margin-right: 8px; }
+    .console-box .lvl-warn { color: #FFB347; }
+    .console-box .lvl-err  { color: #FF6A5C; }
+    .console-box .empty    { color: #7C8B96; }
+    .console-box pre {
+      margin: 4px 0 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #C5DDEB;
+    }
+
+    .state-pre {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px dashed rgba(14, 42, 58, .25);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      max-height: 220px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .demo-action-row {
+      margin-top: 26px;
+      padding: 18px;
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      border-radius: 14px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .demo-action-row .demo-action-card {
+      flex: 1 1 140px;
+      min-width: 140px;
+      background: var(--cream);
+      border: 1px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+      transition: transform .12s;
+    }
+    .demo-action-row .demo-action-card:hover {
+      transform: translate(-1px, -1px);
+    }
+    .demo-action-row .demo-action-card .icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .demo-action-row .demo-action-card .title {
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .demo-action-row .demo-action-card .sub {
+      font-size: 11px;
+      color: var(--mute);
+      margin-top: 2px;
+    }
+
+    .footnote {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 10.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-top: 22px;
+      line-height: 1.6;
+    }
+    .footnote a { color: var(--pink-dark); }
+  </style>
+</head>
+<body>
+
+  <div class="demo-page">
+
+    <div class="demo-head">
+      <div class="kicker">V21 · Component C</div>
+      <h1>Auth Gate <em>+ Drop-Off Recovery</em></h1>
+      <p class="lead">
+        In-chat email gate that triggers during Nora's "while I finish" moment.
+        Magic-link primary, Google OAuth secondary, skip-for-now visible.
+        Skipping locks the save / forward / share actions in the plan report drawer.
+      </p>
+    </div>
+
+    <div class="demo-grid">
+
+      <!-- ─── STAGE: where the gate renders ─── -->
+      <div class="demo-stage" data-auth-skip-banner-host>
+
+        <div class="stage-label">
+          <span class="pulse"></span>
+          Nora chat · live preview
+        </div>
+
+        <!-- This is the slot Component C mounts into -->
+        <div data-auth-gate></div>
+
+        <!-- Mocked plan-report drawer actions to demonstrate locks -->
+        <div class="demo-action-row" id="demo-actions" aria-label="Plan report drawer actions">
+          <div class="demo-action-card" data-auth-lockable
+                                        data-auth-lockable-tooltip="Sign in to save or share this plan">
+            <div class="icon">💾</div>
+            <div class="title">Save plan</div>
+            <div class="sub">Add to your account</div>
+          </div>
+          <div class="demo-action-card" data-auth-lockable
+                                        data-auth-lockable-tooltip="Sign in to email the PDF">
+            <div class="icon">✉</div>
+            <div class="title">Email PDF</div>
+            <div class="sub">Plan-vs-plan report</div>
+          </div>
+          <div class="demo-action-card" data-auth-lockable
+                                        data-auth-lockable-tooltip="Sign in to forward to spouse">
+            <div class="icon">↗</div>
+            <div class="title">Forward</div>
+            <div class="sub">To partner / family</div>
+          </div>
+        </div>
+
+        <div class="stage-meta">
+          Current persona: <span data-demo-persona-label>SP1</span>
+          <br>
+          Authed: <span data-demo-authed>false</span> ·
+          Skipped: <span data-demo-skipped>false</span>
+        </div>
+
+      </div>
+
+      <!-- ─── CONTROLS ─── -->
+      <div class="demo-controls">
+        <h3>Controls</h3>
+        <div class="sub">All side-effects log to the box below</div>
+
+        <div class="control-group">
+          <div class="label">Persona</div>
+          <div class="btn-row" id="persona-row">
+            <button data-persona="RU1">RU1</button>
+            <button data-persona="SP1" class="is-active">SP1</button>
+            <button data-persona="BR1">BR1</button>
+            <button data-persona="CL1">CL1</button>
+            <button data-persona="PC1">PC1</button>
+            <button data-persona="GEN">GEN</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="label">Gate state</div>
+          <div class="btn-row">
+            <button data-action="show">Show</button>
+            <button data-action="hide">Hide</button>
+            <button data-action="success">Success</button>
+            <button data-action="error">Error</button>
+            <button data-action="reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="label">Skip / authed flow</div>
+          <div class="btn-row">
+            <button data-action="skip-true">Set Skipped</button>
+            <button data-action="skip-false">Unlock (Authed)</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="label">Drop-off recovery</div>
+          <div class="btn-row">
+            <a class="btn-link" id="resume-link" href="#">Resume URL ↗</a>
+            <button data-action="idle-fast">Idle 5s test</button>
+            <button data-action="idle-fire">Fire idle now</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="label">Session</div>
+          <div class="btn-row">
+            <button data-action="session-init">Init</button>
+            <button data-action="session-reset">Reset</button>
+            <button data-action="session-dump">Dump state</button>
+          </div>
+        </div>
+
+        <div class="state-pre" id="state-dump">// session state will appear here</div>
+
+        <div class="footnote">
+          spec: front-end design / quiz-app-capture-flow.md §6 + nora-app-design-brief.md §7
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif;margin:36px 0 8px;font-size:18px;">Console</h3>
+    <div class="console-box" id="console-box">
+      <div class="empty">// console output will appear here</div>
+    </div>
+
+  </div>
+
+  <script src="./session.js"></script>
+  <script src="./auth-gate.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // ─── Console mirror — pipe console.log into the box ────
+      var consoleBox = document.getElementById('console-box');
+      var emptyEl = consoleBox.querySelector('.empty');
+      function appendLog(level, args) {
+        if (emptyEl && emptyEl.parentNode === consoleBox) {
+          consoleBox.innerHTML = '';
+          emptyEl = null;
+        }
+        var line = document.createElement('div');
+        var ts = new Date().toLocaleTimeString([], { hour12: false });
+        var lvlClass = level === 'warn' ? 'lvl-warn' : (level === 'error' ? 'lvl-err' : '');
+        var head = '<span class="ts">' + ts + '</span><span class="' + lvlClass + '">' +
+                   args[0] + '</span>';
+        line.innerHTML = head;
+        if (args.length > 1) {
+          var rest = Array.prototype.slice.call(args, 1).map(function (a) {
+            try { return typeof a === 'string' ? a : JSON.stringify(a, null, 2); }
+            catch (e) { return String(a); }
+          }).join('  ');
+          var pre = document.createElement('pre');
+          pre.textContent = rest;
+          line.appendChild(pre);
+        }
+        consoleBox.appendChild(line);
+        consoleBox.scrollTop = consoleBox.scrollHeight;
+      }
+      ['log', 'warn', 'error'].forEach(function (level) {
+        var orig = console[level].bind(console);
+        console[level] = function () {
+          appendLog(level, Array.prototype.slice.call(arguments));
+          orig.apply(console, arguments);
+        };
+      });
+
+      // ─── Init session + check resume URL ────
+      var resumed = NoraSession.hydrateFromUrl();
+      if (resumed && resumed.restored) {
+        showWelcomeBack(resumed);
+      } else {
+        NoraSession.init({
+          persona: 'SP1',
+          quiz_answers: { state: 'TX', age: 35, sex: 'M', pregnancy: false, conditions: 'none' },
+          discovery_progress: { name: 'Sarah', zip: '78701', dob: null, conditions_detail: null, start_date: null }
+        });
+      }
+      NoraSession.startIdleTimer();
+
+      function showWelcomeBack(info) {
+        var msg = document.createElement('div');
+        msg.style.cssText = 'background:var(--lemon);border:1.5px solid var(--ink);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-weight:600;font-size:14px;';
+        msg.innerHTML =
+          '👋 Welcome back · you were ' + info.completed_pct +
+          '% complete' +
+          (info.email ? ' · ' + info.email : '') + '.';
+        var stage = document.querySelector('[data-auth-skip-banner-host]');
+        stage.insertBefore(msg, stage.firstChild);
+        console.log('[Demo] Welcome-back hydrate:', info);
+      }
+
+      // ─── Mount the gate ────
+      var personaState = { current: 'SP1' };
+      AuthGate.mount(document.querySelector('[data-auth-gate]'), {
+        persona: personaState.current,
+        onSubmit: function (payload) {
+          console.log('[Demo onSubmit] payload:', payload);
+          // Returning the NoraSession promise lets AuthGate handle loading + success.
+          return NoraSession.requestMagicLink(payload.email, payload.phone, payload.smsOptIn);
+        },
+        onSkip: function () {
+          console.log('[Demo onSkip] User skipped — showing locked plan summary');
+          renderState();
+        },
+        onShow: function () { console.log('[Demo onShow]'); },
+        onHide: function () { console.log('[Demo onHide]'); }
+      });
+
+      // Initialize lock state to match current authed state
+      AuthGate.refreshLocks();
+
+      // ─── Resume URL builder ────
+      var resumeLink = document.getElementById('resume-link');
+      function refreshResumeLink() {
+        var origin = location.origin || '';
+        var path = location.pathname;
+        var token = 'demo_token_' + Math.random().toString(36).slice(2, 10);
+        resumeLink.href = origin + path + '?token=' + token + '&ref=email-link';
+      }
+      refreshResumeLink();
+
+      // ─── Persona buttons ────
+      document.getElementById('persona-row').addEventListener('click', function (e) {
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        var persona = btn.getAttribute('data-persona');
+        document.querySelectorAll('#persona-row button').forEach(function (b) {
+          b.classList.toggle('is-active', b === btn);
+        });
+        AuthGate.setPersona(persona);
+        AuthGate.reset();
+        document.querySelector('[data-demo-persona-label]').textContent = persona;
+        console.log('[Demo] Persona →', persona);
+      });
+
+      // ─── Action buttons ────
+      document.body.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        var action = btn.getAttribute('data-action');
+        switch (action) {
+          case 'show':
+            AuthGate.show();
+            break;
+          case 'hide':
+            AuthGate.hide();
+            break;
+          case 'success':
+            AuthGate.success(null, NoraSession.get().email || 'sarah@example.com');
+            break;
+          case 'error':
+            AuthGate.error('Email already taken');
+            break;
+          case 'reset':
+            AuthGate.reset();
+            AuthGate.show();
+            break;
+          case 'skip-true':
+            AuthGate.setSkipped(true);
+            renderState();
+            break;
+          case 'skip-false':
+            AuthGate.setAuthed(true);
+            renderState();
+            break;
+          case 'idle-fast':
+            // Set 5s for testing.
+            NoraSession.IDLE_TRIGGER_MS = 5000;
+            NoraSession.startIdleTimer();
+            console.log('[Demo] Idle trigger set to 5000ms — walk away or stop interacting');
+            break;
+          case 'idle-fire':
+            NoraSession.fireResumeEmail('manual_demo_trigger');
+            break;
+          case 'session-init':
+            NoraSession.init({
+              persona: personaState.current,
+              quiz_answers: { state: 'TX', age: 35, sex: 'M', pregnancy: false, conditions: 'none' }
+            });
+            renderState();
+            break;
+          case 'session-reset':
+            NoraSession.reset();
+            AuthGate.reset();
+            AuthGate.setAuthed(false);
+            AuthGate.setSkipped(false);
+            renderState();
+            break;
+          case 'session-dump':
+            console.log('[Demo] session state:', NoraSession.get());
+            renderState();
+            break;
+        }
+      });
+
+      // ─── State dump renderer ────
+      function renderState() {
+        var s = NoraSession.get();
+        document.getElementById('state-dump').textContent =
+          JSON.stringify({
+            session_id:    s.session_id,
+            persona:       s.persona,
+            email:         s.email,
+            phone:         s.phone,
+            sms_opt_in:    s.sms_opt_in,
+            is_authed:     s.is_authed,
+            is_skipped:    s.is_skipped,
+            completed_pct: NoraSession.getCompletedPct(),
+            last_activity: s.last_activity ? new Date(s.last_activity).toLocaleTimeString() : null
+          }, null, 2);
+        document.querySelector('[data-demo-authed]').textContent = String(s.is_authed);
+        document.querySelector('[data-demo-skipped]').textContent = String(s.is_skipped);
+      }
+
+      // Subscribe so any session change re-renders the dump.
+      NoraSession.subscribe(renderState);
+      renderState();
+
+    })();
+  </script>
+
+</body>
+</html>

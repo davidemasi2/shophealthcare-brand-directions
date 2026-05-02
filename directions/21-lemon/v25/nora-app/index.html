@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nora — ShopHealthcare</title>
+  <meta name="description" content="Your real plan with Nora. Licensed enrollment assistant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="nora-app.css">
+  <!-- V21 component styles -->
+  <link rel="stylesheet" href="../_lib/value-stack.css">
+  <link rel="stylesheet" href="../_lib/unlock-trail.css">
+  <link rel="stylesheet" href="../_lib/auth-gate.css">
+  <link rel="stylesheet" href="../_lib/plan-cards.css">
+  <link rel="stylesheet" href="../_lib/plan-report.css">
+  <link rel="stylesheet" href="../_lib/plan-compare-modal.css">
+  <link rel="stylesheet" href="../_lib/social-proof.css">
+  <link rel="stylesheet" href="../_lib/ocr-capture.css">
+  <style>
+    /* V21 — host slots injected into the existing 3-zone shell */
+    .nx-unlock-trail-host {
+      max-width: 1440px;
+      margin: 16px auto 0;
+      padding: 14px 28px 0;
+    }
+    @media (max-width: 1023px) { .nx-unlock-trail-host { padding: 10px 16px 0; } }
+    @media (max-width: 767px)  { .nx-unlock-trail-host { padding: 8px 12px 0; } }
+
+    /* Value-Stack mounted INSIDE .nx-bignum-wrap replaces the static span markup */
+    .nx-bignum-wrap.has-value-stack { padding: 18px 18px 16px; }
+    .nx-bignum-wrap .value-stack { margin: 0; }
+
+    /* Plan-cards slot — initially hidden; revealed after auth gate moment */
+    .nx-plan-cards-host { display: none; margin-top: 22px; }
+    .nx-plan-cards-host.is-active { display: block; }
+
+    /* Plan-report drawer host — replaces .nx-drawer-empty when filled */
+    .nx-drawer-empty.is-hidden { display: none; }
+    .nx-drawer-content { width: 100%; padding: 22px 24px 30px; overflow-y: auto; }
+
+    /* Auth-gate inside chat scroll — render as Nora message bubble */
+    .nx-chat-scroll .auth-gate {
+      align-self: flex-start;
+      max-width: 92%;
+      margin: 0;
+    }
+
+    /* Skip-banner host inside dash header */
+    [data-auth-skip-banner-host] { width: 100%; }
+  </style>
+</head>
+<body class="motif-quiet">
+
+  <!-- A11Y · Skip-to-content link (keyboard users) -->
+  <a href="#zone-chat" class="nx-skip-link">Skip to Nora chat</a>
+
+  <!-- A11Y · Live announcement region (off-screen, polite) for status changes -->
+  <div class="nx-aria-live" role="status" aria-live="polite" aria-atomic="true" id="nx-aria-live"></div>
+
+  <!-- Top chrome -->
+  <header class="nx-top" role="banner">
+    <a class="nx-logo" href="/" aria-label="ShopHealthcare home">
+      <span class="nx-mark" aria-hidden="true"></span>
+      <span class="nx-word">ShopHealthcare</span>
+    </a>
+    <div class="nx-status" role="status" aria-label="Nora is live">
+      <span class="nx-status-dot" aria-hidden="true"></span>
+      <span class="nx-status-label">Nora · Live</span>
+    </div>
+    <button class="nx-account" aria-label="Account" hidden>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+    </button>
+  </header>
+
+  <!-- V21 · Unlock Trail (sits below top bar, above zone shell) -->
+  <div data-unlock-trail class="nx-unlock-trail-host"></div>
+
+  <!-- Mobile tab nav (visible <768px) -->
+  <nav class="nx-tabs" role="tablist" aria-label="App sections">
+    <button class="nx-tab is-active" data-tab="chat" role="tab" aria-selected="true" aria-controls="zone-chat" id="tab-chat">Chat</button>
+    <button class="nx-tab" data-tab="dash" role="tab" aria-selected="false" aria-controls="zone-dash" id="tab-dash">Dashboard</button>
+    <button class="nx-tab" data-tab="drawer" role="tab" aria-selected="false" aria-controls="zone-drawer" id="tab-drawer">Report</button>
+  </nav>
+
+  <!-- The single ink-bordered workspace container -->
+  <main class="nx-shell" id="nx-shell" role="main">
+
+    <!-- ZONE 1 — Nora chat -->
+    <section class="nx-zone nx-chat is-active" id="zone-chat" role="tabpanel" aria-labelledby="tab-chat" aria-label="Nora chat">
+      <header class="nx-chat-head">
+        <div class="nx-avatar" aria-hidden="true">N</div>
+        <div class="nx-chat-id">
+          <div class="nx-chat-name">Nora</div>
+          <div class="nx-chat-credential">Licensed enrollment assistant <span class="nx-chat-sep" aria-hidden="true">·</span> <span class="nx-online" aria-hidden="true"></span> Live</div>
+        </div>
+      </header>
+
+      <div class="nx-chat-scroll" id="chat-scroll" role="log" aria-live="polite" aria-atomic="false" aria-label="Conversation with Nora">
+        <!-- Messages render here -->
+      </div>
+
+      <div class="nx-chat-input-wrap">
+        <div class="nx-quick-replies" id="quick-replies" role="group" aria-label="Quick reply options"></div>
+        <form class="nx-input-row" id="chat-form" autocomplete="off" aria-label="Send a message to Nora">
+          <label for="chat-input" class="sr-only">Message Nora</label>
+          <input
+            type="text"
+            id="chat-input"
+            class="nx-input"
+            placeholder="Type or pick an option above…"
+            aria-label="Message Nora"
+            aria-describedby="chat-input-help"
+            autocomplete="off"
+            spellcheck="false">
+          <span id="chat-input-help" class="sr-only">Press Enter to send your message</span>
+          <button type="submit" class="nx-send" aria-label="Send message">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ZONE 2 — Live dashboard -->
+    <section class="nx-zone nx-dash" id="zone-dash" role="tabpanel" aria-labelledby="tab-dash" aria-label="Live dashboard" data-auth-skip-banner-host>
+      <div class="nx-dash-estimate-block" id="dash-estimate-block">
+        <div class="nx-dash-eyebrow" id="dash-eyebrow">★ YOUR ESTIMATE</div>
+        <h1 class="nx-dash-headline" id="dash-headline">Routing your numbers.</h1>
+        <p class="nx-dash-reinforce" id="dash-reinforce"></p>
+        <!-- V24 Tier 4 · Social proof live counter (dashboard) -->
+        <div data-social-proof data-sp-host="dashboard"></div>
+
+        <div class="nx-dash-divider" aria-hidden="true"></div>
+
+        <!-- V21 · Value Stack (3-tier dial+odometer) replaces the static big-number markup -->
+        <div class="nx-bignum-wrap has-value-stack" id="dash-vs-wrap" role="region" aria-label="Your estimate">
+          <div data-value-stack id="dashValueStack"></div>
+        </div>
+
+        <!-- V23 · AuthGate skeleton — populated when AuthGate is active -->
+        <div class="nx-dash-authskel" id="dash-authskel" hidden role="status" aria-live="polite">
+          <div class="nx-dash-authskel-eyebrow">⚙ NORA IS FINALIZING</div>
+          <p class="nx-dash-authskel-status" id="dash-authskel-status">Pulling carrier rates</p>
+        </div>
+
+        <div class="nx-dash-divider" aria-hidden="true"></div>
+
+        <div class="nx-known" id="dash-known">
+          <h2 class="nx-known-label" id="known-list-label">What we know so far</h2>
+          <ul class="nx-known-list" id="known-list" aria-labelledby="known-list-label" aria-live="polite">
+            <li class="known-item is-confirmed" data-key="state"><span class="nx-known-mark" aria-hidden="true">✓</span><span class="nx-known-text">State: <b id="fact-state">—</b></span></li>
+            <li class="known-item is-confirmed" data-key="age"><span class="nx-known-mark" aria-hidden="true">✓</span><span class="nx-known-text">Age: <b id="fact-age">—</b></span></li>
+            <li class="known-item is-confirmed" data-key="sex"><span class="nx-known-mark" aria-hidden="true">✓</span><span class="nx-known-text">Sex: <b id="fact-sex">—</b></span></li>
+            <li class="known-item is-confirmed" data-key="conditions"><span class="nx-known-mark" aria-hidden="true">✓</span><span class="nx-known-text">Conditions: <b id="fact-conditions">—</b></span></li>
+            <li class="known-item is-pending" data-key="name"><span class="nx-known-mark" aria-hidden="true">⊙</span><span class="nx-known-text">Name: <span class="nx-mute">pending…</span></span></li>
+            <li class="known-item is-pending" data-key="zip"><span class="nx-known-mark" aria-hidden="true">⊙</span><span class="nx-known-text">ZIP: <span class="nx-mute">pending…</span></span></li>
+            <li class="known-item is-pending" data-key="dob"><span class="nx-known-mark" aria-hidden="true">⊙</span><span class="nx-known-text">DOB: <span class="nx-mute">pending…</span></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- V21 · Plan cards slot — revealed after auth-gate moment -->
+      <div class="nx-plan-cards-host" id="dash-plan-cards-host">
+        <div data-plan-cards id="dashPlanCards"></div>
+      </div>
+
+      <div class="nx-dash-trust">
+        <div>Operated by Core Value Insurance Associates, LLC · NPN #19482230</div>
+        <div>Licensed in <span id="trust-state">all 50 states</span> · Verifiable at <a href="https://nipr.com" target="_blank" rel="noopener">NIPR.com</a></div>
+      </div>
+    </section>
+
+    <!-- ZONE 3 — Report drawer -->
+    <aside class="nx-zone nx-drawer" id="zone-drawer" role="tabpanel" aria-labelledby="tab-drawer" aria-label="Report drawer">
+      <div class="nx-drawer-empty" id="drawer-empty">
+        <svg class="nx-drawer-illo" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+          <rect x="9" y="14" width="46" height="36" rx="3"/>
+          <path d="M9 18l23 16 23-16"/>
+        </svg>
+        <div class="nx-drawer-eyebrow">★ YOUR REPORT</div>
+        <div class="nx-drawer-title">Your report will appear here.</div>
+        <!-- V24 Tier 8 · ruthless polish — visual route preview removed
+             (the dashboard already tells the user what to do; the empty
+             drawer should not double-instruct). The route remains in the
+             DOM but `.is-sr-only` so screen readers still describe the arc. -->
+        <ol class="nx-drawer-route is-sr-only" aria-label="Steps to unlock your report">
+          <li class="nx-route-step is-active" aria-current="step">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Chat with Nora</span>
+          </li>
+          <li class="nx-route-step">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Lock your plan</span>
+          </li>
+          <li class="nx-route-step">
+            <span class="nx-route-dot" aria-hidden="true"></span>
+            <span class="nx-route-label">Report appears here</span>
+          </li>
+        </ol>
+      </div>
+      <!-- V21 · Plan report slot — populated when user picks a plan card -->
+      <div class="nx-drawer-content" id="drawer-content" data-plan-report style="display:none;"></div>
+    </aside>
+
+  </main>
+
+  <!-- V21 component scripts (load before nora-app.js so APIs are available) -->
+  <script src="../_lib/session.js"></script>
+  <script src="../_lib/value-stack.js"></script>
+  <script src="../_lib/unlock-trail.js"></script>
+  <script src="../_lib/auth-gate.js"></script>
+  <script src="../_lib/nora-data-types.js"></script>
+  <script src="../_lib/plan-mock-data.js"></script>
+  <script src="../_lib/plan-cards.js"></script>
+  <script src="../_lib/plan-report.js"></script>
+  <script src="../_lib/plan-compare-modal.js"></script>
+  <script src="../_lib/social-proof.js"></script>
+  <script src="../_lib/ocr-capture.js"></script>
+  <script src="nora-app.js"></script>
+</body>
+</html>

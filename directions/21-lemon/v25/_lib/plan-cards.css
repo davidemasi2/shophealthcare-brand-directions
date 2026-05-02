@@ -1,0 +1,694 @@
+/* =============================================================
+   PLAN-CARDS — V21 Component D · Mode 1
+   3-card plan selection in the dashboard zone.
+   Design: nora-app-design-brief.md §5 + quiz-app-capture-flow.md §7
+   ============================================================= */
+
+.plan-cards {
+  /* V24 Tier 5: SHC-Match defaults (white/gold/teal/navy) */
+  --pc-ink:        var(--ink, #0E2A3A);
+  --pc-cream:      var(--cream, #FFFFFF);
+  --pc-lemon:      var(--lemon, #FFC857);
+  --pc-blush:      var(--blush, #FFFFFF);
+  --pc-pink:       var(--pink, #00B5D8);
+  --pc-pink-dark:  var(--pink-dark, #007A93);
+  --pc-mute:       var(--mute, #5D7C8E);
+  --pc-rule:       var(--rule, #DDE9EE);
+
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--pc-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+/* Optional pagination/header row above the card grid */
+.plan-cards__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.plan-cards__set-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pc-mute);
+  font-weight: 600;
+}
+.plan-cards__pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.plan-cards__pager-btn {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--pc-ink);
+  border-radius: 999px;
+  background: var(--pc-cream);
+  color: var(--pc-ink);
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.plan-cards__pager-btn:hover { background: var(--pc-lemon); }
+.plan-cards__pager-btn[disabled] { opacity: .35; cursor: not-allowed; }
+.plan-cards__pager-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.plan-cards__pager-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(14,42,58,0.22);
+}
+.plan-cards__pager-dot.is-active { background: var(--pc-ink); }
+
+/* The 3-card grid */
+.plan-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* ---- single card ---- */
+/* V23 H4 — min-height locks all cards to the same vertical envelope.
+   Equal-heights via flex column + min-height. */
+.plan-card {
+  position: relative;
+  background: var(--pc-cream);
+  border: 2px solid var(--pc-ink);
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 4px 4px 0 var(--pc-ink);
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  min-height: 480px;
+}
+.plan-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--pc-ink);
+}
+
+/* V24 Tier 5 — choreographed cascade entrance (60ms stagger, 460ms swift-settle) */
+.plan-cards .plan-card {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 460ms cubic-bezier(.22,.61,.36,1),
+    transform 460ms cubic-bezier(.22,.61,.36,1),
+    box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+}
+.plan-cards.is-revealed .plan-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+.plan-cards.is-revealed .plan-card:nth-child(1) { transition-delay: 0ms, 0ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(2) { transition-delay: 60ms, 60ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(3) { transition-delay: 120ms, 120ms, 0ms; }
+.plan-cards.is-revealed .plan-card:nth-child(4) { transition-delay: 180ms, 180ms, 0ms; }
+@media (prefers-reduced-motion: reduce) {
+  .plan-cards .plan-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.plan-card:focus-visible {
+  outline: 3px solid var(--pc-pink);
+  outline-offset: 2px;
+}
+
+/* Recommended card — extra emphasis */
+.plan-card--recommended {
+  background: linear-gradient(180deg, #FFF8C8 0%, var(--pc-cream) 65%);
+  box-shadow: 6px 6px 0 var(--pc-ink);
+}
+.plan-card--recommended:hover {
+  box-shadow: 8px 8px 0 var(--pc-ink);
+}
+
+/* Selected card — flips background to lemon, locks the shadow */
+.plan-card.is-selected {
+  background: var(--pc-lemon);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--pc-ink);
+}
+.plan-card--recommended.is-selected {
+  background: linear-gradient(180deg, var(--pc-lemon) 0%, #FFE49A 100%);
+}
+
+/* V24 Tier 3 · Robinhood milestone celebration — card lemon-glow.
+   Single 1.0s breath on the chosen card the moment lock fires.
+   Ink-shadow grows 4 → 6 → 4. Pairs with the dial radial pulse. */
+.plan-card.is-locking {
+  animation: pc-lock-glow 1.0s cubic-bezier(.22,.61,.36,1) 1 forwards;
+}
+@keyframes pc-lock-glow {
+  0% {
+    box-shadow: 4px 4px 0 var(--pc-ink),
+                0 0 0 0 rgba(255, 200, 87, 0);
+  }
+  50% {
+    box-shadow: 6px 6px 0 var(--pc-ink),
+                0 0 18px 4px rgba(255, 200, 87, 0.55);
+  }
+  100% {
+    box-shadow: 4px 4px 0 var(--pc-ink),
+                0 0 0 0 rgba(255, 200, 87, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plan-card.is-locking {
+    animation: none !important;
+  }
+}
+
+/* Tier badge (top of card) */
+.plan-card__tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pc-ink);
+  border: 1.5px solid var(--pc-ink);
+  border-radius: 999px;
+  background: var(--pc-cream);
+  line-height: 1;
+}
+.plan-card--recommended .plan-card__tier {
+  background: var(--pc-lemon);
+}
+
+/* V23 H6 — RECOMMENDED ⭐ pill badge (replaces tier label on middle card) */
+.plan-card__rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pc-ink);
+  background: var(--pc-lemon);
+  border: 2px solid var(--pc-ink);
+  border-radius: 999px;
+  line-height: 1;
+  box-shadow: 2px 2px 0 var(--pc-ink);
+}
+
+/* Card top row: carrier logo + network type */
+.plan-card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 28px;
+}
+.plan-card__carrier {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.plan-card__carrier-logo {
+  width: 36px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.plan-card__carrier-logo img,
+.plan-card__carrier-logo svg {
+  max-width: 100%;
+  max-height: 22px;
+  display: block;
+}
+.plan-card__carrier-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pc-mute);
+  letter-spacing: -.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.plan-card__network {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--pc-lemon);
+  color: var(--pc-ink);
+  border: 1.5px solid var(--pc-ink);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Plan name (legacy — kept for backwards compatibility) */
+.plan-card__name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--pc-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* V23 H5 — short tier name + full technical name as a 3-line clamped subhead */
+.plan-card__nameblock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 76px;
+}
+.plan-card__short {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.05;
+  letter-spacing: -.015em;
+  color: var(--pc-ink);
+  margin: 0;
+}
+.plan-card__name-full {
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--pc-mute);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Price block — Component A goes here in compact mode.
+   Fallback: simple text rendering if Component A not loaded. */
+.plan-card__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 0 8px;
+  border-top: 1px dashed var(--pc-rule);
+  border-bottom: 1px dashed var(--pc-rule);
+}
+.plan-card__price-fallback {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--pc-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.025em;
+  display: inline-flex;
+  align-items: baseline;
+}
+.plan-card__price-fallback .pcp-prefix,
+.plan-card__price-fallback .pcp-suffix {
+  font-size: 0.42em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pc-mute);
+  letter-spacing: 0;
+}
+.plan-card__price-fallback .pcp-prefix { margin-right: 0.05em; }
+.plan-card__price-fallback .pcp-suffix { margin-left: 0.06em; }
+.plan-card__price-host {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+/* When ValueStack is mounted inside a card, override its size to
+   compact display only (no big arc visible on the card). */
+.plan-card__price-host .value-stack {
+  width: auto;
+  align-items: flex-start;
+  text-align: left;
+}
+.plan-card__price-host .value-stack__primary {
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  padding: 4px 0 0;
+}
+.plan-card__price-host .value-stack__arc {
+  display: none; /* compact — no arc */
+}
+.plan-card__price-host .value-stack__sparks { display: none; }
+.plan-card__price-host .value-stack__primary-number {
+  font-size: 36px;
+}
+.plan-card__price-host .value-stack__estimate-note {
+  display: none;
+}
+.plan-card__price-host .value-stack__secondary,
+.plan-card__price-host .value-stack__tertiary {
+  display: none;
+}
+
+/* Highlights list */
+.plan-card__highlights {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.plan-card__highlights li {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--pc-ink);
+  display: flex;
+  gap: 6px;
+}
+.plan-card__highlights li strong {
+  font-weight: 600;
+  color: var(--pc-ink);
+}
+.plan-card__highlights li span {
+  color: var(--pc-mute);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Description */
+.plan-card__desc {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--pc-mute);
+  margin: 0;
+}
+
+/* CTA */
+.plan-card__cta {
+  margin-top: auto;
+  padding-top: 8px;
+}
+.plan-card__cta-btn {
+  width: 100%;
+  display: inline-block;
+  background: var(--pc-pink);
+  color: var(--pc-ink);
+  border: 2px solid var(--pc-ink);
+  border-radius: 10px;
+  padding: 11px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -.005em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pc-ink);
+  transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1);
+  text-align: center;
+  white-space: normal;
+  box-sizing: border-box;
+}
+.plan-card__cta-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--pc-ink);
+}
+.plan-card__cta-btn:active {
+  transform: translate(0,0);
+  box-shadow: 1px 1px 0 var(--pc-ink);
+}
+.plan-card.is-selected .plan-card__cta-btn {
+  background: var(--pc-lemon);
+}
+
+/* V23 M4 — recommended CTA gets a subtle pulse to nudge selection.
+   Pulse pauses on hover/active so users see the hover lift cleanly. */
+.plan-card--recommended:not(.is-selected) .plan-card__cta-btn {
+  animation: pc-rec-pulse 2.4s ease-in-out infinite;
+}
+.plan-card--recommended:hover .plan-card__cta-btn,
+.plan-card--recommended:active .plan-card__cta-btn,
+.plan-card--recommended.is-selected .plan-card__cta-btn {
+  animation: none;
+}
+@keyframes pc-rec-pulse {
+  0%, 100% { box-shadow: 3px 3px 0 var(--pc-ink); }
+  50%      { box-shadow: 3px 3px 0 var(--pc-ink), 0 0 0 4px rgba(255, 232, 110, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plan-card--recommended:not(.is-selected) .plan-card__cta-btn {
+    animation: none;
+  }
+}
+
+/* Compare link below grid */
+.plan-cards__foot {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+.plan-cards__compare {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  color: var(--pc-mute);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  letter-spacing: -.005em;
+}
+.plan-cards__compare:hover { color: var(--pc-ink); }
+
+/* -----------------------------------------------------------
+   RESPONSIVE
+   ----------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .plan-cards__grid {
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 4px;
+  }
+  .plan-card {
+    scroll-snap-align: start;
+    min-width: 260px;
+  }
+}
+@media (max-width: 480px) {
+  .plan-cards__grid {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+  .plan-card {
+    min-width: 0;
+    width: 100%;
+  }
+  /* Recommended first on mobile */
+  .plan-card--recommended {
+    order: -1;
+  }
+  /* V24 Tier 7 · 44px min tap targets on mobile */
+  .plan-card {
+    min-height: 44px;
+  }
+  .plan-card__cta-btn,
+  .plan-cards__compare,
+  .plan-cards__pager-btn {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+  /* Replace hover-lift with tap-active feedback on touch */
+  .plan-card:active {
+    transform: scale(0.98);
+    transition: transform 100ms cubic-bezier(.22,.61,.36,1);
+  }
+}
+
+/* V24 Tier 7 · Windows High Contrast Mode */
+@media (forced-colors: active) {
+  .plan-card,
+  .plan-card__cta-btn,
+  .plan-cards__compare,
+  .plan-cards__pager-btn {
+    border: 2px solid CanvasText !important;
+    box-shadow: none !important;
+  }
+  .plan-card.is-selected,
+  .plan-card[aria-pressed="true"] {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+  .plan-card--recommended .plan-card__tier-badge {
+    background: Highlight !important;
+    color: HighlightText !important;
+    forced-color-adjust: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .plan-card,
+  .plan-card__cta-btn {
+    transition: none !important;
+  }
+  .plan-card:hover {
+    transform: none !important;
+  }
+}
+
+/* =============================================================
+   V24 Tier 3 · Wealthfront-style "WHY THIS ONE" rationale band
+   Renders only on the Recommended ⭐ card. Cream-tinted panel
+   with a lemon-gold left border. Mono-caps eyebrow + Fraunces
+   italic line. ≤14 words.
+   ============================================================= */
+.plan-card__rationale {
+  margin: 8px 0 0;
+  padding: 9px 10px 10px 12px;
+  background: rgba(255, 200, 87, 0.10);
+  border-left: 3px solid var(--pc-lemon);
+  border-radius: 0 6px 6px 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.plan-card__rationale .pc-rationale-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pc-mute);
+  line-height: 1;
+}
+.plan-card__rationale .pc-rationale-text {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 14px;
+  line-height: 1.32;
+  color: var(--pc-ink);
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -.005em;
+}
+.plan-card__rationale .pc-rationale-text em {
+  font-style: italic;
+  color: var(--pc-pink);
+  font-weight: 500;
+}
+
+/* =============================================================
+   V25 — 5-element card additions
+   ============================================================= */
+
+/* Tier eyebrow — universal small caps anchor at top of every card.
+   Replaces the V21/V24 split between .plan-card__tier and .plan-card__rec-badge. */
+.plan-card__tier-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pc-ink);
+  border: 1.5px solid var(--pc-ink);
+  border-radius: 999px;
+  background: var(--pc-cream);
+  line-height: 1;
+}
+.plan-card__tier-eyebrow--budget {
+  background: var(--pc-cream);
+}
+.plan-card__tier-eyebrow--recommended {
+  background: var(--pc-lemon);
+  border-width: 2px;
+  padding: 5px 12px;
+  box-shadow: 2px 2px 0 var(--pc-ink);
+}
+.plan-card__tier-eyebrow--premium {
+  background: var(--pc-cream);
+  border-style: dashed;
+}
+
+/* Standalone carrier block (no longer wrapped in __topline) */
+.plan-card > .plan-card__carrier {
+  margin-top: 4px;
+}
+
+/* V25 — savings delta line shown when window.NORA_OCR_BASELINE is set.
+   Renders between price block and rationale. */
+.plan-card__savings {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 10px;
+  margin: -2px 0 0;
+  background: var(--pc-cream);
+  border: 1px dashed var(--pc-ink);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--pc-pink-dark, #007A93);
+}
+.plan-card__savings .pcs-mark {
+  color: var(--pc-pink-dark, #007A93);
+  font-weight: 700;
+  font-size: 12px;
+}
+.plan-card__savings .pcs-anchor {
+  color: var(--pc-mute);
+  font-weight: 500;
+  letter-spacing: .02em;
+  font-size: 10.5px;
+  margin-left: 2px;
+  text-transform: uppercase;
+}
+.plan-card.is-selected .plan-card__savings {
+  background: rgba(255,255,255,0.7);
+  border-color: var(--pc-ink);
+}

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan UX — V21 Component D Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../lemon.css" />
+  <link rel="stylesheet" href="./value-stack.css" />
+  <link rel="stylesheet" href="./plan-cards.css" />
+  <link rel="stylesheet" href="./plan-report.css" />
+  <link rel="stylesheet" href="./plan-compare-modal.css" />
+  <style>
+    /* Demo-page chrome only — not part of any component */
+    body.theme-shc-match {
+      background: #FAF7EE;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--ink);
+    }
+
+    .demo-head {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 32px 12px;
+    }
+    .demo-head h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 32px;
+      letter-spacing: -.02em;
+      margin: 0 0 6px;
+    }
+    .demo-head p {
+      font-size: 14px;
+      color: var(--mute);
+      margin: 0 0 14px;
+      max-width: 800px;
+    }
+    .demo-controls {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .demo-controls button {
+      padding: 8px 14px;
+      border: 1.5px solid var(--ink);
+      background: var(--cream);
+      color: var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+    .demo-controls button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .demo-controls button.is-active {
+      background: var(--lemon);
+    }
+
+    /* The 3-zone layout, mimicking the V21 Nora app shell. */
+    .demo-shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 12px 32px 60px;
+      display: grid;
+      grid-template-columns: 320px minmax(0,1fr) 360px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .demo-zone {
+      background: var(--cream);
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 6px 6px 0 var(--ink);
+      min-height: 600px;
+    }
+    .demo-zone-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--mute);
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    /* Chat zone (placeholder) */
+    .demo-chat {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .demo-chat-bubble {
+      background: #FFF8C8;
+      border: 1.5px solid var(--ink);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      max-width: 88%;
+    }
+    .demo-chat-bubble--user {
+      background: var(--lemon);
+      align-self: flex-end;
+      max-width: 80%;
+    }
+    .demo-chat-bubble strong {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--mute);
+      margin-bottom: 2px;
+    }
+
+    /* Dashboard zone — header before the cards */
+    .demo-dash-headline {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      margin: 0 0 4px;
+    }
+    .demo-dash-sub {
+      font-size: 13px;
+      color: var(--mute);
+      margin: 0 0 18px;
+    }
+
+    @media (max-width: 1200px) {
+      .demo-shell {
+        grid-template-columns: 1fr 1fr;
+      }
+      .demo-zone--chat { display: none; } /* hide chat for visual clarity on smaller demo */
+    }
+    @media (max-width: 720px) {
+      .demo-shell {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-skip-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      background: var(--blush);
+      border: 1.5px solid var(--pink-dark);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="theme-shc-match">
+  <div class="demo-head">
+    <h1>Plan UX — V21 Component D <span class="demo-skip-pill" id="demoSkipPill" style="display:none">Skip mode</span></h1>
+    <p>
+      Plan cards (Mode 1) in the dashboard, plan report (Mode 2) in the right drawer, and the
+      side-by-side compare modal (Mode 3) lazy-mounted on demand. All three modes consume the same
+      Nora data structure (see <code>nora-data-types.js</code>).
+    </p>
+    <div class="demo-controls">
+      <button type="button" id="btnSelectBronze">Select bronze</button>
+      <button type="button" id="btnSelectSilver" class="is-active">Select silver ★</button>
+      <button type="button" id="btnSelectGold">Select gold</button>
+      <button type="button" id="btnCompare">Open compare modal</button>
+      <button type="button" id="btnToggleSkip">Toggle skip mode</button>
+    </div>
+  </div>
+
+  <div class="demo-shell">
+    <!-- Zone 1: Chat placeholder -->
+    <aside class="demo-zone demo-zone--chat">
+      <span class="demo-zone-label">Zone 1 · Nora chat</span>
+      <div class="demo-chat">
+        <div class="demo-chat-bubble">
+          <strong>Nora</strong>
+          I see Utah · 35 · male. Pulled three Plan 01 quotes that fit your situation.
+          Tap one to dig in.
+        </div>
+        <div class="demo-chat-bubble demo-chat-bubble--user">
+          <strong>You</strong>
+          Show me what each one actually covers.
+        </div>
+        <div class="demo-chat-bubble">
+          <strong>Nora</strong>
+          Reports are loaded in the right drawer. Want a side-by-side?
+        </div>
+      </div>
+    </aside>
+
+    <!-- Zone 2: Dashboard with plan cards -->
+    <main class="demo-zone demo-zone--dash">
+      <span class="demo-zone-label">Zone 2 · Dashboard</span>
+      <h2 class="demo-dash-headline">Three plans for self-employed in Utah</h2>
+      <p class="demo-dash-sub">Filtered for your age, ZIP, and conditions. Tap to load full report on the right.</p>
+      <div data-plan-cards></div>
+    </main>
+
+    <!-- Zone 3: Report drawer -->
+    <aside class="demo-zone demo-zone--drawer">
+      <span class="demo-zone-label">Zone 3 · Report drawer</span>
+      <div data-plan-report></div>
+    </aside>
+  </div>
+
+  <!-- Component A peer dep -->
+  <script src="./value-stack.js"></script>
+
+  <!-- Component D scripts -->
+  <script src="./nora-data-types.js"></script>
+  <script src="./plan-mock-data.js"></script>
+  <script src="./plan-cards.js"></script>
+  <script src="./plan-report.js"></script>
+  <script src="./plan-compare-modal.js"></script>
+
+  <script>
+    (function () {
+      var data = window.MOCK_NORA_RESPONSE;
+      var cardsEl = document.querySelector('[data-plan-cards]');
+      var reportEl = document.querySelector('[data-plan-report]');
+
+      // Default to recommended plan
+      var initialPlanId = (data.plans.find(function (p) { return p.tier === 'recommended'; })
+        || data.plans[0]).plan_id;
+
+      var skipped = false;
+
+      var planCardsApi = window.PlanCards.mount(cardsEl, {
+        planSet: data,
+        selectedPlanId: initialPlanId,
+        onSelect: function (planId) {
+          mountReport(planId);
+          // Update active state on demo controls
+          updateActiveDemoBtn(planId);
+          console.log('[demo] plan selected:', planId);
+        },
+        onCompareClick: function () {
+          console.log('[demo] compare clicked');
+          window.PlanCompareModal.show({
+            planSet: data,
+            diffsOnly: true,
+            onClose: function () { console.log('[demo] compare modal closed'); }
+          });
+        },
+        onSetChange: function (newSetNumber) {
+          // Demo: there's only one set, so just log.
+          console.log('[demo] set change requested:', newSetNumber);
+        }
+      });
+
+      function mountReport(planId) {
+        window.PlanReport.mount(reportEl, {
+          planSet: data,
+          selectedPlanId: planId,
+          skipped: skipped,
+          onSave:           function () { console.log('[demo] save'); },
+          onEmailPdf:       function () { console.log('[demo] email pdf'); },
+          onForward:        function () { console.log('[demo] forward'); },
+          onContinueEnroll: function () { console.log('[demo] continue to enrollment'); },
+          onOpenEmailGate:  function () {
+            skipped = false;
+            mountReport(planId);
+            document.getElementById('demoSkipPill').style.display = 'none';
+          }
+        });
+      }
+
+      mountReport(initialPlanId);
+
+      // Demo controls
+      var bronzeId = data.plans.find(function (p) { return p.tier === 'budget'; }).plan_id;
+      var silverId = data.plans.find(function (p) { return p.tier === 'recommended'; }).plan_id;
+      var goldId   = data.plans.find(function (p) { return p.tier === 'premium'; }).plan_id;
+
+      function updateActiveDemoBtn(planId) {
+        document.getElementById('btnSelectBronze').classList.toggle('is-active', planId === bronzeId);
+        document.getElementById('btnSelectSilver').classList.toggle('is-active', planId === silverId);
+        document.getElementById('btnSelectGold').classList.toggle('is-active',   planId === goldId);
+      }
+
+      document.getElementById('btnSelectBronze').addEventListener('click', function () {
+        planCardsApi.setSelected(bronzeId);
+        mountReport(bronzeId);
+        updateActiveDemoBtn(bronzeId);
+      });
+      document.getElementById('btnSelectSilver').addEventListener('click', function () {
+        planCardsApi.setSelected(silverId);
+        mountReport(silverId);
+        updateActiveDemoBtn(silverId);
+      });
+      document.getElementById('btnSelectGold').addEventListener('click', function () {
+        planCardsApi.setSelected(goldId);
+        mountReport(goldId);
+        updateActiveDemoBtn(goldId);
+      });
+      document.getElementById('btnCompare').addEventListener('click', function () {
+        window.PlanCompareModal.show({ planSet: data, diffsOnly: true });
+      });
+      document.getElementById('btnToggleSkip').addEventListener('click', function () {
+        skipped = !skipped;
+        document.getElementById('demoSkipPill').style.display = skipped ? '' : 'none';
+        // Re-mount with current selection
+        var cards = document.querySelectorAll('.plan-card.is-selected');
+        var selectedId = cards.length
+          ? cards[0].getAttribute('data-plan-id')
+          : initialPlanId;
+        mountReport(selectedId);
+      });
+    })();
+  </script>
+</body>
+</html>

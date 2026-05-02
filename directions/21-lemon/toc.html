@@ -319,9 +319,38 @@
 
 <hr class="div">
 
-<!-- V23 · PERSONA QUIZ + NORA APP (current canonical, post-optimization) -->
+<!-- V25 · SELF-CONTAINED — Trail rebuild · OCR · Mode 2B · Categorized compare -->
 <div class="toc-section">
-  <h2>V23 — Persona <em>quiz</em> + Nora <em>app</em> (current)</h2>
+  <h2>V25 — Self-contained: <em>Trail (6 phases)</em> · <em>OCR</em> · <em>Switch Report</em> · <em>Categorized compare</em> (current canonical)</h2>
+  <div class="file-grid two">
+    <a class="file-card lemon" href="v25/homepage.html" style="grid-column: 1 / -1;">
+      <div class="num">★ V25a · HOMEPAGE · SELF-CONTAINED PERSONA QUIZ</div>
+      <div class="meta">V25 = V24 + 5 tiers of UX rebuilds. 6-phase Trail (MATCH/READ/PRICE/COMPARE/LOCK/ENROLL) · plan-cards stripped to 5 elements · plan-report Mode 2A receipt + Mode 2B Switch Report · OCR card-scan with persona-keyed strategy · 12-category compare modal.</div>
+      <h3>Self-contained V25 homepage. <em>All dependencies in v25/. No path overlap with V24.</em></h3>
+      <p>The V25 homepage. <b>V25 changes from V24</b>: Trail rebuilt as 6 user-facing phases (was 7 atomic steps) with phase-aware copy · plan-cards stripped to 5 elements + universal "WHY THIS ONE" rationale + "Lock this plan →" CTA · plan-report Mode 2A reorders so Continue-to-enrollment promotes above accordions · plan-report Mode 2B (Switch Report) fires when OCR baseline present, replacing premium block with $4,716/yr Fraunces savings + diff bullets · OCR persona-strategy enum (assume_have / assume_recent / neutral_ask / on_demand) — SP1 corrected to neutral_ask (not "no insurance") · 12-category compare modal with diff-count summary per category. <b>Self-contained at /v25/</b> — own _lib/, assets/, lemon.css, palette-switch.js. Rollback to V24 via git reset --hard 77d494d.</p>
+      <span class="go">Open V25 homepage — self-contained</span>
+    </a>
+    <a class="file-card ink" href="v25/nora-app/?p=SP1&s=TX&a=35&x=M&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">★ V25b · NORA APP · SELF-CONTAINED THREE-ZONE WEB APP</div>
+      <div class="meta">All V25 components wired: 6-phase Trail · OCR capture overlay · Mode 2A/2B receipt · 5-element plan-cards · 12-category compare modal. Test other personas via ?p=CL1/BR1/RU1/PC1/GEN.</div>
+      <h3>The V25 Nora app. <em>OCR offers fire by persona; baseline flips report into Switch Report mode.</em></h3>
+      <p>The V25 Nora app. <b>OCR entry points</b>: HERO offer for assume_have/assume_recent personas (CL1, BR1, PC1, RU1) fires 1.5s after opener with [Snap your card →] / [Skip for now] chips · MID-DISCOVERY ask for neutral_ask personas (SP1, GEN) fires after conditions with [Yes/No/Not sure] · always-available manual entry. <b>Exit points</b>: Trail value pill shows "vs $X your current" · dashboard prepends "Current: Carrier · Plan · $X/mo" row · plan-cards display annual savings delta · plan-report swaps to Mode 2B Switch Report · compare modal adds 4th "Your current" column. <b>Compliance</b>: never claims parity backend can't verify; "What stays the same" only renders verified bullets.</p>
+      <span class="go">Open V25 Nora app (SP1 — tests neutral_ask flow)</span>
+    </a>
+    <a class="file-card pink" href="v25/nora-app/?p=CL1&s=CA&a=32&x=F&pg=0&c=none" style="grid-column: 1 / -1;">
+      <div class="num">V25c · NORA APP · CL1 — tests assume_have OCR offer</div>
+      <div class="meta">CL1 = renewal/spike persona. Hero OCR offer fires immediately after opener.</div>
+      <h3>Walk CL1 to see the assume_have hero offer + Aetna Silver 5500 mock card → Mode 2B Switch Report.</h3>
+      <span class="go">Open V25 Nora app (CL1 — Aetna $890/mo baseline)</span>
+    </a>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- V23 · PERSONA QUIZ + NORA APP (V24 in-place, pre-V25) -->
+<div class="toc-section">
+  <h2>V23 — Persona <em>quiz</em> + Nora <em>app</em> (V24 in-place baseline)</h2>
   <div class="file-grid two">
     <a class="file-card lemon" href="homepage-v23-persona-quiz.html" style="grid-column: 1 / -1;">
       <div class="num">★ V23a · HOMEPAGE · PERSONA QUIZ + DASHBOARD REVEAL (post-optimization)</div>

@@ -1,0 +1,80 @@
+{
+  "RU1": {
+    "label": "Just lost insurance",
+    "noraOpener": "Let's get you back on coverage fast. Your plan can be active in 24 hours.",
+    "reinforce": "You just got hit. The system failed you. We can have you covered by your start date.",
+    "revealReinforce": "You just got hit. Here's what coverage looks like by your start date — no gap.",
+    "dashboardHeadline": "Coverage in 24 hours.",
+    "comparisonAnchor": "what your monthly premium will be once you're back on coverage",
+    "hasCurrentCoverage": false,
+    "cardScanStrategy": "assume_recent",
+    "cardScanOffer": "Have your old card? 10 seconds to show what stays vs what changes.",
+    "socialProofLabel": "first-coverage applications this hour",
+    "lockPercentile": 22
+  },
+  "SP1": {
+    "label": "Self-employed / 1099",
+    "noraOpener": "37% of self-employed people in your bracket save the most on the right plan. Let me show you what that looks like for you.",
+    "reinforce": "You're 1099 — and most freelancers don't realize this kind of plan exists. It was built for self-employed people with irregular income.",
+    "revealReinforce": "You're 1099 — and most freelancers don't realize the plan we'd write you was built for them. Here's your real number.",
+    "dashboardHeadline": "Built for irregular income.",
+    "comparisonAnchor": "what most freelancers pay on the open market",
+    "hasCurrentCoverage": "maybe",
+    "cardScanStrategy": "neutral_ask",
+    "cardScanOffer": "Quick one — do you have current insurance you're shopping against?",
+    "socialProofLabel": "freelancers got their number this hour",
+    "lockPercentile": 12
+  },
+  "BR1": {
+    "label": "Pre-65 bridge years",
+    "noraOpener": "5+ years from your transition is the costliest stretch. Let's bridge it without the premium spike.",
+    "reinforce": "You're in the longest, most expensive insurance gap of your life. The plan we'd write you was designed for exactly this window.",
+    "revealReinforce": "The plan we'd write you was designed for exactly this window. Here's what bridging the gap really costs.",
+    "dashboardHeadline": "Bridge the gap.",
+    "comparisonAnchor": "what you'd pay on the open market for bridge coverage",
+    "hasCurrentCoverage": "usually",
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Got your current card? I'll show the bridge math against what you have.",
+    "socialProofLabel": "bridge year quotes this hour",
+    "lockPercentile": 18
+  },
+  "CL1": {
+    "label": "My premium just spiked",
+    "noraOpener": "Let me see your current premium and show you the actual delta.",
+    "reinforce": "Your renewal letter is real. Most renewals jumped 26–114%. Our number sits 50–60% under what you're being asked to pay now.",
+    "revealReinforce": "Your renewal letter is real. Here's what our number looks like next to it — same network, lower premium.",
+    "dashboardHeadline": "Your renewal vs. our number.",
+    "comparisonAnchor": "your renewal premium — the one that just spiked",
+    "hasCurrentCoverage": true,
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Want me to read your current card and show what your renewal actually changes?",
+    "socialProofLabel": "renewal-spike checks this hour",
+    "lockPercentile": 8
+  },
+  "PC1": {
+    "label": "Check if I'm overpaying",
+    "noraOpener": "Worst case: your plan's fine and you saved 60 seconds. Let me run the check.",
+    "reinforce": "Most people are. About 6 in 10 we check are paying for things they'll never use.",
+    "revealReinforce": "About 6 in 10 we check are paying for things they'll never use. Here's where you actually land.",
+    "dashboardHeadline": "Plan diagnostic.",
+    "comparisonAnchor": "whether your current plan is the best deal in your state",
+    "hasCurrentCoverage": true,
+    "cardScanStrategy": "assume_have",
+    "cardScanOffer": "Scan your card — I'll check coverage parity for your conditions before we shop.",
+    "socialProofLabel": "diagnostic checks this hour",
+    "lockPercentile": 28
+  },
+  "GEN": {
+    "label": "Not sure",
+    "noraOpener": "Let me ask 3 things and tell you which path makes sense.",
+    "reinforce": "Most common answer we get. Most people have no idea what they're actually paying for.",
+    "revealReinforce": "Most people don't know what they're actually paying for. Here's your real number — and what's hiding behind it.",
+    "dashboardHeadline": "Routing your numbers.",
+    "comparisonAnchor": "the typical premium for someone in your situation",
+    "hasCurrentCoverage": "unknown",
+    "cardScanStrategy": "neutral_ask",
+    "cardScanOffer": "Quick gut-check — do you have current insurance you're shopping against?",
+    "socialProofLabel": "plan reviews this hour",
+    "lockPercentile": 25
+  }
+}
