@@ -1,131 +1,12 @@
 @charset "UTF-8";
 /* =============================================================
-   LEMON — shared visual language
-   Faithful port of /Claude Design Pass/directions/12-lemon-v2.html
-   3 themes (original / heritage / disruptor)
-   × 2 motif intensities (quiet / loud) = 6 variants
+   SHOPHEALTHCARE V23 — single canonical theme (SHC-Match)
+   Locked 2026-04-29 — no alternate themes from this point forward.
+   Tokens are global on :root; no theme class required on <body>.
    ============================================================= */
 html, body { overflow-x: clip; }
 
-/* -----------------------------------------------------------
-   THEME A — Lemon-Original (canonical, "in the middle")
-   ----------------------------------------------------------- */
-.theme-original {
-  --blush:        #FFE4DB;
-  --blush-2:      #FFD3C2;
-  --lemon:        #FFE86E;
-  --lemon-2:      #FFF1A6;
-  --cream:        #FFFAF2;
-  --pink:         #FF6A5C;
-  --pink-dark:    #D94A3E;
-  --ink:          #1A1322;
-  --mute:         #6A5E70;
-  --rule:         #EED9D0;
-  --mint:         #7FC8A6;
-  --plum:         #3B2A4A;
-  --sky:          #BEE3F8;
-}
-
-/* -----------------------------------------------------------
-   THEME B — Lemon-Heritage ("mimic" — SHC blue/teal,
-   Lemon motif system applied on top)
-   ----------------------------------------------------------- */
-.theme-heritage {
-  --blush:        #F4F8FB;
-  --blush-2:      #DCE9F2;
-  --lemon:        #FFD25C;
-  --lemon-2:      #FFE89B;
-  --cream:        #FFFFFF;
-  --pink:         #3D9AB3;
-  --pink-dark:    #003D6D;
-  --ink:          #0B2545;
-  --mute:         #4A6781;
-  --rule:         #C8D8E4;
-  --mint:         #5BB8A0;
-  --plum:         #002648;
-  --sky:          #BEE3F8;
-}
-
-/* -----------------------------------------------------------
-   THEME C — Lemon-Disruptor ("really crazy")
-   ----------------------------------------------------------- */
-.theme-disruptor {
-  --blush:        #FAF6E8;
-  --blush-2:      #F0EAD4;
-  --lemon:        #D8FF4A;
-  --lemon-2:      #ECFFA1;
-  --cream:        #FFFFFF;
-  --pink:         #FF2E63;
-  --pink-dark:    #C81F4E;
-  --ink:          #0F0F0F;
-  --mute:         #5A5A5A;
-  --rule:         #E5DFCB;
-  --mint:         #6EE7B7;
-  --plum:         #0F0F0F;
-  --sky:          #C8F0FF;
-}
-
-/* -----------------------------------------------------------
-   THEME D — Lemon-Sunset (premium dusk · terracotta + amber)
-   ----------------------------------------------------------- */
-.theme-sunset {
-  --blush:        #FFE9D6;
-  --blush-2:      #FCD2A8;
-  --lemon:        #FFB347;
-  --lemon-2:      #FFD480;
-  --cream:        #FFF4E6;
-  --pink:         #C0392B;
-  --pink-dark:    #8B2A1F;
-  --ink:          #2D1B14;
-  --mute:         #8B6F5C;
-  --rule:         #E8C9A5;
-  --mint:         #A8C09A;
-  --plum:         #2D1B14;
-  --sky:          #F4E4C1;
-}
-
-/* -----------------------------------------------------------
-   THEME E — Lemon-Clinic (medical · sage + cream)
-   ----------------------------------------------------------- */
-.theme-clinic {
-  --blush:        #F0F5EC;
-  --blush-2:      #D8E5CD;
-  --lemon:        #F5DC6B;
-  --lemon-2:      #F9E89A;
-  --cream:        #FFFFFF;
-  --pink:         #2F8060;
-  --pink-dark:    #1F5C44;
-  --ink:          #1B2D2A;
-  --mute:         #5C7569;
-  --rule:         #C8D9C0;
-  --mint:         #7FC8A6;
-  --plum:         #0F2622;
-  --sky:          #C7E2D5;
-}
-
-/* -----------------------------------------------------------
-   THEME F — Lemon-Almanac (editorial newsprint · parchment + cherry)
-   ----------------------------------------------------------- */
-.theme-almanac {
-  --blush:        #F2EBDB;
-  --blush-2:      #E5DBC1;
-  --lemon:        #E8C547;
-  --lemon-2:      #F0D778;
-  --cream:        #FAF5E6;
-  --pink:         #C8273A;
-  --pink-dark:    #9C1D2C;
-  --ink:          #1A1A1A;
-  --mute:         #6B5E4A;
-  --rule:         #D4C9A8;
-  --mint:         #8FA68B;
-  --plum:         #1A1A1A;
-  --sky:          #C8DEED;
-}
-
-/* -----------------------------------------------------------
-   THEME G — Lemon-SHC-Match (exact live site teal + warm CTA on white)
-   ----------------------------------------------------------- */
-.theme-shc-match {
+:root {
   --blush:        #FFFFFF;
   --blush-2:      #EAF6F8;
   --lemon:        #FFC857;
@@ -142,23 +23,14 @@ html, body { overflow-x: clip; }
 }
 
 /* -----------------------------------------------------------
-   THEME H — Lemon-Y2K (totally different · electric candy)
+   ARCHIVED THEME REMOVAL NOTE (2026-04-29)
+   The following themes were removed:
+     theme-original / theme-heritage / theme-disruptor / theme-sunset
+     theme-clinic / theme-almanac / theme-y2k
+   The 8-palette grid was rejected per Brand Bible v1. SHC-Match
+   is the only canonical palette going forward. If you need to
+   restore alternates, see git history before commit on this date.
    ----------------------------------------------------------- */
-.theme-y2k {
-  --blush:        #FFE7F5;
-  --blush-2:      #FFCEEB;
-  --lemon:        #FFDE3A;
-  --lemon-2:      #FFEC76;
-  --cream:        #FFFFFF;
-  --pink:         #00D9FF;
-  --pink-dark:    #0095BD;
-  --ink:          #6B0F8E;
-  --mute:         #8A6B9D;
-  --rule:         #F2D0E8;
-  --mint:         #B5FF6B;
-  --plum:         #2D0E45;
-  --sky:          #BFF7FF;
-}
 
 /* =============================================================
    GLOBAL
