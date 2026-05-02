@@ -317,8 +317,35 @@
   margin-left: 4px;
   white-space: nowrap;
 }
+/* V28 · LOCKING / LOCKED states stay visible at every breakpoint
+   (the persona-tag-only mobile-hide rule shouldn't suppress the
+   commitment signal). */
+.unlock-trail .ut-value .ut-context--locking {
+  color: var(--ink, #0E2A3A);
+  background: var(--lemon, #FFC857);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 8px;
+}
+.unlock-trail .ut-value .ut-context--locked {
+  color: var(--cream, #FFFAF2);
+  background: var(--ink, #0E2A3A);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 8px;
+}
 @media (max-width: 480px) {
   .unlock-trail .ut-value .ut-context { display: none; }
+  .unlock-trail .ut-value .ut-context--locking,
+  .unlock-trail .ut-value .ut-context--locked { display: inline-block; }
+}
+@media (forced-colors: active) {
+  .unlock-trail .ut-value .ut-context--locking,
+  .unlock-trail .ut-value .ut-context--locked {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
 }
 
 /* Pop-badge */

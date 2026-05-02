@@ -370,32 +370,44 @@
     });
 
     // Value pill — same persona-aware tag as V24
+    // V28 · At LOCK (phase 5) the pill shows "LOCKING", at ENROLL (phase 6)
+    // it shows "LOCKED" with the tilde dropped (number is no longer estimate).
     if (s.valueEstimate === null || typeof s.valueEstimate === 'undefined') {
       els.valueEl.classList.add('is-pending');
       els.valueEl.textContent = 'Calculating…';
     } else {
       els.valueEl.classList.remove('is-pending');
       var personaTag = '';
-      // OCR baseline supersedes persona tag if present
-      var ocr = global.NORA_OCR_BASELINE;
-      if (ocr && typeof ocr.monthly_premium === 'number') {
-        personaTag = '<span class="ut-context"> · vs $' + formatNumber(ocr.monthly_premium) + ' your current</span>';
+      var locked = s.currentPhase >= 6;            // V28: ENROLL = locked
+      var locking = s.currentPhase === 5;           // V28: LOCK   = locking
+      if (locked) {
+        personaTag = '<span class="ut-context ut-context--locked"> · LOCKED</span>';
+      } else if (locking) {
+        personaTag = '<span class="ut-context ut-context--locking"> · LOCKING</span>';
       } else {
-        var personaKey = (global.NORA_ACTIVE_PERSONA || '').toUpperCase();
-        var TAGS = {
-          SP1: 'self-employed',
-          CL1: 'vs $890 renewal',
-          BR1: 'bridge years',
-          RU1: '24h coverage',
-          PC1: 'diagnostic',
-          GEN: 'estimate'
-        };
-        if (TAGS[personaKey]) {
-          personaTag = '<span class="ut-context"> · ' + TAGS[personaKey] + '</span>';
+        // OCR baseline supersedes persona tag if present
+        var ocr = global.NORA_OCR_BASELINE;
+        if (ocr && typeof ocr.monthly_premium === 'number') {
+          personaTag = '<span class="ut-context"> · vs $' + formatNumber(ocr.monthly_premium) + ' your current</span>';
+        } else {
+          var personaKey = (global.NORA_ACTIVE_PERSONA || '').toUpperCase();
+          var TAGS = {
+            SP1: 'self-employed',
+            CL1: 'vs $890 renewal',
+            BR1: 'bridge years',
+            RU1: '24h coverage',
+            PC1: 'diagnostic',
+            GEN: 'estimate'
+          };
+          if (TAGS[personaKey]) {
+            personaTag = '<span class="ut-context"> · ' + TAGS[personaKey] + '</span>';
+          }
         }
       }
+      // V28 · Tilde drops at ENROLL — the number is no longer an estimate.
+      var tilde = locked ? '' : '<span class="ut-tilde">~</span>';
       els.valueEl.innerHTML =
-        '<span class="ut-tilde">~</span>$' + formatNumber(s.valueEstimate) +
+        tilde + '$' + formatNumber(s.valueEstimate) +
         '<span class="ut-suffix">/mo</span>' +
         personaTag;
     }
