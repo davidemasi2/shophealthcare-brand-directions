@@ -168,9 +168,16 @@
   max-width: 100%;
   transition: color var(--ut-fill-dur) cubic-bezier(.22,.61,.36,1);
 }
-.unlock-trail .ut-stage.is-active .ut-label,
-.unlock-trail .ut-stage.is-completed .ut-label {
+/* V24 Tier 8 · hierarchy pass — only the ACTIVE stage gets ink.
+   Completed stages stay muted (the filled+lemon dot communicates state,
+   the label text doesn't need to compete). Less uniform labels = clearer
+   visual eye-track to the active stage. */
+.unlock-trail .ut-stage.is-active .ut-label {
   color: var(--ink, #0E2A3A);
+}
+.unlock-trail .ut-stage.is-completed .ut-label {
+  color: var(--mute, #4A6678);
+  opacity: .85;
 }
 
 /* ── Tooltip ────────────────────────────────────────────────── */
@@ -226,7 +233,7 @@
 
 .unlock-trail .ut-value {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 18px;
+  font-size: 20px; /* V24 Tier 8 · 18→20 — pull more weight to the dollar anchor */
   font-weight: 600;
   letter-spacing: -.01em;
   color: var(--ink, #0E2A3A);
@@ -301,7 +308,18 @@
 }
 
 /* ── Step counter (bottom row) ──────────────────────────────── */
+/* V24 Tier 8 · "less but better" pass — counter row hidden by default.
+   The trail itself communicates progress (filled dots + active glow),
+   the value pill carries the dollar anchor — a third row of meta-text
+   is redundant and competes with the H1 below. We keep it in the DOM
+   for ARIA / screen readers and for surfaces that may opt-in via
+   `.unlock-trail.show-counter` (e.g. the hero ribbon).
+   To restore: drop `display: none` on `.ut-counter` below. */
 .unlock-trail .ut-counter {
+  display: none;
+}
+.unlock-trail.show-counter .ut-counter {
+  display: flex;
   margin-top: 14px;
   padding-top: 12px;
   border-top: 1px dashed var(--rule, #DDE9EE);
@@ -309,7 +327,6 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--mute, #5D7C8E);
-  display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;

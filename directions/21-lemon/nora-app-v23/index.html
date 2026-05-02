@@ -181,10 +181,11 @@
         </svg>
         <div class="nx-drawer-eyebrow">★ YOUR REPORT</div>
         <div class="nx-drawer-title">Your report will appear here.</div>
-        <!-- V24 Tier 6 · Journey route preview — 3 dots showing where the
-             user is in the report-unlock arc. Subtle, mono-caps, on-brand.
-             V24 Tier 7 · aria-current="step" on the active step for screen readers. -->
-        <ol class="nx-drawer-route" aria-label="Steps to unlock your report">
+        <!-- V24 Tier 8 · ruthless polish — visual route preview removed
+             (the dashboard already tells the user what to do; the empty
+             drawer should not double-instruct). The route remains in the
+             DOM but `.is-sr-only` so screen readers still describe the arc. -->
+        <ol class="nx-drawer-route is-sr-only" aria-label="Steps to unlock your report">
           <li class="nx-route-step is-active" aria-current="step">
             <span class="nx-route-dot" aria-hidden="true"></span>
             <span class="nx-route-label">Chat with Nora</span>
@@ -198,7 +199,6 @@
             <span class="nx-route-label">Report appears here</span>
           </li>
         </ol>
-        <p class="nx-drawer-meta">Pick a plan from the dashboard to fill this drawer.</p>
       </div>
       <!-- V21 · Plan report slot — populated when user picks a plan card -->
       <div class="nx-drawer-content" id="drawer-content" data-plan-report style="display:none;"></div>

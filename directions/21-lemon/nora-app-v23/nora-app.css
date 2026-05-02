@@ -906,25 +906,29 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
   display: block; /* override default `display:none` so the peek shows */
 }
 .nx-plan-cards-host.is-active .nx-plan-peek { display: none; }
+/* V24 Tier 8 · "less but better" — peek pill quieted to a tighter,
+   single-line strip. Was 16-18px padded card with 22px icon. Now an
+   inline strip that whispers anticipation, doesn't shout for attention. */
 .nx-plan-peek {
-  margin-top: 22px;
-  padding: 16px 18px;
-  background: rgba(0, 181, 216, 0.04);
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: transparent;
   border: 1px dashed var(--rule);
-  border-radius: 12px;
-  display: flex; align-items: center; gap: 10px;
+  border-radius: 10px;
+  display: flex; align-items: center; gap: 8px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
   color: var(--mute);
-  line-height: 1.5;
+  line-height: 1.4;
   transition: opacity 280ms cubic-bezier(.22,.61,.36,1);
 }
 .nx-plan-peek-icon {
   flex: none;
   display: inline-grid; place-items: center;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--ink); color: var(--lemon);
-  font-size: 11px;
+  width: 16px; height: 16px;
+  font-size: 10px;
+  color: var(--mute);
+  opacity: .6;
 }
 /* Hide the peek when the plan-cards host has been already activated */
 .nx-plan-cards-host.is-active + .nx-plan-peek,
@@ -1093,7 +1097,8 @@ body.nx-is-booting #zone-drawer .nx-drawer-empty {
    ============================================================= */
 
 /* ─── A11Y · Screen-reader-only utility ───────────────────────── */
-.sr-only {
+.sr-only,
+.is-sr-only {
   position: absolute;
   width: 1px; height: 1px;
   padding: 0; margin: -1px;
